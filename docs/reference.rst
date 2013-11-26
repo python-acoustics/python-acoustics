@@ -1,0 +1,46 @@
+.. _reference:
+
+Reference
+#########
+
+.. toctree::
+    :maxdepth: 2
+    
+This section contains a description of all classes and functions.
+
+.. inheritance-diagram:: acoustics
+.. automodule:: acoustics
+    :show-inheritance:
+    :members:
+    
+    
+Octave
+======
+.. inheritance-diagram:: acoustics.octave
+.. automodule:: acoustics.Octave
+    :show-inheritance:
+    :members:
+
+Doppler
+=======
+.. inheritance-diagram:: acoustics.doppler
+.. automodule:: acoustics.Doppler
+    :show-inheritance:
+    :members:
+    
+
+Signal
+===
+.. inheritance-diagram:: acoustics.signal
+.. automodule:: acoustics.LTV
+    :show-inheritance:
+    :members:
+
+
+Reflection
+==========
+.. inheritance-diagram:: acoustics.reflection
+.. automodule:: acoustics.reflection
+    :show-inheritance:
+    :members:
+
