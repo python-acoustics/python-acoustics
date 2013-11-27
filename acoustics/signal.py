@@ -2,11 +2,10 @@
 This module constains a function to perform a convolution of signal with a Linear Time-Variant system.
 
 """
-import numpy as np
-from scipy.sparse import spdiags
-
 from __future__ import division
 
+import numpy as np
+from scipy.sparse import spdiags
 from scipy.signal import butter, lfilter
 
 
