@@ -1,6 +1,7 @@
 """
 The reflection module contains functions for calculating reflection factors.
 """
+from __future__ import division
 
 import numpy as np
 
@@ -188,4 +189,3 @@ def impedance_attenborough(frequency, flow_resistivity, density=DENSITY, soundsp
     
     """
     return (1.0 - 1j) * np.sqrt(flow_resistivity/frequency)/np.sqrt(np.pi*specific_heat_ratio*density) - 1j*soundspeed*porosity_decrease/(8.0*np.pi*specific_heat_ratio*frequency)
-    

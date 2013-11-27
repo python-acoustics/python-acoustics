@@ -1,6 +1,7 @@
 """
 Module containing functions and a classes related to the atmosphere.
 """
+from __future__ import division
 
 import numpy as np
 import matplotlib.pyplot as plt
