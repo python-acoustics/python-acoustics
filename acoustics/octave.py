@@ -1,9 +1,9 @@
 """
 Module for working with octaves.
 
-The following is an example on how to use :class:`Acoustics.Octave.Octave`.
+The following is an example on how to use :class:`acoustics.octave.Octave`.
 
-.. literalinclude:: ../examples/Octave.py
+.. literalinclude:: ../examples/octave.py
 
 """
 import numpy as np

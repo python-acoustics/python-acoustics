@@ -38,14 +38,14 @@ Building
     
 
 Signal
-===
+======
 .. inheritance-diagram:: acoustics.signal
 .. automodule:: acoustics.signal
     :show-inheritance:
     :members:
 
 Directivity
-==========
+===========
 .. inheritance-diagram:: acoustics.directivity
 .. automodule:: acoustics.directivity
     :show-inheritance:
