@@ -5,7 +5,7 @@ from __future__ import division
 
 import numpy as np
 
-from .bands import third
+from acoustics.core.bands import third
 
 
 def a_weighting(first, last):

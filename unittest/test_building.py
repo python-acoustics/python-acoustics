@@ -5,7 +5,8 @@ from numpy.testing import assert_almost_equal, assert_array_almost_equal
 
 import pytest
 
-from acoustics.building import rw_curve, rw, rw_c, rw_ctr, stc, stc_curve, mass_law
+from acoustics.building import (rw_curve, rw, rw_c, rw_ctr, stc, stc_curve,
+                                mass_law)
 
 
 def setup_module(building):

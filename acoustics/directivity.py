@@ -7,6 +7,8 @@ The following conventions are used within this module:
 * The angle :math:`\\phi` has a range :math:`[-pi, pi]`.
 
 """
+from __future__ import division
+
 import numpy as np
 import abc
 from scipy.interpolate import interp2d as interpolate
@@ -246,4 +248,3 @@ class Custom(Directivity):
         f = interpolate(self.theta, self.phi, self.r)
         
         return f(theta, phi)
-    

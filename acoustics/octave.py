@@ -6,6 +6,8 @@ The following is an example on how to use :class:`acoustics.octave.Octave`.
 .. literalinclude:: ../examples/octave.py
 
 """
+from __future__ import division
+
 import numpy as np
 
 
@@ -174,4 +176,3 @@ class Octave(object):
     ###n = np.arange(n_min, n_max+1)
     ###fc = 1000.0 * 10.0**(3.0/order/10.0) * 2.0**(n)
     ###return fc
-

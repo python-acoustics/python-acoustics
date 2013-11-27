@@ -1,6 +1,7 @@
 """
 Doppler shift module.
 """
+from __future__ import division
 
 
 def velocity_from_doppler_shift(c, f1, f2):
@@ -17,4 +18,3 @@ def velocity_from_doppler_shift(c, f1, f2):
     
     """
     return c * (f2 - f1) / (f2 + f1)
-    

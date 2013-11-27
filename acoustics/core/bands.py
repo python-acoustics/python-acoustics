@@ -1,7 +1,7 @@
 from __future__ import division
 import numpy as np
 
-from ..utils.utils import esum, _is_1d
+from acoustics.utils.utils import esum, _is_1d
 
 
 def octave(first, last):
