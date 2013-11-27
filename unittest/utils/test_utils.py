@@ -2,7 +2,7 @@ import numpy as np
 from numpy.testing import (assert_almost_equal, assert_array_equal,
                            assert_array_almost_equal)
 
-from ...utils.utils import _e10, esum, _is_1d, mean_TL
+from acoustics.utils.utils import _e10, esum, _is_1d, mean_TL
 
 
 def test__e10_int():

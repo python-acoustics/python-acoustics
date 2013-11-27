@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_array_almost_equal
 
-from ...room.reverberation import (t60_sabine, t60_eyring, t60_millington,
+from acoustics.room.reverberation import (t60_sabine, t60_eyring, t60_millington,
                                    t60_fitzroy, t60_arau)
 
 

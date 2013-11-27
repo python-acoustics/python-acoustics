@@ -6,8 +6,8 @@ import pytest
 has_matplotlib = pytest.importorskip("matplotlib")
 
 if has_matplotlib: 
-    from ..core.bands import octave, third
-    from ..imaging import plot_octave, plot_third, plot_bands
+    from acoustics.core.bands import octave, third
+    from acoustics.imaging import plot_octave, plot_third, plot_bands
 
 
 def setup_module(imaging):

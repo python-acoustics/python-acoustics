@@ -5,7 +5,7 @@ from numpy.testing import assert_almost_equal
 
 import pytest
 
-from ...core.power import lw_iso3746
+from acoustics.core.power import lw_iso3746
 
 
 @pytest.mark.parametrize("background_noise, expected", [
