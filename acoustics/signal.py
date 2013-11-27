@@ -2,8 +2,21 @@
 This module constains a function to perform a convolution of signal with a Linear Time-Variant system.
 
 """
+from __future__ import division
+
 import numpy as np
 from scipy.sparse import spdiags
+from scipy.signal import butter, lfilter
+
+
+def butter_bandpass_filter(data, lowcut, highcut, fs, order=3):
+    nyq = 0.5 * fs
+    low = lowcut / nyq
+    high = highcut / nyq
+    b, a = butter(order, [low, high], btype='band')
+    y = lfilter(b, a, data)
+    return y
+
 
 def convolve(signal, ltv):
     """

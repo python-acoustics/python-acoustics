@@ -3,7 +3,7 @@ from numpy.testing import assert_array_equal
 
 import pytest
 
-from ...core.criterion import nc_curve, nc
+from acoustics.core.criterion import nc_curve, nc
 
 
 @pytest.mark.parametrize("nc, expected", [
