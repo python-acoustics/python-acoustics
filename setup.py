@@ -14,7 +14,7 @@ setup(
       install_requires=[
           'numpy',
           'scipy',
-          'matplotlib'
-          'mayavi'
+          'matplotlib',
+          'mayavi',
           ],
       )
