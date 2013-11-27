@@ -2,7 +2,7 @@ from __future__ import division
 
 import numpy as np
 
-from ..utils.utils import _e10
+from acoustics.utils.utils import _e10
 
 
 def _leq(levels, time):
