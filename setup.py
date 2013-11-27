@@ -4,7 +4,7 @@ setup(
       name='acoustics',
       version='0.0',
       description="Acoustics module for Python.",
-      long_description=open('README').read(),
+      long_description=open('README.md').read(),
       author='Python Acoustics',
       author_email='fridh@fridh.nl',
       license='LICENSE',
