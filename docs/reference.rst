@@ -17,14 +17,22 @@ This section contains a description of all classes and functions.
 Octave
 ======
 .. inheritance-diagram:: acoustics.octave
-.. automodule:: acoustics.Octave
+.. automodule:: acoustics.octave
     :show-inheritance:
     :members:
 
 Doppler
 =======
 .. inheritance-diagram:: acoustics.doppler
-.. automodule:: acoustics.Doppler
+.. automodule:: acoustics.doppler
+    :show-inheritance:
+    :members:
+    
+
+Building
+========
+.. inheritance-diagram:: acoustics.building
+.. automodule:: acoustics.building
     :show-inheritance:
     :members:
     
@@ -32,7 +40,14 @@ Doppler
 Signal
 ===
 .. inheritance-diagram:: acoustics.signal
-.. automodule:: acoustics.LTV
+.. automodule:: acoustics.signal
+    :show-inheritance:
+    :members:
+
+Directivity
+==========
+.. inheritance-diagram:: acoustics.directivity
+.. automodule:: acoustics.directivity
     :show-inheritance:
     :members:
 
