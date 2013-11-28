@@ -12,8 +12,9 @@ from __future__ import division
 import numpy as np
 import abc
 from scipy.interpolate import interp2d as interpolate
-from mayavi import mlab
 
+    
+    
 def cardioid(theta, a=1.0, k=1.0):
     """
     A cardioid pattern.
@@ -146,6 +147,12 @@ class Directivity(object):
         :param filename: Filename
         :param include_rotation: Apply the rotation to the directivity. By default the rotation is applied in this figure.
         """
+        try:
+            from mayavi import mlab
+        except ImportError:
+            raise ImportWarning("mayavi is not available.")
+            return
+        
         phi = np.linspace(-np.pi, +np.pi, 50)
         theta = np.linspace(0.0, np.pi, 50)
         
@@ -160,8 +167,9 @@ class Directivity(object):
         #ax0.pcolormesh(u*180.0/np.pi, v*180.0/np.pi, r)
         (x, y, z) = spherical_to_cartesian(d, theta_n, phi_n)
         
+        
         fig = mlab.figure()
-         
+        
         s = mlab.mesh(x,y,z)
         
         fig.add(s)
@@ -169,7 +177,6 @@ class Directivity(object):
         mlab.axes()
         mlab.outline()
         mlab.show()
-        
         
         #ax0.plot_wireframe(x*180.0/np.pi, y*180.0/np.pi, z)
         #ax0.set_xlabel(r'Latitude $u$ in degree')
