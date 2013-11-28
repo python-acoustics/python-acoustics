@@ -10,6 +10,15 @@ from scipy.signal import butter, lfilter
 
 
 def butter_bandpass_filter(data, lowcut, highcut, fs, order=3):
+    """
+    Butterworth bandpass filter.
+    
+    :param data: data
+    :param lowcut: Lower cut-off frequency
+    :param highcut: Upper cut-off frequency
+    :param fs: Sample frequency
+    :param order: Order
+    """
     nyq = 0.5 * fs
     low = lowcut / nyq
     high = highcut / nyq

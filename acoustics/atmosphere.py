@@ -1,5 +1,5 @@
 """
-Module containing functions and a classes related to the atmosphere.
+Module containing functions and a classes related to atmospheric acoustics.
 """
 from __future__ import division
 

@@ -8,6 +8,9 @@ from acoustics.utils.utils import _is_1d
 def mean_alpha(alphas, surfaces):
     """
     Calculate mean of absorption coefficients.
+    
+    :param alphas: Absorption coefficients
+    :param surfaces: Surfaces
     """
     return np.average(alphas, axis=0, weights=surfaces)
 
@@ -16,6 +19,9 @@ def nrc(alphas):
     """
     Calculate Noise Reduction Coefficient (NRC) from four absorption
     coefficient values (250, 500, 1000 and 2000 Hz).
+    
+    :param alphas: Absorption coefficients
+    
     """
     alpha_axis = alphas.ndim - 1
     return np.mean(alphas, axis=alpha_axis)
@@ -23,7 +29,7 @@ def nrc(alphas):
 
 def t60_sabine(surfaces, alpha, volume, c=343):
     """
-    Calculate reverberation time according to Sabine's formula:
+    Reverberation time according to Sabine:
 
     .. math:: T_{60} = \\frac{4 ln(10^6)}{c} \\frac{V}{S\\alpha}
 
@@ -57,6 +63,14 @@ def t60_sabine(surfaces, alpha, volume, c=343):
 
 
 def t60_eyring(surfaces, alpha, volume, c=343):
+    """
+    Reverberation time according to Eyring.
+    
+    :param surfaces: Surfaces
+    :param alpha: Mean absorption coefficient
+    :param volume: Volume
+    :param c: Speed of sound
+    """
     mean_alpha = np.average(alpha, axis=0, weights=surfaces)
     S = np.sum(surfaces, axis=0)
     A = -S * np.log(1-mean_alpha)
@@ -65,6 +79,14 @@ def t60_eyring(surfaces, alpha, volume, c=343):
 
 
 def t60_millington(surfaces, alpha, volume, c=343):
+    """
+    Reverberation time according to Millington.
+    
+    :param surfaces: Surfaces
+    :param alpha: Mean absorption coefficient
+    :param volume: Volume
+    :param c: Speed of sound
+    """
     mean_alpha = np.average(alpha, axis=0, weights=surfaces)
     A = -np.sum(surfaces[:, np.newaxis] * np.log(1 - mean_alpha), axis=0)
     t60 = 4 * np.log(10**6) * volume / (c * A)
@@ -72,6 +94,14 @@ def t60_millington(surfaces, alpha, volume, c=343):
 
 
 def t60_fitzroy(surfaces, alpha, volume, c=343):
+    """
+    Reverberation time according to Fitzroy.
+    
+    :param surfaces: Surfaces
+    :param alpha: Mean absorption coefficient
+    :param volume: Volume
+    :param c: Speed of sound
+    """
     Sx = np.sum(surfaces[0:2])
     Sy = np.sum(surfaces[2:4])
     Sz = np.sum(surfaces[4:6])
@@ -87,7 +117,7 @@ def t60_fitzroy(surfaces, alpha, volume, c=343):
 
 def t60_arau(Sx, Sy, Sz, alpha, volume, c=343):
     """
-    Calculate reverberation time according to Arau's formula. [#arau]_
+    Reverberation time according to Arau. [#arau]_
 
     ``Sx``: Sum of side walls.
 
