@@ -18,12 +18,17 @@ from scipy.interpolate import interp2d as interpolate
 def cardioid(theta, a=1.0, k=1.0):
     """
     A cardioid pattern.
+    
+    :param a: a
+    :param k: k
     """
     return np.abs( a + a * np.cos(k*theta) )
 
 def figure_eight(theta):
     """
     A figure-of-eight pattern.
+    
+    :param theta: angle :math:`\\theta`
     """
     return np.abs( np.cos(theta) )
 
@@ -31,6 +36,10 @@ def figure_eight(theta):
 def spherical_to_cartesian(r, theta , phi):
     """
     Convert spherical coordinates to cartesian coordinates.
+    
+    :param r: norm
+    :param theta: angle :math:`\\theta`
+    :param phi: angle :math:`\\phi`
     
     .. math:: x = r \\sin{\\theta}\\cos{\\phi}
     .. math:: y = r \\sin{\\theta}\\sin{\\phi}
@@ -45,6 +54,10 @@ def spherical_to_cartesian(r, theta , phi):
 def cartesian_to_spherical(x, y, z):
     """
     Convert cartesian coordinates to spherical coordinates.
+    
+    :param x: x
+    :param y: y
+    :param z: z
     
     .. math:: r = \\sqrt{\\left( x^2 + y^2 + z^2 \\right)}
     .. math:: \\theta = \\arccos{\\frac{z}{r}}
@@ -124,7 +137,9 @@ class Directivity(object):
         """
         Return the directivity for given spherical coordinates.
         
-        :param x: Spherical coordinate.
+        :param r: norm
+        :param theta: angle :math:`\\theta`
+        :param phi: angle :math:`\\phi`
         """
         
         """
@@ -136,13 +151,15 @@ class Directivity(object):
         """
         Return the directivity for given cartesian coordinates.
         
-        :param x: Cartesian coordinate.
+        :param x: x
+        :param y: y
+        :param z: z
         """
         return self.using_spherical(*cartesian_to_spherical(x, y, z))
     
     def plot(self, filename=None, include_rotation=True):
         """
-        Directivity plot.
+        Directivity plot. Plot to ``filename`` when given.
         
         :param filename: Filename
         :param include_rotation: Apply the rotation to the directivity. By default the rotation is applied in this figure.
