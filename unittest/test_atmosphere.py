@@ -1,6 +1,6 @@
 import unittest
 
-from acoustics.atmosphere import atmosphere
+from acoustics.atmosphere import Atmosphere
 
 class AtmosphereCase(unittest.TestCase):
     
