@@ -1,7 +1,7 @@
 """
 Module containing functions and a classes related to atmospheric acoustics.
 """
-from __future__ import division
+from __future__ import division, print_function
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -287,7 +287,7 @@ class Atmosphere(object):
         
         ir = np.real(ir).T
         
-        print 'IR'
+        print('IR')
         return ir   # Note that the reduction is a factor two too much! Too much energy loss now that we use a double-sided spectrum.
     
     def plot_attenuation_impulse_response(self, filename, fs, N, d):
