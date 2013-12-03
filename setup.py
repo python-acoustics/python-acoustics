@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
       name='acoustics',
@@ -8,7 +8,7 @@ setup(
       author='Python Acoustics',
       author_email='fridh@fridh.nl',
       license='LICENSE',
-      packages=['acoustics'],
+      packages=find_packages(),
       scripts=[],
       zip_safe=False,
       install_requires=[
