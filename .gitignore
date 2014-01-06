@@ -42,3 +42,5 @@ nosetests.xml
 
 _build
 *.bak
+
+*.png
