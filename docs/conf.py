@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Acoustics'
+project = u'acoustics'
 copyright = u'2013, Frederik Rietdijk'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -167,7 +167,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Acousticsdoc'
+htmlhelp_basename = 'acousticsdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -186,7 +186,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Acoustics.tex', u'Acoustics Documentation',
+  ('index', 'acoustics.tex', u'acoustics Documentation',
    u'Frederik Rietdijk', 'manual'),
 ]
 
@@ -230,8 +230,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Acoustics', u'Acoustics Documentation',
-   u'Frederik Rietdijk', 'Acoustics', 'One line description of project.',
+  ('index', 'acoustics', u'acoustics Documentation',
+   u'Python-Acoustics', 'acoustics', 'One line description of project.',
    'Miscellaneous'),
 ]
 
