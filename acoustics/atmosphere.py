@@ -6,6 +6,12 @@ from __future__ import division, print_function
 import numpy as np
 import matplotlib.pyplot as plt
 
+try:
+    from pyfftw.interfaces.numpy_fft import ifft       # Performs much better than numpy's fftpack
+except ImportError:                                    # Use monkey-patching np.fft perhaps instead?
+    from numpy.fft import ifft
+
+
 def soundspeed(ref_temp, temp):
     """
     Speed of sound :math:`c`.
@@ -279,7 +285,7 @@ class Atmosphere(object):
         #print('TF reshaped: ' + str(tf.shape))
         
         #n = 2**int(np.ceil(np.log2(len(tf))))   # Blocksize for the IFFT. Zeros are padded.
-        ir = np.fft.ifft( tf , n=N)     # Obtain the impulse response through the IFFT.
+        ir = ifft( tf , n=N)     # Obtain the impulse response through the IFFT.
         
         ir = np.hstack((ir[:, N/2:N], ir[:, 0:N/2]))
         
