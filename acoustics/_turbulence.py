@@ -270,15 +270,17 @@ class Spectrum2D(Spectrum):
         """
         Mode amplitudes :math:`G(\\mathbf{k})`.
         
-        :param k_n: Wavenumber :math:`\\mathbf{k}_n`
-        #:param delta_k: Wavenumber resolution :math:`\\Delta k`
-        :param F: Spectral density :math:`F`.
-        
         :rtype: A `n`-dimensional array where `n` is equal to the amount of dimensions of `k_n`.
+        
+        The mode amplitudes are calculating using
         
         .. math:: G (\\mathbf{k}_n ) = \\sqrt{4 \\pi \\Delta k F(\\mathbf{k}_n) \\mathbf{k}_n} 
         
+        where :math:`\\mathbf{k}_n` are the wavenumber, :math:`\\Delta k` the wavenumber resolution, 
+        and :math:`F` the spectral density.
+        
         See Salomons, below equation J.24.
+        
         """
         n = np.arange(0, self.max_mode_order)
         return np.sqrt(4.0 * np.pi * self.wavenumber_resolution  * self.spectral_density()  * self.wavenumber)

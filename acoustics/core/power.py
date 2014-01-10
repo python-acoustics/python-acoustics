@@ -6,17 +6,18 @@ import numpy as np
 def lw_iso3746(LpAi, LpAiB, S, alpha, surfaces):
     """
     Calculate sound power level according to ISO 3746:2010.
+    
+    :param LpAi: Sound pressure levels of the source.
+    :type LpAi: :class:`np.ndarray`
+    :param LpAiB: Background noise sound pressure levels.
+    :type LpAiB: :class:`np.ndarray`
+    :param S: Area in square meters of the measurement surface.
+    :type S: :class:`float`
+    :param alpha: Absorption coefficients of the room. 
+    :type alpha: :class:`np.ndarray`
+    :param surfaces: Room surfaces.
+    :type :class:`np.ndarray`
 
-    LpAi : NumPy 1-D array containing sound pressure levels of the source.
-
-    LpAiB: NumPy 1-D array containing sound pressure levels of the
-    background noise.
-
-    S: area in square metres of the measurement surface.
-
-    alpha: NumPy 1-D array containing absorption coefficients of the room.
-
-    surfaces: NumPy 1-D array containing room surfaces.
     """
     LpA = 10 * np.log10(np.sum(10**(0.1*LpAi))/LpAi.size)
     LpAB = 10 * np.log10(np.sum(10**(0.1*LpAiB))/LpAiB.size)
