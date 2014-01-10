@@ -254,7 +254,7 @@ class Atmosphere(object):
         
         ##return alpha
     
-    def ir_air_absorption(self, d, fs=44100, N=2048, sign=+1):
+    def ir_attenuation_coefficient(self, d, fs=44100, N=2048, sign=+1):
         """
         Calculate the impulse response due to air absorption.
         
@@ -280,19 +280,19 @@ class Atmosphere(object):
         
         #n = 2**int(np.ceil(np.log2(len(tf))))   # Blocksize for the IFFT. Zeros are padded.
         ir = np.fft.ifft( tf , n=N)     # Obtain the impulse response through the IFFT.
-        
+
         ir = np.hstack((ir[:, N/2:N], ir[:, 0:N/2]))
         
         #ir = np.real(ir[0:N/2])
         
         ir = np.real(ir).T
         
-        print('IR')
         return ir   # Note that the reduction is a factor two too much! Too much energy loss now that we use a double-sided spectrum.
     
-    def plot_attenuation_impulse_response(self, filename, fs, N, d):
+    def plot_ir_attenuation_coefficient(self, fs, N, d, filename=None):
         """
         Plot the impulse response of the attenuation due to atmospheric absorption.
+        The impulse response is calculated using :meth:`ir_attenuation_coefficient`.
         
         :param filename: Filename
         :param fs: Sample frequency
@@ -305,7 +305,7 @@ class Atmosphere(object):
         ax0 = fig.add_subplot(111)
         ax0.set_title('Impulse response atmospheric attenuation')
         
-        ir = self.ir_air_absorption(fs, N, d)
+        ir = self.ir_attenuation_coefficient(fs, N, d)
         
         xsignal = np.arange(0.0, len(ir)) / fs
         ax0.plot(xsignal, ir)
@@ -313,10 +313,15 @@ class Atmosphere(object):
         ax0.set_ylabel(r'Some')
         ax0.set_yscale('log')
         ax0.grid()
-        fig.savefig(filename)
-
+        
+        if filename:
+            fig.savefig(filename)
+        else:
+            fig.show()
     
-    def plot_attenuation_coefficient(self, filename, frequency):
+    
+    
+    def plot_attenuation_coefficient(self, frequency, filename=None):
         """
         Plot the attenuation coefficient :math:`\\alpha` as function of frequency and write the figure to ``filename``.
         
@@ -337,4 +342,9 @@ class Atmosphere(object):
         
         ax0.legend()
         ax0.grid()
-        fig.savefig(filename)
+        
+        if filename:
+            fig.savefig(filename)
+        else:
+            fig.show()
+            
