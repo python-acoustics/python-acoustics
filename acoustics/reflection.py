@@ -1,5 +1,5 @@
 """
-The reflection module contains functions for calculating reflection factors.
+The reflection module contains functions for calculating reflection factors and impedances.
 """
 from __future__ import division
 
@@ -95,10 +95,10 @@ class Boundary(object):
   
 def reflection_factor_plane_wave(impedance, angle):
     """
-    Plane wave reflection factor.
+    Plane wave reflection factor :math:`R`.
     
-    :param impedance: Normalized impedance.
-    :param angle: Angle of incidence.
+    :param impedance: Normalized impedance :math:`Z`.
+    :param angle: Angle of incidence :math:`\\theta`.
     
     
     The plane wave reflection factor :math:`R` is given by
@@ -113,16 +113,16 @@ def reflection_factor_plane_wave(impedance, angle):
 
 def numerical_distance(impedance, angle, distance, wavenumber):
     """
-    Numerical distance.
+    Numerical distance :math:`w`.
     
-    :param impedance: Normalized impedance.
-    :param angle: Angle of incidence.
-    :param distance: Path length of the reflected ray.
-    :param wavenumber: Wavenumber.    
+    :param impedance: Normalized impedance :math:`Z`.
+    :param angle: Angle of incidence :math:`\\theta`.
+    :param distance: Path length of the reflected ray :math:`r`.
+    :param wavenumber: Wavenumber :math:`k`.    
     
     The numerical distance :math:`w` is given by
     
-    .. math:: w = \\sqrt{-j k R  \\left( 1 + \\frac{1}{Z} \cos{\\theta} - \\sqrt{1 - \\left( \\frac{1}{Z} \\right)^2} \\sin{\\theta} \\right) }
+    .. math:: w = \\sqrt{-j k r  \\left( 1 + \\frac{1}{Z} \cos{\\theta} - \\sqrt{1 - \\left( \\frac{1}{Z} \\right)^2} \\sin{\\theta} \\right) }
     
     """
     return np.sqrt(-1j*wavenumber*distance*(1.0 + 1.0/impedance * np.cos(angle) - np.sqrt(1.0-(1.0/impedance)**2.0)*np.sin(angle)))
@@ -130,18 +130,18 @@ def numerical_distance(impedance, angle, distance, wavenumber):
 
 def reflection_factor_spherical_wave(impedance, angle, distance, wavenumber):
     """
-    Spherical wave reflection factor.
+    Spherical wave reflection factor :math:`Q`.
     
-    :param impedance: Normalized impedance.
-    :param angle: Angle of incidence.
-    :param distance: Path length of the reflected ray.
-    :param wavenumber: Wavenumber.  
+    :param impedance: Normalized impedance :math:`Z`.
+    :param angle: Angle of incidence :math:`\\theta`.
+    :param distance: Path length of the reflected ray :math:`r`.
+    :param wavenumber: Wavenumber :math:`k`.  
     
     The spherical wave relfection factor :math:`Q` is given by
     
     .. math:: Q = R \\left(1 - R \\right) F
     
-    where :math:`R` is the plane wave reflection factor as calculated in :func:`plane_wave_reflection_factor` and :math:`F` is given by
+    where :math:`R` is the plane wave reflection factor as calculated in :func:`reflection_factor_plane_wave` and :math:`F` is given by
     
     .. math:: F = 1 - j \\sqrt{ \\pi} w e^{-w^2} \mathrm{erfc} \\left( j w \\right) 
     
@@ -180,7 +180,7 @@ def impedance_attenborough(frequency, flow_resistivity, density=DENSITY, soundsp
     :param soundspeed: Speed of sound in air :math:`c`.
     :param density: Density of air :math:`\\rho`.
     :param porosity_decrease: Rate of exponential decrease of porosity with depth :math:`\\alpha`.
-    :param specific_heat_ratio: Ratio of specific heats for air.
+    :param specific_heat_ratio: Ratio of specific heats :math:`\\gamma` for air.
     
     
     The impedance :math:`Z` is given by

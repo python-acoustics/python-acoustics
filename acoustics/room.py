@@ -1,3 +1,7 @@
+"""
+The room acoustics module contains several functions to calculate the reverberation time in spaces.
+"""
+
 from __future__ import division
 
 import numpy as np
@@ -10,13 +14,12 @@ from acoustics.signal import butter_bandpass_filter
 from acoustics.core.bands import (_check_band_type, octave_low, octave_high,
                                   third_low, third_high)
 
-
 def mean_alpha(alphas, surfaces):
     """
     Calculate mean of absorption coefficients.
     
-    :param alphas: Absorption coefficients
-    :param surfaces: Surfaces
+    :param alphas: Absorption coefficients :math:`\\alpha`.
+    :param surfaces: Surfaces :math:`S`.
     """
     return np.average(alphas, axis=0, weights=surfaces)
 
@@ -26,7 +29,7 @@ def nrc(alphas):
     Calculate Noise Reduction Coefficient (NRC) from four absorption
     coefficient values (250, 500, 1000 and 2000 Hz).
     
-    :param alphas: Absorption coefficients
+    :param alphas: Absorption coefficients :math:`\\alpha`.
     
     """
     alpha_axis = alphas.ndim - 1
@@ -35,31 +38,25 @@ def nrc(alphas):
 
 def t60_sabine(surfaces, alpha, volume, c=343):
     """
-    Reverberation time according to Sabine:
-
-    .. math:: T_{60} = \\frac{4 ln(10^6)}{c} \\frac{V}{S\\alpha}
-
-    Where:
-
-     - :math:`c`: speed of sound.
-     - :math:`V`: Volume of the room.
-     - :math:`S`: Surface of the room.
-     - :math:`\\alpha`: Absorption coefficient of the room.
-
-    Parameters:
-
-    surfaces : ndarray
+    Reverberation time according to Sabine.
+    
+    :param surfaces: Surface of the room :math:`S`. 
         NumPy array that contains different surfaces.
-
-    alpha : ndarray
+    :type surfaces: :class:`np.ndarray`
+    :param alpha: Absorption coefficient of the room :math:`\\alpha`.
         Contains absorption coefficients of ``surfaces``.
         It could be one value or some values in different bands (1D and 2D
         array, respectively).
-
-    volume : float
-        Volume of the room.
-    c : float
-        Speed of sound (343 m/s by default).
+    :type alpha: :class:`np.ndarray`
+    :param volume: Volume of the room :math:`V`.
+    :type volume: :class:`float`
+    :param c: Speed of sound :math:`c`.
+    :type c: :class:`float`
+    
+    Sabine's formula for the reverberation time is:
+    
+    .. math:: T_{60} = \\frac{24 \\ln(10)}{c} \\frac{V}{S\\alpha}
+    
     """
     mean_alpha = np.average(alpha, axis=0, weights=surfaces)
     S = np.sum(surfaces, axis=0)
@@ -72,10 +69,15 @@ def t60_eyring(surfaces, alpha, volume, c=343):
     """
     Reverberation time according to Eyring.
     
-    :param surfaces: Surfaces
-    :param alpha: Mean absorption coefficient or by frequency bands
-    :param volume: Volume
-    :param c: Speed of sound
+    :param surfaces: Surfaces :math:`S`.
+    :param alpha: Mean absorption coefficient :math:`\\alpha` or by frequency bands
+    :param volume: Volume of the room :math:`V`.
+    :param c: Speed of sound :math:`c`.
+    
+    Eyring's formula for the reverberation time is:
+    
+    .. math:: T_{60} = \\frac{24 \\ln{10} V}{c \\left( 4 mV - S \\ln{\\left( 1 - \\alpha \\right)} \\right)}
+
     """
     mean_alpha = np.average(alpha, axis=0, weights=surfaces)
     S = np.sum(surfaces, axis=0)
@@ -88,10 +90,10 @@ def t60_millington(surfaces, alpha, volume, c=343):
     """
     Reverberation time according to Millington.
     
-    :param surfaces: Surfaces
-    :param alpha: Mean absorption coefficient or by frequency bands
-    :param volume: Volume
-    :param c: Speed of sound
+    :param surfaces: Surfaces :math:`S`.
+    :param alpha: Mean absorption coefficient :math:`\\alpha` or by frequency bands
+    :param volume: Volume of the room :math:`V`.
+    :param c: Speed of sound :math:`c`.
     """
     mean_alpha = np.average(alpha, axis=0, weights=surfaces)
     A = -np.sum(surfaces[:, np.newaxis] * np.log(1 - mean_alpha), axis=0)
@@ -103,10 +105,10 @@ def t60_fitzroy(surfaces, alpha, volume, c=343):
     """
     Reverberation time according to Fitzroy.
     
-    :param surfaces: Surfaces
-    :param alpha: Mean absorption coefficient or by frequency bands
-    :param volume: Volume
-    :param c: Speed of sound
+    :param surfaces: Surfaces :math:`S`.
+    :param alpha: Mean absorption coefficient :math:`\\alpha` or by frequency bands
+    :param volume: Volume of the room :math:`V`.
+    :param c: Speed of sound :math:`c`.
     """
     Sx = np.sum(surfaces[0:2])
     Sy = np.sum(surfaces[2:4])
@@ -125,18 +127,13 @@ def t60_arau(Sx, Sy, Sz, alpha, volume, c=343):
     """
     Reverberation time according to Arau. [#arau]_
 
-    ``Sx``: Sum of side walls.
-
-    ``Sy``: Sum of other side walls.
-
-    ``Sz``: Sum of room and floor surfaces.
-
-    ``alpha``: Absorption coefficients for Sx, Sy and Sz, respectively.
-
-    ``volume``: Volume of the room.
-
-    ``c``: Speed of sound.
-
+    :param Sx: Total surface perpendicular to x-axis (yz-plane) :math:`S_{x}`.
+    :param Sy: Total surface perpendicular to y-axis (xz-plane) :math:`S_{y}`.
+    :param Sz: Total surface perpendicular to z-axis (xy-plane) :math:`S_{z}`.
+    :param alpha: Absorption coefficients :math:`\\mathbf{\\alpha} = \\left[ \\alpha_x, \\alpha_y, \\alpha_z \\right]`
+    :param volume: Volume of the room :math:`V`.
+    :param c: Speed of sound :math:`c`.
+    
     .. [#arau] For more details, plase see
        http://www.arauacustica.com/files/publicaciones/pdf_esp_7.pdf
     """
@@ -150,12 +147,13 @@ def t60_arau(Sx, Sy, Sz, alpha, volume, c=343):
 
 
 def t60_impulse(file_name, bands, rt='t30'):
-    """Reverberation time from a WAV impulse response.
+    """
+    Reverberation time from a WAV impulse response.
 
     :param file_name: name of the WAV file containing the impulse response.
     :param bands: Octave or third bands as NumPy array.
-    :param rt: Reverberation time estimator. It accepts `'t30'`, `'t20'`,
-    `'t10'` and `'edt'`.
+    :param rt: Reverberation time estimator. It accepts `'t30'`, `'t20'`, `'t10'` and `'edt'`.
+    
     """
     fs, raw_signal = wavfile.read(file_name)
     band_type = _check_band_type(bands)

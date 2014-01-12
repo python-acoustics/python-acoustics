@@ -15,7 +15,9 @@ def band_of_frequency(f, order=1, ref=1000.0):
     """
     Calculate the band ``n`` from a given frequency.
     
-    :param f: Frequency
+    :param f: Frequency :math:`f`.
+    :param order: Band order.
+    :param ref: Reference center frequency :math:`f_0`.
     """
     return np.round( ( np.log2(f/ref) - 1.0/order ) * order)
 

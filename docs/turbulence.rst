@@ -1,7 +1,5 @@
-
 Turbulence
 ==========
-
 
 ================    
 Abstract classes
@@ -10,7 +8,6 @@ Abstract classes
 .. automodule:: acoustics._turbulence
     :show-inheritance:
     :members:
-    
     
 ==========    
 Turbulence
