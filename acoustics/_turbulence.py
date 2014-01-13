@@ -348,7 +348,7 @@ class Spectrum2D(Spectrum):
             k_nr = k_n * np.cos(theta_n)    # Wavenumber component
             k_nz = k_n * np.sin(theta_n)    # Wavenumber component
             
-            r_mesh, z_mesh = np.meshgrid(r, z)
+            r_mesh, z_mesh = np.meshgrid(r, z, indexing='ij')
             
             #k_n_v = np.vstack( , k_n * np.sin(theta))
             
@@ -370,7 +370,7 @@ class Spectrum2D(Spectrum):
         fig = plt.figure()
         ax = fig.add_subplot(111)
         ax.set_title("Refractive-index field")
-        plot = ax.pcolormesh(r, z, self.field())
+        plot = ax.pcolormesh(r, z, self.field().T)
         ax.set_xlabel(r'$r$ in m')
         ax.set_ylabel(r'$z$ in m')
         c = fig.colorbar(plot)
