@@ -4,6 +4,23 @@ import numpy as np
 from acoustics.utils.utils import esum, _is_1d
 
 
+OCTAVE_CENTER_FREQUENCIES = np.array([16, 31.5, 63, 125, 250, 500,
+                             1000, 2000, 4000, 8000, 16000])
+"""
+Preferred 1/1-octave band center frequencies.
+"""
+
+THIRD_OCTAVE_CENTER_FREQUENCIES = np.array([12.5,     16,    20,   25, 31.5,    40,
+                                50,       63,    80,  100,  125,   160,
+                                200,     250,   315,  400,  500,   630,
+                                800,    1000,  1250, 1600, 2000,  2500,
+                                3150,   4000,  5000, 6300, 8000, 10000,
+                                12500, 16000, 20000])
+"""
+Preferred 1/3-octave band center frequencies.
+"""
+
+
 def octave(first, last):
     """
     Generate a Numpy array for central frequencies of octave bands.
@@ -24,8 +41,7 @@ def octave(first, last):
     octave_bands : array
         An array of centerfrequency octave bands.
     """
-    octave_bands = np.array([16, 31.5, 63, 125, 250, 500,
-                             1000, 2000, 4000, 8000, 16000])
+    octave_bands = OCTAVE_CENTER_FREQUENCIES
     low = np.where(octave_bands == first)[0]
     high = np.where(octave_bands == last)[0]
     return octave_bands[low: high+1]
@@ -56,12 +72,7 @@ def third(first, last):
     octave_bands : array
         An array of centerfrequency third octave bands.
     """
-    third_oct_bands = np.array([12.5,     16,    20,   25, 31.5,    40,
-                                50,       63,    80,  100,  125,   160,
-                                200,     250,   315,  400,  500,   630,
-                                800,    1000,  1250, 1600, 2000,  2500,
-                                3150,   4000,  5000, 6300, 8000, 10000,
-                                12500, 16000, 20000])
+    third_oct_bands = THIRD_OCTAVE_CENTER_FREQUENCIES
     low = np.where(third_oct_bands == first)[0]
     high = np.where(third_oct_bands == last)[0]
     return third_oct_bands[low: high+1]
