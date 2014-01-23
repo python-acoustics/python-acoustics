@@ -275,7 +275,6 @@ class VonKarman2DTempWind(VonKarmanTempWind, Spectrum2D):
         elif plane == (0,1,1):  # yz-plane
             k_var = k
         
-        
         f1 = A / (k**2.0 + K_0**2.0 )**(8.0/6.0)
         f2 = gamma(1.0/2.0)*gamma(8.0/6.0) / gamma(11.0/6.0) * C_T**2.0/(4.0*T_0**2.0)
         f3 = gamma(3.0/2.0)*gamma(8.0/6.0)/gamma(17.0/6.0) + k_var**2.0/(k**2.0+K_0**2.0) * gamma(1.0/2.0)*gamma(14.0/6.0)/gamma(17.0/6.0)
@@ -305,43 +304,9 @@ class Comparison(object):
     def __init__(self, items):
         
         self.items = items
-    
-    
-    ###def plot_field(self, filename=None):
-        ###"""
-        ###Create a plot of the fields.
-        
-        ###:param filename: filename
-        
-        ###"""
-        ###def plot_field(self, filename=None):
-        ###"""
-        ###Calculate and plot a random field.
-        ###"""
-        ###r, z = self._sizes[self.plane]
-        ###r = np.arange(0.0, r, self.spatial_resolution)
-        ###z = np.arange(0.0, z, self.spatial_resolution)
-        
-        
-        ###fig = plt.figure()
-        
-        ###for item in self.items:
-            ###ax = fig.add_subplot(111)
-            ###ax.set_title("Refractive-index field")
-            ###plot = ax.pcolormesh(r, z, self.field())
-            ###ax.set_xlabel(r'$r$ in m')
-            ###ax.set_ylabel(r'$z$ in m')
-            ###c = fig.colorbar(plot)
-            ###c.set_label(r'Refractive-index fluctuation $\mu$')
-        
-        ###if filename:
-            ###fig.savefig(filename)
-        ###else:
-            ###fig.show()
-
-        
-        
-        
+        """
+        Turbulence spectra.
+        """
     
     def plot_mode_amplitudes(self, filename=None):
         """
@@ -390,6 +355,118 @@ class Comparison(object):
     
     
     
+class Field2D(object):
+    """
+    Refractive index field.
+    """
+    
+    mu = None
+    """
+    Refractive index.
+    """
+    
+    def __init__(self, x, y, z, spatial_resolution, spectrum):
+        
+        self.x = x
+        """
+        Size of field in x-direction.
+        """
+        self.y = y
+        """
+        Size of field in y-direction.
+        """
+        self.z = z
+        """
+        Size of field in z-direction.
+        """
+        self.spatial_resolution = spatial_resolution
+        """
+        Spatial resolution.
+        """
+        self.spectrum = spectrum
+        """
+        Spectrum.
+        """
+    
+    def randomize(self):
+        """
+        Create new random values. This is a shortcut to :meth:`Spectrum2D.randomize()`.
+        """
+        self.spectrum.randomize()
+        return self
+    
+    #@numba.autojit
+    def generate(self):
+        """
+        Create a random realization of the refractive-index fluctuations. To actually create a random field, call :meth:`randomize` first.
+        
+        .. math:: \\mu(r) = \\sqrt{4\\pi \\Delta k} \\sum_n \\cos{\\left( \\mathbf{k}_n \cdot \\mathbf{r} + \\alpha_n \\right)} \\sqrt{F(\\mathbf{k_n} k_n}
+        
+        """
+    
+        r = self.x
+        z = self.z
+        
+        r = np.arange(np.ceil(r/self.spatial_resolution)) * self.spatial_resolution
+        z = np.arange(np.ceil(z/self.spatial_resolution)) * self.spatial_resolution
+        
+        #r = np.arange(0.0, r, self.spatial_resolution)
+        #z = np.arange(0.0, z, self.spatial_resolution)
+        
+        delta_k = self.spectrum.wavenumber_resolution
+        
+        mu = list()
+        
+        mode_amplitudes = self.spectrum.mode_amplitude()
+        
+        for n, G, theta_n, alpha_n in zip(self.spectrum.modes, mode_amplitudes, self.spectrum.theta, self.spectrum.alpha):
+            
+            k_n = n * delta_k
+
+            k_nr = k_n * np.cos(theta_n)    # Wavenumber component
+            k_nz = k_n * np.sin(theta_n)    # Wavenumber component
+            
+            #r_mesh, z_mesh = np.meshgrid(r, z, indexing='ij')
+            r_mesh, z_mesh = np.meshgrid(r, z)
+            r_mesh = r_mesh.T
+            z_mesh = z_mesh.T
+            
+            #k_n_v = np.vstack( , k_n * np.sin(theta))
+            
+            mu_n = G * np.cos(r_mesh * k_nr + z_mesh * k_nz + alpha_n)
+            mu.append(mu_n)
+        
+        self.mu = sum(mu)
+        return self
+        
+    
+    def plot(self, filename=None):
+        """
+        Plot the field.
+        """
+        
+        if self.mu is None:
+            raise ValueError("Need to calculate the refractive index first.")
+        
+        r = self.x
+        z = self.z
+        r = np.arange(np.ceil(r/self.spatial_resolution)) * self.spatial_resolution
+        z = np.arange(np.ceil(z/self.spatial_resolution)) * self.spatial_resolution
+        
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.set_title("Refractive-index field")
+        plot = ax.pcolormesh(r, z, self.mu.T)
+        ax.set_xlabel(r'$r$ in m')
+        ax.set_ylabel(r'$z$ in m')
+        c = fig.colorbar(plot)
+        c.set_label(r'Refractive-index fluctuation $\mu$')
+        
+        if filename:
+            fig.savefig(filename)
+        else:
+            fig.show()
+
 
 
 
