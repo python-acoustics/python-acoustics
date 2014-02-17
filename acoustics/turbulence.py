@@ -453,8 +453,8 @@ class Field2D(object):
         r = np.arange(np.ceil(r/self.spatial_resolution)) * self.spatial_resolution
         z = np.arange(np.ceil(z/self.spatial_resolution)) * self.spatial_resolution
         
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
+        fig = plt.figure(figsize=(16, 12), dpi=80)
+        ax = fig.add_subplot(111, aspect='equal')
         ax.set_title("Refractive-index field")
         plot = ax.pcolormesh(r, z, self.mu.T)
         ax.set_xlabel(r'$r$ in m')
