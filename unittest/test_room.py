@@ -3,19 +3,19 @@ from numpy.testing import assert_almost_equal, assert_array_almost_equal
 
 import pytest
 
-from acoustics.room import (t60_sabine, t60_eyring, t60_millington,
-                            t60_fitzroy, t60_arau, t60_impulse)
-from acoustics.room import mean_alpha, nrc
+from acoustics.room import (mean_alpha, nrc, t60_sabine, t60_eyring,
+                            t60_millington, t60_fitzroy, t60_arau,
+                            t60_impulse, c50, c80)
 from acoustics.core.bands import octave, third
 
 
-def setup_module(reverberation):
-    reverberation.surfaces = np.array([240, 600, 500])
-    reverberation.alpha = np.array([0.1, 0.25, 0.45])
-    reverberation.alpha_bands = np.array([[0.1,   0.1, 0.1, 0.1],
+def setup_module(room):
+    room.surfaces = np.array([240, 600, 500])
+    room.alpha = np.array([0.1, 0.25, 0.45])
+    room.alpha_bands = np.array([[0.1,   0.1, 0.1, 0.1],
                                           [0.25, 0.25, 0.25, 0.25],
                                           [0.45, 0.45, 0.45, 0.45]])
-    reverberation.volume = 3000
+    room.volume = 3000
 
 
 def test_t60_sabine():
@@ -182,5 +182,37 @@ def test_t60_impulse(file_name, bands, rt, expected):
     assert_array_almost_equal(calculated, expected, decimal=3)
 
 
-def teardown_module(reverberation):
+@pytest.mark.parametrize("file_name, bands, expected", [
+    ('data/living_room_1.wav', octave(63, 8000),
+     np.array([9.810090860, 17.78107771, 23.63256910, 26.59021365,
+               29.91912315, 31.17249929, 27.26166407, 28.93600729])),
+    ('data/living_room_1.wav', third(100, 5000),
+     np.array([7.48464265,  12.15184964, 12.87283779, 14.80677394,
+               22.96706923, 23.21976252, 20.08290893, 19.84378251,
+               28.50723841, 30.62900321, 29.67155789, 27.40158394,
+               31.95718416, 30.73367102, 30.46496850, 28.48307909,
+               29.35669929, 24.7029713])),
+])
+def test_c50(file_name, bands, expected):
+    calculated = c50(file_name, bands)
+    assert_array_almost_equal(calculated, expected)
+
+
+@pytest.mark.parametrize("file_name, bands, expected", [
+    ('data/living_room_1.wav', octave(63, 8000),
+     np.array([18.56362713, 23.07404213, 27.01531388, 31.74336460,
+               35.46917050, 36.83616671, 33.46332100, 36.06266455])),
+    ('data/living_room_1.wav', third(100, 5000),
+     np.array([15.46541178, 17.43681184, 20.47858056, 24.82982021,
+               27.83519017, 27.46105495, 22.48741892, 26.65080093,
+               34.58317523, 34.98894487, 34.69216874, 32.8265513 ,
+               38.33906658, 38.39338847, 34.32216410, 34.1181196 ,
+               34.85016284, 31.88701492])),
+])
+def test_c80(file_name, bands, expected):
+    calculated = c80(file_name, bands)
+    assert_array_almost_equal(calculated, expected)
+
+
+def teardown_module(room):
     pass
