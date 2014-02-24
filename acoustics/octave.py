@@ -11,7 +11,13 @@ from __future__ import division
 import numpy as np
 
 
-def band_of_frequency(f, order=1, ref=1000.0):
+REFERENCE_FREQUENCY = 1000.0
+"""
+Reference frequency.
+"""
+
+
+def band_of_frequency(f, order=1, ref=REFERENCE_FREQUENCY):
     """
     Calculate the band ``n`` from a given frequency.
     
