@@ -134,7 +134,7 @@ def t60_arau(Sx, Sy, Sz, alpha, volume, c=343):
     :param volume: Volume of the room :math:`V`.
     :param c: Speed of sound :math:`c`.
     
-    .. [#arau] For more details, plase see
+    .. [#arau] For more details, please see
        http://www.arauacustica.com/files/publicaciones/pdf_esp_7.pdf
     """
     a_x = -np.log(1 - alpha[0])
@@ -209,3 +209,75 @@ def t60_impulse(file_name, bands, rt='t30'):
         db_regress_end = (end - intercept) / slope
         t60[band] = factor * (db_regress_end - db_regress_init)
     return t60
+
+
+def clarity(time, signal, fs):
+    """
+    Clarity from an impulse response.
+    :param time: Time in miliseconds (e.g.: 50, 80).
+    :param signal: Impulse response.
+    :type signal: :class:`np.ndarray`
+    :param fs: Sample frequency.
+    """
+    h2 = signal**2
+    t = (time/1000)*fs + 1
+    return 10*np.log10((np.sum(h2[:t])/np.sum(h2[t:])))
+
+
+def clarity_bands(time, signal, fs, bands):
+    """
+    Clarity in bands from an impulse response.
+    :param time: Time in miliseconds (e.g.: 50, 80).
+    :param signal: Impulse response.
+    :type signal: :class:`np.ndarray`
+    :param fs: Sample frequency.
+    """
+    band_type = _check_band_type(bands)
+
+    if band_type is 'octave':
+        low = octave_low(bands[0], bands[-1])
+        high = octave_high(bands[0], bands[-1])
+    elif band_type is 'third':
+        low = third_low(bands[0], bands[-1])
+        high = third_high(bands[0], bands[-1])
+
+    c = np.zeros(bands.size)
+    for band in range(bands.size):
+        filtered_signal = butter_bandpass_filter(signal, low[band],high[band],
+                                                 fs, order=3)
+        c[band] = clarity(time, filtered_signal, fs)
+    return c
+
+
+def c50(file_name, bands=None):
+    """
+    Clarity for 50 miliseconds from a file.
+    :param file_name: File name (only WAV is supported).
+    :type file_name: :class:`str`
+    :param bands: Bands of calculation (optional). Only support standard octave
+    and third-octave bands.
+    :type bands: :class:`np.ndarray`
+    """
+    fs, signal = wavfile.read(file_name)
+
+    if bands is not None:
+        return clarity_bands(50, signal, fs, bands)
+    else:
+        return clarity(50, signal, fs)
+
+
+def c80(file_name, bands=None):
+    """
+    Clarity for 80 miliseconds from a file.
+    :param file_name: File name (only WAV is supported).
+    :type file_name: :class:`str`
+    :param bands: Bands of calculation (optional). Only support standard octave
+    and third-octave bands.
+    :type bands: :class:`np.ndarray`
+    """
+    fs, signal = wavfile.read(file_name)
+
+    if bands is not None:
+        return clarity_bands(80, signal, fs, bands)
+    else:
+        return clarity(80, signal, fs)
