@@ -12,6 +12,10 @@ from scipy.special import iv as bessel  # Modified Bessel function of the first 
 
 from ._turbulence import *
 
+try:
+    import numba
+except ImportError:
+    pass
 
 class Gaussian1DTemp(GaussianTemp, Spectrum1D):
     """
@@ -354,7 +358,29 @@ class Comparison(object):
             fig.show()
     
     
+
+def _generate(r, z, delta_k, mode_amplitudes, modes, theta, alpha):
     
+    mu = np.zeros((len(r), len(z)), dtype='float64')
+    
+    for n, G, theta_n, alpha_n in zip(modes, mode_amplitudes, theta, alpha):
+        
+        k_n = n * delta_k
+
+        k_nr = k_n * np.cos(theta_n)    # Wavenumber component
+        k_nz = k_n * np.sin(theta_n)    # Wavenumber component
+        
+        #r_mesh, z_mesh = np.meshgrid(r, z, indexing='ij')
+        r_mesh, z_mesh = np.meshgrid(r, z)
+        r_mesh = r_mesh.T
+        z_mesh = z_mesh.T
+        
+        mu_n = G * np.cos(r_mesh * k_nr + z_mesh * k_nz + alpha_n)
+        mu = mu + mu_n
+    
+    return mu
+
+
 class Field2D(object):
     """
     Refractive index field.
@@ -387,6 +413,12 @@ class Field2D(object):
         """
         Spectrum.
         """
+        
+        try:
+            self._generate = autojit(_generate)
+        except NameError:
+            self._generate = _generate
+        
     
     def randomize(self):
         """
@@ -395,50 +427,71 @@ class Field2D(object):
         self.spectrum.randomize()
         return self
     
-    #@numba.autojit
     def generate(self):
-        """
-        Create a random realization of the refractive-index fluctuations. To actually create a random field, call :meth:`randomize` first.
-        
-        .. math:: \\mu(r) = \\sqrt{4\\pi \\Delta k} \\sum_n \\cos{\\left( \\mathbf{k}_n \cdot \\mathbf{r} + \\alpha_n \\right)} \\sqrt{F(\\mathbf{k_n} k_n}
-        
-        """
-    
         r = self.x
         z = self.z
-        
         r = np.arange(np.ceil(r/self.spatial_resolution)) * self.spatial_resolution
         z = np.arange(np.ceil(z/self.spatial_resolution)) * self.spatial_resolution
-        
-        #r = np.arange(0.0, r, self.spatial_resolution)
-        #z = np.arange(0.0, z, self.spatial_resolution)
-        
         delta_k = self.spectrum.wavenumber_resolution
         
-        mu = list()
+        self.mu = self._generate(r, z, delta_k, self.spectrum.mode_amplitude(), self.spectrum.modes, self.spectrum.theta, self.spectrum.alpha)
         
-        mode_amplitudes = self.spectrum.mode_amplitude()
-        
-        for n, G, theta_n, alpha_n in zip(self.spectrum.modes, mode_amplitudes, self.spectrum.theta, self.spectrum.alpha):
-            
-            k_n = n * delta_k
-
-            k_nr = k_n * np.cos(theta_n)    # Wavenumber component
-            k_nz = k_n * np.sin(theta_n)    # Wavenumber component
-            
-            #r_mesh, z_mesh = np.meshgrid(r, z, indexing='ij')
-            r_mesh, z_mesh = np.meshgrid(r, z)
-            r_mesh = r_mesh.T
-            z_mesh = z_mesh.T
-            
-            #k_n_v = np.vstack( , k_n * np.sin(theta))
-            
-            mu_n = G * np.cos(r_mesh * k_nr + z_mesh * k_nz + alpha_n)
-            mu.append(mu_n)
-        
-        self.mu = sum(mu)
         return self
+    
+    
+    #def generate(self):
+        #"""
+        #Create a random realization of the refractive-index fluctuations. To actually create a random field, call :meth:`randomize` first.
         
+        #.. math:: \\mu(r) = \\sqrt{4\\pi \\Delta k} \\sum_n \\cos{\\left( \\mathbf{k}_n \cdot \\mathbf{r} + \\alpha_n \\right)} \\sqrt{F(\\mathbf{k_n} k_n}
+        
+        #"""
+    
+        #r = self.x
+        #z = self.z
+        
+        #r = np.arange(np.ceil(r/self.spatial_resolution)) * self.spatial_resolution
+        #z = np.arange(np.ceil(z/self.spatial_resolution)) * self.spatial_resolution
+        
+        ##r = np.arange(0.0, r, self.spatial_resolution)
+        ##z = np.arange(0.0, z, self.spatial_resolution)
+        
+        #delta_k = self.spectrum.wavenumber_resolution
+        
+        #mu = list()
+        
+        #mode_amplitudes = self.spectrum.mode_amplitude()
+        
+        #for n, G, theta_n, alpha_n in zip(self.spectrum.modes, mode_amplitudes, self.spectrum.theta, self.spectrum.alpha):
+            
+            #k_n = n * delta_k
+
+            #k_nr = k_n * np.cos(theta_n)    # Wavenumber component
+            #k_nz = k_n * np.sin(theta_n)    # Wavenumber component
+            
+            ##r_mesh, z_mesh = np.meshgrid(r, z, indexing='ij')
+            #r_mesh, z_mesh = np.meshgrid(r, z)
+            #r_mesh = r_mesh.T
+            #z_mesh = z_mesh.T
+            
+            ##k_n_v = np.vstack( , k_n * np.sin(theta))
+            
+            #mu_n = G * np.cos(r_mesh * k_nr + z_mesh * k_nz + alpha_n)
+            #mu.append(mu_n)
+        
+        #self.mu = sum(mu)
+        #return self
+        
+    #def plot_correlation(self):
+        #"""
+        #Plot the correlation.
+        #"""
+        
+        #fig = plt.figure(figsize=(16,12)
+        
+        
+    
+    
     
     def plot(self, filename=None):
         """
