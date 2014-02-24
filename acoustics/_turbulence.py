@@ -248,21 +248,17 @@ class Spectrum2D(Spectrum):
         ax = fig.add_subplot(111)
         #ax.set_title("Mode {}".format(n))
 
-        ax.plot(self.wavenumber, self.mode_amplitude())
+        ax.semilogx(self.wavenumber, self.mode_amplitude())
         ax.set_xlabel(r'$k$ in $\mathrm{m}^{-1}$')
         ax.set_ylabel(r'$G$')
         ax.grid()
+        ax.set_title('Mode amplitude as function of wavenumber')
         
         if filename:
             fig.savefig(filename)
         else:
             fig.show()
 
-    def plot_correlation(self):
-        """
-        Plot the correlation function.
-        """
-        pass
     
     def plot_structure(self):
         """
@@ -278,10 +274,12 @@ class Spectrum2D(Spectrum):
         fig = plt.figure()
         ax = fig.add_subplot(111)
         
-        ax.plot(self.wavenumber, self.spectral_density())
+        ax.loglog(self.wavenumber, self.spectral_density())
         ax.set_xlabel(r'$k$ in $\mathrm{m}^{-1}$')
         ax.set_ylabel(r'$F$')
         ax.grid()
+        ax.set_title('Spectral density as function of wavenumber')
+        
         
         if filename:
             fig.savefig(filename)
@@ -509,7 +507,7 @@ class GaussianTempWind(object):
         .. math:: \\rho = \\sqrt{y^2 + z^2}
         
         """
-        return (x**2.0 + y**2.0)**0.5
+        return (z**2.0 + y**2.0)**0.5
     
     
     def spectral_density(self):
