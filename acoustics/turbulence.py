@@ -358,25 +358,29 @@ class Comparison(object):
             fig.show()
     
     
-
 def _generate(r, z, delta_k, mode_amplitudes, modes, theta, alpha):
     
     mu = np.zeros((len(r), len(z)), dtype='float64')
     
+    r_mesh, z_mesh = np.meshgrid(r, z)
+    r_mesh = r_mesh.T
+    z_mesh = z_mesh.T
+    #r_mesh, z_mesh = np.meshgrid(r, z, indexing='ij')
+  
     for n, G, theta_n, alpha_n in zip(modes, mode_amplitudes, theta, alpha):
+    #for i in range(len(modes)): #zip(modes, mode_amplitudes, theta, alpha):
+        #n = modes[i]
+        #G = mode_amplitudes[i]
+        #theta_n = theta[i]
+        #alpha_n = alpha[i]
         
         k_n = n * delta_k
 
         k_nr = k_n * np.cos(theta_n)    # Wavenumber component
         k_nz = k_n * np.sin(theta_n)    # Wavenumber component
-        
-        #r_mesh, z_mesh = np.meshgrid(r, z, indexing='ij')
-        r_mesh, z_mesh = np.meshgrid(r, z)
-        r_mesh = r_mesh.T
-        z_mesh = z_mesh.T
-        
+
         mu_n = G * np.cos(r_mesh * k_nr + z_mesh * k_nz + alpha_n)
-        mu = mu + mu_n
+        mu += mu_n
     
     return mu
 
@@ -415,7 +419,7 @@ class Field2D(object):
         """
         
         try:
-            self._generate = autojit(_generate)
+            self._generate = numba.autojit(_generate)
         except NameError:
             self._generate = _generate
         
