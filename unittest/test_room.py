@@ -5,7 +5,7 @@ import pytest
 
 from acoustics.room import (mean_alpha, nrc, t60_sabine, t60_eyring,
                             t60_millington, t60_fitzroy, t60_arau,
-                            t60_impulse, c50, c80)
+                            t60_impulse, c50_from_file, c80_from_file)
 from acoustics.core.bands import octave, third
 
 
@@ -193,8 +193,8 @@ def test_t60_impulse(file_name, bands, rt, expected):
                31.95718416, 30.73367102, 30.46496850, 28.48307909,
                29.35669929, 24.7029713])),
 ])
-def test_c50(file_name, bands, expected):
-    calculated = c50(file_name, bands)
+def test_c50_from_file(file_name, bands, expected):
+    calculated = c50_from_file(file_name, bands)
     assert_array_almost_equal(calculated, expected)
 
 
@@ -209,8 +209,8 @@ def test_c50(file_name, bands, expected):
                38.33906658, 38.39338847, 34.32216410, 34.1181196 ,
                34.85016284, 31.88701492])),
 ])
-def test_c80(file_name, bands, expected):
-    calculated = c80(file_name, bands)
+def test_c80_from_file(file_name, bands, expected):
+    calculated = c80_from_file(file_name, bands)
     assert_array_almost_equal(calculated, expected)
 
 

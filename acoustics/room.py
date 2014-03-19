@@ -14,6 +14,7 @@ from acoustics.signal import butter_bandpass_filter
 from acoustics.core.bands import (_check_band_type, octave_low, octave_high,
                                   third_low, third_high)
 
+
 def mean_alpha(alphas, surfaces):
     """
     Calculate mean of absorption coefficients.
@@ -211,26 +212,16 @@ def t60_impulse(file_name, bands, rt='t30'):
     return t60
 
 
-def clarity(time, signal, fs):
+def clarity(time, signal, fs, bands=None):
     """
     Clarity from an impulse response.
     :param time: Time in miliseconds (e.g.: 50, 80).
     :param signal: Impulse response.
     :type signal: :class:`np.ndarray`
     :param fs: Sample frequency.
-    """
-    h2 = signal**2
-    t = (time/1000)*fs + 1
-    return 10*np.log10((np.sum(h2[:t])/np.sum(h2[t:])))
-
-
-def clarity_bands(time, signal, fs, bands):
-    """
-    Clarity in bands from an impulse response.
-    :param time: Time in miliseconds (e.g.: 50, 80).
-    :param signal: Impulse response.
-    :type signal: :class:`np.ndarray`
-    :param fs: Sample frequency.
+    :param bands: Bands of calculation (optional). Only support standard octave
+    and third-octave bands.
+    :type bands: :class:`np.ndarray`
     """
     band_type = _check_band_type(bands)
 
@@ -245,11 +236,13 @@ def clarity_bands(time, signal, fs, bands):
     for band in range(bands.size):
         filtered_signal = butter_bandpass_filter(signal, low[band],high[band],
                                                  fs, order=3)
-        c[band] = clarity(time, filtered_signal, fs)
+        h2 = filtered_signal**2
+        t = (time/1000)*fs + 1
+        c[band] = 10*np.log10((np.sum(h2[:t])/np.sum(h2[t:])))
     return c
 
 
-def c50(file_name, bands=None):
+def c50_from_file(file_name, bands=None):
     """
     Clarity for 50 miliseconds from a file.
     :param file_name: File name (only WAV is supported).
@@ -259,14 +252,10 @@ def c50(file_name, bands=None):
     :type bands: :class:`np.ndarray`
     """
     fs, signal = wavfile.read(file_name)
-
-    if bands is not None:
-        return clarity_bands(50, signal, fs, bands)
-    else:
-        return clarity(50, signal, fs)
+    return clarity(50, signal, fs, bands)
 
 
-def c80(file_name, bands=None):
+def c80_from_file(file_name, bands=None):
     """
     Clarity for 80 miliseconds from a file.
     :param file_name: File name (only WAV is supported).
@@ -276,8 +265,4 @@ def c80(file_name, bands=None):
     :type bands: :class:`np.ndarray`
     """
     fs, signal = wavfile.read(file_name)
-
-    if bands is not None:
-        return clarity_bands(80, signal, fs, bands)
-    else:
-        return clarity(80, signal, fs)
+    return clarity(80, signal, fs, bands)
