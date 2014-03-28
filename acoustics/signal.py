@@ -27,12 +27,13 @@ def butter_bandpass_filter(data, lowcut, highcut, fs, order=3):
     return y
 
 
-def convolve(signal, ltv):
+def convolve(signal, ltv, mode='full'):
     """
     Perform convolution of signal with linear time-variant system ``ltv``.
     
     :param signal: Vector representing input signal :math:`u`.
     :param ltv: 2D array where each column represents an impulse response
+    :param mode: 'full', 'valid', or 'same'. See :func:`np.convolve` for an explanation of the options.
     
     The convolution of two sequences is given by
     
@@ -50,8 +51,24 @@ def convolve(signal, ltv):
     The input matrix ``ltv`` thus represents the non-shifted version of the Toeplitz matrix.
     
     """
+    
+    assert(len(signal) == ltv.shape[1])
+    
     n = ltv.shape[0] + len(signal) - 1                          # Length of output vector
     un = np.concatenate((signal, np.zeros(ltv.shape[0] - 1)))   # Resize input vector
     offsets = np.arange(0, -ltv.shape[0], -1)                   # Offsets for impulse responses
     Cs = spdiags(ltv, offsets, n, n)                            # Sparse representation of IR's.
-    return Cs.dot(un)                                           # Calculate dot product.
+    out = Cs.dot(un)                                            # Calculate dot product.
+
+    if mode=='full':
+        return out
+    elif mode=='same':
+        start = ltv.shape[0]/2 - 1 + ltv.shape[0]%2
+        stop = len(signal) + ltv.shape[0]/2 - 1 + ltv.shape[0]%2
+        return out[start:stop]
+    elif mode=='valid':
+        length = len(signal) - ltv.shape[0]
+        start = ltv.shape[0] - 1
+        stop = len(signal) 
+        return out[start:stop]
+
