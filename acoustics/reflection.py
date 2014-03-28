@@ -4,8 +4,11 @@ The reflection module contains functions for calculating reflection factors and 
 from __future__ import division
 
 import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1 import AxesGrid, make_axes_locatable
 
 from scipy.special import erfc
+
 
 SPECIFIC_HEAT_RATIO = 1.4
 """Specific heat ratio of air :math:`\\gamma`."""
@@ -23,6 +26,63 @@ class Boundary(object):
     
     def __init__(self, frequency, flow_resistivity, density=DENSITY, soundspeed=SOUNDSPEED, porosity_decrease=POROSITY_DECREASE, specific_heat_ratio=SPECIFIC_HEAT_RATIO, angle=None, distance=None, impedance_model='db', reflection_model='plane'):
         
+        
+        self.frequency = frequency
+        """
+        Frequency. Single value or vector for a frequency range.
+        """
+        
+        self.flow_resistivity = flow_resistivity
+        """
+        Flow resistivity :math:`\\sigma`.
+        """
+        
+        self.density = density
+        """
+        Density of air :math:`\\rho`.
+        
+        .. note:: This value is only required for when calculating the impedance according to Attenborough's model. See :func:`impedance_attenborough`.
+        
+        """
+        
+        self.soundspeed = soundspeed
+        """
+        Speed of sound in air :math:`c`.
+        
+        .. note:: This value is required when calculating the impedance according to Attenborough's model or when calculating the spherical wave reflection factor. See respectively :func:`impedance_attenborough` and :func:`reflection_factor_spherical_wave`.
+        
+        """
+        
+        self.porosity_decrease = porosity_decrease
+        """
+        Rate of exponential decrease of porosity with depth :math:`\\alpha`.
+        
+        .. note:: This value is only required for when calculating the impedance according to Attenborough's model. See :func:`impedance_attenborough`.
+        
+        """
+        
+        self.specific_heat_ratio = specific_heat_ratio
+        """
+        Ratio of specific heats :math:`\\gamma` for air.
+        
+        .. note:: This value is only required for when calculating the impedance according to Attenborough's model. See :func:`impedance_attenborough`.
+        
+        """
+        
+        self.angle = angle
+        """
+        Angle of incidence :math:`\\theta`.
+        
+        """
+        
+        self.distance = distance
+        """
+        Path length of the reflected ray :math:`r`.
+        
+        .. note:: This value is only required for when calculating the spherical wave reflection factor. See :func:`reflection_factor_spherical_wave`.
+        
+        """
+
         self.impedance_model = impedance_model
         """
         Impedance model.
@@ -37,7 +97,16 @@ class Boundary(object):
         Possibilities are ``'plane'`` and ``'spherical'``` for respectively :func:`reflection_factor_plane_wave` and :func:`reflection_factor_spherical_wave`.
         """
 
+    @property
+    def wavenumber(self):
+        """
+        Wavenumber :math:`k`.
+        
+        .. math:: k = \\frac{2 \\pi f}{c}
+        """
+        return 2.0 * np.pi * self.frequency / self.soundspeed
 
+    @property
     def impedance(self):
         """
         Impedance according to chosen impedance model defined using :meth:`impedance_model`.
@@ -47,7 +116,7 @@ class Boundary(object):
         if self.impedance_model=='att':
             return impedance_attenborough(self.frequency, self.flow_resistivity, self.density, self.soundspeed, self.porosity_decrease, self.specific_heat_ratio)
 
-
+    @property
     def reflection_factor(self):
         """
         Reflection factor according to chosen reflection factor model defined using :meth:`reflection_model`.
@@ -55,18 +124,22 @@ class Boundary(object):
         if self.angle is None:
             raise AttributeError('Cannot calculate reflection factor. self.angle has not been specified.')
         
-        if self.impedance_model=='plane':
-            return reflection_factor_plane_wave(self.impedance, self.angle)
-        if self.impedance_model=='spherical':
+        
+        
+        if self.reflection_model=='plane':
+            return reflection_factor_plane_wave(*np.meshgrid(self.impedance, self.angle))
+        elif self.reflection_model=='spherical':
             if self.distance is None:
                 raise AttributeError('Cannot calculate reflection factor. self.distance has not been specified.')
             else:
-                return reflection_factor_spherical_wave(self.impedance, self.angle)
-            
-            
-    def plot_impedance(filename=None):
+                return reflection_factor_spherical_wave(*np.meshgrid(self.impedance, self.angle), distance=self.distance, wavenumber=self.wavenumber)
+        else:
+            raise RuntimeError("Oops...")
+        
+        
+    def plot_impedance(self, filename=None):
         """
-        Plot impedance.
+        Plot magnitude and phase of the impedance as function of frequency.
         """
         
         fig = plt.figure()
@@ -91,7 +164,88 @@ class Boundary(object):
             fig.savefig(filename, transparant=True)
         else:
             fig.show()
+    
+    
+    def plot_reflection_factor(self, filename=None):
+        """
+        Plot reflection factor.
+        """
         
+        if self.frequency is None:
+            raise ValueError("No frequency specified.")
+        if self.angle is None:
+            raise ValueError("No angle specified.")
+        
+        try:
+            n_f = len(self.frequency)
+        except TypeError:
+            n_f = 1
+        try:
+            n_a = len(self.angle)
+        except TypeError:
+            n_a = 1
+        
+        
+        if n_f==1 and n_a==1:
+            raise ValueError("Either frequency or angle needs to be a vector.")
+        
+        elif n_f==1 or n_a==1:
+            if n_f==1 and n_a>1:# Show R as function of angle for a single frequency.
+                xlabel = r"$\theta$ in degrees"
+            elif n_f>1 and n_a==1:# Show R as function of frequency for a single angle.
+                xlabel = r"$f$ in Hz"
+            R = self.reflection_factor
+            fig = plt.figure()
+                
+            ax0 = fig.add_subplot(211)
+            ax0.set_title("Magnitude of reflection factor")
+            ax0.semilogx(self.frequency, np.abs(R))
+            ax0.set_xlabel(xlabel)
+            ax0.set_ylabel(r'$\left|R\right|$') 
+            ax0.grid()
+            
+            ax1 = fig.add_subplot(212)
+            ax1.set_title("Phase of reflection factor")
+            ax1.semilogx(self.frequency, np.angle(R))
+            ax1.set_xlabel(xlabel)
+            ax1.set_ylabel(r'$\angle R$') 
+            ax1.grid()
+
+            
+        elif n_f>1 and n_a>1:# Show 3D or pcolor
+            R = self.reflection_factor
+            fig = plt.figure()
+            
+            #grid = AxesGrid(fig, 111, nrows_ncols=(2, 2), axes_pad=0.1, cbar_mode='each', cbar_location='right')
+            ax0 = fig.add_subplot(211)
+            #ax0 = grid[0]
+            ax0.set_title("Magnitude of reflection factor")
+            ax0.pcolormesh(self.frequency, self.angle * 180.0 / np.pi, np.abs(R))
+            #ax0.pcolor(self.angle, self.frequency, np.abs(R))
+            #ax0.set_xlabel(xlabel)
+            #ax0.set_ylabel(r'$\left|R\right|$') 
+            ax0.grid()
+            
+            ax1 = fig.add_subplot(212)
+            #ax1 = grid[1]
+            ax1.set_title("Phase of reflection factor")
+            ax1.pcolormesh(self.frequency, self.angle * 180.0 / np.pi, np.angle(R))
+            #ax1.pcolor(self.angle, self.frequency, np.angle(R))
+            #ax0.set_xlabel(xlabel)
+            #ax0.set_ylabel(r'$\angle R$') 
+            ax1.grid()
+
+        else:
+            raise RuntimeError("Oops...")
+        
+        #plt.tight_layout()
+        
+        if filename:
+            fig.savefig(filename, transparant=True)
+        else:
+            fig.show()
+    
+    
   
 def reflection_factor_plane_wave(impedance, angle):
     """
@@ -108,8 +262,7 @@ def reflection_factor_plane_wave(impedance, angle):
     where :math:`Z` is the normalized impedance and :math:`\\theta` the angle of incidence.
     
     """
-    return (impedance*np.cos(angle) - 1.0) / (impedance*np.cos(angle) + 1.0) 
-
+    return (impedance * np.cos(angle) - 1.0) / (impedance * np.cos(angle) + 1.0)
 
 def numerical_distance(impedance, angle, distance, wavenumber):
     """
@@ -153,7 +306,6 @@ def reflection_factor_spherical_wave(impedance, angle, distance, wavenumber):
 
     plane_factor = reflection_factor_plane_wave(impedance, angle)
     return plane_factor * (1.0 - plane_factor) * F
-
 
 
 def impedance_delany_and_bazley(frequency, flow_resistivity):

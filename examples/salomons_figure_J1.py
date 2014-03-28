@@ -2,7 +2,7 @@
 This script reproduces figure J.1 from Salomons.
 """
 import numpy as np
-from acoustics.turbulence import Gaussian2DTempWind, VonKarman2DTempWind, Comparison
+from acoustics.turbulence import Gaussian2DTempWind, VonKarman2DTempWind, Comparison, Field2D
 
 def main():
     
@@ -43,10 +43,7 @@ def main():
                            sigma_nu=sigma_nu,
                            c_0=c_0,
                            wavenumber_resolution=wavenumber_resolution,
-                           spatial_resolution=spatial_resolution,
-                           x=x,
-                           y=y,
-                           z=z
+                           plane=(1,0,1)
                            )
     
     vk = VonKarman2DTempWind(max_mode_order=N, 
@@ -56,10 +53,7 @@ def main():
                             C_v=C_v,
                             c_0=c_0,
                             wavenumber_resolution=wavenumber_resolution,
-                            spatial_resolution=spatial_resolution,
-                            x=x,
-                            y=y,
-                            z=z
+                            plane=(1,0,1)
                             )
 
 
@@ -69,8 +63,11 @@ def main():
     c.plot_mode_amplitudes('salomons_figure_J1.png')
 
     """We can additionally calculate turbulent fields according to these two spectra."""
-    g.plot_field('Gaussian2DTempWind_field.png')
-    vk.plot_field('VonKarman2DTempWind_field.png')
+    field_g = Field2D(x=x, y=y, z=z, spatial_resolution=spatial_resolution, spectrum=g)
+    field_g.generate().plot('Gaussian2DTempWind_field.png')
+    
+    field_vk = Field2D(x=x, y=y, z=z, spatial_resolution=spatial_resolution, spectrum=vk)
+    field_vk.generate().plot('VonKarman2DTempWind_field.png')
 
     c.plot_spectral_density('Gaussian2DTempWind_and_VonKarman2DTempWind_spectral_density.png')
 

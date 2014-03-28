@@ -21,63 +21,15 @@ class abstractstaticmethod(staticmethod):
         function.__isabstractmethod__ = True
     __isabstractmethod__ = True
 
-
-    
 @six.add_metaclass(abc.ABCMeta)
 class Spectrum(object):
     """
     Abstract turbulence spectrum.
     """
-    
-    @property
-    def x(self):
-        """
-        Length of field :math:`x`.
-        """
-        return self._sizes[0]
-    
-    
-    @x.setter
-    def x(self, x):
-        self._sizes[0] = x
-    
-    @property
-    def y(self):
-        """
-        Depth of field :math:`y`
-        """
-        return self._sizes[1]
-
-    @y.setter
-    def y(self, x):
-        self._sizes[1] = x
-    
-    
-    
-    @property
-    def z(self):
-        """
-        Height of field :math:`z`.
-        """
-        return self._sizes[2]
-    
-    @z.setter
-    def z(self, x):
-        self._sizes[2] = x
-    
-        
-    #@property
-    #def dimensions(self):
-        #return np.count_nonzero(self._sizes)
 
     wavenumber_resolution = None
     """
     Wavenumber resolution
-    """
-    
-    spatial_resolution = None
-    """
-    Spatial resolution.
     """
     
     max_mode_order = None
@@ -86,7 +38,8 @@ class Spectrum(object):
     """
     
     
-    _required_attributes = ['x', 'y', 'z', 'wavenumber_resolution', 'spatial_resolution', 'max_mode_order']
+    #_required_attributes = ['x', 'y', 'z', 'wavenumber_resolution', 'spatial_resolution', 'max_mode_order']
+    _required_attributes = ['wavenumber_resolution', 'max_mode_order']
     
     def _construct(self, attributes, *args, **kwargs):
         for attr in attributes:
@@ -115,36 +68,6 @@ class Spectrum(object):
         if missing:
             raise ValueError("Missing arguments: " + str(set(missing)))
         
-        
-        #super(Spectrum, self).__init__(*args, **kwargs)
-        
-        ##=0.0, z=0.0, d=0.0, N=10, a=1.0, mu_0=0.0010):
-        
-        #for arg in args.iteritems():
-            #print arg
-        
-        #for kwarg in kwargs.iteritems():
-            #print kwarg
-        
-        #attributes = ['wavenumber', 'spatial_resolution', 'max_mode_order']
-        #self._construct(attributes, args, kwargs)
-        
-        
-        #self._sizes = np.zeros(3)
-        #"""
-        #Length of the field in each direction.
-        #"""
-        
-        #self.a = a
-        #"""
-        #Correlation length.
-        #"""
-        
-        #self.wavenumber = wavenumber
-        #"""
-        #Wavenumbers to use for the calculation.
-        #"""
-        
     @property
     def modes(self):
         """
@@ -161,10 +84,6 @@ class Spectrum(object):
 
     @abc.abstractmethod
     def mode_amplitude():
-        pass
-
-    @abc.abstractmethod
-    def field(self):
         pass
 
     @abc.abstractmethod
@@ -203,7 +122,6 @@ class Spectrum(object):
 
 
 
-
 @six.add_metaclass(abc.ABCMeta)
 class Spectrum1D(Spectrum):
     """
@@ -239,6 +157,9 @@ class Spectrum2D(Spectrum):
 
     _max_mode_order = None
     
+    _required_attributes = ['plane']
+    
+    
     @property
     def wavenumber_resolution(self):
         return self._wavenumber_resolution
@@ -258,12 +179,12 @@ class Spectrum2D(Spectrum):
         self.randomize()
     
     
-    @property
-    def plane(self):
-        """
-        Tuple indicating the plane that is modelled.
-        """
-        return self._sizes.astype(bool)
+    #@property
+    #def plane(self):
+        #"""
+        #Tuple indicating the plane that is modelled.
+        #"""
+        #return self._sizes.astype(bool)
         
     
     def mode_amplitude(self):
@@ -318,69 +239,7 @@ class Spectrum2D(Spectrum):
         self.theta = np.random.random_sample(self.max_mode_order) * np.pi # Create random alpha_n
         return self
     
-    #@numba.autojit
-    def field(self):
-        """
-        Create a random realization of the refractive-index fluctuations. To actually create a random field, call :meth:`randomize` first.
-        
-        .. math:: \\mu(r) = \\sqrt{4\\pi \\Delta k} \\sum_n \\cos{\\left( \\mathbf{k}_n \cdot \\mathbf{r} + \\alpha_n \\right)} \\sqrt{F(\\mathbf{k_n} k_n}
-        
-        """
     
-        
-        r, z = self._sizes[self.plane]
-        r = np.arange(0.0, r, self.spatial_resolution)
-        z = np.arange(0.0, z, self.spatial_resolution)
-        
-        delta_k = self.wavenumber_resolution
-        
-        
-        mu = list()
-        
-        mode_amplitudes = self.mode_amplitude()
-        
-        for n, G, theta_n, alpha_n in zip(self.modes, mode_amplitudes, self.theta, self.alpha):
-            
-            #alpha_n = np.random.random_sample() * np.pi # Create random alpha_n
-            #theta_n = np.random.random_sample() * np.pi # Create random theta_n
-            k_n = n * delta_k
-
-            k_nr = k_n * np.cos(theta_n)    # Wavenumber component
-            k_nz = k_n * np.sin(theta_n)    # Wavenumber component
-            
-            r_mesh, z_mesh = np.meshgrid(r, z)
-            
-            #k_n_v = np.vstack( , k_n * np.sin(theta))
-            
-            
-            mu_n = G * np.cos(r_mesh * k_nr + z_mesh * k_nz + alpha_n)
-            mu.append(mu_n)
-        
-        return sum(mu)
-    
-    def plot_field(self, filename=None):
-        """
-        Calculate and plot a random field.
-        """
-        r, z = self._sizes[self.plane]
-        r = np.arange(0.0, r, self.spatial_resolution)
-        z = np.arange(0.0, z, self.spatial_resolution)
-        
-        
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        ax.set_title("Refractive-index field")
-        plot = ax.pcolormesh(r, z, self.field())
-        ax.set_xlabel(r'$r$ in m')
-        ax.set_ylabel(r'$z$ in m')
-        c = fig.colorbar(plot)
-        c.set_label(r'Refractive-index fluctuation $\mu$')
-        
-        if filename:
-            fig.savefig(filename)
-        else:
-            fig.show()
-
     def plot_mode_amplitudes(self, filename=None):
         """
         Calculate and plot mode amplitudes.
@@ -389,22 +248,17 @@ class Spectrum2D(Spectrum):
         ax = fig.add_subplot(111)
         #ax.set_title("Mode {}".format(n))
 
-        ax.plot(self.wavenumber, self.mode_amplitude())
+        ax.semilogx(self.wavenumber, self.mode_amplitude())
         ax.set_xlabel(r'$k$ in $\mathrm{m}^{-1}$')
         ax.set_ylabel(r'$G$')
         ax.grid()
+        ax.set_title('Mode amplitude as function of wavenumber')
         
         if filename:
             fig.savefig(filename)
         else:
             fig.show()
 
-
-    def plot_correlation(self):
-        """
-        Plot the correlation function.
-        """
-        pass
     
     def plot_structure(self):
         """
@@ -420,10 +274,12 @@ class Spectrum2D(Spectrum):
         fig = plt.figure()
         ax = fig.add_subplot(111)
         
-        ax.plot(self.wavenumber, self.spectral_density())
+        ax.loglog(self.wavenumber, self.spectral_density())
         ax.set_xlabel(r'$k$ in $\mathrm{m}^{-1}$')
         ax.set_ylabel(r'$F$')
         ax.grid()
+        ax.set_title('Spectral density as function of wavenumber')
+        
         
         if filename:
             fig.savefig(filename)
@@ -651,7 +507,7 @@ class GaussianTempWind(object):
         .. math:: \\rho = \\sqrt{y^2 + z^2}
         
         """
-        return (x**2.0 + y**2.0)**0.5
+        return (z**2.0 + y**2.0)**0.5
     
     
     def spectral_density(self):
@@ -698,9 +554,5 @@ class VonKarmanTempWind(object):
     def spectral_density(self):
         return self.spectral_density_function(self.wavenumber, self.theta, tuple(self.plane), self.c_0, self.T_0, self.C_v, self.C_T, self.L, self.CONSTANT_A)
         
-
-
-
-
 
 
