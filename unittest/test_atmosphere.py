@@ -2,6 +2,7 @@ import unittest
 import numpy as np
 
 from acoustics.atmosphere import Atmosphere
+from get_data_path import data_path
 
 class AtmosphereCase(unittest.TestCase):
     
@@ -26,7 +27,7 @@ class AtmosphereCase(unittest.TestCase):
     def test_attenuation_coefficient(self):
         
         """Test data is all at an air pressure of one standard atmosphere, 101.325 Pa."""
-        data = np.loadtxt('data/absorption_coefficient.csv', skiprows=1, delimiter=',')
+        data = np.loadtxt(data_path() + 'absorption_coefficient.csv', skiprows=1, delimiter=',')
 
         f = np.array([50.0, 63.0, 80.0, 100.0, 125.0, 160.0, 200.0, 250.0, 315.0, 400.0, 500.0, 630.0, 800.0, 1000.0, 1250.0, 1600.0, 2000.0, 2500.0, 3150.0, 4000.0, 5000.0, 6300.0, 8000.0, 10000.0])
         
