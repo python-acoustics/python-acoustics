@@ -5,6 +5,7 @@ This module constains a function to perform a convolution of signal with a Linea
 from __future__ import division
 
 import numpy as np
+import matplotlib.pyplot as plt
 from scipy.sparse import spdiags
 from scipy.signal import butter, lfilter
 
@@ -72,26 +73,54 @@ def convolve(signal, ltv, mode='full'):
         stop = len(signal) 
         return out[start:stop]
 
+
+class Frequencies(object):
+    
+    def __init__(self, filterbank):
+        
+        self._filterbank = filterbank
+        self.
+        
+    
+    @property
+    def center(self):
+        return self._center
+
+    @property.setter
+    def center(self, x):
+        self._center = x
+
+    @property
+    def lower(self):
+        return self._upper
+    
+    @property
+    def upper(self):
+        return self._upper
+
 class Filterbank(object):
     """
     Fractional-Octave filter bank.
     """
     
-    def __init__(self, filter_order=3, sample_frequency=44100, bands_per_octave=1, center_frequencies=None, f_ref=REFERENCE_FREQUENCY):
+    def __init__(self, order=3, sample_frequency=44100, fraction=1, center_frequencies=None, f_ref=REFERENCE_FREQUENCY):
         
-        self.bands_per_octave = bands_per_octave
+        self.fraction = fraction
         """
         Bands per octave.
         """
         
-        self.filter_order = filter_order
+        self.order = order
         """
         Filter order.
         """
         
         self.sample_frequency = sample_frequency
         
-        self.center_frequencies = center_frequencies
+        self.frequencies = Frequencies(self)
+        
+        
+        self.frequencies.center = center_frequencies
         
     
     @property
@@ -99,14 +128,13 @@ class Filterbank(object):
         """
         Sample frequency.
         """
-        return self.sample_frequency
+        return self._sample_frequency
     
     @sample_frequency.setter
     def sample_frequency(self, x):
         #if x <= self.center_frequencies.max():
             #raise ValueError("Sample frequency cannot be lower than the highest center frequency.")
-        self._center_frequencies = x
-        
+        self._sample_frequency = x
         
     @property
     def center_frequencies(self):
@@ -115,8 +143,8 @@ class Filterbank(object):
         """
         if self._center_frequencies:
             return self._center_frequencies
-        else:
-            pass
+        #else:
+            raise NotImplementedError
 
     @center_frequencies.setter
     def center_frequencies(self, x):
@@ -131,13 +159,11 @@ class Filterbank(object):
         """
         Filters this filterbank consists of.
         """
-        order = self.filter_order
+        order = self.order
         filters = list()
         for f in self.center_frequencies:
             filters.append(butter(order, [], btype='band')
-    
-    
-    
+
     def filt(self, signal):
         """
         Filter signal with filterbank.
@@ -155,5 +181,28 @@ class Filterbank(object):
         Power per band in signal.
         """
         filtered = self.filt(signal)
-        return [(x**2.0).sum() for x in filtered]
+        return [(x**2.0).sum()/len(x) for x in filtered]
+    
+    def plot_power(self, signal, filename=None):
+        """
+        Plot power in signal.
+        """
         
+        f = self.center_frequencies
+        p = self.power(signal)
+        
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        p = ax.bar(f, p)
+        ax.set_xlabel('$f$ in Hz')
+        ax.set_ylabel('$L$ in dB re. 1')
+        
+        if filename:
+            fig.savefig(filename)
+        else:
+            return fig
+        
+        
+        
+    
+    
