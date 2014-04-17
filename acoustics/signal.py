@@ -72,3 +72,88 @@ def convolve(signal, ltv, mode='full'):
         stop = len(signal) 
         return out[start:stop]
 
+class Filterbank(object):
+    """
+    Fractional-Octave filter bank.
+    """
+    
+    def __init__(self, filter_order=3, sample_frequency=44100, bands_per_octave=1, center_frequencies=None, f_ref=REFERENCE_FREQUENCY):
+        
+        self.bands_per_octave = bands_per_octave
+        """
+        Bands per octave.
+        """
+        
+        self.filter_order = filter_order
+        """
+        Filter order.
+        """
+        
+        self.sample_frequency = sample_frequency
+        
+        self.center_frequencies = center_frequencies
+        
+    
+    @property
+    def sample_frequency(self):
+        """
+        Sample frequency.
+        """
+        return self.sample_frequency
+    
+    @sample_frequency.setter
+    def sample_frequency(self, x):
+        #if x <= self.center_frequencies.max():
+            #raise ValueError("Sample frequency cannot be lower than the highest center frequency.")
+        self._center_frequencies = x
+        
+        
+    @property
+    def center_frequencies(self):
+        """
+        Center frequencies.
+        """
+        if self._center_frequencies:
+            return self._center_frequencies
+        else:
+            pass
+
+    @center_frequencies.setter
+    def center_frequencies(self, x):
+        if not np.all(np.gradient(x) > 0):
+            raise ValueError("Values are not in increasing order.")
+        #if not (x.max() < self.sample_frequency):
+            #raise ValueError("Center frequency cannot be higher than sample frequency.")
+        self._center_frequencies = x
+        
+    @property
+    def filters(self):
+        """
+        Filters this filterbank consists of.
+        """
+        order = self.filter_order
+        filters = list()
+        for f in self.center_frequencies:
+            filters.append(butter(order, [], btype='band')
+    
+    
+    
+    def filt(self, signal):
+        """
+        Filter signal with filterbank.
+        Returns a list consisting of a filtered signal per filter.
+        """
+        filters = self.filters
+        
+        out = list()
+        
+        for f in filters:
+            out.append( lfilter(f.b, f.a, signal) )
+            
+    def power(self, signal):
+        """
+        Power per band in signal.
+        """
+        filtered = self.filt(signal)
+        return [(x**2.0).sum() for x in filtered]
+        
