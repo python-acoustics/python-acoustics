@@ -235,6 +235,7 @@ class Spectrum2D(Spectrum):
         .. note:: This function is called whenever :attr:`max_mode_order` or :attr:`wavenumber_resolution` is changed.
         
         """
+        np.random.seed()
         self.alpha = np.random.random_sample(self.max_mode_order) * np.pi # Create random alpha_n
         self.theta = np.random.random_sample(self.max_mode_order) * np.pi # Create random alpha_n
         return self
