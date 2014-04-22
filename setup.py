@@ -1,10 +1,11 @@
 import os
 from setuptools import setup, find_packages
 
-long_description = "A Python library aimed at acousticians."
 if os.path.exists('README.md'):
-    long_description=open('README.md').read()
-
+    long_description = open('README.md').read()
+else:
+    long_description = "A Python library aimed at acousticians." 
+    
 setup(
       name='acoustics',
       version='0.0',
@@ -20,5 +21,10 @@ setup(
           'numpy',
           'scipy',
           'matplotlib',
+          'six',
           ],
+      extras_require={
+          'jit' : 'numba',
+          'fast_fft' : 'pyFFTW',          
+          }
       )
