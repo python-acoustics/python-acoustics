@@ -4,13 +4,8 @@ import numpy as np
 
 
 def esum(levels, axis=1):
-    """Energetic summation.
-
-    :param x: Levels
-    :param axis: 
-    :returns: 
-    :rtype: 
-
+    """
+    Energetic summation.
     """
     levels = _is_1d(levels)
     return 10 * np.log10(np.sum(10**(levels/10), axis=axis))
