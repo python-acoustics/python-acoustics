@@ -10,17 +10,15 @@ from __future__ import division
 
 import numpy as np
 
-
-REFERENCE_FREQUENCY = 1000.0
+REFERENCE = 1000.0
 """
 Reference frequency.
 """
 
-
-def band_of_frequency(f, order=1, ref=REFERENCE_FREQUENCY):
+def band_of_frequency(f, order=1, ref=REFERENCE):
     """
-    Calculate the band ``n`` from a given frequency.
-    
+    Calculate the band ``n`` from a given center frequency.
+
     :param f: Frequency :math:`f`.
     :param order: Band order.
     :param ref: Reference center frequency :math:`f_0`.
@@ -28,16 +26,48 @@ def band_of_frequency(f, order=1, ref=REFERENCE_FREQUENCY):
     return np.round( ( np.log2(f/ref) - 1.0/order ) * order)
 
 
+def frequency_of_band(n, order=1, ref=REFERENCE):
+    """
+    Calculate center frequency of band ``n``.
+    
+    :param n: band ``n`.
+    :order: Order of octave.
+    :ref: Reference center frequency.
+    """
+    return ref * 10.0**(3.0/order/10.0) * 2.0**(n/order)
+
+
+def upper_frequency(center, order):
+    """
+    Upper frequency of frequency band given a center frequency and order.
+    
+    .. math:: f_u = f_c \cdot 2^{\\frac{+1}{2N}}
+    
+    """
+    return center * 2.0**(+1.0/(2.0*order))
+    
+    
+def lower_frequency(center, order):
+    """
+    Lower frequency of frequency band given a center frequency and order.
+    
+    .. math:: f_l = f_c \cdot 2^{\\frac{-1}{2N}}
+    
+    """
+    return center * 2.0**(-1.0/(2.0*order))    
+
 
 class Octave(object):
     """
     Class to calculate octave center frequencies.
     """
-    
-    REF = 1000.0
-    """Reference center frequency :math:`f_{c,0}`."""
-    
-    def __init__(self, order=1, interval=None, fmin=None, fmax=None, unique=False):
+
+    def __init__(self, order=1, interval=None, fmin=None, fmax=None, unique=False, reference=REFERENCE):
+        
+        self.reference = reference
+        """
+        Reference center frequency :math:`f_{c,0}`.
+        """
         
         self.order = order
         """
@@ -60,53 +90,55 @@ class Octave(object):
         """Whether or not to calculate the requested values for every value of ``interval``."""
         
         
-    def _set_fmin(self, x):
-        if self.interval is not None:
-            pass    # Warning, remove interval first.
-        else:
-            self._fmin = x
-    
-    def _set_fmax(self, x):
-        if self.interval is not None:
-            pass
-        else:
-            self._fmax = x
-    
-    def _get_fmin(self):
+    @property
+    def fmin(self):
+        """Minimum frequency of an interval."""
         if self._fmin is not None:
             return self._fmin
         elif self._interval is not None:
             return self.interval.min()
     
-    def _get_fmax(self):
+    @fmin.setter
+    def fmin(self, x):
+        if self.interval is not None:
+            pass    # Warning, remove interval first.
+        else:
+            self._fmin = x
+    
+    @property
+    def fmax(self):
+        """Maximum frequency of an interval."""
         if self._fmax is not None:
             return self._fmax
         elif self._interval is not None:
             return self.interval.max()
-        
-    def _set_interval(self, x):
+    
+    @fmax.setter
+    def fmax(self, x):
+        if self.interval is not None:
+            pass
+        else:
+            self._fmax = x
+
+    @property
+    def interval(self):
+        """Interval."""
+        return self._interval
+    
+    @interval.setter
+    def interval(self, x):
         if self._fmin or self._fmax:
             pass
         else:
             self._interval = x if isinstance(x, np.ndarray) else np.array(x)
-    
-    def _get_interval(self):
-        return self._interval
-    
-    fmin = property(fget=_get_fmin, fset=_set_fmin)
-    """Minimum frequency of an interval."""
-    fmax = property(fget=_get_fmax, fset=_set_fmax)
-    """Maximum frequency of an interval."""
-    interval = property(fget=_get_interval, fset=_set_interval)
-    """Interval."""
-    
+        
     def _n(self, f):
         """
         Calculate the band ``n`` from a given frequency.
         
         :param f: Frequency
         """
-        return np.round( ( np.log2(f/self.REF) - 1.0/self.order ) * self.order)
+        return np.round( ( np.log2(f/self.reference) - 1.0/self.order ) * self.order)
     
     def _fc(self, n):
         """
@@ -115,7 +147,7 @@ class Octave(object):
         :param n: band ``n`.
         
         """
-        return self.REF * 10.0**(3.0/self.order/10.0) * 2.0**(n/self.order)
+        return self.reference * 10.0**(3.0/self.order/10.0) * 2.0**(n/self.order)
     
     def n(self):
         """
