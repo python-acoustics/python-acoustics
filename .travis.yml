@@ -5,14 +5,8 @@ python:
   - "3.3"
 
 env:
-  - NUMPY_VERSION=1.8.0
-  - NUMPY_VERSION=1.7.1
-  - NUMPY_VERSION=1.6.2
-
-matrix:
-  exclude:
-    - python: "3.3"
-      env: NUMPY_VERSION=1.6.2
+  - NUMPY_VERSION=1.8
+  - NUMPY_VERSION=1.7
 
 before_install:
   - sudo apt-get update -qq
@@ -23,8 +17,8 @@ before_install:
 
 install:
   - pip install -q numpy==$NUMPY_VERSION
-  - pip install scipy==0.13
-  - pip install matplotlib==1.3.1 --allow-external matplotlib --allow-unverified matplotlib
+  - pip install scipy
+  - pip install matplotlib --allow-external matplotlib --allow-unverified matplotlib
 
 
 script:
