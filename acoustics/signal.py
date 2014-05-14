@@ -150,6 +150,7 @@ class EqualBand(Frequencies):
     def __repr__(self):
         return "EqualBand({})".format(str(self.center))
         
+
     
 class OctaveBand(Frequencies):
     """
@@ -209,6 +210,10 @@ class OctaveBand(Frequencies):
 class Filterbank(object):
     """
     Fractional-Octave filter bank.
+    
+    
+    .. note:: For high frequencies the filter coefficients are wrong for low frequencies. Therefore, to improve the response for lower frequencies the signal should be downsampled. Currently, there is no easy way to do so within the Filterbank.
+    
     """
     
     def __init__(self, frequencies, sample_frequency=44100, order=3):
@@ -218,7 +223,10 @@ class Filterbank(object):
         """
         Frequencies object.
         
+        See also :class:`Frequencies` and subclasses.
+        
         .. note:: A frequencies object should have the attributes center, lower and upper.
+        
         """
         
         self.order = order
@@ -276,7 +284,7 @@ class Filterbank(object):
         Power per band in signal.
         """
         filtered = self.filtfilt(signal)
-        return np.array([(x**2.0).sum()/len(x) for x in filtered])
+        return np.array([(x**2.0).sum()/len(x) / bw for x, bw in zip(filtered, self.frequencies.bandwidth)])
     
     def plot_response(self, filename=None):
         """
@@ -286,21 +294,20 @@ class Filterbank(object):
         """
         
         fs = self.sample_frequency
-        fig = plt.figure(figsize=(16,12), dpi=80)
+        fig = plt.figure()
         ax1 = fig.add_subplot(211)
         ax2 = fig.add_subplot(212)
         for f, fc in zip(self.filters, self.frequencies.center):
-            w, h = freqz(f[0], f[1])#, fs/2)#, np.arange(fs/2.0))
+            w, h = freqz(f[0], f[1], int(fs/2))#np.arange(fs/2.0))
             ax1.semilogx(w / (2.0*np.pi) * fs, 20.0 * np.log10(np.abs(h)), label=str(int(fc)))
             ax2.semilogx(w / (2.0*np.pi) * fs, np.angle(h), label=str(int(fc)))
         ax1.set_xlabel(r'$f$ in Hz')
-        ax1.set_ylabel(r'$L$ in dB re. 1')
+        ax1.set_ylabel(r'$|H|$ in dB re. 1')
         ax2.set_xlabel(r'$f$ in Hz')
-        ax2.set_ylabel(r'$\angle$ in rad')
-        ax1.grid()
-        ax2.grid()
+        ax2.set_ylabel(r'$\angle H$ in rad')
         ax1.legend(loc=5)
         ax2.legend(loc=5)
+        ax1.set_ylim(-60.0, +10.0)
         
         if filename:
             fig.savefig(filename)
@@ -317,14 +324,38 @@ class Filterbank(object):
         
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        p = ax.bar(f, p)
+        p = ax.bar(f, 20.0*np.log10(p))
         ax.set_xlabel('$f$ in Hz')
         ax.set_ylabel('$L$ in dB re. 1')
+        ax.set_xscale('log')
         
         if filename:
             fig.savefig(filename)
         else:
             return fig
+        
+        
+#class FilterbankFFT(object):
+    #"""
+    #Filterbank to filter signal using FFT.
+    #"""
+    
+    #def __init__(self, frequencies, sample_frequency=44100):
+       
+       #self.frequencies = frequencies
+       #"""
+       #Frequencies.
+       
+       #See also :class:`Frequencies` and subclasses.
+       #"""
+       #self.sample_frequency = sample_frequency
+       
+    
+    #def power(self, signal):
+        #pass
+    
+    #def plot_power(self, signal):
+        #pass
         
         
         
