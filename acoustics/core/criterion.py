@@ -2,7 +2,24 @@ from __future__ import division
 
 import numpy as np
 
-
+NC_CURVES = {
+    15 : np.array([47.0, 36.0, 29.0, 22.0, 17.0, 14.0, 12.0, 11.0]),
+    20 : np.array([51.0, 40.0, 33.0, 26.0, 22.0, 19.0, 17.0, 16.0]),
+    25 : np.array([54.0, 44.0, 37.0, 31.0, 27.0, 24.0, 22.0, 21.0]),
+    30 : np.array([57.0, 48.0, 41.0, 35.0, 31.0, 29.0, 28.0, 27.0]),
+    35 : np.array([60.0, 52.0, 45.0, 40.0, 36.0, 34.0, 33.0, 32.0]),
+    40 : np.array([64.0, 56.0, 50.0, 45.0, 41.0, 39.0, 38.0, 37.0]),
+    45 : np.array([67.0, 60.0, 54.0, 49.0, 46.0, 44.0, 43.0, 42.0]),
+    50 : np.array([71.0, 64.0, 58.0, 54.0, 51.0, 49.0, 48.0, 47.0]),
+    55 : np.array([74.0, 67.0, 62.0, 58.0, 56.0, 54.0, 53.0, 52.0]),
+    60 : np.array([77.0, 71.0, 67.0, 63.0, 61.0, 59.0, 58.0, 57.0]),
+    65 : np.array([80.0, 75.0, 71.0, 68.0, 66.0, 64.0, 63.0, 62.0]),
+    70 : np.array([83.0, 79.0, 75.0, 72.0, 71.0, 70.0, 69.0, 68.0])
+    }
+"""
+NC curves.
+"""
+    
 def nc_curve(nc):
     """Return an array containing the `nc` curve.
 
@@ -11,33 +28,10 @@ def nc_curve(nc):
     nc: `int` between 15 and 70 with step of 5. Valid values are: 15, 20, 25,
     ..., 60, 65 and 70. Invalid values (e.g. 23) returns `None`.
     """
-    if nc == 15:
-        curve = np.array([47, 36, 29, 22, 17, 14, 12, 11])
-    elif nc == 20:
-        curve = np.array([51, 40, 33, 26, 22, 19, 17, 16])
-    elif nc == 25:
-        curve = np.array([54, 44, 37, 31, 27, 24, 22, 21])
-    elif nc == 30:
-        curve = np.array([57, 48, 41, 35, 31, 29, 28, 27])
-    elif nc == 35:
-        curve = np.array([60, 52, 45, 40, 36, 34, 33, 32])
-    elif nc == 40:
-        curve = np.array([64, 56, 50, 45, 41, 39, 38, 37])
-    elif nc == 45:
-        curve = np.array([67, 60, 54, 49, 46, 44, 43, 42])
-    elif nc == 50:
-        curve = np.array([71, 64, 58, 54, 51, 49, 48, 47])
-    elif nc == 55:
-        curve = np.array([74, 67, 62, 58, 56, 54, 53, 52])
-    elif nc == 60:
-        curve = np.array([77, 71, 67, 63, 61, 59, 58, 57])
-    elif nc == 65:
-        curve = np.array([80, 75, 71, 68, 66, 64, 63, 62])
-    elif nc == 70:
-        curve = np.array([83, 79, 75, 72, 71, 70, 69, 68])
-    else:
-        curve = None
-    return curve
+    try:
+        return NC_CURVES[nc]
+    except KeyError:
+        return None
 
 
 def nc(levels):

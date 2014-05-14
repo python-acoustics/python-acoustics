@@ -8,10 +8,10 @@ from acoustics.utils.utils import _e10
 def _leq(levels, time):
     if type(levels) is list:
         levels = np.array(levels)
-    return 10 * np.log10((1/time) * np.sum(_e10(levels)))
+    return 10.0 * np.log10((1.0/time) * np.sum(_e10(levels)))
 
 
-def leq(levels, int_time=1):
+def leq(levels, int_time=1.0):
     '''
     Sum of levels in dB.
     '''
@@ -27,17 +27,17 @@ def sel(levels):
     '''
     if type(levels) is list:
         levels = np.array(levels)
-    return _leq(levels, 1)
+    return _leq(levels, 1.0)
 
 
-def lw(W, Wref=1e-12):
+def lw(W, Wref=1.0e-12):
     '''
     Sound power level for ``W`` with ``Wref`` as reference ($10^{-12}$
     by default).
     '''
     if type(W) is list:
         W = np.array(W)
-    return 10 * np.log10(W/Wref)
+    return 10.0 * np.log10(W/Wref)
 
 
 def lden(lday, levening, lnight):
@@ -50,10 +50,10 @@ def lden(lday, levening, lnight):
         levening = np.array(levening)
     if type(lnight) is list:
         lnight = np.array(lnight)
-    day = 12*_e10(lday)
-    evening = 4*_e10(levening+5)
-    night = 8*_e10(lnight+10)
-    return 10 * np.log10((day + evening + night) / 24)
+    day = 12.0*_e10(lday)
+    evening = 4.0*_e10(levening+5.0)
+    night = 8.0*_e10(lnight+10.0)
+    return 10.0 * np.log10((day + evening + night) / 24.0)
 
 
 def ldn(lday, lnight):
@@ -64,6 +64,6 @@ def ldn(lday, lnight):
         lday = np.array(lday)
     if type(lnight) is list:
         lnight = np.array(lnight)
-    day = 15*_e10(lday)
-    night = 9*_e10(lnight+10)
-    return 10 * np.log10((day + night) / 24)
+    day = 15.0*_e10(lday)
+    night = 9.0*_e10(lnight+10.0)
+    return 10.0 * np.log10((day + night) / 24.0)
