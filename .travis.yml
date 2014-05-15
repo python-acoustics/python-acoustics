@@ -8,9 +8,9 @@ language: python
 #   - NUMPY_VERSION=1.8
 #   - NUMPY_VERSION=1.7
   
-env:
-  global:
-    - SCIPY_VERSION=0.14
+# env:
+#   global:
+#     - SCIPY_VERSION=0.14
        
   
 matrix:
@@ -20,22 +20,50 @@ matrix:
       env:
       - PYTHON_VERSION=2.7
       - NUMPY_VERSION=1.7
-      - JOB_NAME: "python_27_numpy_17"
+      - SCIPY_VERSION=0.13
+      - JOB_NAME: "python_27_numpy_17_scipy_013"
     - python: 2.7
       env:
       - PYTHON_VERSION=2.7
       - NUMPY_VERSION=1.8
-      - JOB_NAME: "python_27_numpy_18"
+      - SCIPY_VERSION=0.13
+      - JOB_NAME: "python_27_numpy_18_scipy_013"
     - python: 2.7
       env:
       - PYTHON_VERSION=3.3
       - NUMPY_VERSION=1.7
-      - JOB_NAME: "python_33_numpy_17"
+      - SCIPY_VERSION=0.13
+      - JOB_NAME: "python_33_numpy_17_scipy_013"
     - python: 2.7
       env:
       - PYTHON_VERSION=3.3
       - NUMPY_VERSION=1.8
-      - JOB_NAME: "python_33_numpy_18"
+      - SCIPY_VERSION=0.13
+      - JOB_NAME: "python_33_numpy_18_scipy_013"
+#     - python: 2.7
+#       env:
+#       - PYTHON_VERSION=2.7
+#       - NUMPY_VERSION=1.7
+#       - SCIPY_VERSION=0.14
+#       - JOB_NAME: "python_27_numpy_17_scipy_014"
+#     - python: 2.7
+#       env:
+#       - PYTHON_VERSION=2.7
+#       - NUMPY_VERSION=1.8
+#       - SCIPY_VERSION=0.14
+#       - JOB_NAME: "python_27_numpy_18_scipy_014"
+#     - python: 2.7
+#       env:
+#       - PYTHON_VERSION=3.3
+#       - NUMPY_VERSION=1.7
+#       - SCIPY_VERSION=0.14
+#       - JOB_NAME: "python_33_numpy_17_scipy_014"
+#     - python: 2.7
+#       env:
+#       - PYTHON_VERSION=3.3
+#       - NUMPY_VERSION=1.8
+#       - SCIPY_VERSION=0.14
+#       - JOB_NAME: "python_33_numpy_18_scipy_014"
       
       
 before_install:
@@ -56,12 +84,11 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 
 install:
-  - conda create -n testenv python=$PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib six pytest pip
+  - conda create -n testenv python=$PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib six pytest pip nose
   - source activate testenv
 #   - conda install --yes 
   - pip install .
   - python setup.py install
   
 script:
-#   - python setup.py install
-  - py.test
+  - nosetests
