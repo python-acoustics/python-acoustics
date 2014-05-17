@@ -1,7 +1,8 @@
 from __future__ import division
+
 import numpy as np
 
-from acoustics.utils.utils import esum, _is_1d
+from acoustics.utils import esum, _is_1d
 
 
 OCTAVE_CENTER_FREQUENCIES = np.array([16, 31.5, 63, 125, 250, 500,

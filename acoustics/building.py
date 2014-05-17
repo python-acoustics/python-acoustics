@@ -5,7 +5,7 @@ from __future__ import division
 
 import numpy as np
 
-from acoustics.utils.physics import w
+from acoustics.utils import w
 
 
 def rw_curve(tl):
