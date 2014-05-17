@@ -37,7 +37,7 @@ def frequency_of_band(n, order=1, ref=REFERENCE):
     return ref * 10.0**(3.0/order/10.0) * 2.0**(n/order)
 
 
-def upper_frequency(center, order):
+def upper_frequency(center, order=1):
     """
     Upper frequency of frequency band given a center frequency and order.
     
@@ -47,7 +47,7 @@ def upper_frequency(center, order):
     return center * 2.0**(+1.0/(2.0*order))
     
     
-def lower_frequency(center, order):
+def lower_frequency(center, order=1):
     """
     Lower frequency of frequency band given a center frequency and order.
     
@@ -137,18 +137,21 @@ class Octave(object):
         Calculate the band ``n`` from a given frequency.
         
         :param f: Frequency
+        
+        See also :func:`band_of_frequency`.
         """
-        return np.round( ( np.log2(f/self.reference) - 1.0/self.order ) * self.order)
-    
+        return band_of_frequency(f, order=self.order, ref=self.reference)
+        
     def _fc(self, n):
         """
         Calculate center frequency of band ``n``.
         
         :param n: band ``n`.
         
+        See also :func:`frequency_of_band`.
         """
-        return self.reference * 10.0**(3.0/self.order/10.0) * 2.0**(n/self.order)
-    
+        return frequency_of_band(n, order=self.order, ref=self.reference)
+        
     def n(self):
         """
         Return band ``n`` for a given frequency.
@@ -183,19 +186,20 @@ class Octave(object):
         
         .. math:: f_l = f_c \cdot 2^{\\frac{-1}{2N}}
         
+        See also :func:`lower_frequency`.
         """
-        return self.center() * 2.0**(-1.0/(2.0*self.order))
-    
+        return lower_frequency(self.center, self.order)
+        
     def upper(self):
         """
         Upper frequency limits of bands.
         
         .. math:: f_u = f_c \cdot 2^{\\frac{+1}{2N}}
         
+        See also :func:`upper_frequency`.
         """
-        return self.center() * 2.0**(+1.0/(2.0*self.order))
-    
-    
+        return upper_frequency(self.center, self.order)
+        
     
 ###def center_frequency_octave(frequencies, order=1):
     ###"""
