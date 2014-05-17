@@ -494,9 +494,6 @@ class Field2D(object):
         #fig = plt.figure(figsize=(16,12)
         
         
-    
-    
-    
     def plot(self, filename=None):
         """
         Plot the field.
@@ -516,11 +513,16 @@ class Field2D(object):
         plot = ax.pcolormesh(r, z, self.mu.T)
         ax.set_xlabel(r'$r$ in m')
         ax.set_ylabel(r'$z$ in m')
-        c = fig.colorbar(plot)
-        c.set_label(r'Refractive-index fluctuation $\mu$')
+        ax.set_xlim(r[0], r[-1])
+        ax.set_ylim(z[0], z[-1])
         
+        orientation = 'horizontal' if self.x > self.z else 'vertical'
+        
+        c = fig.colorbar(plot, orientation=orientation, pad=0.06)
+        c.set_label(r'Refractive-index fluctuation $\mu$')
+        plt.tight_layout()
         if filename:
-            fig.savefig(filename)
+            fig.savefig(filename, bbox_inches='tight')
         else:
             fig.show()
 
