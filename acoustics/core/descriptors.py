@@ -2,14 +2,11 @@ from __future__ import division
 
 import numpy as np
 
-from acoustics.utils.utils import _e10
-
 
 def _leq(levels, time):
     if type(levels) is list:
         levels = np.array(levels)
-    return 10.0 * np.log10((1.0/time) * np.sum(_e10(levels)))
-
+    return 10.0 * np.log10((1.0/time) * np.sum(10.0**(levels/10.0)))
 
 def leq(levels, int_time=1.0):
     '''
@@ -50,9 +47,9 @@ def lden(lday, levening, lnight):
         levening = np.array(levening)
     if type(lnight) is list:
         lnight = np.array(lnight)
-    day = 12.0*_e10(lday)
-    evening = 4.0*_e10(levening+5.0)
-    night = 8.0*_e10(lnight+10.0)
+    day = 12.0 * 10.0**(lday/10.0)
+    evening = 4.0 * 10.0**((levening+5.0) / 10.0)
+    night = 8.0 * 10.0**((lnight+10.0) / 10.0)
     return 10.0 * np.log10((day + evening + night) / 24.0)
 
 
@@ -64,6 +61,6 @@ def ldn(lday, lnight):
         lday = np.array(lday)
     if type(lnight) is list:
         lnight = np.array(lnight)
-    day = 15.0*_e10(lday)
-    night = 9.0*_e10(lnight+10.0)
+    day = 15.0 * 10.0**(lday/10.0)
+    night = 9.0 * 10.0**((lnight+10.0) / 10.0)
     return 10.0 * np.log10((day + night) / 24.0)

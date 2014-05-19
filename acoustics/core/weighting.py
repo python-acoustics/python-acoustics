@@ -17,7 +17,7 @@ THIRD_OCTAVE_A_WEIGHTING = np.array([-63.4, -56.7, -50.5, -44.7, -39.4, -34.6,
 A-weighting filter for preferred 1/3-octave band center frequencies, as specified in :attr:`acoustics.core.bands.THIRD_OCTAVE_CENTER_FREQUENCIES`.
 """
 
-THIRD_OCTAVE_C_WEIGHTING = np.array([-11.2, -8.5, -6.2, -4.4, -3, -2, 
+THIRD_OCTAVE_C_WEIGHTING = np.array([-11.2, -8.5, -6.2, -4.4, -3.0, -2.0, 
                                      -1.3, -0.8, -0.5, -0.3, -0.2, -0.1, 
                                      +0.0, +0.0, +0.0, +0.0, +0.0, +0.0,
                                      +0.0, +0.0, +0.0, -0.1, -0.2, -0.3,
