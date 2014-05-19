@@ -49,11 +49,11 @@ def octave(first, last):
 
 
 def octave_low(first, last):
-    return octave(first, last)/np.sqrt(2)
+    return octave(first, last)/np.sqrt(2.0)
 
 
 def octave_high(first, last):
-    return octave(first, last)*np.sqrt(2)
+    return octave(first, last)*np.sqrt(2.0)
 
 
 def third(first, last):
@@ -80,11 +80,11 @@ def third(first, last):
 
 
 def third_low(first, last):
-    return third(first, last)/2**(1/6)
+    return third(first, last)/2.0**(1.0/6.0)
 
 
 def third_high(first, last):
-    return third(first, last)*2**(1/6)
+    return third(first, last)*2.0**(1.0/6.0)
 
 
 def third2oct(levels):
