@@ -62,6 +62,13 @@ class ConvolveCase(unittest.TestCase):
         y_ltv = convolveLTV(u, C)
         np.testing.assert_array_equal(y_ltv, y_manual)
         
+
+class FilterbankCase(unittest.TestCase):
+    
+    pass
+
+
+
     
 if __name__ == '__main__':
     unittest.main()
