@@ -2,25 +2,27 @@ from __future__ import division
 
 import numpy as np
 
+SOUNDSPEED = 343.0
 
-def esum(levels, axis=1):
+def esum(levels, axis=None):
     """
     Energetic summation.
     """
-    levels = _is_1d(levels)
-    return 10 * np.log10(np.sum(10**(levels/10), axis=axis))
-
+    #levels = _is_1d(levels)
+    levels = np.array(levels)
+    #axis = axis if axis is not None else levels.ndim - 1
+    return np.squeeze( 10.0 * np.log10((10.0**(levels/10.0)).sum(axis=axis)) )
 
 def mean_tl(tl, surfaces):
     try:
         tau_axis = tl.ndim - 1
     except AttributeError:
         tau_axis = 0
-    tau = 1 / (10**(tl/10))
-    return 10 * np.log10(1 / np.average(tau, tau_axis, surfaces))
+    tau = 1.0 / (10.0**(tl/10.0))
+    return 10.0 * np.log10(1.0 / np.average(tau, tau_axis, surfaces))
 
 
-def wavelength(freq, c=343):
+def wavelength(freq, c=SOUNDSPEED):
     """
     Wavelength for one or more frequencies (as ``NumPy array``).
     """
@@ -31,7 +33,7 @@ def w(freq):
     """
     Angular frequency for one o more frequencies (as ``NumPy array``).
     """
-    return 2 * np.pi * freq
+    return 2.0 * np.pi * freq
 
 
 def _is_1d(input):

@@ -3,7 +3,7 @@ from __future__ import division
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_array_almost_equal
 
-from acoustics.core.descriptors import leq, sel, lw, lden, ldn
+from acoustics.descriptors import leq, sel, lw, lden, ldn
 
 
 def setup_module(descriptors):

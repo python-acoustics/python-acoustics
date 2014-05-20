@@ -29,7 +29,8 @@ def test_esum_1d():
 
 def test_esum_2d_default_axis():
     calculated = esum(np.array([[90, 90, 90], [80, 80, 80]]))
-    real = np.array([94.77121255, 84.77121255])
+    real = np.array(95.18513939877889)
+    #real = np.array([94.77121255, 84.77121255])
     assert_array_almost_equal(calculated, real)
 
 

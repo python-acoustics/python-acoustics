@@ -6,8 +6,8 @@ import pytest
 from acoustics.room import (mean_alpha, nrc, t60_sabine, t60_eyring,
                             t60_millington, t60_fitzroy, t60_arau,
                             t60_impulse, c50_from_file, c80_from_file)
-from acoustics.core.bands import octave, third
-from get_data_path import data_path
+from acoustics.bands import octave, third
+from .get_data_path import data_path
 
 
 def setup_module(room):
