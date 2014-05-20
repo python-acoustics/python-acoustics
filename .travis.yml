@@ -12,6 +12,9 @@ language: python
 #   global:
 #     - SCIPY_VERSION=0.14
        
+cache:
+  directories:
+  - $HOME/anaconda/pkgs
   
 matrix:
     fast_finish: true
