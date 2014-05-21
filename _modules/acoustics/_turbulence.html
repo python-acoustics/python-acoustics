@@ -1,0 +1,648 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>acoustics._turbulence &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for acoustics._turbulence</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file contains all abstract base classes related to atmospheric turbulence.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">gamma</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">iv</span> <span class="k">as</span> <span class="n">bessel</span>  <span class="c"># Modified Bessel function of the first kind.</span>
+
+
+<div class="viewcode-block" id="abstractstaticmethod"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.abstractstaticmethod">[docs]</a><span class="k">class</span> <span class="nc">abstractstaticmethod</span><span class="p">(</span><span class="nb">staticmethod</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract static method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">abstractstaticmethod</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+        <span class="n">function</span><span class="o">.</span><span class="n">__isabstractmethod__</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">__isabstractmethod__</span> <span class="o">=</span> <span class="bp">True</span>
+</div>
+<span class="nd">@six.add_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)</span>
+<div class="viewcode-block" id="Spectrum"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum">[docs]</a><span class="k">class</span> <span class="nc">Spectrum</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract turbulence spectrum.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">wavenumber_resolution</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wavenumber resolution</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">max_mode_order</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Maximum amount of modes to consider.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    
+    <span class="c">#_required_attributes = [&#39;x&#39;, &#39;y&#39;, &#39;z&#39;, &#39;wavenumber_resolution&#39;, &#39;spatial_resolution&#39;, &#39;max_mode_order&#39;]</span>
+    <span class="n">_required_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;wavenumber_resolution&#39;</span><span class="p">,</span> <span class="s">&#39;max_mode_order&#39;</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">_construct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">attr</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+                <span class="c">#raise ValueError(&quot;Requires &quot; + attr + &quot;.&quot;)</span>
+        
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sizes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Length of the field in each direction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">missing</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">cls</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__mro__</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_construct</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="s">&#39;_required_attributes&#39;</span><span class="p">),</span> <span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="n">missing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Missing arguments: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">missing</span><span class="p">)))</span>
+        
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Spectrum.modes"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum.modes">[docs]</a>    <span class="k">def</span> <span class="nf">modes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Vector of modes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_mode_order</span><span class="p">)</span>
+    </div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Spectrum.wavenumber"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum.wavenumber">[docs]</a>    <span class="k">def</span> <span class="nf">wavenumber</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Vector of wavenumbers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavenumber_resolution</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">modes</span>
+</div>
+    <span class="nd">@abc.abstractmethod</span>
+    <span class="k">def</span> <span class="nf">mode_amplitude</span><span class="p">():</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abc.abstractmethod</span>
+<div class="viewcode-block" id="Spectrum.spectral_density"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum.spectral_density">[docs]</a>    <span class="k">def</span> <span class="nf">spectral_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Spectral density of this object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    </div>
+    <span class="nd">@abstractstaticmethod</span>
+<div class="viewcode-block" id="Spectrum.spectral_density_function"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum.spectral_density_function">[docs]</a>    <span class="k">def</span> <span class="nf">spectral_density_function</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The spectral density function that is used in this model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    
+    
+    <span class="c">##def correlation(self):</span>
+        <span class="c">##&quot;&quot;&quot;</span>
+        <span class="c">##Correlation for this object.</span>
+        <span class="c">##&quot;&quot;&quot;</span>
+        <span class="c">##return self.correlation_function(self.mu_0, self.a, self.r)</span>
+    
+    <span class="c">##def structure(self):</span>
+        <span class="c">##&quot;&quot;&quot;</span>
+        <span class="c">##Structure for this object.</span>
+        <span class="c">##&quot;&quot;&quot;</span>
+        <span class="c">##return self.structure_function(self.mu_0, self.a, self.r)</span>
+
+    <span class="c">##def spectral_density(self):</span>
+        <span class="c">##&quot;&quot;&quot;</span>
+        <span class="c">##Spectral density for this object.</span>
+        <span class="c">##&quot;&quot;&quot;</span>
+        <span class="c">##return self.spectral_density_function(self.mu_0, self.a, self.wavenumber)</span>
+        <span class="c">#return getattr(self, &#39;spectral_density_function_&#39;+self.ndim+&#39;d&#39;)(self.mu_0, self.a, self.wavenumber)   </span>
+
+
+</div></div>
+<span class="nd">@six.add_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)</span>
+<div class="viewcode-block" id="Spectrum1D"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum1D">[docs]</a><span class="k">class</span> <span class="nc">Spectrum1D</span><span class="p">(</span><span class="n">Spectrum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for one-dimensional turbulence spectra.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">NDIM</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Amount of dimensions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    </div>
+<span class="nd">@six.add_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)</span>
+<div class="viewcode-block" id="Spectrum2D"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum2D">[docs]</a><span class="k">class</span> <span class="nc">Spectrum2D</span><span class="p">(</span><span class="n">Spectrum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for two-dimensional turbulence spectra.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">NDIM</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Amount of dimensions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c">#def __init__(self, *args, **kwargs):</span>
+        
+        <span class="c">#super(Spectrum2D, self).__init__(*args, **kwargs)</span>
+        <span class="c">#attributes = [&#39;r&#39;, &#39;z&#39;]</span>
+        <span class="c">#self._construct(attributes, args, kwargs)</span>
+        
+    
+    <span class="c">#def __init__(self, wavenumber, max_mode_order, r, z, *args, **kwargs):</span>
+        <span class="c">#Spectrum.__init__(self, wavenumber, max_mode_order)</span>
+
+    <span class="n">_max_mode_order</span> <span class="o">=</span> <span class="bp">None</span>
+    
+    <span class="n">_required_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;plane&#39;</span><span class="p">]</span>
+    
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">wavenumber_resolution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wavenumber_resolution</span>
+    
+    <span class="nd">@wavenumber_resolution.setter</span>
+    <span class="k">def</span> <span class="nf">wavenumber_resolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wavenumber_resolution</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">randomize</span><span class="p">()</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">max_mode_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_mode_order</span>
+    
+    <span class="nd">@max_mode_order.setter</span>
+    <span class="k">def</span> <span class="nf">max_mode_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_mode_order</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">randomize</span><span class="p">()</span>
+    
+    
+    <span class="c">#@property</span>
+    <span class="c">#def plane(self):</span>
+        <span class="c">#&quot;&quot;&quot;</span>
+        <span class="c">#Tuple indicating the plane that is modelled.</span>
+        <span class="c">#&quot;&quot;&quot;</span>
+        <span class="c">#return self._sizes.astype(bool)</span>
+        
+    
+<div class="viewcode-block" id="Spectrum2D.mode_amplitude"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum2D.mode_amplitude">[docs]</a>    <span class="k">def</span> <span class="nf">mode_amplitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mode amplitudes :math:`G(\\mathbf{k})`.</span>
+<span class="sd">        </span>
+<span class="sd">        :rtype: A `n`-dimensional array where `n` is equal to the amount of dimensions of `k_n`.</span>
+<span class="sd">        </span>
+<span class="sd">        The mode amplitudes are calculating using</span>
+<span class="sd">        </span>
+<span class="sd">        .. math:: G (\\mathbf{k}_n ) = \\sqrt{4 \\pi \\Delta k F(\\mathbf{k}_n) \\mathbf{k}_n} </span>
+<span class="sd">        </span>
+<span class="sd">        where :math:`\\mathbf{k}_n` are the wavenumber, :math:`\\Delta k` the wavenumber resolution, </span>
+<span class="sd">        and :math:`F` the spectral density.</span>
+<span class="sd">        </span>
+<span class="sd">        See Salomons, below equation J.24.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_mode_order</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavenumber_resolution</span>  <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectral_density</span><span class="p">()</span>  <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavenumber</span><span class="p">)</span>
+    
+    <span class="c">#def _field(self):</span>
+        <span class="sd">&quot;&quot;&quot;Numba version??&quot;&quot;&quot;</span>
+        
+        <span class="c">#r_vector = np.arange(0.0, self.r, self.spatial_resolution)</span>
+        <span class="c">#z_vector = np.arange(0.0, self.z, self.spatial_resolution)</span>
+            
+        <span class="c">#shape = (len(self.r_vector), len(self.z_vector), len(self.wavenumber))</span>
+        <span class="c">#mu = np.zeros(shape)</span>
+        
+        <span class="c">#for n in range(self.max_mode_order):</span>
+            <span class="c">#for r in r_vector:</span>
+                <span class="c">#for z in z_vector:</span>
+                    <span class="c">#for k in self.wavenumber:</span>
+                        <span class="c">#mu += </span>
+                        
+        <span class="c">#return mu</span>
+    
+    </div>
+<div class="viewcode-block" id="Spectrum2D.randomize"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum2D.randomize">[docs]</a>    <span class="k">def</span> <span class="nf">randomize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create new random values for :math:`\\theta_n` and :math:`\\alpha_n`.</span>
+<span class="sd">        </span>
+<span class="sd">        :rtype: self</span>
+<span class="sd">        </span>
+<span class="sd">        .. warning:: This function should always be called before :meth:`field` when a new random field should be generated.</span>
+<span class="sd">        </span>
+<span class="sd">        .. note:: This function is called whenever :attr:`max_mode_order` or :attr:`wavenumber_resolution` is changed.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_mode_order</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="c"># Create random alpha_n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_mode_order</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="c"># Create random alpha_n</span>
+        <span class="k">return</span> <span class="bp">self</span>
+    
+    </div>
+<div class="viewcode-block" id="Spectrum2D.plot_mode_amplitudes"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum2D.plot_mode_amplitudes">[docs]</a>    <span class="k">def</span> <span class="nf">plot_mode_amplitudes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate and plot mode amplitudes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        <span class="c">#ax.set_title(&quot;Mode {}&quot;.format(n))</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavenumber</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode_amplitude</span><span class="p">())</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">r&#39;$k$ in $\mathrm{m}^{-1}$&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">r&#39;$G$&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">&#39;Mode amplitude as function of wavenumber&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    </div>
+<div class="viewcode-block" id="Spectrum2D.plot_structure"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum2D.plot_structure">[docs]</a>    <span class="k">def</span> <span class="nf">plot_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the structure function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    </div>
+<div class="viewcode-block" id="Spectrum2D.plot_spectral_density"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum2D.plot_spectral_density">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spectral_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the spectral density.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        
+        <span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavenumber</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectral_density</span><span class="p">())</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">r&#39;$k$ in $\mathrm{m}^{-1}$&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">r&#39;$F$&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">&#39;Spectral density as function of wavenumber&#39;</span><span class="p">)</span>
+        
+        
+        <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        
+        
+</div></div>
+<span class="nd">@six.add_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)</span>
+<div class="viewcode-block" id="Spectrum3D"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.Spectrum3D">[docs]</a><span class="k">class</span> <span class="nc">Spectrum3D</span><span class="p">(</span><span class="n">Spectrum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for one-dimensional turbulence spectra.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">NDIM</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Amount of dimensions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+</div>
+<span class="nd">@six.add_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)</span>
+<div class="viewcode-block" id="GaussianTemp"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.GaussianTemp">[docs]</a><span class="k">class</span> <span class="nc">GaussianTemp</span><span class="p">(</span><span class="n">Spectrum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for Gaussian spectrum when only temperature fluctuations are considered.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">_required_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;mu_0&#39;</span><span class="p">]</span>
+    
+    
+    <span class="n">a</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Characteristic length :math:`a`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">mu_0</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The standard deviation of the refractive-index fluctuation :math:`\\mu` is :math:`\\mu_0`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">spectral_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectral_density_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavenumber</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_0</span><span class="p">)</span>
+    
+    
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GaussianTemp.correlation_function"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.GaussianTemp.correlation_function">[docs]</a>    <span class="k">def</span> <span class="nf">correlation_function</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">mu_0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Correlation function :math:`B(r)`.</span>
+<span class="sd">        </span>
+<span class="sd">        :param r: :math:`r`</span>
+<span class="sd">        :param a: :math:`a`</span>
+<span class="sd">        :param mu_0: :math:`\\mu_0`</span>
+<span class="sd">        </span>
+<span class="sd">        The correlation function is given by</span>
+<span class="sd">        </span>
+<span class="sd">        .. math:: B(r) = \\mu_0^2 \\exp{(-r^2/a^2)}</span>
+<span class="sd">        </span>
+<span class="sd">        See Salomons, equation I.28.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">mu_0</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span><span class="o">**</span><span class="mf">2.0</span><span class="o">/</span><span class="n">a</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GaussianTemp.structure_function"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.GaussianTemp.structure_function">[docs]</a>    <span class="k">def</span> <span class="nf">structure_function</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">mu_0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Structure function :math:`D(r)`.</span>
+<span class="sd">        </span>
+<span class="sd">        :param r: :math:`r`</span>
+<span class="sd">        :param a: :math:`a`</span>
+<span class="sd">        :param mu_0: :math:`\\mu_0`</span>
+
+<span class="sd">        The structure function is given by</span>
+<span class="sd">        </span>
+<span class="sd">        .. math:: D(r) = 2 \\mu_0^2 \\left[ 1 - \\exp{(-r^2/a^2)} \\right]</span>
+<span class="sd">        </span>
+<span class="sd">        See Salomons, equation I.29.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">mu_0</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    
+</div></div>
+<span class="nd">@six.add_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)</span>
+<div class="viewcode-block" id="KolmogorovTemp"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.KolmogorovTemp">[docs]</a><span class="k">class</span> <span class="nc">KolmogorovTemp</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for Kolmogorov spectrum when only temperature fluctuations are considered.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">spectral_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectral_density_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavenumber</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">)</span>
+    
+    
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="KolmogorovTemp.correlation_function"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.KolmogorovTemp.correlation_function">[docs]</a>    <span class="k">def</span> <span class="nf">correlation_function</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Correlation function is not defined for Kolmogorov spectrum.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Correlation function is not defined for Kolmogorov spectrum.&quot;</span><span class="p">)</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="KolmogorovTemp.structure_function"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.KolmogorovTemp.structure_function">[docs]</a>    <span class="k">def</span> <span class="nf">structure_function</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">2.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Structure function :math:`D(r)`.</span>
+<span class="sd">        </span>
+<span class="sd">        :param r: :math:`r`</span>
+<span class="sd">        :param C: :math:`C`</span>
+<span class="sd">        </span>
+<span class="sd">        The structure function is given by</span>
+<span class="sd">        </span>
+<span class="sd">        .. math:: D(r) = C^2 r^p</span>
+<span class="sd">        </span>
+<span class="sd">        where :math:`p = 2/3`.</span>
+<span class="sd">        </span>
+<span class="sd">        See Salomons, equation I.34.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">C</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">r</span><span class="o">**</span><span class="n">p</span>
+    
+</div></div>
+<span class="nd">@six.add_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)</span>
+<div class="viewcode-block" id="VonKarmanTemp"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.VonKarmanTemp">[docs]</a><span class="k">class</span> <span class="nc">VonKarmanTemp</span><span class="p">(</span><span class="n">Spectrum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for Von Karman spectrum when only temperature fluctuations are considered.</span>
+<span class="sd">    &quot;&quot;&quot;</span> 
+    
+    <span class="n">_required_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;mu_0&#39;</span><span class="p">]</span>
+    
+    
+    <span class="n">a</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Characteristic length :math:`a`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">mu_0</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The standard deviation of the refractive-index fluctuation :math:`\\mu` is :math:`\\mu_0`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">spectral_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectral_density_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavenumber</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu_0</span><span class="p">)</span>
+    
+    
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="VonKarmanTemp.correlation_function"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.VonKarmanTemp.correlation_function">[docs]</a>    <span class="k">def</span> <span class="nf">correlation_function</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">mu_0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Correlation function :math:`B(r)`.</span>
+<span class="sd">        </span>
+<span class="sd">        :param r: :math:`r`</span>
+<span class="sd">        :param a: :math:`a`</span>
+<span class="sd">        :param mu_0: :math:`\\mu_0`</span>
+
+<span class="sd">        The correlation function is given by</span>
+<span class="sd">        </span>
+<span class="sd">        .. math:: B(r) = \\mu_0^2 \\frac{2^{2/3}}{\\Gamma(1/3)} \\left(\\frac{r}{a}\\right)^{1/3} K_{1/3} \\left(\\frac{r}{a}\\right)</span>
+<span class="sd">        </span>
+<span class="sd">        See Salomons, equation I.39.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">mu_0</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="mf">2.0</span><span class="o">**</span><span class="p">(</span><span class="mf">2.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">gamma</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span><span class="o">/</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">bessel</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">r</span><span class="o">/</span><span class="n">a</span><span class="p">)</span>
+    </div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="VonKarmanTemp.structure_function"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.VonKarmanTemp.structure_function">[docs]</a>    <span class="k">def</span> <span class="nf">structure_function</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">mu_0</span><span class="p">,</span> <span class="n">smaller_than_factor</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Structure function :math:`D(r)`.</span>
+<span class="sd">        </span>
+<span class="sd">        :param r: :math:`r`</span>
+<span class="sd">        :param a: :math:`a`</span>
+<span class="sd">        :param mu_0: :math:`\\mu_0`</span>
+<span class="sd">        :param smaller_than_factor: Factor</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. math:: D(r) = 2 \\mu_0^2 \\left[ 1 - \\frac{2^{2/3}}{\\Gamma(1/3)} \\left(\\frac{r}{a}\\right)^{1/3} K_{1/3} \\left(\\frac{r}{a}\\right) \\right]</span>
+<span class="sd">        </span>
+<span class="sd">        When :math:`a \\ll r`, or &#39;r &lt; smaller_than_factor * a&#39;</span>
+<span class="sd">        </span>
+<span class="sd">        .. math:: D(r) \\approx \\mu_0^2 \\frac{\\sqrt{\\pi}}{\\Gamma(7/6)} \\left( \\frac{r}{a} \\right)^{2/3} </span>
+<span class="sd">        </span>
+<span class="sd">        See Salomons, equation I.40.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">r</span> <span class="o">&lt;</span> <span class="n">smaller_than_factor</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> \
+               <span class="p">(</span> <span class="n">mu_0</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="n">gamma</span><span class="p">(</span><span class="mf">7.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span><span class="o">/</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">2.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)</span>  <span class="p">)</span> <span class="o">+</span> \
+               <span class="p">(</span><span class="n">r</span> <span class="o">&gt;=</span> <span class="n">smaller_than_factor</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> \
+               <span class="p">(</span> <span class="n">mu_0</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span>  <span class="mf">2.0</span><span class="o">**</span><span class="p">(</span><span class="mf">2.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">gamma</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span><span class="o">/</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">bessel</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">r</span><span class="o">/</span><span class="n">a</span><span class="p">)</span> <span class="p">)</span>  <span class="p">)</span>
+                
+        <span class="c">#if r &lt; smaller_than_factor * a:</span>
+            <span class="c">#return mu_0**2.0 * np.sqrt(np.pi)/gamma(7.0/6.0) * (r/a)**(2.0/3.0)</span>
+        <span class="c">#else:</span>
+            <span class="c">#return mu_0**2.0 * (1.0 -  2.0**(2.0/3.0) / gamma(1.0/3.0) * (r/a)**(1.0/3.0) * bessel(1.0/3.0, r/a) )</span>
+    
+
+
+</div></div>
+<span class="nd">@six.add_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)</span>
+<div class="viewcode-block" id="GaussianTempWind"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.GaussianTempWind">[docs]</a><span class="k">class</span> <span class="nc">GaussianTempWind</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for Gaussian spectrum when both temperature and wind fluctuations are considered.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">_required_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;sigma_T&#39;</span><span class="p">,</span> <span class="s">&#39;T_0&#39;</span><span class="p">,</span> <span class="s">&#39;sigma_nu&#39;</span><span class="p">,</span> <span class="s">&#39;c_0&#39;</span><span class="p">]</span>
+    
+    
+    <span class="n">a</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Characteristic length :math:`a`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GaussianTempWind.r"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.GaussianTempWind.r">[docs]</a>    <span class="k">def</span> <span class="nf">r</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Distance :math:`r`.</span>
+<span class="sd">        </span>
+<span class="sd">        :param x: x</span>
+<span class="sd">        :param y: y</span>
+<span class="sd">        :param z: z</span>
+<span class="sd">        </span>
+<span class="sd">        .. math:: r = \\sqrt{x^2 + y^2 + z^2}</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span>
+        
+    </div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GaussianTempWind.rho"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.GaussianTempWind.rho">[docs]</a>    <span class="k">def</span> <span class="nf">rho</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Distance :math:`\\rho`.</span>
+<span class="sd">        </span>
+<span class="sd">        :param y: y</span>
+<span class="sd">        :param z: z</span>
+<span class="sd">        </span>
+<span class="sd">        .. math:: \\rho = \\sqrt{y^2 + z^2}</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">z</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+    
+    </div>
+    <span class="k">def</span> <span class="nf">spectral_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectral_density_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavenumber</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plane</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_nu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_0</span><span class="p">)</span>
+    
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GaussianTempWind.correlation_function"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.GaussianTempWind.correlation_function">[docs]</a>    <span class="k">def</span> <span class="nf">correlation_function</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">sigma_T</span><span class="p">,</span> <span class="n">T_0</span><span class="p">,</span> <span class="n">sigma_nu</span><span class="p">,</span> <span class="n">c_0</span><span class="p">,</span> <span class="n">rho</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Correlation function :math:`B(r)`.</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. math:: B(x,y,z) = \\left[ \\frac{\\sigma_T^2}{4 T_0)^2} + \\frac{\\sigma_{\\nu}^2}{c_0^2} \\left( 1 - \\frac{\\rho^2}{a^2}  \\right)  \\right]  \\exp{\\left( -r^2/a^2 \\right)}</span>
+<span class="sd">        </span>
+<span class="sd">        See Salomons, equation I.48.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">sigma_T</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">T_0</span><span class="p">))</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">+</span> <span class="p">(</span><span class="n">sigma_nu</span><span class="o">/</span><span class="n">c_0</span><span class="p">)</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">rho</span><span class="o">/</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">r</span><span class="o">/</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span>
+
+    
+
+</div></div>
+<span class="nd">@six.add_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)</span>
+<div class="viewcode-block" id="KolmogorovTempWind"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.KolmogorovTempWind">[docs]</a><span class="k">class</span> <span class="nc">KolmogorovTempWind</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for Kolmogorov spectrum when both temperature and wind fluctuations are considered.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</div>
+<span class="nd">@six.add_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)</span>
+<div class="viewcode-block" id="VonKarmanTempWind"><a class="viewcode-back" href="../../turbulence.html#acoustics._turbulence.VonKarmanTempWind">[docs]</a><span class="k">class</span> <span class="nc">VonKarmanTempWind</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for Von Karman spectrum when both temperature and wind fluctuations are considered.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">_required_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;c_0&#39;</span><span class="p">,</span> <span class="s">&#39;T_0&#39;</span><span class="p">,</span> <span class="s">&#39;C_v&#39;</span><span class="p">,</span> <span class="s">&#39;C_T&#39;</span><span class="p">,</span> <span class="s">&#39;L&#39;</span><span class="p">]</span>
+
+    <span class="n">CONSTANT_A</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">18.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">gamma</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">))</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constant `A`.</span>
+
+<span class="sd">    .. math:: A = 5 / [ 18 \\pi \\Gamma(1/3) ] \\approx 0.0330</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">spectral_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectral_density_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavenumber</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plane</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">c_0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CONSTANT_A</span><span class="p">)</span>
+        
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Directivity &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
+    <link rel="up" title="Reference" href="reference.html" />
+    <link rel="next" title="Doppler" href="doppler.html" />
+    <link rel="prev" title="Building" href="building.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="doppler.html" title="Doppler"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="building.html" title="Building"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="directivity">
+<h1>Directivity<a class="headerlink" href="#directivity" title="Permalink to this headline">¶</a></h1>
+<p class="graphviz">
+<img src="_images/inheritance-e6694c457fe1afd0ae0893312492b73cf885ebf9.png" alt="Inheritance diagram of acoustics.directivity" usemap="#inheritanced27c5fa74d" class="inheritance"/>
+<map id="inheritanced27c5fa74d" name="inheritanced27c5fa74d">
+<area shape="rect" id="node1" href="#acoustics.directivity.Cardioid" title="Cardioid directivity." alt="" coords="276,5,476,32"/>
+<area shape="rect" id="node2" href="#acoustics.directivity.Directivity" title="Abstract directivity class." alt="" coords="7,81,217,108"/>
+<area shape="rect" id="node4" href="#acoustics.directivity.Custom" title="A class to work with directivity." alt="" coords="277,56,475,83"/>
+<area shape="rect" id="node6" href="#acoustics.directivity.FigureEight" title="Figure of eight directivity." alt="" coords="267,107,485,133"/>
+<area shape="rect" id="node8" href="#acoustics.directivity.Omni" title="Class to work with omni&#45;directional directivity." alt="" coords="285,157,467,184"/>
+</map>
+</p>
+<span class="target" id="module-acoustics.directivity"></span><p>Class and functions to work with directivity.</p>
+<p>The following conventions are used within this module:</p>
+<ul class="simple">
+<li>The angle <img class="math" src="_images/math/a9cfbeb8ebee1f365919e147a79e242dcb67ee5d.png" alt="\theta"/> has a range <img class="math" src="_images/math/382cd28a1b99d9ce284e1888b78cd9554e6f335c.png" alt="[0, \pi]"/>.</li>
+<li>The angle <img class="math" src="_images/math/10e009bdb83f96c5f47c58b34d5d4b12ef268d5b.png" alt="\phi"/> has a range <img class="math" src="_images/math/8c5d981afc8f5b61e0b16275cdcf452d583d78fa.png" alt="[-pi, pi]"/>.</li>
+</ul>
+<dl class="class">
+<dt id="acoustics.directivity.Cardioid">
+<em class="property">class </em><tt class="descclassname">acoustics.directivity.</tt><tt class="descname">Cardioid</tt><big>(</big><em>rotation=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#Cardioid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.Cardioid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#acoustics.directivity.Directivity" title="acoustics.directivity.Directivity"><tt class="xref py py-class docutils literal"><span class="pre">acoustics.directivity.Directivity</span></tt></a></p>
+<p>Cardioid directivity.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="acoustics.directivity.Custom">
+<em class="property">class </em><tt class="descclassname">acoustics.directivity.</tt><tt class="descname">Custom</tt><big>(</big><em>theta=None</em>, <em>phi=None</em>, <em>r=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#Custom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.Custom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#acoustics.directivity.Directivity" title="acoustics.directivity.Directivity"><tt class="xref py py-class docutils literal"><span class="pre">acoustics.directivity.Directivity</span></tt></a></p>
+<p>A class to work with directivity.</p>
+<dl class="attribute">
+<dt id="acoustics.directivity.Custom.phi">
+<tt class="descname">phi</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.directivity.Custom.phi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Longitude. 1-D array.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.directivity.Custom.r">
+<tt class="descname">r</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.directivity.Custom.r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Magnitude or radius. 2-D array.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.directivity.Custom.theta">
+<tt class="descname">theta</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.directivity.Custom.theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Latitude. 1-D array.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="acoustics.directivity.Directivity">
+<em class="property">class </em><tt class="descclassname">acoustics.directivity.</tt><tt class="descname">Directivity</tt><big>(</big><em>rotation=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#Directivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.Directivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Abstract directivity class.</p>
+<p>This class defines several methods to be implemented by subclasses.</p>
+<dl class="method">
+<dt id="acoustics.directivity.Directivity.plot">
+<tt class="descname">plot</tt><big>(</big><em>filename=None</em>, <em>include_rotation=True</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#Directivity.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.Directivity.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Directivity plot. Plot to <tt class="docutils literal"><span class="pre">filename</span></tt> when given.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; Filename</li>
+<li><strong>include_rotation</strong> &#8211; Apply the rotation to the directivity. By default the rotation is applied in this figure.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.directivity.Directivity.rotation">
+<tt class="descname">rotation</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.directivity.Directivity.rotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotation of the directivity pattern.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.directivity.Directivity.using_cartesian">
+<tt class="descname">using_cartesian</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>include_rotation=True</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#Directivity.using_cartesian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.Directivity.using_cartesian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the directivity for given cartesian coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; x</li>
+<li><strong>y</strong> &#8211; y</li>
+<li><strong>z</strong> &#8211; z</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.directivity.Directivity.using_spherical">
+<tt class="descname">using_spherical</tt><big>(</big><em>r</em>, <em>theta</em>, <em>phi</em>, <em>include_rotation=True</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#Directivity.using_spherical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.Directivity.using_spherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the directivity for given spherical coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>r</strong> &#8211; norm</li>
+<li><strong>theta</strong> &#8211; angle <img class="math" src="_images/math/a9cfbeb8ebee1f365919e147a79e242dcb67ee5d.png" alt="\theta"/></li>
+<li><strong>phi</strong> &#8211; angle <img class="math" src="_images/math/10e009bdb83f96c5f47c58b34d5d4b12ef268d5b.png" alt="\phi"/></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="acoustics.directivity.FigureEight">
+<em class="property">class </em><tt class="descclassname">acoustics.directivity.</tt><tt class="descname">FigureEight</tt><big>(</big><em>rotation=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#FigureEight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.FigureEight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#acoustics.directivity.Directivity" title="acoustics.directivity.Directivity"><tt class="xref py py-class docutils literal"><span class="pre">acoustics.directivity.Directivity</span></tt></a></p>
+<p>Figure of eight directivity.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="acoustics.directivity.Omni">
+<em class="property">class </em><tt class="descclassname">acoustics.directivity.</tt><tt class="descname">Omni</tt><big>(</big><em>rotation=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#Omni"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.Omni" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#acoustics.directivity.Directivity" title="acoustics.directivity.Directivity"><tt class="xref py py-class docutils literal"><span class="pre">acoustics.directivity.Directivity</span></tt></a></p>
+<p>Class to work with omni-directional directivity.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.directivity.cardioid">
+<tt class="descclassname">acoustics.directivity.</tt><tt class="descname">cardioid</tt><big>(</big><em>theta</em>, <em>a=1.0</em>, <em>k=1.0</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#cardioid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.cardioid" title="Permalink to this definition">¶</a></dt>
+<dd><p>A cardioid pattern.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> &#8211; a</li>
+<li><strong>k</strong> &#8211; k</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.directivity.cartesian_to_spherical">
+<tt class="descclassname">acoustics.directivity.</tt><tt class="descname">cartesian_to_spherical</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#cartesian_to_spherical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.cartesian_to_spherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert cartesian coordinates to spherical coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; x</li>
+<li><strong>y</strong> &#8211; y</li>
+<li><strong>z</strong> &#8211; z</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/eb0e54a618a2f587911f9fec4389dbaa3f6a7373.png" alt="r = \sqrt{\left( x^2 + y^2 + z^2 \right)}"/></p>
+</div><div class="math">
+<p><img src="_images/math/1820dfb2c176490ea00ab533f54b6b57aafd61de.png" alt="\theta = \arccos{\frac{z}{r}}"/></p>
+</div><div class="math">
+<p><img src="_images/math/1ef07b65d9cb0d658bcd8b69122334ac899aea9a.png" alt="\phi = \arccos{\frac{y}{x}}"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.directivity.figure_eight">
+<tt class="descclassname">acoustics.directivity.</tt><tt class="descname">figure_eight</tt><big>(</big><em>theta</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#figure_eight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.figure_eight" title="Permalink to this definition">¶</a></dt>
+<dd><p>A figure-of-eight pattern.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> &#8211; angle <img class="math" src="_images/math/a9cfbeb8ebee1f365919e147a79e242dcb67ee5d.png" alt="\theta"/></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.directivity.spherical_to_cartesian">
+<tt class="descclassname">acoustics.directivity.</tt><tt class="descname">spherical_to_cartesian</tt><big>(</big><em>r</em>, <em>theta</em>, <em>phi</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#spherical_to_cartesian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.spherical_to_cartesian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert spherical coordinates to cartesian coordinates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>r</strong> &#8211; norm</li>
+<li><strong>theta</strong> &#8211; angle <img class="math" src="_images/math/a9cfbeb8ebee1f365919e147a79e242dcb67ee5d.png" alt="\theta"/></li>
+<li><strong>phi</strong> &#8211; angle <img class="math" src="_images/math/10e009bdb83f96c5f47c58b34d5d4b12ef268d5b.png" alt="\phi"/></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/49081ea978ee681ea06827418127dadebc29f765.png" alt="x = r \sin{\theta}\cos{\phi}"/></p>
+</div><div class="math">
+<p><img src="_images/math/8720a1db9693f9919dda47341722b1eb08d554b6.png" alt="y = r \sin{\theta}\sin{\phi}"/></p>
+</div><div class="math">
+<p><img src="_images/math/47797bc0792c2690350b722e7dd2a4657b54fd81.png" alt="z = r \cos{\theta}"/></p>
+</div></dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="building.html"
+                        title="previous chapter">Building</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="doppler.html"
+                        title="next chapter">Doppler</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/directivity.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="doppler.html" title="Doppler"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="building.html" title="Building"
+             >previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" >Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

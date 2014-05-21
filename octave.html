@@ -1,0 +1,319 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Octave &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
+    <link rel="up" title="Reference" href="reference.html" />
+    <link rel="next" title="Reflection" href="reflection.html" />
+    <link rel="prev" title="Imaging" href="imaging.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reflection.html" title="Reflection"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="imaging.html" title="Imaging"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="octave">
+<h1>Octave<a class="headerlink" href="#octave" title="Permalink to this headline">¶</a></h1>
+<p class="graphviz">
+<img src="_images/inheritance-dbae0d2b6d768fe51c8ea565a54c10ec6573b413.png" alt="Inheritance diagram of acoustics.octave" usemap="#inheritance906b77cf39" class="inheritance"/>
+<map id="inheritance906b77cf39" name="inheritance906b77cf39">
+<area shape="rect" id="node1" href="#acoustics.octave.Octave" title="Class to calculate octave center frequencies." alt="" coords="5,5,184,32"/>
+</map>
+</p>
+<span class="target" id="module-acoustics.octave"></span><p>Module for working with octaves.</p>
+<p>The following is an example on how to use <a class="reference internal" href="#acoustics.octave.Octave" title="acoustics.octave.Octave"><tt class="xref py py-class docutils literal"><span class="pre">acoustics.octave.Octave</span></tt></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">An example of how to use :class:`Acoustics.Octave.Octave`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">acoustics.octave</span> <span class="kn">import</span> <span class="n">Octave</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+   
+    <span class="sd">&quot;&quot;&quot;We happen to have the following frequency vector.&quot;&quot;&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+    <span class="sd">&quot;&quot;&quot;And we want to get some 1/3-octave results, so we set octave to 3.&quot;&quot;&quot;</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">Octave</span><span class="p">(</span><span class="n">interval</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="sd">&quot;&quot;&quot;We can now print the center frequencies of the 1/3 octave bands belonging to this frequency vector.&quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">center</span><span class="p">())</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Since by default ``unique=True`` in :class:`Auraliser.Octave.Octave` we get a </span>
+<span class="sd">    value for every value in ``interval``. If we only want to obtain unique </span>
+<span class="sd">    values, it is fastest to set ``unique=True`. This could be done during </span>
+<span class="sd">    initialization but also now.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">unique</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="sd">&quot;&quot;&quot;Now we should only get the unique center frequencies.&quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">center</span><span class="p">())</span>
+
+    <span class="sd">&quot;&quot;&quot;We can also calculate the bandwidth of each band.&quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">())</span>
+
+    <span class="sd">&quot;&quot;&quot;As well as the lower limits of the frequency limits...&quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+
+    <span class="sd">&quot;&quot;&quot;...and the upper frequency limits.&quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    So far we used a frequency interval. Sometimes you have a lower frequency and an upper frequency. </span>
+<span class="sd">    Instead of requiring to generate a frequency vector you can just give these boundary values as well.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">Octave</span><span class="p">(</span><span class="n">fmin</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="mi">20000</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">center</span><span class="p">())</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="acoustics.octave.Octave">
+<em class="property">class </em><tt class="descclassname">acoustics.octave.</tt><tt class="descname">Octave</tt><big>(</big><em>order=1</em>, <em>interval=None</em>, <em>fmin=None</em>, <em>fmax=None</em>, <em>unique=False</em>, <em>reference=1000.0</em><big>)</big><a class="reference internal" href="_modules/acoustics/octave.html#Octave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.Octave" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Class to calculate octave center frequencies.</p>
+<dl class="method">
+<dt id="acoustics.octave.Octave.bandwidth">
+<tt class="descname">bandwidth</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/acoustics/octave.html#Octave.bandwidth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.Octave.bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bandwidth of bands.</p>
+<div class="math">
+<p><img src="_images/math/fe30c1fc47c300959872e983382cc5b90cfb67cf.png" alt="B = f_u - f_l"/></p>
+</div></dd></dl>
+
+<dl class="method">
+<dt id="acoustics.octave.Octave.center">
+<tt class="descname">center</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/acoustics/octave.html#Octave.center"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.Octave.center" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return center frequencies <img class="math" src="_images/math/95dca2acb17190fe4abb62b64ba7d7f8f7a7c4a1.png" alt="f_c"/>.</p>
+<div class="math">
+<p><img src="_images/math/1defb34d6a377e9e1b652cec31bed7632afc2215.png" alt="f_c = f_{ref} \cdot 2^{n/N} \cdot 10^{\frac{3}{10N}}"/></p>
+</div></dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.octave.Octave.fmax">
+<tt class="descname">fmax</tt><a class="reference internal" href="_modules/acoustics/octave.html#Octave.fmax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.Octave.fmax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum frequency of an interval.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.octave.Octave.fmin">
+<tt class="descname">fmin</tt><a class="reference internal" href="_modules/acoustics/octave.html#Octave.fmin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.Octave.fmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum frequency of an interval.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.octave.Octave.interval">
+<tt class="descname">interval</tt><a class="reference internal" href="_modules/acoustics/octave.html#Octave.interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.Octave.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interval.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.octave.Octave.lower">
+<tt class="descname">lower</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/acoustics/octave.html#Octave.lower"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.Octave.lower" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lower frequency limits of bands.</p>
+<div class="math">
+<p><img src="_images/math/59ef65a1f71d1870f6869ceb9a029c1827190b97.png" alt="f_l = f_c \cdot 2^{\frac{-1}{2N}}"/></p>
+</div><p>See also <a class="reference internal" href="#acoustics.octave.lower_frequency" title="acoustics.octave.lower_frequency"><tt class="xref py py-func docutils literal"><span class="pre">lower_frequency()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.octave.Octave.n">
+<tt class="descname">n</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/acoustics/octave.html#Octave.n"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.Octave.n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return band <tt class="docutils literal"><span class="pre">n</span></tt> for a given frequency.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.octave.Octave.order">
+<tt class="descname">order</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.octave.Octave.order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Order</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.octave.Octave.reference">
+<tt class="descname">reference</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.octave.Octave.reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reference center frequency <img class="math" src="_images/math/6ad9a678df3f46a0af3dd61e8cc541dd0ed49135.png" alt="f_{c,0}"/>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.octave.Octave.unique">
+<tt class="descname">unique</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.octave.Octave.unique" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether or not to calculate the requested values for every value of <tt class="docutils literal"><span class="pre">interval</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.octave.Octave.upper">
+<tt class="descname">upper</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/acoustics/octave.html#Octave.upper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.Octave.upper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upper frequency limits of bands.</p>
+<div class="math">
+<p><img src="_images/math/a5c740f9e8c20f7ceff5beb5dc438449ca0edfaa.png" alt="f_u = f_c \cdot 2^{\frac{+1}{2N}}"/></p>
+</div><p>See also <a class="reference internal" href="#acoustics.octave.upper_frequency" title="acoustics.octave.upper_frequency"><tt class="xref py py-func docutils literal"><span class="pre">upper_frequency()</span></tt></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.octave.REFERENCE">
+<tt class="descclassname">acoustics.octave.</tt><tt class="descname">REFERENCE</tt><em class="property"> = 1000.0</em><a class="headerlink" href="#acoustics.octave.REFERENCE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reference frequency.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.octave.band_of_frequency">
+<tt class="descclassname">acoustics.octave.</tt><tt class="descname">band_of_frequency</tt><big>(</big><em>f</em>, <em>order=1</em>, <em>ref=1000.0</em><big>)</big><a class="reference internal" href="_modules/acoustics/octave.html#band_of_frequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.band_of_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the band <tt class="docutils literal"><span class="pre">n</span></tt> from a given center frequency.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>f</strong> &#8211; Frequency <img class="math" src="_images/math/0001d02b63ede2fe3219e05a7cd09c82ae6298b6.png" alt="f"/>.</li>
+<li><strong>order</strong> &#8211; Band order.</li>
+<li><strong>ref</strong> &#8211; Reference center frequency <img class="math" src="_images/math/faebbcf663fe1e0c5290dcb40f830cc33b17b530.png" alt="f_0"/>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.octave.frequency_of_band">
+<tt class="descclassname">acoustics.octave.</tt><tt class="descname">frequency_of_band</tt><big>(</big><em>n</em>, <em>order=1</em>, <em>ref=1000.0</em><big>)</big><a class="reference internal" href="_modules/acoustics/octave.html#frequency_of_band"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.frequency_of_band" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate center frequency of band <tt class="docutils literal"><span class="pre">n</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> &#8211; band <a href="#id1"><span class="problematic" id="id2">``</span></a>n`.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Order:</th><td class="field-body">Order of octave.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Ref:</th><td class="field-body">Reference center frequency.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.octave.lower_frequency">
+<tt class="descclassname">acoustics.octave.</tt><tt class="descname">lower_frequency</tt><big>(</big><em>center</em>, <em>order=1</em><big>)</big><a class="reference internal" href="_modules/acoustics/octave.html#lower_frequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.lower_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lower frequency of frequency band given a center frequency and order.</p>
+<div class="math">
+<p><img src="_images/math/59ef65a1f71d1870f6869ceb9a029c1827190b97.png" alt="f_l = f_c \cdot 2^{\frac{-1}{2N}}"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.octave.upper_frequency">
+<tt class="descclassname">acoustics.octave.</tt><tt class="descname">upper_frequency</tt><big>(</big><em>center</em>, <em>order=1</em><big>)</big><a class="reference internal" href="_modules/acoustics/octave.html#upper_frequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.octave.upper_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upper frequency of frequency band given a center frequency and order.</p>
+<div class="math">
+<p><img src="_images/math/a5c740f9e8c20f7ceff5beb5dc438449ca0edfaa.png" alt="f_u = f_c \cdot 2^{\frac{+1}{2N}}"/></p>
+</div></dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="imaging.html"
+                        title="previous chapter">Imaging</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="reflection.html"
+                        title="next chapter">Reflection</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/octave.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reflection.html" title="Reflection"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="imaging.html" title="Imaging"
+             >previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" >Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

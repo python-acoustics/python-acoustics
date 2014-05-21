@@ -1,0 +1,7 @@
+<map id="inheritanced27c5fa74d" name="inheritanced27c5fa74d">
+<area shape="rect" id="node1" href="#acoustics.directivity.Cardioid" title="Cardioid directivity." alt="" coords="276,5,476,32"/>
+<area shape="rect" id="node2" href="#acoustics.directivity.Directivity" title="Abstract directivity class." alt="" coords="7,81,217,108"/>
+<area shape="rect" id="node4" href="#acoustics.directivity.Custom" title="A class to work with directivity." alt="" coords="277,56,475,83"/>
+<area shape="rect" id="node6" href="#acoustics.directivity.FigureEight" title="Figure of eight directivity." alt="" coords="267,107,485,133"/>
+<area shape="rect" id="node8" href="#acoustics.directivity.Omni" title="Class to work with omni&#45;directional directivity." alt="" coords="285,157,467,184"/>
+</map>

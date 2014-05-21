@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Signal &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
+    <link rel="up" title="Reference" href="reference.html" />
+    <link rel="next" title="Turbulence" href="turbulence.html" />
+    <link rel="prev" title="Room" href="room.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="turbulence.html" title="Turbulence"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="room.html" title="Room"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="signal">
+<h1>Signal<a class="headerlink" href="#signal" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-acoustics.signal"></span><p>This module constains a function to perform a convolution of signal with a Linear Time-Variant system.</p>
+<dl class="function">
+<dt id="acoustics.signal.butter_bandpass_filter">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">butter_bandpass_filter</tt><big>(</big><em>data</em>, <em>lowcut</em>, <em>highcut</em>, <em>fs</em>, <em>order=3</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#butter_bandpass_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.butter_bandpass_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Butterworth bandpass filter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> &#8211; data</li>
+<li><strong>lowcut</strong> &#8211; Lower cut-off frequency</li>
+<li><strong>highcut</strong> &#8211; Upper cut-off frequency</li>
+<li><strong>fs</strong> &#8211; Sample frequency</li>
+<li><strong>order</strong> &#8211; Order</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.convolve">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">convolve</tt><big>(</big><em>signal</em>, <em>ltv</em>, <em>mode='full'</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#convolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.convolve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform convolution of signal with linear time-variant system <tt class="docutils literal"><span class="pre">ltv</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>signal</strong> &#8211; Vector representing input signal <img class="math" src="_images/math/e5fc41b391867da81606413e3389c7efc73abaf0.png" alt="u"/>.</li>
+<li><strong>ltv</strong> &#8211; 2D array where each column represents an impulse response</li>
+<li><strong>mode</strong> &#8211; &#8216;full&#8217;, &#8216;valid&#8217;, or &#8216;same&#8217;. See <tt class="xref py py-func docutils literal"><span class="pre">np.convolve()</span></tt> for an explanation of the options.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The convolution of two sequences is given by</p>
+<div class="math">
+<p><img src="_images/math/8555f0809e66d07cb276687cf7ca20533b594f45.png" alt="\mathbf{y} = \mathbf{t} \star \mathbf{u}"/></p>
+</div><p>This can be written as a matrix-vector multiplication</p>
+<div class="math">
+<p><img src="_images/math/89bbd00e0c01c04101a3e1f0d340d327d86f498e.png" alt="\mathbf{y} = \mathbf{T} \cdot \mathbf{u}"/></p>
+</div><p>where <img class="math" src="_images/math/6d42c88506b8da39a2a23653aecbfb7c29728063.png" alt="T"/> is a Toeplitz matrix in which each column represents an impulse response. 
+In the case of a linear time-invariant (LTI) system, each column represents a time-shifted copy of the first column.
+In the time-variant case (LTV), every column can contain a unique impulse response, both in values as in size.</p>
+<p>This function assumes all impulse responses are of the same size. 
+The input matrix <tt class="docutils literal"><span class="pre">ltv</span></tt> thus represents the non-shifted version of the Toeplitz matrix.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.decibel_to_neper">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">decibel_to_neper</tt><big>(</big><em>decibel</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#decibel_to_neper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.decibel_to_neper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert decibel to neper.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>decibel</strong> &#8211; Value in decibel (dB).</td>
+</tr>
+</tbody>
+</table>
+<p>The conversion is done according to</p>
+<div class="math">
+<p><img src="_images/math/063ecae2abc0191c1a15d2a61ebab65170c47520.png" alt="\mathrm{dB} = \frac{\log{10}}{20} \mathrm{Np}"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.ir2fr">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">ir2fr</tt><big>(</big><em>ir</em>, <em>fs</em>, <em>N=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#ir2fr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.ir2fr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert impulse response into frequency response. Returns single-sided RMS spectrum.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ir</strong> &#8211; Impulser response</li>
+<li><strong>fs</strong> &#8211; Sample frequency</li>
+<li><strong>N</strong> &#8211; Blocks</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Calculates the positive frequencies using <tt class="xref py py-func docutils literal"><span class="pre">np.fft.rfft()</span></tt>.
+Corrections are then applied to obtain the single-sided spectrum.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Single-sided spectrum. Therefore, the amount of bins returned is either N/2 or N/2+1.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.neper_to_decibel">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">neper_to_decibel</tt><big>(</big><em>neper</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#neper_to_decibel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.neper_to_decibel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert neper to decibel.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>neper</strong> &#8211; Value in neper (Np).</td>
+</tr>
+</tbody>
+</table>
+<p>The conversion is done according to</p>
+<div class="math">
+<p><img src="_images/math/4a85e40d436e46c0b8a98f23ef0581362b8e8a22.png" alt="\mathrm{Np} = \frac{20}{\log{10}} \mathrm{dB}"/></p>
+</div></dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="room.html"
+                        title="previous chapter">Room</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="turbulence.html"
+                        title="next chapter">Turbulence</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/signal.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="turbulence.html" title="Turbulence"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="room.html" title="Room"
+             >previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" >Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

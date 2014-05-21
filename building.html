@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Building &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
+    <link rel="up" title="Reference" href="reference.html" />
+    <link rel="next" title="Directivity" href="directivity.html" />
+    <link rel="prev" title="Atmosphere" href="atmosphere.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="directivity.html" title="Directivity"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="atmosphere.html" title="Atmosphere"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="building">
+<h1>Building<a class="headerlink" href="#building" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-acoustics.building"></span><p>This module contains functions related to building acoustics.</p>
+<dl class="function">
+<dt id="acoustics.building.mass_law">
+<tt class="descclassname">acoustics.building.</tt><tt class="descname">mass_law</tt><big>(</big><em>freq</em>, <em>vol_density</em>, <em>thickness</em>, <em>theta=0</em>, <em>c=343</em>, <em>rho0=1.225</em><big>)</big><a class="reference internal" href="_modules/acoustics/building.html#mass_law"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.mass_law" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate transmission loss according to mass law.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>freq</strong> (<cite>float</cite> or <cite>NumPy array</cite>) &#8211; Frequency of interest in Hz.</li>
+<li><strong>vol_density</strong> (<cite>float</cite>) &#8211; Volumetric density of material in [kg/m^3].</li>
+<li><strong>thickness</strong> (<cite>float</cite>) &#8211; Thickness of wall.</li>
+<li><strong>theta</strong> (<cite>float</cite>) &#8211; Angle of incidence in degrees. Default value is <cite>0</cite> (normal incidence).</li>
+<li><strong>c</strong> (<cite>float</cite>) &#8211; Speed of sound in [m/s].</li>
+<li><strong>rho0</strong> (<cite>float</cite>) &#8211; Density of air in kg/m^3.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.building.rw">
+<tt class="descclassname">acoustics.building.</tt><tt class="descname">rw</tt><big>(</big><em>tl</em><big>)</big><a class="reference internal" href="_modules/acoustics/building.html#rw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.rw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate <img class="math" src="_images/math/eac780e695c94d964ad8f899012a74e72bcbfb52.png" alt="R_W"/> from a NumPy array <cite>tl</cite> with third octave data
+between 100 Hz and 3.15 kHz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tl</strong> &#8211; Transmission Loss</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.building.rw_c">
+<tt class="descclassname">acoustics.building.</tt><tt class="descname">rw_c</tt><big>(</big><em>tl</em><big>)</big><a class="reference internal" href="_modules/acoustics/building.html#rw_c"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.rw_c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate <img class="math" src="_images/math/f48cdf900b78e4b359a78dbbaf67869435214d51.png" alt="R_W + C"/> from a NumPy array <cite>tl</cite> with third octave data
+between 100 Hz and 3.15 kHz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tl</strong> &#8211; Transmission Loss</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.building.rw_ctr">
+<tt class="descclassname">acoustics.building.</tt><tt class="descname">rw_ctr</tt><big>(</big><em>tl</em><big>)</big><a class="reference internal" href="_modules/acoustics/building.html#rw_ctr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.rw_ctr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate <img class="math" src="_images/math/4fb9d7e6016ce8135f94ca56d25df0f696c3e698.png" alt="R_W + C_{tr}"/> from a NumPy array <cite>tl</cite> with third octave
+data between 100 Hz and 3.15 kHz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tl</strong> &#8211; Transmission Loss</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.building.rw_curve">
+<tt class="descclassname">acoustics.building.</tt><tt class="descname">rw_curve</tt><big>(</big><em>tl</em><big>)</big><a class="reference internal" href="_modules/acoustics/building.html#rw_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.rw_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the curve of <img class="math" src="_images/math/71124af46652cf56b0a053a1d58b3b652e336282.png" alt="Rw"/> from a NumPy array <cite>tl</cite> with third
+octave data between 100 Hz and 3.15 kHz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tl</strong> &#8211; Transmission Loss</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.building.stc">
+<tt class="descclassname">acoustics.building.</tt><tt class="descname">stc</tt><big>(</big><em>tl</em><big>)</big><a class="reference internal" href="_modules/acoustics/building.html#stc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.stc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Sound Transmission Class (STC) from a NumPy array <cite>tl</cite> with
+third octave data between 125 Hz and 4 kHz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tl</strong> &#8211; Transmission Loss</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.building.stc_curve">
+<tt class="descclassname">acoustics.building.</tt><tt class="descname">stc_curve</tt><big>(</big><em>tl</em><big>)</big><a class="reference internal" href="_modules/acoustics/building.html#stc_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.stc_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Sound Transmission Class (STC) curve from a NumPy array <cite>tl</cite>
+with third octave data between 125 Hz and 4 kHz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tl</strong> &#8211; Transmission Loss</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="atmosphere.html"
+                        title="previous chapter">Atmosphere</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="directivity.html"
+                        title="next chapter">Directivity</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/building.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="directivity.html" title="Directivity"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="atmosphere.html" title="Atmosphere"
+             >previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" >Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>
