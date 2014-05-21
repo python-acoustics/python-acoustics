@@ -3,10 +3,16 @@ from __future__ import division
 import numpy as np
 
 SOUNDSPEED = 343.0
+"""
+Speed of sound in air.
+"""
 
 def esum(levels, axis=None):
     """
     Energetic summation.
+    
+    .. math:: L = 10 \\log_{10} \\left( \sum_{i=0}^N 10^{L_i/10}   \\right)
+    
     """
     #levels = _is_1d(levels)
     levels = np.array(levels)
