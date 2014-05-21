@@ -19,24 +19,24 @@ cache:
 matrix:
     fast_finish: true
     include:
-    - python: 2.7
-      env:
-      - PYTHON_VERSION=2.7
-      - NUMPY_VERSION=1.7
-      - SCIPY_VERSION=0.13
-      - JOB_NAME: "python_27_numpy_17_scipy_013"
+#     - python: 2.7
+#       env:
+#       - PYTHON_VERSION=2.7
+#       - NUMPY_VERSION=1.7
+#       - SCIPY_VERSION=0.13
+#       - JOB_NAME: "python_27_numpy_17_scipy_013"
     - python: 2.7
       env:
       - PYTHON_VERSION=2.7
       - NUMPY_VERSION=1.8
       - SCIPY_VERSION=0.13
       - JOB_NAME: "python_27_numpy_18_scipy_013"
-    - python: 2.7
-      env:
-      - PYTHON_VERSION=3.3
-      - NUMPY_VERSION=1.7
-      - SCIPY_VERSION=0.13
-      - JOB_NAME: "python_33_numpy_17_scipy_013"
+#     - python: 2.7
+#       env:
+#       - PYTHON_VERSION=3.3
+#       - NUMPY_VERSION=1.7
+#       - SCIPY_VERSION=0.13
+#       - JOB_NAME: "python_33_numpy_17_scipy_013"
     - python: 2.7
       env:
       - PYTHON_VERSION=3.3
