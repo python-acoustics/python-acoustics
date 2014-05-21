@@ -8,6 +8,10 @@ from scipy.signal import convolve as convolveLTI
 import numpy as np
 import itertools
 
+from acoustics.signal import decibel_to_neper, neper_to_decibel, ir2fr
+from numpy.testing import assert_almost_equal, assert_array_almost_equal
+
+
 class ConvolveCase(unittest.TestCase):
     
     def test_LTI(self):
@@ -62,6 +66,33 @@ class ConvolveCase(unittest.TestCase):
         y_ltv = convolveLTV(u, C)
         np.testing.assert_array_equal(y_ltv, y_manual)
         
+        
+def test_decibel_to_neper():
+    assert( decibel_to_neper(1.0) == 0.11512925464970229)
+
+
+def test_neper_to_decibel():
+    assert( neper_to_decibel(1.0) == 8.685889638065035)
+    
+def test_ir2fr():
+    """
+    Test whether the frequency vector is correct.
+    """
+    
+    t = 1.0
+    fs = 100.0
+    f = 20.0
+    ts = np.arange(0, t, 1./fs)
+    
+    A = 5.0
+    
+    x = A * np.sin(2. * np.pi * f * ts)
+    
+    fv, fr = ir2fr(x, fs)
+    
+    assert_array_almost_equal(fv[np.abs(fr).argmax()], f)
+
+    assert_array_almost_equal(np.abs(fr).max(), A)
     
 if __name__ == '__main__':
     unittest.main()
