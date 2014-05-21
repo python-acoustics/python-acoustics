@@ -70,7 +70,10 @@
 <span class="kn">from</span> <span class="nn">acoustics.bands</span> <span class="kn">import</span> <span class="n">octave</span><span class="p">,</span> <span class="n">third</span>
 
 
-<span class="k">class</span> <span class="nc">OctaveBandScale</span><span class="p">(</span><span class="n">mscale</span><span class="o">.</span><span class="n">ScaleBase</span><span class="p">):</span>
+<div class="viewcode-block" id="OctaveBandScale"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.OctaveBandScale">[docs]</a><span class="k">class</span> <span class="nc">OctaveBandScale</span><span class="p">(</span><span class="n">mscale</span><span class="o">.</span><span class="n">ScaleBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Octave band scale.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;octave&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -99,11 +102,14 @@
 
         <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
+</div>
 <span class="n">mscale</span><span class="o">.</span><span class="n">register_scale</span><span class="p">(</span><span class="n">OctaveBandScale</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">ThirdBandScale</span><span class="p">(</span><span class="n">mscale</span><span class="o">.</span><span class="n">ScaleBase</span><span class="p">):</span>
+<div class="viewcode-block" id="ThirdBandScale"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.ThirdBandScale">[docs]</a><span class="k">class</span> <span class="nc">ThirdBandScale</span><span class="p">(</span><span class="n">mscale</span><span class="o">.</span><span class="n">ScaleBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Third-octave band scale.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;third&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -132,7 +138,7 @@
 
         <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
+</div>
 <span class="n">mscale</span><span class="o">.</span><span class="n">register_scale</span><span class="p">(</span><span class="n">ThirdBandScale</span><span class="p">)</span>
 
 
@@ -246,8 +252,37 @@
     <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bands</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
 </div>
+<span class="n">TICKS_OCTAVE</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;16&#39;</span><span class="p">,</span> <span class="s">&#39;31.5&#39;</span><span class="p">,</span> <span class="s">&#39;63&#39;</span><span class="p">,</span> <span class="s">&#39;125&#39;</span><span class="p">,</span> <span class="s">&#39;250&#39;</span><span class="p">,</span> <span class="s">&#39;500&#39;</span><span class="p">,</span> <span class="s">&#39;1000&#39;</span><span class="p">,</span> <span class="s">&#39;2000&#39;</span><span class="p">,</span> <span class="s">&#39;4000&#39;</span><span class="p">,</span> <span class="s">&#39;8000&#39;</span><span class="p">,</span> <span class="s">&#39;16000&#39;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Octave center frequencies as strings. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">TICKS_OCTAVE_KHZ</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;16&#39;</span><span class="p">,</span> <span class="s">&#39;31.5&#39;</span><span class="p">,</span> <span class="s">&#39;63&#39;</span><span class="p">,</span> <span class="s">&#39;125&#39;</span><span class="p">,</span> <span class="s">&#39;250&#39;</span><span class="p">,</span> <span class="s">&#39;500&#39;</span><span class="p">,</span> <span class="s">&#39;1k&#39;</span><span class="p">,</span> <span class="s">&#39;2k&#39;</span><span class="p">,</span> <span class="s">&#39;4k&#39;</span><span class="p">,</span> <span class="s">&#39;8k&#39;</span><span class="p">,</span> <span class="s">&#39;16k&#39;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Octave center frequencies as strings. Uses kHz notation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">TICKS_THIRD_OCTAVE</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;12.5&#39;</span><span class="p">,</span>     <span class="s">&#39;16&#39;</span><span class="p">,</span>    <span class="s">&#39;20&#39;</span><span class="p">,</span>   <span class="s">&#39;25&#39;</span><span class="p">,</span> <span class="s">&#39;31.5&#39;</span><span class="p">,</span>    <span class="s">&#39;40&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;50&#39;</span><span class="p">,</span>       <span class="s">&#39;63&#39;</span><span class="p">,</span>    <span class="s">&#39;80&#39;</span><span class="p">,</span>  <span class="s">&#39;100&#39;</span><span class="p">,</span>  <span class="s">&#39;125&#39;</span><span class="p">,</span>   <span class="s">&#39;160&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;200&#39;</span><span class="p">,</span>     <span class="s">&#39;250&#39;</span><span class="p">,</span>   <span class="s">&#39;315&#39;</span><span class="p">,</span>  <span class="s">&#39;400&#39;</span><span class="p">,</span>  <span class="s">&#39;500&#39;</span><span class="p">,</span>   <span class="s">&#39;630&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;800&#39;</span><span class="p">,</span>    <span class="s">&#39;1000&#39;</span><span class="p">,</span>  <span class="s">&#39;1250&#39;</span><span class="p">,</span> <span class="s">&#39;1600&#39;</span><span class="p">,</span> <span class="s">&#39;2000&#39;</span><span class="p">,</span>  <span class="s">&#39;2500&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;3150&#39;</span><span class="p">,</span>   <span class="s">&#39;4000&#39;</span><span class="p">,</span>  <span class="s">&#39;5000&#39;</span><span class="p">,</span> <span class="s">&#39;6300&#39;</span><span class="p">,</span> <span class="s">&#39;8000&#39;</span><span class="p">,</span> <span class="s">&#39;10000&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;12500&#39;</span><span class="p">,</span> <span class="s">&#39;16000&#39;</span><span class="p">,</span> <span class="s">&#39;20000&#39;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Third-octave center frequencies as strings.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">TICKS_THIRD_OCTAVE_KHZ</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;12.5&#39;</span><span class="p">,</span>     <span class="s">&#39;16&#39;</span><span class="p">,</span>    <span class="s">&#39;20&#39;</span><span class="p">,</span>   <span class="s">&#39;25&#39;</span><span class="p">,</span> <span class="s">&#39;31.5&#39;</span><span class="p">,</span>    <span class="s">&#39;40&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;50&#39;</span><span class="p">,</span>       <span class="s">&#39;63&#39;</span><span class="p">,</span>    <span class="s">&#39;80&#39;</span><span class="p">,</span>  <span class="s">&#39;100&#39;</span><span class="p">,</span>  <span class="s">&#39;125&#39;</span><span class="p">,</span>   <span class="s">&#39;160&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;200&#39;</span><span class="p">,</span>     <span class="s">&#39;250&#39;</span><span class="p">,</span>   <span class="s">&#39;315&#39;</span><span class="p">,</span>  <span class="s">&#39;400&#39;</span><span class="p">,</span>  <span class="s">&#39;500&#39;</span><span class="p">,</span>   <span class="s">&#39;630&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;800&#39;</span><span class="p">,</span>    <span class="s">&#39;1000&#39;</span><span class="p">,</span>  <span class="s">&#39;1250&#39;</span><span class="p">,</span> <span class="s">&#39;1600&#39;</span><span class="p">,</span> <span class="s">&#39;2000&#39;</span><span class="p">,</span>  <span class="s">&#39;2500&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;3150&#39;</span><span class="p">,</span>   <span class="s">&#39;4000&#39;</span><span class="p">,</span>  <span class="s">&#39;5000&#39;</span><span class="p">,</span> <span class="s">&#39;6300&#39;</span><span class="p">,</span> <span class="s">&#39;8000&#39;</span><span class="p">,</span> <span class="s">&#39;10000&#39;</span><span class="p">,</span>
+                          <span class="s">&#39;12500&#39;</span><span class="p">,</span> <span class="s">&#39;16000&#39;</span><span class="p">,</span> <span class="s">&#39;20000&#39;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Third-octave center frequencies as strings. Uses kHz notation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="k">def</span> <span class="nf">_get_ticklabels</span><span class="p">(</span><span class="n">band_type</span><span class="p">,</span> <span class="n">kHz</span><span class="p">,</span> <span class="n">separator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a list with all tick labels for octave or third octave bands cases.</span>
@@ -258,26 +293,15 @@
 
     <span class="k">if</span> <span class="n">band_type</span> <span class="o">==</span> <span class="s">&#39;octave&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">kHz</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
-            <span class="n">ticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;16&#39;</span><span class="p">,</span> <span class="s">&#39;31.5&#39;</span><span class="p">,</span> <span class="s">&#39;63&#39;</span><span class="p">,</span> <span class="s">&#39;125&#39;</span><span class="p">,</span> <span class="s">&#39;250&#39;</span><span class="p">,</span> <span class="s">&#39;500&#39;</span><span class="p">,</span>
-                          <span class="s">&#39;1k&#39;</span><span class="p">,</span>   <span class="s">&#39;2k&#39;</span><span class="p">,</span> <span class="s">&#39;4k&#39;</span><span class="p">,</span>  <span class="s">&#39;8k&#39;</span><span class="p">,</span> <span class="s">&#39;16k&#39;</span><span class="p">]</span>
+            <span class="n">ticklabels</span> <span class="o">=</span> <span class="n">TICKS_OCTAVE_KHZ</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">ticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;16&#39;</span><span class="p">,</span>   <span class="s">&#39;31.5&#39;</span><span class="p">,</span>   <span class="s">&#39;63&#39;</span><span class="p">,</span>  <span class="s">&#39;125&#39;</span><span class="p">,</span>  <span class="s">&#39;250&#39;</span><span class="p">,</span> <span class="s">&#39;500&#39;</span><span class="p">,</span>
-                          <span class="s">&#39;1000&#39;</span><span class="p">,</span> <span class="s">&#39;2000&#39;</span><span class="p">,</span> <span class="s">&#39;4000&#39;</span><span class="p">,</span> <span class="s">&#39;8000&#39;</span><span class="p">,</span> <span class="s">&#39;16000&#39;</span><span class="p">]</span>
+            <span class="n">ticklabels</span> <span class="o">=</span> <span class="n">TICKS_OCTAVE</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">kHz</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
-            <span class="n">ticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;12.5&#39;</span><span class="p">,</span>   <span class="s">&#39;16&#39;</span><span class="p">,</span>    <span class="s">&#39;20&#39;</span><span class="p">,</span>   <span class="s">&#39;25&#39;</span><span class="p">,</span> <span class="s">&#39;31.5&#39;</span><span class="p">,</span>   <span class="s">&#39;40&#39;</span><span class="p">,</span>
-                          <span class="s">&#39;50&#39;</span><span class="p">,</span>     <span class="s">&#39;63&#39;</span><span class="p">,</span>    <span class="s">&#39;80&#39;</span><span class="p">,</span>  <span class="s">&#39;100&#39;</span><span class="p">,</span>  <span class="s">&#39;125&#39;</span><span class="p">,</span>  <span class="s">&#39;160&#39;</span><span class="p">,</span>
-                          <span class="s">&#39;200&#39;</span><span class="p">,</span>   <span class="s">&#39;250&#39;</span><span class="p">,</span>   <span class="s">&#39;315&#39;</span><span class="p">,</span>  <span class="s">&#39;400&#39;</span><span class="p">,</span>  <span class="s">&#39;500&#39;</span><span class="p">,</span>  <span class="s">&#39;630&#39;</span><span class="p">,</span>
-                          <span class="s">&#39;800&#39;</span><span class="p">,</span>    <span class="s">&#39;1k&#39;</span><span class="p">,</span> <span class="s">&#39;1.25k&#39;</span><span class="p">,</span> <span class="s">&#39;1.6k&#39;</span><span class="p">,</span>   <span class="s">&#39;2k&#39;</span><span class="p">,</span> <span class="s">&#39;2.5k&#39;</span><span class="p">,</span>
-                          <span class="s">&#39;3.15k&#39;</span><span class="p">,</span>  <span class="s">&#39;4k&#39;</span><span class="p">,</span>    <span class="s">&#39;5k&#39;</span><span class="p">,</span> <span class="s">&#39;6.3k&#39;</span><span class="p">,</span>   <span class="s">&#39;8k&#39;</span><span class="p">,</span>  <span class="s">&#39;10k&#39;</span><span class="p">,</span>
-                          <span class="s">&#39;12.5k&#39;</span><span class="p">,</span> <span class="s">&#39;16k&#39;</span><span class="p">,</span>   <span class="s">&#39;20k&#39;</span><span class="p">]</span>
+            <span class="n">ticklabels</span> <span class="o">=</span> <span class="n">TICKS_THIRD_OCTAVE_KHZ</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">ticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;12.5&#39;</span><span class="p">,</span>     <span class="s">&#39;16&#39;</span><span class="p">,</span>    <span class="s">&#39;20&#39;</span><span class="p">,</span>   <span class="s">&#39;25&#39;</span><span class="p">,</span> <span class="s">&#39;31.5&#39;</span><span class="p">,</span>    <span class="s">&#39;40&#39;</span><span class="p">,</span>
-                          <span class="s">&#39;50&#39;</span><span class="p">,</span>       <span class="s">&#39;63&#39;</span><span class="p">,</span>    <span class="s">&#39;80&#39;</span><span class="p">,</span>  <span class="s">&#39;100&#39;</span><span class="p">,</span>  <span class="s">&#39;125&#39;</span><span class="p">,</span>   <span class="s">&#39;160&#39;</span><span class="p">,</span>
-                          <span class="s">&#39;200&#39;</span><span class="p">,</span>     <span class="s">&#39;250&#39;</span><span class="p">,</span>   <span class="s">&#39;315&#39;</span><span class="p">,</span>  <span class="s">&#39;400&#39;</span><span class="p">,</span>  <span class="s">&#39;500&#39;</span><span class="p">,</span>   <span class="s">&#39;630&#39;</span><span class="p">,</span>
-                          <span class="s">&#39;800&#39;</span><span class="p">,</span>    <span class="s">&#39;1000&#39;</span><span class="p">,</span>  <span class="s">&#39;1250&#39;</span><span class="p">,</span> <span class="s">&#39;1600&#39;</span><span class="p">,</span> <span class="s">&#39;2000&#39;</span><span class="p">,</span>  <span class="s">&#39;2500&#39;</span><span class="p">,</span>
-                          <span class="s">&#39;3150&#39;</span><span class="p">,</span>   <span class="s">&#39;4000&#39;</span><span class="p">,</span>  <span class="s">&#39;5000&#39;</span><span class="p">,</span> <span class="s">&#39;6300&#39;</span><span class="p">,</span> <span class="s">&#39;8000&#39;</span><span class="p">,</span> <span class="s">&#39;10000&#39;</span><span class="p">,</span>
-                          <span class="s">&#39;12500&#39;</span><span class="p">,</span> <span class="s">&#39;16000&#39;</span><span class="p">,</span> <span class="s">&#39;20000&#39;</span><span class="p">]</span>
+            <span class="n">ticklabels</span> <span class="o">=</span> <span class="n">TICKS_THIRD_OCTAVE</span>
+            
     <span class="n">ticklabels</span> <span class="o">=</span> <span class="n">_set_separator</span><span class="p">(</span><span class="n">ticklabels</span><span class="p">,</span> <span class="n">separator</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ticklabels</span>
 

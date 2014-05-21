@@ -1,0 +1,5 @@
+<map id="inheritance02d0c82b10" name="inheritance02d0c82b10">
+<area shape="rect" id="node1" href="#acoustics.imaging.OctaveBandScale" title="Octave band scale." alt="" coords="249,5,503,32"/>
+<area shape="rect" id="node2" title="The base class for all scales." alt="" coords="5,31,200,57"/>
+<area shape="rect" id="node4" href="#acoustics.imaging.ThirdBandScale" title="Third&#45;octave band scale." alt="" coords="256,56,496,83"/>
+</map>

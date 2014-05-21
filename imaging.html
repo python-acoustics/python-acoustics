@@ -57,9 +57,11 @@
   <div class="section" id="imaging">
 <h1>Imaging<a class="headerlink" href="#imaging" title="Permalink to this headline">¶</a></h1>
 <p class="graphviz">
-<img src="_images/inheritance-1bb82ba490a590c29bbfec7d75f4dc81f079861c.png" alt="Inheritance diagram of acoustics.imaging" usemap="#inheritance02d0c82b10" class="inheritance"/>
+<img src="_images/inheritance-7dad6ec660c4af20bc53b7c239fc5973c80bd358.png" alt="Inheritance diagram of acoustics.imaging" usemap="#inheritance02d0c82b10" class="inheritance"/>
 <map id="inheritance02d0c82b10" name="inheritance02d0c82b10">
+<area shape="rect" id="node1" href="#acoustics.imaging.OctaveBandScale" title="Octave band scale." alt="" coords="249,5,503,32"/>
 <area shape="rect" id="node2" title="The base class for all scales." alt="" coords="5,31,200,57"/>
+<area shape="rect" id="node4" href="#acoustics.imaging.ThirdBandScale" title="Third&#45;octave band scale." alt="" coords="256,56,496,83"/>
 </map>
 </p>
 <span class="target" id="module-acoustics.imaging"></span><p>Plotting functions using <a class="reference external" href="http://matplotlib.org/">matplotlib</a> library.</p>
@@ -67,6 +69,44 @@
 <p class="first admonition-title">Warning</p>
 <p class="last">You need to have <a class="reference external" href="http://matplotlib.org/">matplotlib</a> installed in order to use this module.</p>
 </div>
+<dl class="class">
+<dt id="acoustics.imaging.OctaveBandScale">
+<em class="property">class </em><tt class="descclassname">acoustics.imaging.</tt><tt class="descname">OctaveBandScale</tt><big>(</big><em>axis</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/acoustics/imaging.html#OctaveBandScale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.OctaveBandScale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://matplotlib.sourceforge.net/devel/add_new_projection.html#matplotlib.scale.ScaleBase" title="(in Matplotlib v1.3.1)"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.scale.ScaleBase</span></tt></a></p>
+<p>Octave band scale.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.imaging.TICKS_OCTAVE">
+<tt class="descclassname">acoustics.imaging.</tt><tt class="descname">TICKS_OCTAVE</tt><em class="property"> = [u'16', u'31.5', u'63', u'125', u'250', u'500', u'1000', u'2000', u'4000', u'8000', u'16000']</em><a class="headerlink" href="#acoustics.imaging.TICKS_OCTAVE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Octave center frequencies as strings.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.imaging.TICKS_OCTAVE_KHZ">
+<tt class="descclassname">acoustics.imaging.</tt><tt class="descname">TICKS_OCTAVE_KHZ</tt><em class="property"> = [u'16', u'31.5', u'63', u'125', u'250', u'500', u'1k', u'2k', u'4k', u'8k', u'16k']</em><a class="headerlink" href="#acoustics.imaging.TICKS_OCTAVE_KHZ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Octave center frequencies as strings. Uses kHz notation.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.imaging.TICKS_THIRD_OCTAVE">
+<tt class="descclassname">acoustics.imaging.</tt><tt class="descname">TICKS_THIRD_OCTAVE</tt><em class="property"> = [u'12.5', u'16', u'20', u'25', u'31.5', u'40', u'50', u'63', u'80', u'100', u'125', u'160', u'200', u'250', u'315', u'400', u'500', u'630', u'800', u'1000', u'1250', u'1600', u'2000', u'2500', u'3150', u'4000', u'5000', u'6300', u'8000', u'10000', u'12500', u'16000', u'20000']</em><a class="headerlink" href="#acoustics.imaging.TICKS_THIRD_OCTAVE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Third-octave center frequencies as strings.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.imaging.TICKS_THIRD_OCTAVE_KHZ">
+<tt class="descclassname">acoustics.imaging.</tt><tt class="descname">TICKS_THIRD_OCTAVE_KHZ</tt><em class="property"> = [u'12.5', u'16', u'20', u'25', u'31.5', u'40', u'50', u'63', u'80', u'100', u'125', u'160', u'200', u'250', u'315', u'400', u'500', u'630', u'800', u'1000', u'1250', u'1600', u'2000', u'2500', u'3150', u'4000', u'5000', u'6300', u'8000', u'10000', u'12500', u'16000', u'20000']</em><a class="headerlink" href="#acoustics.imaging.TICKS_THIRD_OCTAVE_KHZ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Third-octave center frequencies as strings. Uses kHz notation.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="acoustics.imaging.ThirdBandScale">
+<em class="property">class </em><tt class="descclassname">acoustics.imaging.</tt><tt class="descname">ThirdBandScale</tt><big>(</big><em>axis</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/acoustics/imaging.html#ThirdBandScale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.ThirdBandScale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://matplotlib.sourceforge.net/devel/add_new_projection.html#matplotlib.scale.ScaleBase" title="(in Matplotlib v1.3.1)"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.scale.ScaleBase</span></tt></a></p>
+<p>Third-octave band scale.</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="acoustics.imaging.plot_bands">
 <tt class="descclassname">acoustics.imaging.</tt><tt class="descname">plot_bands</tt><big>(</big><em>data</em>, <em>bands</em>, <em>axes</em>, <em>band_type</em>, <em>k_ticks=False</em>, <em>xlabel=None</em>, <em>ylabel=None</em>, <em>title=None</em>, <em>separator=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/acoustics/imaging.html#plot_bands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.plot_bands" title="Permalink to this definition">¶</a></dt>
