@@ -8,6 +8,11 @@ import numpy as np
 from scipy.sparse import spdiags
 from scipy.signal import butter, lfilter
 
+try:
+    from pyfftw.interfaces.numpy_fft import rfft
+except ImportError:
+    from numpy.fft import rfft
+
 
 def butter_bandpass_filter(data, lowcut, highcut, fs, order=3):
     """
@@ -72,3 +77,59 @@ def convolve(signal, ltv, mode='full'):
         stop = len(signal) 
         return out[start:stop]
 
+
+def ir2fr(ir, fs, N=None):
+    """
+    Convert impulse response into frequency response. Returns single-sided RMS spectrum.
+    
+    :param ir: Impulser response
+    :param fs: Sample frequency
+    :param N: Blocks
+    
+    Calculates the positive frequencies using :func:`np.fft.rfft`.
+    Corrections are then applied to obtain the single-sided spectrum.
+    
+    .. note:: Single-sided spectrum. Therefore, the amount of bins returned is either N/2 or N/2+1.
+    
+    """
+    #ir = ir - np.mean(ir) # Remove DC component.
+    
+    N = N if N else ir.shape[-1]
+    fr = rfft(ir, n=N) / N
+    f = np.fft.rfftfreq(N, 1.0/fs)    #/ 2.0
+    
+    fr *= 2.0
+    fr[..., 0] /= 2.0    # DC component should not be doubled.
+    if not N%2: # if not uneven
+        fr[..., -1] /= 2.0 # And neither should fs/2 be.
+    
+    #f = np.arange(0, N/2+1)*(fs/N)
+    
+    return f, fr
+
+
+def decibel_to_neper(decibel):
+    """
+    Convert decibel to neper.
+    
+    :param decibel: Value in decibel (dB).
+    
+    The conversion is done according to
+    
+    .. math :: \\mathrm{dB} = \\frac{\\log{10}}{20} \\mathrm{Np}
+    
+    """
+    return np.log(10.0) / 20.0  * decibel
+
+
+def neper_to_decibel(neper):
+    """
+    Convert neper to decibel.
+    
+    :param neper: Value in neper (Np).
+    
+    The conversion is done according to
+
+    .. math :: \\mathrm{Np} = \\frac{20}{\\log{10}} \\mathrm{dB}
+    """
+    return 20.0 / np.log(10.0) * neper
