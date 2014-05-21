@@ -22,6 +22,9 @@ from acoustics.bands import octave, third
 
 
 class OctaveBandScale(mscale.ScaleBase):
+    """
+    Octave band scale.
+    """
     name = 'octave'
 
     def __init__(self, axis, **kwargs):
@@ -55,6 +58,9 @@ mscale.register_scale(OctaveBandScale)
 
 
 class ThirdBandScale(mscale.ScaleBase):
+    """
+    Third-octave band scale.
+    """
     name = 'third'
 
     def __init__(self, axis, **kwargs):
@@ -198,6 +204,35 @@ def plot_bands(data, bands, axes, band_type, k_ticks=False, xlabel=None,
         axes.set_title(title)
     return axes.plot(bands, data, *args, **kwargs)
 
+TICKS_OCTAVE = ['16', '31.5', '63', '125', '250', '500', '1000', '2000', '4000', '8000', '16000']
+"""
+Octave center frequencies as strings. 
+"""
+
+TICKS_OCTAVE_KHZ = ['16', '31.5', '63', '125', '250', '500', '1k', '2k', '4k', '8k', '16k']
+"""
+Octave center frequencies as strings. Uses kHz notation.
+"""
+
+TICKS_THIRD_OCTAVE = ['12.5',     '16',    '20',   '25', '31.5',    '40',
+                          '50',       '63',    '80',  '100',  '125',   '160',
+                          '200',     '250',   '315',  '400',  '500',   '630',
+                          '800',    '1000',  '1250', '1600', '2000',  '2500',
+                          '3150',   '4000',  '5000', '6300', '8000', '10000',
+                          '12500', '16000', '20000']
+"""
+Third-octave center frequencies as strings.
+"""
+
+TICKS_THIRD_OCTAVE_KHZ = ['12.5',     '16',    '20',   '25', '31.5',    '40',
+                          '50',       '63',    '80',  '100',  '125',   '160',
+                          '200',     '250',   '315',  '400',  '500',   '630',
+                          '800',    '1000',  '1250', '1600', '2000',  '2500',
+                          '3150',   '4000',  '5000', '6300', '8000', '10000',
+                          '12500', '16000', '20000']
+"""
+Third-octave center frequencies as strings. Uses kHz notation.
+"""
 
 def _get_ticklabels(band_type, kHz, separator):
     """
@@ -209,26 +244,15 @@ def _get_ticklabels(band_type, kHz, separator):
 
     if band_type == 'octave':
         if kHz is True:
-            ticklabels = ['16', '31.5', '63', '125', '250', '500',
-                          '1k',   '2k', '4k',  '8k', '16k']
+            ticklabels = TICKS_OCTAVE_KHZ
         else:
-            ticklabels = ['16',   '31.5',   '63',  '125',  '250', '500',
-                          '1000', '2000', '4000', '8000', '16000']
+            ticklabels = TICKS_OCTAVE
     else:
         if kHz is True:
-            ticklabels = ['12.5',   '16',    '20',   '25', '31.5',   '40',
-                          '50',     '63',    '80',  '100',  '125',  '160',
-                          '200',   '250',   '315',  '400',  '500',  '630',
-                          '800',    '1k', '1.25k', '1.6k',   '2k', '2.5k',
-                          '3.15k',  '4k',    '5k', '6.3k',   '8k',  '10k',
-                          '12.5k', '16k',   '20k']
+            ticklabels = TICKS_THIRD_OCTAVE_KHZ
         else:
-            ticklabels = ['12.5',     '16',    '20',   '25', '31.5',    '40',
-                          '50',       '63',    '80',  '100',  '125',   '160',
-                          '200',     '250',   '315',  '400',  '500',   '630',
-                          '800',    '1000',  '1250', '1600', '2000',  '2500',
-                          '3150',   '4000',  '5000', '6300', '8000', '10000',
-                          '12500', '16000', '20000']
+            ticklabels = TICKS_THIRD_OCTAVE
+            
     ticklabels = _set_separator(ticklabels, separator)
     return ticklabels
 
