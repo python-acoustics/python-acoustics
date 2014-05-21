@@ -31,8 +31,8 @@ def frequency_of_band(n, order=1, ref=REFERENCE):
     Calculate center frequency of band ``n``.
     
     :param n: band ``n`.
-    :order: Order of octave.
-    :ref: Reference center frequency.
+    :param order: Order of octave.
+    :param ref: Reference center frequency.
     """
     return ref * 10.0**(3.0/order/10.0) * 2.0**(n/order)
 
@@ -40,6 +40,9 @@ def frequency_of_band(n, order=1, ref=REFERENCE):
 def upper_frequency(center, order=1):
     """
     Upper frequency of frequency band given a center frequency and order.
+    
+    :param centr: Center frequencies.
+    :param order: Fraction of octave.
     
     .. math:: f_u = f_c \cdot 2^{\\frac{+1}{2N}}
     
@@ -50,6 +53,9 @@ def upper_frequency(center, order=1):
 def lower_frequency(center, order=1):
     """
     Lower frequency of frequency band given a center frequency and order.
+    
+    :param centr: Center frequencies.
+    :param order: Fraction of octave.
     
     .. math:: f_l = f_c \cdot 2^{\\frac{-1}{2N}}
     
@@ -71,7 +77,7 @@ class Octave(object):
         
         self.order = order
         """
-        Order
+        Fraction of octave.
         """
         
         if (interval is not None) and (fmin is not None or fmax is not None):
