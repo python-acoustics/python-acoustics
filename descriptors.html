@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Descriptors &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
+    <link rel="up" title="Reference" href="reference.html" />
+    <link rel="next" title="Directivity" href="directivity.html" />
+    <link rel="prev" title="Criterion" href="criterion.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="directivity.html" title="Directivity"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="criterion.html" title="Criterion"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="descriptors">
+<h1>Descriptors<a class="headerlink" href="#descriptors" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<span class="target" id="module-acoustics.descriptors"></span><dl class="function">
+<dt id="acoustics.descriptors.lden">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">lden</tt><big>(</big><em>lday</em>, <em>levening</em>, <em>lnight</em><big>)</big><a class="reference internal" href="_modules/acoustics/descriptors.html#lden"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.lden" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate <img class="math" src="_images/math/aa21619472c43e27c2a2612a272d4c31ea98086d.png" alt="L_{den}"/> from <img class="math" src="_images/math/77b658d08eeeff1e9fbd3e6e7db3df33478d68f0.png" alt="L_{day}"/>, <img class="math" src="_images/math/33d9af6c29d01e8d189f533ae02bda2e9ea01ba5.png" alt="L_{evening}"/> and <img class="math" src="_images/math/1da848b92815ea58805ce962248df3f43251102d.png" alt="L_{night}"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lday</strong> &#8211; Equivalent level during day period <img class="math" src="_images/math/77b658d08eeeff1e9fbd3e6e7db3df33478d68f0.png" alt="L_{day}"/>.</li>
+<li><strong>levening</strong> &#8211; Equivalent level during evening period <img class="math" src="_images/math/33d9af6c29d01e8d189f533ae02bda2e9ea01ba5.png" alt="L_{evening}"/>.</li>
+<li><strong>lnight</strong> &#8211; Equivalent level during night period <img class="math" src="_images/math/1da848b92815ea58805ce962248df3f43251102d.png" alt="L_{night}"/>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><img class="math" src="_images/math/aa21619472c43e27c2a2612a272d4c31ea98086d.png" alt="L_{den}"/></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.ldn">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">ldn</tt><big>(</big><em>lday</em>, <em>lnight</em><big>)</big><a class="reference internal" href="_modules/acoustics/descriptors.html#ldn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.ldn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate <img class="math" src="_images/math/cb4277a9de8bc60f7e3eaa2b7874f4be236a0b0b.png" alt="L_{dn}"/> from <img class="math" src="_images/math/77b658d08eeeff1e9fbd3e6e7db3df33478d68f0.png" alt="L_{day}"/> and <img class="math" src="_images/math/1da848b92815ea58805ce962248df3f43251102d.png" alt="L_{night}"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lday</strong> &#8211; Equivalent level during day period <img class="math" src="_images/math/77b658d08eeeff1e9fbd3e6e7db3df33478d68f0.png" alt="L_{day}"/>.</li>
+<li><strong>lnight</strong> &#8211; Equivalent level during night period <img class="math" src="_images/math/1da848b92815ea58805ce962248df3f43251102d.png" alt="L_{night}"/>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><img class="math" src="_images/math/cb4277a9de8bc60f7e3eaa2b7874f4be236a0b0b.png" alt="L_{dn}"/></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.leq">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">leq</tt><big>(</big><em>levels</em>, <em>int_time=1.0</em><big>)</big><a class="reference internal" href="_modules/acoustics/descriptors.html#leq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.leq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equivalent level <img class="math" src="_images/math/dbb61ce379599c0fa4014c951a2062337a5bfd9d.png" alt="L_{eq}"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>levels</strong> &#8211; Levels as function of time.</li>
+<li><strong>int_time</strong> &#8211; Integration time. Default value is 1.0 second.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Equivalent level L_{eq}.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Sum of levels in dB.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.lw">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">lw</tt><big>(</big><em>W</em>, <em>Wref=1e-12</em><big>)</big><a class="reference internal" href="_modules/acoustics/descriptors.html#lw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.lw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sound power level <img class="math" src="_images/math/6d48dab70e369071d385c7fd2cec20f17bb1b845.png" alt="L_{w}"/> for sound power <img class="math" src="_images/math/fa34489cf430b7630b30f28b2eb050e2489e3523.png" alt="W"/> and reference power <img class="math" src="_images/math/4070d71af637cc678f5350f23c41425624863b8e.png" alt="W_{ref}"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>W</strong> &#8211; Sound power <img class="math" src="_images/math/fa34489cf430b7630b30f28b2eb050e2489e3523.png" alt="W"/>.</li>
+<li><strong>Wref</strong> &#8211; Reference power <img class="math" src="_images/math/4070d71af637cc678f5350f23c41425624863b8e.png" alt="W_{ref}"/>. Default value is <img class="math" src="_images/math/b4b238f0f085c6843273ec1babb3460deae99fea.png" alt="10^{12}"/> watt.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.sel">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">sel</tt><big>(</big><em>levels</em><big>)</big><a class="reference internal" href="_modules/acoustics/descriptors.html#sel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.sel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sound Exposure Level from <tt class="docutils literal"><span class="pre">levels</span></tt> (NumPy array).</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="criterion.html"
+                        title="previous chapter">Criterion</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="directivity.html"
+                        title="next chapter">Directivity</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/descriptors.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="directivity.html" title="Directivity"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="criterion.html" title="Criterion"
+             >previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" >Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

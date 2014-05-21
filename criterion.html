@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Criterion &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
+    <link rel="up" title="Reference" href="reference.html" />
+    <link rel="next" title="Descriptors" href="descriptors.html" />
+    <link rel="prev" title="Building" href="building.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="descriptors.html" title="Descriptors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="building.html" title="Building"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="criterion">
+<h1>Criterion<a class="headerlink" href="#criterion" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<span class="target" id="module-acoustics.criterion"></span><dl class="data">
+<dt id="acoustics.criterion.NC_CURVES">
+<tt class="descclassname">acoustics.criterion.</tt><tt class="descname">NC_CURVES</tt><em class="property"> = {65: array([ 80.,  75.,  71.,  68.,  66.,  64.,  63.,  62.]), 70: array([ 83.,  79.,  75.,  72.,  71.,  70.,  69.,  68.]), 15: array([ 47.,  36.,  29.,  22.,  17.,  14.,  12.,  11.]), 20: array([ 51.,  40.,  33.,  26.,  22.,  19.,  17.,  16.]), 25: array([ 54.,  44.,  37.,  31.,  27.,  24.,  22.,  21.]), 30: array([ 57.,  48.,  41.,  35.,  31.,  29.,  28.,  27.]), 35: array([ 60.,  52.,  45.,  40.,  36.,  34.,  33.,  32.]), 40: array([ 64.,  56.,  50.,  45.,  41.,  39.,  38.,  37.]), 45: array([ 67.,  60.,  54.,  49.,  46.,  44.,  43.,  42.]), 50: array([ 71.,  64.,  58.,  54.,  51.,  49.,  48.,  47.]), 55: array([ 74.,  67.,  62.,  58.,  56.,  54.,  53.,  52.]), 60: array([ 77.,  71.,  67.,  63.,  61.,  59.,  58.,  57.])}</em><a class="headerlink" href="#acoustics.criterion.NC_CURVES" title="Permalink to this definition">¶</a></dt>
+<dd><p>NC curves.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.criterion.nc">
+<tt class="descclassname">acoustics.criterion.</tt><tt class="descname">nc</tt><big>(</big><em>levels</em><big>)</big><a class="reference internal" href="_modules/acoustics/criterion.html#nc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.criterion.nc" title="Permalink to this definition">¶</a></dt>
+<dd><p>It returns the NC curve of <cite>levels</cite>. If <cite>levels</cite> is upper than NC-70
+returns &#8216;70+&#8217;.</p>
+<p>Parameter:</p>
+<p>levels: 1-D NumPy array containing values between 63 Hz and 8 kHz in octave
+bands.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.criterion.nc_curve">
+<tt class="descclassname">acoustics.criterion.</tt><tt class="descname">nc_curve</tt><big>(</big><em>nc</em><big>)</big><a class="reference internal" href="_modules/acoustics/criterion.html#nc_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.criterion.nc_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an array containing the <cite>nc</cite> curve.</p>
+<p>Parameter:</p>
+<p>nc: <cite>int</cite> between 15 and 70 with step of 5. Valid values are: 15, 20, 25,
+..., 60, 65 and 70. Invalid values (e.g. 23) returns <cite>None</cite>.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="building.html"
+                        title="previous chapter">Building</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="descriptors.html"
+                        title="next chapter">Descriptors</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/criterion.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="descriptors.html" title="Descriptors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="building.html" title="Building"
+             >previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" >Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

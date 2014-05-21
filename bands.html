@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Bands &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
+    <link rel="up" title="Reference" href="reference.html" />
+    <link rel="next" title="Building" href="building.html" />
+    <link rel="prev" title="Atmosphere" href="atmosphere.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="building.html" title="Building"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="atmosphere.html" title="Atmosphere"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="bands">
+<h1>Bands<a class="headerlink" href="#bands" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<span class="target" id="module-acoustics.bands"></span><dl class="data">
+<dt id="acoustics.bands.OCTAVE_CENTER_FREQUENCIES">
+<tt class="descclassname">acoustics.bands.</tt><tt class="descname">OCTAVE_CENTER_FREQUENCIES</tt><em class="property"> = array([    16. ,     31.5,     63. ,    125. ,    250. ,    500. ,          1000. ,   2000. ,   4000. ,   8000. ,  16000. ])</em><a class="headerlink" href="#acoustics.bands.OCTAVE_CENTER_FREQUENCIES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Preferred 1/1-octave band center frequencies.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES">
+<tt class="descclassname">acoustics.bands.</tt><tt class="descname">THIRD_OCTAVE_CENTER_FREQUENCIES</tt><em class="property"> = array([  1.25000000e+01,   1.60000000e+01,   2.00000000e+01,          2.50000000e+01,   3.15000000e+01,   4.00000000e+01,          5.00000000e+01,   6.30000000e+01,   8.00000000e+01,          1.00000000e+02,   1.25000000e+02,   1.60000000e+02,          2.00000000e+02,   2.50000000e+02,   3.15000000e+02,          4.00000000e+02,   5.00000000e+02,   6.30000000e+02,          8.00000000e+02,   1.00000000e+03,   1.25000000e+03,          1.60000000e+03,   2.00000000e+03,   2.50000000e+03,          3.15000000e+03,   4.00000000e+03,   5.00000000e+03,          6.30000000e+03,   8.00000000e+03,   1.00000000e+04,          1.25000000e+04,   1.60000000e+04,   2.00000000e+04])</em><a class="headerlink" href="#acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Preferred 1/3-octave band center frequencies.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.bands.octave">
+<tt class="descclassname">acoustics.bands.</tt><tt class="descname">octave</tt><big>(</big><em>first</em>, <em>last</em><big>)</big><a class="reference internal" href="_modules/acoustics/bands.html#octave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.bands.octave" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a Numpy array for central frequencies of octave bands.</p>
+<p>There are more information on how to calculate &#8216;real&#8217; bands in
+<a class="reference external" href="http://blog.prosig.com/2006/02/17/standard-octave-bands/">http://blog.prosig.com/2006/02/17/standard-octave-bands/</a></p>
+<dl class="docutils">
+<dt>first <span class="classifier-delimiter">:</span> <span class="classifier">scalar</span></dt>
+<dd>First octave centerfrequency.</dd>
+<dt>last <span class="classifier-delimiter">:</span> <span class="classifier">scalar</span></dt>
+<dd>Last octave centerfrequency.</dd>
+</dl>
+<dl class="docutils">
+<dt>octave_bands <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dd>An array of centerfrequency octave bands.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.bands.third">
+<tt class="descclassname">acoustics.bands.</tt><tt class="descname">third</tt><big>(</big><em>first</em>, <em>last</em><big>)</big><a class="reference internal" href="_modules/acoustics/bands.html#third"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.bands.third" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a Numpy array for central frequencies of third octave bands.</p>
+<dl class="docutils">
+<dt>first <span class="classifier-delimiter">:</span> <span class="classifier">scalar</span></dt>
+<dd>First third octave centerfrequency.</dd>
+<dt>last <span class="classifier-delimiter">:</span> <span class="classifier">scalar</span></dt>
+<dd>Last third octave centerfrequency.</dd>
+</dl>
+<dl class="docutils">
+<dt>octave_bands <span class="classifier-delimiter">:</span> <span class="classifier">array</span></dt>
+<dd>An array of centerfrequency third octave bands.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.bands.third2oct">
+<tt class="descclassname">acoustics.bands.</tt><tt class="descname">third2oct</tt><big>(</big><em>levels</em>, <em>axis=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/bands.html#third2oct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.bands.third2oct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate Octave levels from third octave levels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>levels</strong> &#8211; Array containing third octave levels.</li>
+<li><strong>axis</strong> (<tt class="xref py py-class docutils literal"><span class="pre">int</span></tt>) &#8211; Axis over which to perform the summation.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></tt></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Third octave levels</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The number of elements along the summation axis should be a factor of 3.</p>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="atmosphere.html"
+                        title="previous chapter">Atmosphere</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="building.html"
+                        title="next chapter">Building</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/bands.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="building.html" title="Building"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="atmosphere.html" title="Atmosphere"
+             >previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" >Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

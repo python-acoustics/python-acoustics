@@ -60,6 +60,10 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>                                    <span class="c"># Use monkey-patching np.fft perhaps instead?</span>
     <span class="kn">from</span> <span class="nn">numpy.fft</span> <span class="kn">import</span> <span class="n">ifft</span>
 
+<span class="n">SOUNDSPEED</span> <span class="o">=</span> <span class="mf">343.2</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Speed of sound.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="soundspeed"><a class="viewcode-back" href="../../atmosphere.html#acoustics.atmosphere.soundspeed">[docs]</a><span class="k">def</span> <span class="nf">soundspeed</span><span class="p">(</span><span class="n">ref_temp</span><span class="p">,</span> <span class="n">temp</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -194,35 +198,35 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Atmosphere.soundspeed"><a class="viewcode-back" href="../../atmosphere.html#acoustics.atmosphere.Atmosphere.soundspeed">[docs]</a>    <span class="k">def</span> <span class="nf">soundspeed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Speed of sound :math:`c` calculated using :func:`Auraliser.Atmosphere.soundspeed`.</span>
+<span class="sd">        Speed of sound :math:`c` calculated using :func:`soundspeed`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">soundspeed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">REF_TEMP</span><span class="p">)</span>
         </div>
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Atmosphere.saturation_pressure"><a class="viewcode-back" href="../../atmosphere.html#acoustics.atmosphere.Atmosphere.saturation_pressure">[docs]</a>    <span class="k">def</span> <span class="nf">saturation_pressure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Saturation pressure :math:`p_{sat}` calculated using :func:`Auraliser.Atmosphere.saturation_pressure`.</span>
+<span class="sd">        Saturation pressure :math:`p_{sat}` calculated using :func:`saturation_pressure`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">saturation_pressure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">REF_PRESSURE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">TRIPLE_TEMP</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">)</span>
     </div>
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Atmosphere.molar_concentration_water_vapour"><a class="viewcode-back" href="../../atmosphere.html#acoustics.atmosphere.Atmosphere.molar_concentration_water_vapour">[docs]</a>    <span class="k">def</span> <span class="nf">molar_concentration_water_vapour</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Molar concentration of water vapour :math:`h` calculated using :func:`Auraliser.Atmosphere.molar_concentration_water_vapour`.</span>
+<span class="sd">        Molar concentration of water vapour :math:`h` calculated using :func:`molar_concentration_water_vapour`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">molar_concentration_water_vapour</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relative_humidity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">saturation_pressure</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressure</span><span class="p">)</span>
         </div>
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Atmosphere.relaxation_frequency_nitrogen"><a class="viewcode-back" href="../../atmosphere.html#acoustics.atmosphere.Atmosphere.relaxation_frequency_nitrogen">[docs]</a>    <span class="k">def</span> <span class="nf">relaxation_frequency_nitrogen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Resonance frequency of nitrogen :math:`f_{r,N}` calculated using :func:`Auraliser.Atmosphere.relaxation_frequency_nitrogen`.</span>
+<span class="sd">        Resonance frequency of nitrogen :math:`f_{r,N}` calculated using :func:`relaxation_frequency_nitrogen`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">relaxation_frequency_nitrogen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pressure</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">REF_PRESSURE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">REF_TEMP</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">molar_concentration_water_vapour</span><span class="p">)</span>
     </div>
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Atmosphere.relaxation_frequency_oxygen"><a class="viewcode-back" href="../../atmosphere.html#acoustics.atmosphere.Atmosphere.relaxation_frequency_oxygen">[docs]</a>    <span class="k">def</span> <span class="nf">relaxation_frequency_oxygen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Resonance frequency of oxygen :math:`f_{r,O}` calculated using :func:`Auraliser.Atmosphere.relaxation_frequency_oxygen`.</span>
+<span class="sd">        Resonance frequency of oxygen :math:`f_{r,O}` calculated using :func:`relaxation_frequency_oxygen`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">relaxation_frequency_oxygen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pressure</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">REF_PRESSURE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">molar_concentration_water_vapour</span><span class="p">)</span>
     

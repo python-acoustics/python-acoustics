@@ -60,36 +60,57 @@
 <dl class="function">
 <dt id="acoustics.room.c50_from_file">
 <tt class="descclassname">acoustics.room.</tt><tt class="descname">c50_from_file</tt><big>(</big><em>file_name</em>, <em>bands=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/room.html#c50_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.c50_from_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clarity for 50 miliseconds from a file.
-:param file_name: File name (only WAV is supported).
-:type file_name: <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>
-:param bands: Bands of calculation (optional). Only support standard octave
-and third-octave bands.
-:type bands: <tt class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></tt></p>
+<dd><p>Clarity for 50 miliseconds <img class="math" src="_images/math/4a4bef657a2b5d82223b2c00dda6e15c0f550b07.png" alt="C_{50}"/> from a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>) &#8211; File name (only WAV is supported).</li>
+<li><strong>bands</strong> (<tt class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></tt>) &#8211; Bands of calculation (optional). Only support standard octave and third-octave bands.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="acoustics.room.c80_from_file">
 <tt class="descclassname">acoustics.room.</tt><tt class="descname">c80_from_file</tt><big>(</big><em>file_name</em>, <em>bands=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/room.html#c80_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.c80_from_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clarity for 80 miliseconds from a file.
-:param file_name: File name (only WAV is supported).
-:type file_name: <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>
-:param bands: Bands of calculation (optional). Only support standard octave
-and third-octave bands.
-:type bands: <tt class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></tt></p>
+<dd><p>Clarity for 80 miliseconds <img class="math" src="_images/math/815a8cc73b5cc8b10496bd66934e76f201e4c4ff.png" alt="C_{80}"/> from a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>) &#8211; File name (only WAV is supported).</li>
+<li><strong>bands</strong> (<tt class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></tt>) &#8211; Bands of calculation (optional). Only support standard octave and third-octave bands.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="acoustics.room.clarity">
 <tt class="descclassname">acoustics.room.</tt><tt class="descname">clarity</tt><big>(</big><em>time</em>, <em>signal</em>, <em>fs</em>, <em>bands=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/room.html#clarity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.clarity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clarity from an impulse response.
-:param time: Time in miliseconds (e.g.: 50, 80).
-:param signal: Impulse response.
-:type signal: <tt class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></tt>
-:param fs: Sample frequency.
-:param bands: Bands of calculation (optional). Only support standard octave
-and third-octave bands.
-:type bands: <tt class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></tt></p>
+<dd><p>Clarity <img class="math" src="_images/math/8a58653cc9006396d334006438b846896ad57246.png" alt="C_i"/> determined from an impulse response.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time</strong> &#8211; Time in miliseconds (e.g.: 50, 80).</li>
+<li><strong>signal</strong> (<tt class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></tt>) &#8211; Impulse response.</li>
+<li><strong>fs</strong> &#8211; Sample frequency.</li>
+<li><strong>bands</strong> (<tt class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></tt>) &#8211; Bands of calculation (optional). Only support standard octave and third-octave bands.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -133,7 +154,7 @@ coefficient values (250, 500, 1000 and 2000 Hz).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>Sx</strong> &#8211; Total surface perpendicular to x-axis (yz-plane) <img class="math" src="_images/math/62b3b7953612ac78ce81af4bace274c46b934b28.png" alt="S_{x}"/>.</li>
 <li><strong>Sy</strong> &#8211; Total surface perpendicular to y-axis (xz-plane) <img class="math" src="_images/math/24d357d5a0d2a945a651ee9e013666a46f3164d1.png" alt="S_{y}"/>.</li>
 <li><strong>Sz</strong> &#8211; Total surface perpendicular to z-axis (xy-plane) <img class="math" src="_images/math/bd992e44b3325082512549cf458a5e55b70c9288.png" alt="S_{z}"/>.</li>
@@ -141,6 +162,9 @@ coefficient values (250, 500, 1000 and 2000 Hz).</p>
 <li><strong>volume</strong> &#8211; Volume of the room <img class="math" src="_images/math/c99df7a209495334da442b1ec998abaabfa320d8.png" alt="V"/>.</li>
 <li><strong>c</strong> &#8211; Speed of sound <img class="math" src="_images/math/65868d23a5bfe5b3b2d819386b19c14fa36af134.png" alt="c"/>.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reverberation time <img class="math" src="_images/math/4284863ad899adc6f679d9944ec65540d142dcef.png" alt="T_{60}"/></p>
 </td>
 </tr>
 </tbody>
@@ -162,12 +186,15 @@ coefficient values (250, 500, 1000 and 2000 Hz).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>surfaces</strong> &#8211; Surfaces <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/>.</li>
 <li><strong>alpha</strong> &#8211; Mean absorption coefficient <img class="math" src="_images/math/ad59b6e24a4a00ac621801f8d7513d68be654ab5.png" alt="\alpha"/> or by frequency bands</li>
 <li><strong>volume</strong> &#8211; Volume of the room <img class="math" src="_images/math/c99df7a209495334da442b1ec998abaabfa320d8.png" alt="V"/>.</li>
 <li><strong>c</strong> &#8211; Speed of sound <img class="math" src="_images/math/65868d23a5bfe5b3b2d819386b19c14fa36af134.png" alt="c"/>.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reverberation time <img class="math" src="_images/math/4284863ad899adc6f679d9944ec65540d142dcef.png" alt="T_{60}"/></p>
 </td>
 </tr>
 </tbody>
@@ -185,12 +212,15 @@ coefficient values (250, 500, 1000 and 2000 Hz).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>surfaces</strong> &#8211; Surfaces <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/>.</li>
 <li><strong>alpha</strong> &#8211; Mean absorption coefficient <img class="math" src="_images/math/ad59b6e24a4a00ac621801f8d7513d68be654ab5.png" alt="\alpha"/> or by frequency bands</li>
 <li><strong>volume</strong> &#8211; Volume of the room <img class="math" src="_images/math/c99df7a209495334da442b1ec998abaabfa320d8.png" alt="V"/>.</li>
 <li><strong>c</strong> &#8211; Speed of sound <img class="math" src="_images/math/65868d23a5bfe5b3b2d819386b19c14fa36af134.png" alt="c"/>.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reverberation time <img class="math" src="_images/math/4284863ad899adc6f679d9944ec65540d142dcef.png" alt="T_{60}"/></p>
 </td>
 </tr>
 </tbody>
@@ -205,11 +235,14 @@ coefficient values (250, 500, 1000 and 2000 Hz).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>file_name</strong> &#8211; name of the WAV file containing the impulse response.</li>
 <li><strong>bands</strong> &#8211; Octave or third bands as NumPy array.</li>
 <li><strong>rt</strong> &#8211; Reverberation time estimator. It accepts <cite>&#8216;t30&#8217;</cite>, <cite>&#8216;t20&#8217;</cite>, <cite>&#8216;t10&#8217;</cite> and <cite>&#8216;edt&#8217;</cite>.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reverberation time <img class="math" src="_images/math/4284863ad899adc6f679d9944ec65540d142dcef.png" alt="T_{60}"/></p>
 </td>
 </tr>
 </tbody>
@@ -224,12 +257,15 @@ coefficient values (250, 500, 1000 and 2000 Hz).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>surfaces</strong> &#8211; Surfaces <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/>.</li>
 <li><strong>alpha</strong> &#8211; Mean absorption coefficient <img class="math" src="_images/math/ad59b6e24a4a00ac621801f8d7513d68be654ab5.png" alt="\alpha"/> or by frequency bands</li>
 <li><strong>volume</strong> &#8211; Volume of the room <img class="math" src="_images/math/c99df7a209495334da442b1ec998abaabfa320d8.png" alt="V"/>.</li>
 <li><strong>c</strong> &#8211; Speed of sound <img class="math" src="_images/math/65868d23a5bfe5b3b2d819386b19c14fa36af134.png" alt="c"/>.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reverberation time <img class="math" src="_images/math/4284863ad899adc6f679d9944ec65540d142dcef.png" alt="T_{60}"/></p>
 </td>
 </tr>
 </tbody>
@@ -244,7 +280,7 @@ coefficient values (250, 500, 1000 and 2000 Hz).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>surfaces</strong> (<tt class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></tt>) &#8211; Surface of the room <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/>. 
 NumPy array that contains different surfaces.</li>
 <li><strong>alpha</strong> (<tt class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></tt>) &#8211; Absorption coefficient of the room <img class="math" src="_images/math/ad59b6e24a4a00ac621801f8d7513d68be654ab5.png" alt="\alpha"/>.
@@ -254,6 +290,9 @@ array, respectively).</li>
 <li><strong>volume</strong> (<tt class="xref py py-class docutils literal"><span class="pre">float</span></tt>) &#8211; Volume of the room <img class="math" src="_images/math/c99df7a209495334da442b1ec998abaabfa320d8.png" alt="V"/>.</li>
 <li><strong>c</strong> (<tt class="xref py py-class docutils literal"><span class="pre">float</span></tt>) &#8211; Speed of sound <img class="math" src="_images/math/65868d23a5bfe5b3b2d819386b19c14fa36af134.png" alt="c"/>.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reverberation time <img class="math" src="_images/math/4284863ad899adc6f679d9944ec65540d142dcef.png" alt="T_{60}"/></p>
 </td>
 </tr>
 </tbody>
