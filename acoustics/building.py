@@ -5,7 +5,7 @@ from __future__ import division
 
 import numpy as np
 
-from acoustics.utils import w
+#from acoustics.utils import w
 
 
 def rw_curve(tl):
@@ -112,7 +112,7 @@ def mass_law(freq, vol_density, thickness, theta=0, c=343, rho0=1.225):
     :param rho0: Density of air in kg/m^3.
     :type rho0: `float`
     """
-    rad_freq = w(freq)
+    rad_freq = 2.0 * np.pi * freq
     surface_density = vol_density * thickness
     theta_rad = np.deg2rad(theta)
     a = rad_freq * surface_density * np.cos(theta_rad) / (2 * rho0 * c)

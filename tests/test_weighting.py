@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 
-from acoustics.core.weighting import z2a, a2z, z2c, c2z, a2c, c2a
+from acoustics.weighting import z2a, a2z, z2c, c2z, a2c, c2a
 
 
 def setup_module(weighting):

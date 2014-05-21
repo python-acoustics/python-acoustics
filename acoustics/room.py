@@ -11,7 +11,7 @@ from scipy import stats
 
 from acoustics.utils import _is_1d
 from acoustics.signal import butter_bandpass_filter
-from acoustics.core.bands import (_check_band_type, octave_low, octave_high,
+from acoustics.bands import (_check_band_type, octave_low, octave_high,
                                   third_low, third_high)
 
 

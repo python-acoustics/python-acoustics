@@ -4,7 +4,6 @@ import numpy as np
 
 from acoustics.utils import esum, _is_1d
 
-
 OCTAVE_CENTER_FREQUENCIES = np.array([16, 31.5, 63, 125, 250, 500,
                              1000, 2000, 4000, 8000, 16000])
 """
@@ -87,31 +86,59 @@ def third_high(first, last):
     return third(first, last)*2.0**(1.0/6.0)
 
 
-def third2oct(levels):
+#def third2oct(levels, axis=None):
+    #"""
+    #Calculate octave levels from third octave levels.
+
+    #Parameters
+    #----------
+    #levels : ndarray
+        #1-D or 2-D NumPy array that contains third octave levels.
+        #Number of elements should be factor of 3.
+
+    #Returns
+    #-------
+    #octave_levels: ndarray
+        #NumPy array with octave levels calculated from third octave levels.
+    #"""
+    #levels = _is_1d(levels)
+    #rows = int(levels.shape[0])
+    #columns = int(levels.shape[1]/3)
+    #octave_levels = np.zeros((rows, columns))
+    #for i in range(rows):
+        #for j in range(columns):
+            #thirds = levels[i, 3*j:3*j+3]
+            #octave_levels[i, j] = esum(thirds)
+    #return octave_levels
+
+    
+def third2oct(levels, axis=None):
     """
-    Calculate octave levels from third octave levels.
-
-    Parameters
-    ----------
-    levels : ndarray
-        1-D or 2-D NumPy array that contains third octave levels.
-        Number of elements should be factor of 3.
-
-    Returns
-    -------
-    octave_levels: ndarray
-        NumPy array with octave levels calculated from third octave levels.
+    Calculate Octave levels from third octave levels.
+    
+    :param levels: Array containing third octave levels.
+    :type: :class:`np.ndarray`
+    :param axis: Axis over which to perform the summation. 
+    :type axis: :class:`int`
+    
+    :returns: Third octave levels
+    :rtype: :class:`np.ndarray`
+    
+    .. note:: The number of elements along the summation axis should be a factor of 3.
     """
-    levels = _is_1d(levels)
-    rows = int(levels.shape[0])
-    columns = int(levels.shape[1]/3)
-    octave_levels = np.zeros((rows, columns))
-    for i in range(rows):
-        for j in range(columns):
-            thirds = levels[i, 3*j:3*j+3]
-            octave_levels[i, j] = esum(thirds)
-    return _is_1d(octave_levels)
-
+    
+    levels = np.array(levels)
+    axis = axis if axis is not None else levels.ndim - 1
+    
+    try:
+        assert(levels.shape[axis]%3 == 0)
+    except AssertionError:    
+        raise ValueError("Wrong shape.")
+    shape = list(levels.shape)
+    shape[axis] = shape[axis] // 3
+    shape.insert(axis+1, 3)
+    levels = np.reshape(levels, shape)
+    return esum(levels, axis=axis+1)
 
 def _check_band_type(freqs):
     """Check if an array contains octave or third octave bands values sorted
