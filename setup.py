@@ -18,10 +18,10 @@ setup(
       scripts=[],
       zip_safe=False,
       install_requires=[
-          'numpy',
-          'scipy',
+          'numpy >=1.8',
+          'scipy >= 0.13',
           'matplotlib',
-          'six',
+          'six >= 1.4.1',
           ],
       extras_require={
           'jit' : 'numba',
