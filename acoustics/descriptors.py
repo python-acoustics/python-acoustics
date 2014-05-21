@@ -9,9 +9,15 @@ def _leq(levels, time):
     return 10.0 * np.log10((1.0/time) * np.sum(10.0**(levels/10.0)))
 
 def leq(levels, int_time=1.0):
-    '''
+    """
+    Equivalent level :math:`L_{eq}`.
+    
+    :param levels: Levels as function of time.
+    :param int_time: Integration time. Default value is 1.0 second.
+    :returns: Equivalent level L_{eq}.
+    
     Sum of levels in dB.
-    '''
+    """
     if type(levels) is list:
         levels = np.array(levels)
     time = levels.size * int_time
@@ -19,28 +25,35 @@ def leq(levels, int_time=1.0):
 
 
 def sel(levels):
-    '''
+    """
     Sound Exposure Level from ``levels`` (NumPy array).
-    '''
+    """
     if type(levels) is list:
         levels = np.array(levels)
     return _leq(levels, 1.0)
 
 
 def lw(W, Wref=1.0e-12):
-    '''
-    Sound power level for ``W`` with ``Wref`` as reference ($10^{-12}$
-    by default).
-    '''
+    """
+    Sound power level :math:`L_{w}` for sound power :math:`W` and reference power :math:`W_{ref}`.
+    
+    :param W: Sound power :math:`W`.
+    :param Wref: Reference power :math:`W_{ref}`. Default value is :math:`10^{12}` watt.
+    """
     if type(W) is list:
         W = np.array(W)
     return 10.0 * np.log10(W/Wref)
 
 
 def lden(lday, levening, lnight):
-    '''
-    Calculate $L_{DEN}$ from ``lday``, ``levening`` and ``lnight``.
-    '''
+    """
+    Calculate :math:`L_{den}` from :math:`L_{day}`, :math:`L_{evening}` and :math:`L_{night}`.
+    
+    :param lday: Equivalent level during day period :math:`L_{day}`.
+    :param levening: Equivalent level during evening period :math:`L_{evening}`.
+    :param lnight: Equivalent level during night period :math:`L_{night}`.
+    :returns: :math:`L_{den}`
+    """
     if type(lday) is list:
         lday = np.array(lday)
     if type(levening) is list:
@@ -54,9 +67,14 @@ def lden(lday, levening, lnight):
 
 
 def ldn(lday, lnight):
-    '''
-    Calculate $L_{DN}$ from ``lday`` and ``lnight``.
-    '''
+    """
+    Calculate :math:`L_{dn}` from :math:`L_{day}` and :math:`L_{night}`.
+    
+    :param lday: Equivalent level during day period :math:`L_{day}`.
+    :param lnight: Equivalent level during night period :math:`L_{night}`.
+    :returns: :math:`L_{dn}`
+    
+    """
     if type(lday) is list:
         lday = np.array(lday)
     if type(lnight) is list:

@@ -55,6 +55,7 @@ def t60_sabine(surfaces, alpha, volume, c=SOUNDSPEED):
     :type volume: :class:`float`
     :param c: Speed of sound :math:`c`.
     :type c: :class:`float`
+    :returns: Reverberation time :math:`T_{60}`
     
     Sabine's formula for the reverberation time is:
     
@@ -76,6 +77,7 @@ def t60_eyring(surfaces, alpha, volume, c=SOUNDSPEED):
     :param alpha: Mean absorption coefficient :math:`\\alpha` or by frequency bands
     :param volume: Volume of the room :math:`V`.
     :param c: Speed of sound :math:`c`.
+    :returns: Reverberation time :math:`T_{60}`
     
     Eyring's formula for the reverberation time is:
     
@@ -97,6 +99,7 @@ def t60_millington(surfaces, alpha, volume, c=SOUNDSPEED):
     :param alpha: Mean absorption coefficient :math:`\\alpha` or by frequency bands
     :param volume: Volume of the room :math:`V`.
     :param c: Speed of sound :math:`c`.
+    :returns: Reverberation time :math:`T_{60}`
     """
     mean_alpha = np.average(alpha, axis=0, weights=surfaces)
     A = -np.sum(surfaces[:, np.newaxis] * np.log(1.0 - mean_alpha), axis=0)
@@ -112,6 +115,7 @@ def t60_fitzroy(surfaces, alpha, volume, c=SOUNDSPEED):
     :param alpha: Mean absorption coefficient :math:`\\alpha` or by frequency bands
     :param volume: Volume of the room :math:`V`.
     :param c: Speed of sound :math:`c`.
+    :returns: Reverberation time :math:`T_{60}`
     """
     Sx = np.sum(surfaces[0:2])
     Sy = np.sum(surfaces[2:4])
@@ -136,6 +140,7 @@ def t60_arau(Sx, Sy, Sz, alpha, volume, c=SOUNDSPEED):
     :param alpha: Absorption coefficients :math:`\\mathbf{\\alpha} = \\left[ \\alpha_x, \\alpha_y, \\alpha_z \\right]`
     :param volume: Volume of the room :math:`V`.
     :param c: Speed of sound :math:`c`.
+    :returns: Reverberation time :math:`T_{60}`
     
     .. [#arau] For more details, please see
        http://www.arauacustica.com/files/publicaciones/pdf_esp_7.pdf
@@ -156,6 +161,7 @@ def t60_impulse(file_name, bands, rt='t30'):
     :param file_name: name of the WAV file containing the impulse response.
     :param bands: Octave or third bands as NumPy array.
     :param rt: Reverberation time estimator. It accepts `'t30'`, `'t20'`, `'t10'` and `'edt'`.
+    :returns: Reverberation time :math:`T_{60}`
     
     """
     fs, raw_signal = wavfile.read(file_name)
@@ -216,14 +222,15 @@ def t60_impulse(file_name, bands, rt='t30'):
 
 def clarity(time, signal, fs, bands=None):
     """
-    Clarity from an impulse response.
+    Clarity :math:`C_i` determined from an impulse response.
+    
     :param time: Time in miliseconds (e.g.: 50, 80).
     :param signal: Impulse response.
     :type signal: :class:`np.ndarray`
     :param fs: Sample frequency.
-    :param bands: Bands of calculation (optional). Only support standard octave
-    and third-octave bands.
+    :param bands: Bands of calculation (optional). Only support standard octave and third-octave bands.
     :type bands: :class:`np.ndarray`
+    
     """
     band_type = _check_band_type(bands)
 
@@ -246,12 +253,13 @@ def clarity(time, signal, fs, bands=None):
 
 def c50_from_file(file_name, bands=None):
     """
-    Clarity for 50 miliseconds from a file.
+    Clarity for 50 miliseconds :math:`C_{50}` from a file.
+    
     :param file_name: File name (only WAV is supported).
     :type file_name: :class:`str`
-    :param bands: Bands of calculation (optional). Only support standard octave
-    and third-octave bands.
+    :param bands: Bands of calculation (optional). Only support standard octave and third-octave bands.
     :type bands: :class:`np.ndarray`
+    
     """
     fs, signal = wavfile.read(file_name)
     return clarity(50.0, signal, fs, bands)
@@ -259,12 +267,13 @@ def c50_from_file(file_name, bands=None):
 
 def c80_from_file(file_name, bands=None):
     """
-    Clarity for 80 miliseconds from a file.
+    Clarity for 80 miliseconds :math:`C_{80}` from a file.
+    
     :param file_name: File name (only WAV is supported).
     :type file_name: :class:`str`
-    :param bands: Bands of calculation (optional). Only support standard octave
-    and third-octave bands.
+    :param bands: Bands of calculation (optional). Only support standard octave and third-octave bands.
     :type bands: :class:`np.ndarray`
+    
     """
     fs, signal = wavfile.read(file_name)
     return clarity(80.0, signal, fs, bands)

@@ -11,6 +11,10 @@ try:
 except ImportError:                                    # Use monkey-patching np.fft perhaps instead?
     from numpy.fft import ifft
 
+SOUNDSPEED = 343.2
+"""
+Speed of sound.
+"""
 
 def soundspeed(ref_temp, temp):
     """
@@ -145,35 +149,35 @@ class Atmosphere(object):
     @property
     def soundspeed(self):
         """
-        Speed of sound :math:`c` calculated using :func:`Auraliser.Atmosphere.soundspeed`.
+        Speed of sound :math:`c` calculated using :func:`soundspeed`.
         """
         return soundspeed(self.temperature, self.REF_TEMP)
         
     @property
     def saturation_pressure(self):
         """
-        Saturation pressure :math:`p_{sat}` calculated using :func:`Auraliser.Atmosphere.saturation_pressure`.
+        Saturation pressure :math:`p_{sat}` calculated using :func:`saturation_pressure`.
         """
         return saturation_pressure(self.REF_PRESSURE, self.TRIPLE_TEMP, self.temperature)
     
     @property
     def molar_concentration_water_vapour(self):
         """
-        Molar concentration of water vapour :math:`h` calculated using :func:`Auraliser.Atmosphere.molar_concentration_water_vapour`.
+        Molar concentration of water vapour :math:`h` calculated using :func:`molar_concentration_water_vapour`.
         """
         return molar_concentration_water_vapour(self.relative_humidity, self.saturation_pressure, self.pressure)
         
     @property
     def relaxation_frequency_nitrogen(self):
         """
-        Resonance frequency of nitrogen :math:`f_{r,N}` calculated using :func:`Auraliser.Atmosphere.relaxation_frequency_nitrogen`.
+        Resonance frequency of nitrogen :math:`f_{r,N}` calculated using :func:`relaxation_frequency_nitrogen`.
         """
         return relaxation_frequency_nitrogen(self.pressure, self.REF_PRESSURE, self.temperature, self.REF_TEMP, self.molar_concentration_water_vapour)
     
     @property
     def relaxation_frequency_oxygen(self):
         """
-        Resonance frequency of oxygen :math:`f_{r,O}` calculated using :func:`Auraliser.Atmosphere.relaxation_frequency_oxygen`.
+        Resonance frequency of oxygen :math:`f_{r,O}` calculated using :func:`relaxation_frequency_oxygen`.
         """
         return relaxation_frequency_oxygen(self.pressure, self.REF_PRESSURE, self.molar_concentration_water_vapour)
     
