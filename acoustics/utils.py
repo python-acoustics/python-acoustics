@@ -14,9 +14,7 @@ def esum(levels, axis=None):
     .. math:: L = 10 \\log_{10} \\left( \sum_{i=0}^N 10^{L_i/10}   \\right)
     
     """
-    #levels = _is_1d(levels)
     levels = np.array(levels)
-    #axis = axis if axis is not None else levels.ndim - 1
     return np.squeeze( 10.0 * np.log10((10.0**(levels/10.0)).sum(axis=axis)) )
 
 def mean_tl(tl, surfaces):
