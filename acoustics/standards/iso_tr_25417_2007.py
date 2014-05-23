@@ -2,9 +2,14 @@
 ISO/TR 25417 2007
 =================
 
-ISO/TR 25417:2007 specifies definitions of acoustical quantities and terms used in noise measurement documents prepared by ISO Technical Committee TC 43, Acoustics, Subcommittee SC 1, Noise, together with their symbols and units, with the principal aim of harmonizing the terminology used. [ISO]_
+ISO/TR 25417:2007 specifies definitions of acoustical quantities and terms used 
+in noise measurement documents prepared by ISO Technical Committee TC 43, 
+Acoustics, Subcommittee SC 1, Noise, together with their symbols and units, with 
+the principal aim of harmonizing the terminology used [ISO25417]_.
 
-.. [ISO] http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=42915
+.. [ISO24517] http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=42915
+
+.. inheritance-diagram:: acoustics.standards.iso_tr_25417_2007
 
 """
 
