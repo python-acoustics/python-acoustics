@@ -1,6 +1,69 @@
+"""
+Descriptors
+============
+
+The descriptors module offers all kinds of acoustics related descriptors.
+
+.. toctree::
+    :maxdepth: 2
+
+Descriptors from ISO/TR 25417:2007
+**********************************
+
+Descriptors from :mod:`acoustics.standards.iso_tr_25417_2007`.
+
+.. autoattribute:: acoustics.descriptors.REFERENCE_PRESSURE 
+.. autofunction:: acoustics.descriptors.sound_pressure_level 
+.. autofunction:: acoustics.descriptors.equivalent_sound_pressure_level
+.. autofunction:: acoustics.descriptors.peak_sound_pressure
+.. autofunction:: acoustics.descriptors.peak_sound_pressure_level
+.. autoattribute:: acoustics.descriptors.REFERENCE_SOUND_EXPOSURE
+.. autofunction:: acoustics.descriptors.sound_exposure
+.. autofunction:: acoustics.descriptors.sound_exposure_level
+.. autoattribute:: acoustics.descriptors.REFERENCE_POWER
+.. autofunction:: acoustics.descriptors.sound_power_level
+.. autofunction:: acoustics.descriptors.sound_energy
+.. autofunction:: acoustics.descriptors.sound_energy_level
+.. autoattribute:: acoustics.descriptors.REFERENCE_ENERGY
+.. autofunction:: acoustics.descriptors.sound_intensity
+.. autofunction:: acoustics.descriptors.time_averaged_sound_intensity
+.. autoattribute:: acoustics.descriptors.REFERENCE_INTENSITY
+.. autofunction:: acoustics.descriptors.time_averaged_sound_intensity_level
+.. autofunction:: acoustics.descriptors.normal_time_averaged_sound_intensity
+.. autofunction:: acoustics.descriptors.normal_time_averaged_sound_intensity_level
+
+
+Other descriptors
+*****************
+
+"""
+
 from __future__ import division
 
 import numpy as np
+
+from acoustics.standards.iso_tr_25417_2007 import (REFERENCE_PRESSURE, 
+                                                   sound_pressure_level, 
+                                                   equivalent_sound_pressure_level,
+                                                   peak_sound_pressure,
+                                                   peak_sound_pressure_level,
+                                                   REFERENCE_SOUND_EXPOSURE,
+                                                   sound_exposure,
+                                                   sound_exposure_level,
+                                                   REFERENCE_POWER,
+                                                   sound_power_level,
+                                                   sound_energy,
+                                                   sound_energy_level,
+                                                   sound_intensity,
+                                                   time_averaged_sound_intensity,
+                                                   REFERENCE_INTENSITY,
+                                                   time_averaged_sound_intensity_level,
+                                                   normal_time_averaged_sound_intensity,
+                                                   normal_time_averaged_sound_intensity_level,
+                                                   )
+                                                   
+                                                   
+
 
 
 def _leq(levels, time):
