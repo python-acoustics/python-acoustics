@@ -30,6 +30,7 @@ This section contains a description of all classes and functions.
    utils
    weighting
    standards
+   quantity
 
     
 
