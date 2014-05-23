@@ -1,1 +1,1 @@
-import iso_tr_25417_2007
+from acoustics.standards import iso_tr_25417_2007

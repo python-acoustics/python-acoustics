@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 
 from acoustics.atmosphere import Atmosphere
-from .get_data_path import data_path
+from tests.get_data_path import data_path
 
 class AtmosphereCase(unittest.TestCase):
     
