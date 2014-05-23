@@ -61,15 +61,13 @@ from acoustics.standards.iso_tr_25417_2007 import (REFERENCE_PRESSURE,
                                                    normal_time_averaged_sound_intensity,
                                                    normal_time_averaged_sound_intensity_level,
                                                    )
-                                                   
-                                                   
-
 
 
 def _leq(levels, time):
     if type(levels) is list:
         levels = np.array(levels)
     return 10.0 * np.log10((1.0/time) * np.sum(10.0**(levels/10.0)))
+
 
 def leq(levels, int_time=1.0):
     """

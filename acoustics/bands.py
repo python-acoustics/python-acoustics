@@ -85,32 +85,6 @@ def third_low(first, last):
 def third_high(first, last):
     return third(first, last)*2.0**(1.0/6.0)
 
-
-#def third2oct(levels, axis=None):
-    #"""
-    #Calculate octave levels from third octave levels.
-
-    #Parameters
-    #----------
-    #levels : ndarray
-        #1-D or 2-D NumPy array that contains third octave levels.
-        #Number of elements should be factor of 3.
-
-    #Returns
-    #-------
-    #octave_levels: ndarray
-        #NumPy array with octave levels calculated from third octave levels.
-    #"""
-    #levels = _is_1d(levels)
-    #rows = int(levels.shape[0])
-    #columns = int(levels.shape[1]/3)
-    #octave_levels = np.zeros((rows, columns))
-    #for i in range(rows):
-        #for j in range(columns):
-            #thirds = levels[i, 3*j:3*j+3]
-            #octave_levels[i, j] = esum(thirds)
-    #return octave_levels
-
     
 def third2oct(levels, axis=None):
     """
