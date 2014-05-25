@@ -140,8 +140,24 @@ def neper_to_decibel(neper):
     return 20.0 / np.log(10.0) * neper
 
 
-
-
+class Band(object):
+    """
+    Frequency band object.
+    """
+    
+    def __init__(self, center, lower, upper, bandwidth=None):
+        
+        self.center = center
+        self.lower = lower
+        self.upper = upper
+        self.bandwidth = bandwidth if bandwidth is not None else self.upper - self.lower
+    
+    def __str__(self):
+        return str(self.center)
+    
+    def __repr__(self):
+        return "Band({})".format(str(self.center))
+    
 class Frequencies(object):
     """
     Object describing frequency bands.
@@ -166,8 +182,12 @@ class Frequencies(object):
         
         self.bandwidth = bandwidth if bandwidth is not None else self.upper - self.lower
         """
-        Lower frequencies.
+        Bandwidth.
         """
+    
+    def __iter__(self):
+        for i in range(len(self.center)):
+            yield Band(self.center[i], self.lower[i], self.upper[i], self.bandwidth[i])
     
     def __len__(self):
         return len(self.center)
@@ -185,6 +205,16 @@ class EqualBand(Frequencies):
     """
     
     def __init__(self, center=None, fstart=None, fstop=None, nbands=None, bandwidth=None):
+        """
+        Parameters.
+        
+        :param center: Vector of center frequencies.
+        :param fstart: First center frequency.
+        :param fstop: Last center frequency.
+        :param nbands: Amount of frequency bands.
+        :param bandwidth: Bandwidth of bands.
+        
+        """
         
         if center is not None:
             try:
@@ -192,27 +222,28 @@ class EqualBand(Frequencies):
             except TypeError:
                 center = [center]
                 nbands = 1
-            fstart = center[0]
-            fstop = center[-1]
-            u = np.unique(np.gradient(center))
+
+            u = np.unique(np.diff(center))
             if len(u)==1:
                 bandwidth = u
             else:
                 raise ValueError("Given center frequencies are not equally spaced.")
-        if fstart and fstop and nbands:
-            bandwidth = (fstop - fstart) / nbands
+            fstart = center[0] #- bandwidth/2.0
+            fstop = center[-1] #+ bandwidth/2.0
+        elif fstart and fstop and nbands:
+            bandwidth = (fstop - fstart) / (nbands-1)
         elif fstart and fstop and bandwidth:
-            nbands = round((fstop - fstart) / bandwidth)
+            nbands = round((fstop - fstart) / bandwidth) + 1
         elif fstart and bandwidth and nbands:
             fstop = fstart + nbands * bandwidth
         elif fstop and bandwidth and nbands:
-            fstart = fstop - nbands * bandwidth
+            fstart = fstop - (nbands-1) * bandwidth
         else:
             raise ValueError("Insufficient parameters. Cannot determine fstart, fstop, bandwidth.")
         
-        center = fstart + np.arange(1, nbands+1) * bandwidth # + bandwidth/2.0
-        upper = fstart + np.arange(1, nbands+1) * bandwidth + bandwidth/2.0
-        lower = fstart + np.arange(1, nbands+1) * bandwidth - bandwidth/2.0
+        center = fstart + np.arange(0, nbands) * bandwidth # + bandwidth/2.0
+        upper  = fstart + np.arange(0, nbands) * bandwidth + bandwidth/2.0
+        lower  = fstart + np.arange(0, nbands) * bandwidth - bandwidth/2.0
         
         super(EqualBand, self).__init__(center, lower, upper, bandwidth)
         
@@ -280,7 +311,35 @@ class OctaveBand(Frequencies):
     def __repr__(self):
         return "OctaveBand({})".format(str(self.center))
     
-        
+  
+
+def integrate_bands(data, a, b):
+    """
+    Reduce frequency resolution of power spectrum. Merges frequency bands by integration.
+    
+    :param data: Vector with narrowband powers.
+    :param a: Instance of :class:`Frequencies`.
+    :param b: Instance of :class:`Frequencies`.
+    
+    .. note:: Needs rewriting so that the summation goes over axis=1.
+    
+    """
+    
+    try:
+        if b.fraction%a.fraction:
+            raise NotImplementedError("Non-integer ratio of fractional-octaves are not supported.")
+    except AttributeError:
+        pass
+    
+    lower, _ = np.meshgrid(b.lower, a.center)
+    upper, _ = np.meshgrid(b.upper, a.center)
+    _, center= np.meshgrid(b.center, a.center)
+
+    return ((lower < center) * (center <= upper) * data[:,None]).sum(axis=0)
+
+
+
+  
 class Filterbank(object):
     """
     Fractional-Octave filter bank.
