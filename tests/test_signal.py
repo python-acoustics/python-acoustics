@@ -1,18 +1,18 @@
 """
 Tests for :func:`Acoustics.LTV.convolve`
 """
-import unittest
 
 from acoustics.signal import convolve as convolveLTV
+from acoustics.signal import EqualBand, OctaveBand, integrate_bands
 from scipy.signal import convolve as convolveLTI
 import numpy as np
 import itertools
 
 from acoustics.signal import decibel_to_neper, neper_to_decibel, ir2fr
-from numpy.testing import assert_almost_equal, assert_array_almost_equal
+from numpy.testing import assert_almost_equal, assert_array_almost_equal, assert_array_equal
 
 
-class ConvolveCase(unittest.TestCase):
+class TestConvolve:#(unittest.TestCase):
     
     def test_LTI(self):
         """
@@ -94,5 +94,71 @@ def test_ir2fr():
 
     assert_array_almost_equal(np.abs(fr).max(), A)
     
-if __name__ == '__main__':
-    unittest.main()
+    
+class TestEqualBand:#(unittest.TestCase):
+    """
+    Test :class:`acoustics.signal.EqualBand`.
+    """
+
+    
+    def test_construction_1(self):
+        """Using center."""
+        x = np.arange(10.0, 20.0, 2.0)
+        b = EqualBand(x)
+        assert_array_equal(b.center, x)
+    
+    def test_construction_2(self):
+        """Using fstart, fstop and fbands"""
+        x = np.arange(10.0, 20.0, 2.0)
+        fstart = x[0]
+        fstop = x[-1]
+        nbands = len(x)
+        b = EqualBand(fstart=fstart, fstop=fstop, nbands=nbands)
+        assert_array_equal(b.center, x)
+    
+    def test_construction_3(self):
+        """Using fstart, fstop and bandwidth"""
+        x = np.arange(10.0, 20.0, 2.0)
+        fstart = x[0]
+        fstop = x[-1]
+        bandwidth = np.diff(x)[0]
+        b = EqualBand(fstart=fstart, fstop=fstop, bandwidth=bandwidth)
+        assert_array_equal(b.center, x)
+    
+    def test_construction_4(self):
+        # Using fstart, bandwidth and bands
+        x = np.arange(10.0, 20.0, 2.0)
+        fstart = x[0]
+        bandwidth = np.diff(x)[0]
+        nbands = len(x)
+        b = EqualBand(fstart=fstart, nbands=nbands, bandwidth=bandwidth)
+        assert_array_equal(b.center, x)
+    
+    def test_construction_5(self):
+        # Using fstop, bandwidth and bands
+        x = np.arange(10.0, 20.0, 2.0)
+        fstop = x[-1]
+        bandwidth = np.diff(x)[0]
+        nbands = len(x)
+        b = EqualBand(fstop=fstop, nbands=nbands, bandwidth=bandwidth)
+        assert_array_equal(b.center, x)
+
+class Test_integrate_bands():
+    """
+    Test :func:`acoustics.signal.test_integrate_bands`.
+    """
+    
+    def test_narrowband_to_octave(self):
+    
+        nb = EqualBand(np.arange(100, 900, 200.))
+        x = np.ones(len(nb))
+        ob = OctaveBand(([125., 250, 500.]))
+        y = integrate_bands(x, nb, ob)
+        assert_array_equal(y, np.array([1, 1, 2]))
+    
+    
+
+    
+    
+#if __name__ == '__main__':
+    #unittest.main()
