@@ -12,6 +12,8 @@ from scipy.signal import butter, lfilter, freqz, filtfilt
 import acoustics.octave
 from acoustics.octave import REFERENCE
 
+import acoustics.bands
+
 
 try:
     from pyfftw.interfaces.numpy_fft import rfft
@@ -223,7 +225,7 @@ class EqualBand(Frequencies):
                 center = [center]
                 nbands = 1
 
-            u = np.unique(np.diff(center))
+            u = np.unique(np.diff(center).round(decimals=3))
             if len(u)==1:
                 bandwidth = u
             else:
@@ -338,6 +340,45 @@ def integrate_bands(data, a, b):
     return ((lower < center) * (center <= upper) * data[:,None]).sum(axis=0)
 
 
+
+
+
+def octaves(p, fs):
+    """
+    Calculate level per octave.
+    
+    :param p: Instantaneous pressure :math:`p(t)`.
+    :param fs: Sample frequency.
+    """
+    fob = OctaveBand(acoustics.bands.OCTAVE_CENTER_FREQUENCIES, fraction=1)
+    f, fr = ir2fr(p, fs)
+    fnb = EqualBand(f)
+    power = integrate_bands(np.abs(fr)**2.0, fnb, fob)
+    level = 10.0*np.log10(power)
+    return fob, level
+
+def third_octaves(p, fs):
+    """
+    Calculate level per octave.
+    
+    :param p: Instantaneous pressure :math:`p(t)`.
+    :param fs: Sample frequency.
+    """
+    fob = OctaveBand(acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES, fraction=3)
+    f, fr = ir2fr(p, fs)
+    fnb = EqualBand(f)
+    power = integrate_bands(np.abs(fr)**2.0, fnb, fob)
+    level = 10.0*np.log10(power)
+    return fob, level
+
+
+
+#def plot_signal(x, fs, bands):
+    #"""
+    #Plot signal ``x`` with sample frequency ``fs`` and frequency bands as specified in ``bands``.
+
+    
+    #fig = plt.figure():
 
   
 class Filterbank(object):
