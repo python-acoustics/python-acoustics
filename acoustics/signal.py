@@ -272,7 +272,7 @@ class OctaveBand(Frequencies):
         
         if fstart and fstop:
             o = acoustics.octave.Octave(order=fraction, fmin=fstart, fmax=fstop, reference=reference)
-            center = o.center()
+            center = o.center
             nbands = len(center)
         
         if fstart and nbands:
@@ -290,7 +290,7 @@ class OctaveBand(Frequencies):
         center = acoustics.octave.Octave(order=fraction, 
                                        fmin=fstart, 
                                        fmax=fstop, 
-                                       reference=reference).center()
+                                       reference=reference).center
     
         upper = acoustics.octave.upper_frequency(center, fraction)
         lower = acoustics.octave.lower_frequency(center, fraction)
