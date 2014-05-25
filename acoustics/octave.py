@@ -157,7 +157,8 @@ class Octave(object):
         See also :func:`frequency_of_band`.
         """
         return frequency_of_band(n, order=self.order, ref=self.reference)
-        
+    
+    @property
     def n(self):
         """
         Return band ``n`` for a given frequency.
@@ -166,7 +167,8 @@ class Octave(object):
             return self._n(self.interval)
         else:
             return np.arange(self._n(self.fmin), self._n(self.fmax)+1)
-            
+    
+    @property
     def center(self):
         """
         Return center frequencies :math:`f_c`.
@@ -174,9 +176,10 @@ class Octave(object):
         .. math::  f_c = f_{ref} \cdot 2^{n/N} \\cdot 10^{\\frac{3}{10N}}
         
         """
-        n = self.n()
+        n = self.n
         return self._fc(n)
      
+    @property 
     def bandwidth(self):
         """
         Bandwidth of bands.
@@ -184,8 +187,9 @@ class Octave(object):
         .. math:: B = f_u - f_l
         
         """
-        return self.upper() - self.lower()
+        return self.upper - self.lower
     
+    @property
     def lower(self):
         """
         Lower frequency limits of bands.
@@ -195,7 +199,8 @@ class Octave(object):
         See also :func:`lower_frequency`.
         """
         return lower_frequency(self.center, self.order)
-        
+    
+    @property
     def upper(self):
         """
         Upper frequency limits of bands.

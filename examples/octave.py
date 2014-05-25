@@ -14,7 +14,7 @@ def main():
     o = Octave(interval=f, order=3)
 
     """We can now print the center frequencies of the 1/3 octave bands belonging to this frequency vector."""
-    print(o.center())
+    print(o.center)
 
     """
     Since by default ``unique=True`` in :class:`Auraliser.Octave.Octave` we get a 
@@ -25,16 +25,16 @@ def main():
     o.unique = True
 
     """Now we should only get the unique center frequencies."""
-    print(o.center())
+    print(o.center)
 
     """We can also calculate the bandwidth of each band."""
-    print(o.bandwidth())
+    print(o.bandwidth)
 
     """As well as the lower limits of the frequency limits..."""
-    print(o.lower())
+    print(o.lower)
 
     """...and the upper frequency limits."""
-    print(o.upper())
+    print(o.upper)
 
     """
     So far we used a frequency interval. Sometimes you have a lower frequency and an upper frequency. 
