@@ -2,8 +2,7 @@
 
 *.pyc
 *~
-[#]*[#]
-.\#*
+.directory
 
 # C extensions
 *.so
@@ -44,3 +43,9 @@ _build
 *.bak
 
 *.png
+.cache
+
+# Emacs
+[#]*[#]
+.\#*
+.projectile
