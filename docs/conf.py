@@ -254,9 +254,21 @@ intersphinx_mapping = {'python': ('http://docs.python.org/2', None),
                        'matplotlib': ('http://matplotlib.sourceforge.net/', None)}
 
 
+autodoc_default_flags = ['members', 'show-inheritance']
+
+def skip(app, what, name, obj, skip, options):
+    if name == "__init__":
+        return False
+    return skip
+
+def setup(app):
+    app.connect("autodoc-skip-member", skip)
+
+
 # Create Mock objects for the objects that Sphinx cannot import
 
 import sys
+
 
 class Mock(object):
     def __init__(self, *args, **kwargs):

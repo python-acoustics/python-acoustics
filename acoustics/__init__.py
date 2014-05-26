@@ -1,3 +1,11 @@
+"""
+Acoustics
+=========
+
+The acoustics module...
+
+"""
+
 import acoustics.utils
 import acoustics.octave
 import acoustics.doppler

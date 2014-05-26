@@ -1,10 +1,17 @@
 """
+Imaging
+=======
+
 Plotting functions using matplotlib_ library.
 
 .. warning::
    You need to have matplotlib_ installed in order to use this module.
 
 .. _matplotlib: http://matplotlib.org/
+
+
+.. inheritance-diagram:: acoustics.room
+
 """
 
 

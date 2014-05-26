@@ -1,4 +1,7 @@
 """
+Doppler
+=======
+
 Doppler shift module.
 """
 from __future__ import division

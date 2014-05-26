@@ -1,4 +1,7 @@
 """
+Octave
+======
+
 Module for working with octaves.
 
 The following is an example on how to use :class:`acoustics.octave.Octave`.

@@ -74,7 +74,7 @@ def average(data, sample_frequency, averaging_time):
     
     Time weighting is applied by applying a low-pass filter with one real pole at :math:`-1/\\tau`.
     
-    .. note:: Because $f_s \cdot t_i$ is generally not an integer, samples are discarded. This results in a drift of samples for longer signals (e.g. 60 minutes at 44.1 kHz).
+    .. note:: Because :math:`f_s \\cdot t_i` is generally not an integer, samples are discarded. This results in a drift of samples for longer signals (e.g. 60 minutes at 44.1 kHz).
     
     """
     n = int(floor(averaging_time * sample_frequency))
@@ -105,7 +105,7 @@ def integrate(data, sample_frequency, integration_time):
     
     Time weighting is applied by applying a low-pass filter with one real pole at :math:`-1/\\tau`.
     
-    .. note:: Because $f_s \cdot t_i$ is generally not an integer, samples are discarded. This results in a drift of samples for longer signals (e.g. 60 minutes at 44.1 kHz).
+    .. note:: Because :math:`f_s \\cdot t_i` is generally not an integer, samples are discarded. This results in a drift of samples for longer signals (e.g. 60 minutes at 44.1 kHz).
     
     """
     b, a = bilinear([1.0], [1.0, integration_time], sample_frequency=sample_frequency) # Bilinear: Analog to Digital filter.

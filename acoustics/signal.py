@@ -1,5 +1,64 @@
 """
-This module constains a function to perform a convolution of signal with a Linear Time-Variant system.
+Signal
+======
+
+The signal module constains all kinds of signal processing related functions.
+
+.. inheritance-diagram:: acoustics.signal
+
+
+Filtering
+*********
+
+.. autofunction:: butter_bandpass_filter
+.. autofunction:: convolve
+
+
+Windowing
+*********
+
+.. autofunction:: window_scaling_factor
+.. autofunction:: apply_window
+
+Spectra
+*******
+
+Different types of spectra exist.
+
+.. autofunction:: amplitude_spectrum
+.. autofunction:: auto_spectrum
+.. autofunction:: power_spectrum
+.. autofunction:: density_spectrum
+
+Frequency bands
+***************
+
+.. autoclass:: Band
+.. autoclass:: Frequencies
+.. autoclass:: EqualBand
+.. autoclass:: OctaveBand
+    
+.. autofunction:: integrate_bands
+.. autofunction:: octaves
+.. autofunction:: third_octaves
+
+
+
+
+Conversion
+**********
+
+.. autofunction:: decibel_to_neper
+.. autofunction:: neper_to_decibel
+
+
+Other
+*****
+
+.. autoclass:: Filterbank
+.. autofunction:: rms
+.. autofunction:: ir2fr
+
 
 """
 from __future__ import division
@@ -120,6 +179,7 @@ def decibel_to_neper(decibel):
     Convert decibel to neper.
     
     :param decibel: Value in decibel (dB).
+    :returns: Value in neper (Np).
     
     The conversion is done according to
     
@@ -134,6 +194,7 @@ def neper_to_decibel(neper):
     Convert neper to decibel.
     
     :param neper: Value in neper (Np).
+    :returns: Value in decibel (dB).
     
     The conversion is done according to
 
@@ -150,9 +211,21 @@ class Band(object):
     def __init__(self, center, lower, upper, bandwidth=None):
         
         self.center = center
+        """
+        Center frequency.
+        """
         self.lower = lower
+        """
+        Lower frequency.
+        """
         self.upper = upper
+        """
+        Upper frequency.
+        """
         self.bandwidth = bandwidth if bandwidth is not None else self.upper - self.lower
+        """
+        Bandwidth.
+        """
     
     def __str__(self):
         return str(self.center)
@@ -208,7 +281,6 @@ class EqualBand(Frequencies):
     
     def __init__(self, center=None, fstart=None, fstop=None, nbands=None, bandwidth=None):
         """
-        Parameters.
         
         :param center: Vector of center frequencies.
         :param fstart: First center frequency.
@@ -325,18 +397,6 @@ def rms(x):
     """
     return np.sqrt((np.abs(x)**2.0).mean())
 
-"""
-Spectra
-*******
-
-.. autofunc:: amplitude_spectrum
-
-.. autofunc:: power_spectrum
-
-.. autofunc:: density_spectrum
-
-
-"""
 
 def window_scaling_factor(window):
     """
@@ -347,10 +407,11 @@ def window_scaling_factor(window):
     When analysing broadband (filtered noise) signals it is common to normalise
     the windowed signal so that it has the same power as the un-windowed one.
 
-    .. math:: S = \\sqrt{\\frac{\\sum_{i=0^N w_i^2}{N}}
+    .. math:: S = \\sqrt{\\frac{\\sum_{i=0}^N w_i^2}{N}}
     
     """
     return np.sqrt((window**2.0).sum()/len(window))
+
 
 def apply_window(x, window):
     """
