@@ -10,7 +10,7 @@ from scipy.sparse import spdiags
 from scipy.signal import butter, lfilter, freqz, filtfilt
 
 import acoustics.octave
-from acoustics.octave import REFERENCE
+#from acoustics.octave import REFERENCE
 
 import acoustics.bands
 
@@ -260,7 +260,7 @@ class OctaveBand(Frequencies):
     Fractional-octave band spectrum.
     """
     
-    def __init__(self, center=None, fstart=None, fstop=None, nbands=None, fraction=1, reference=REFERENCE):
+    def __init__(self, center=None, fstart=None, fstop=None, nbands=None, fraction=1, reference=acoustics.octave.REFERENCE):
         
         
         if center is not None:
@@ -314,6 +314,173 @@ class OctaveBand(Frequencies):
         return "OctaveBand({})".format(str(self.center))
     
   
+def rms(x):
+    """
+    Root mean square.
+    
+    :param x: Dynamic quantity.
+    
+    .. math:: x_{rms} = lim_{T \\to \\infty} \\sqrt{\\frac{1}{T} \int_0^T |f(x)|^2 \\mathrm{d} t }
+    
+    """
+    return np.sqrt((np.abs(x)**2.0).mean())
+
+"""
+Spectra
+*******
+
+.. autofunc:: amplitude_spectrum
+
+.. autofunc:: power_spectrum
+
+.. autofunc:: density_spectrum
+
+
+"""
+
+def window_scaling_factor(window):
+    """
+    Calculate window scaling factor.
+    
+    :param window: Window.
+    
+    When analysing broadband (filtered noise) signals it is common to normalise
+    the windowed signal so that it has the same power as the un-windowed one.
+
+    .. math:: S = \\sqrt{\\frac{\\sum_{i=0^N w_i^2}{N}}
+    
+    """
+    return np.sqrt((window**2.0).sum()/len(window))
+
+def apply_window(x, window):
+    """
+    Apply window to signal.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param window: Vector representing window.
+    
+    :returns: Signal with window applied to it.
+    
+    .. math:: x_s(t) = x(t) / S
+    
+    where :math:`S` is the window scaling factor. See also :func:`window_scaling_factor`.
+    
+    """
+    s = window_scaling_factor(window) # Determine window scaling factor.
+    n = len(window)
+    windows = x//n  # Amount of windows.
+    x = x[0:windows*n] # Truncate final part of signal that does not fit.
+    #x = x.reshape(-1, len(window)) # Reshape so we can apply window.
+    y = np.tile(window, windows)
+    
+    return x * y / s
+
+
+def amplitude_spectrum(x, fs, N=None):
+    """
+    Amplitude spectrum of instantaneous signal :math:`x(t)`.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency :math:`f_s`.
+    :param N: Amount of FFT bins.
+    
+    The amplitude spectrum gives the amplitudes of the sinusoidal the signal is built 
+    up from, and the RMS (root-mean-square) amplitudes can easily be found by dividing 
+    these amplitudes with :math:`\\sqrt{2}`.
+    
+    The amplitude spectrum is double-sided.
+    
+    """
+    N = N if N else x.shape[-1]
+    fr = np.fft.fft(x, n=N) / N
+    f = np.fft.fftfreq(N, 1.0/fs)
+    return np.fft.fftshift(f), np.fft.fftshift(fr)
+
+
+def auto_spectrum(x, fs, N=None):
+    """
+    Auto-spectrum of instantaneous signal :math:`x(t)`.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency :math:`f_s`.
+    :param N: Amount of FFT bins.
+    
+    The auto-spectrum contains the squared amplitudes of the signal. Squared amplitudes
+    are used when presenting data as it is a measure of the power/energy in the signal.
+
+    .. math:: S_{xx} (f_n) = \\overline{X (f_n)} \\cdot X (f_n)
+
+    The auto-spectrum is double-sided. For a single-sided autospectrum, see :func:`single_sided_auto_spectrum`.
+    
+    """
+    f, a = amplitude_spectrum(x, fs, N=N)
+    return f, a*a.conj()
+
+
+def power_spectrum(x, fs, N=None):
+    """
+    Power spectrum of instantaneous signal :math:`x(t)`.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency :math:`f_s`.
+    :param N: Amount of FFT bins.
+    
+    The power spectrum, or single-sided autospectrum, contains the squared RMS amplitudes of the signal.
+    
+    A power spectrum is a spectrum with squared RMS values. The power spectrum is 
+    calculated from the autospectrum of the signal.
+    """
+    N = N if N else x.shape[-1]
+    f, a = auto_spectrum(x, fs, N=N)
+    a = a[N//2:]
+    f = f[N//2:]
+    a *= 2.0
+    a[..., 0] /= 2.0    # DC component should not be doubled.
+    if not N%2: # if not uneven
+        a[..., -1] /= 2.0 # And neither should fs/2 be.
+    return f, a
+  
+  
+def density_spectrum(x, fs, N=None):
+    """
+    Density spectrum of instantaneous signal :math:`x(t)`.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency :math:`f_s`.
+    :param N: Amount of FFT bins.
+    
+    A density spectrum considers the amplitudes per unit frequency. 
+    Density spectra are used to compare spectra with different frequency resolution as the 
+    magnitudes are not influenced by the resolution because it is per Hertz. The amplitude 
+    spectra on the other hand depend on the chosen frequency resolution.
+    
+    """
+    N = N if N else x.shape[-1]
+    fr = np.fft.fft(x, n=N) / fs
+    f = np.fft.fftfreq(N, 1.0/fs)
+    return np.fft.fftshift(f), np.fft.fftshift(fr)
+    
+#def auto_density_spectrum(x, fs, N=None):
+    #"""
+    #Auto density spectrum of instantaneous signal :math:`x(t)`.
+    #"""
+    #f, d = density_spectrum(x, fs, N=N)
+    #return f, (d*d.conj()).real
+
+#def power_density_spectrum(x, fs, N=None):
+    #"""
+    #Power density spectrum.
+    #"""
+    #N = N if N else x.shape[-1]
+    #f, a = auto_density_spectrum(x, fs, N=N)
+    #a = a[N//2:]
+    #f = f[N//2:]
+    #a *= 2.0
+    #a[..., 0] /= 2.0    # DC component should not be doubled.
+    #if not N%2: # if not uneven
+        #a[..., -1] /= 2.0 # And neither should fs/2 be.
+    #return f, a
+    
 
 def integrate_bands(data, a, b):
     """
@@ -340,34 +507,38 @@ def integrate_bands(data, a, b):
     return ((lower < center) * (center <= upper) * data[:,None]).sum(axis=0)
 
 
-
-
-
-def octaves(p, fs):
+def octaves(p, fs, density=False):
     """
-    Calculate level per octave.
+    Calculate level per 1/1-octave.
     
     :param p: Instantaneous pressure :math:`p(t)`.
     :param fs: Sample frequency.
+    :param density: Power density instead of power.
     """
     fob = OctaveBand(acoustics.bands.OCTAVE_CENTER_FREQUENCIES, fraction=1)
-    f, fr = ir2fr(p, fs)
+    f, p = power_spectrum(p, fs)
     fnb = EqualBand(f)
-    power = integrate_bands(np.abs(fr)**2.0, fnb, fob)
+    power = integrate_bands(p, fnb, fob)
+    if density:
+        power /= (fob.bandwidth/fnb.bandwidth)
     level = 10.0*np.log10(power)
     return fob, level
 
-def third_octaves(p, fs):
+
+def third_octaves(p, fs, density=False):
     """
-    Calculate level per octave.
+    Calculate level per 1/3-octave.
     
     :param p: Instantaneous pressure :math:`p(t)`.
     :param fs: Sample frequency.
+    :param density: Power density instead of power.
     """
     fob = OctaveBand(acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES, fraction=3)
-    f, fr = ir2fr(p, fs)
+    f, p = power_spectrum(p, fs)
     fnb = EqualBand(f)
-    power = integrate_bands(np.abs(fr)**2.0, fnb, fob)
+    power = integrate_bands(p, fnb, fob)
+    if density:
+        power /= (fob.bandwidth/fnb.bandwidth)
     level = 10.0*np.log10(power)
     return fob, level
 
