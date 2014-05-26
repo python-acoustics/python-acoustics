@@ -17,6 +17,7 @@ This section contains a description of all classes and functions.
    bands
    building
    criterion
+   generator
    descriptors
    directivity
    doppler
