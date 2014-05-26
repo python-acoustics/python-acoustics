@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Generator &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
+    <link rel="up" title="Reference" href="reference.html" />
+    <link rel="next" title="Descriptors" href="descriptors.html" />
+    <link rel="prev" title="Criterion" href="criterion.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="descriptors.html" title="Descriptors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="criterion.html" title="Criterion"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-acoustics.generator"></span><div class="section" id="generator">
+<h1>Generator<a class="headerlink" href="#generator" title="Permalink to this headline">¶</a></h1>
+<p>The generator module provides signal generators.</p>
+<p>The following functions calculate <tt class="docutils literal"><span class="pre">N</span></tt> samples and return an array containing the samples.</p>
+<p>For indefinitely long iteration over the samples, consider using the output of these functions in <a class="reference external" href="http://docs.python.org/2/library/itertools.html#itertools.cycle" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">itertools.cycle()</span></tt></a>.</p>
+<div class="section" id="noise">
+<h2>Noise<a class="headerlink" href="#noise" title="Permalink to this headline">¶</a></h2>
+<p>Different types of noise are available. The following table lists the color 
+of noise and how the power and power density change per octave.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="21%" />
+<col width="54%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Color</th>
+<th class="head">Power</th>
+<th class="head">Power density</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>White</td>
+<td>+3 dB</td>
+<td>0 dB</td>
+</tr>
+<tr class="row-odd"><td>Pink</td>
+<td>0 dB</td>
+<td>-3 dB</td>
+</tr>
+<tr class="row-even"><td>Blue</td>
+<td>+6 dB</td>
+<td>+3 dB</td>
+</tr>
+<tr class="row-odd"><td>Brown</td>
+<td>-3 dB</td>
+<td>-6 dB</td>
+</tr>
+<tr class="row-even"><td>Violet</td>
+<td>+9 dB</td>
+<td>+6 dB</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="acoustics.generator.white">
+<tt class="descclassname">acoustics.generator.</tt><tt class="descname">white</tt><big>(</big><em>N</em><big>)</big><a class="reference internal" href="_modules/acoustics/generator.html#white"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.generator.white" title="Permalink to this definition">¶</a></dt>
+<dd><p>White noise.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of samples.</td>
+</tr>
+</tbody>
+</table>
+<p>White noise has a constant power density. It&#8217;s narrowband spectrum is therefore flat.
+The power in white noise will increase by a factor of two for each octave band, 
+and therefore increases with 3 dB per octave.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.generator.pink">
+<tt class="descclassname">acoustics.generator.</tt><tt class="descname">pink</tt><big>(</big><em>N</em><big>)</big><a class="reference internal" href="_modules/acoustics/generator.html#pink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.generator.pink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pink noise.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of samples.</td>
+</tr>
+</tbody>
+</table>
+<p>Pink noise has equal power in bands that are proportionally wide.
+Power density decreases with 3 dB per octave.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.generator.blue">
+<tt class="descclassname">acoustics.generator.</tt><tt class="descname">blue</tt><big>(</big><em>N</em><big>)</big><a class="reference internal" href="_modules/acoustics/generator.html#blue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.generator.blue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blue noise.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of samples.</td>
+</tr>
+</tbody>
+</table>
+<p>Power increases with 6 dB per octave.
+Power density increases with 3 dB per octave.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.generator.brown">
+<tt class="descclassname">acoustics.generator.</tt><tt class="descname">brown</tt><big>(</big><em>N</em><big>)</big><a class="reference internal" href="_modules/acoustics/generator.html#brown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.generator.brown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Violet noise.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of samples.</td>
+</tr>
+</tbody>
+</table>
+<p>Power decreases with -3 dB per octave.
+Power density decreases with 6 dB per octave.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.generator.violet">
+<tt class="descclassname">acoustics.generator.</tt><tt class="descname">violet</tt><big>(</big><em>N</em><big>)</big><a class="reference internal" href="_modules/acoustics/generator.html#violet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.generator.violet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Violet noise. Power increases with 6 dB per octave.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of samples.</td>
+</tr>
+</tbody>
+</table>
+<p>Power increases with +9 dB per octave.
+Power density increases with +6 dB per octave.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="waveforms">
+<h2>Waveforms<a class="headerlink" href="#waveforms" title="Permalink to this headline">¶</a></h2>
+<p>For related functions, check <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/signal.html#module-scipy.signal" title="(in SciPy v0.14.0)"><tt class="xref py py-mod docutils literal"><span class="pre">scipy.signal</span></tt></a>.</p>
+<dl class="function">
+<dt>
+<tt class="descclassname">acoustics.generator.</tt><tt class="descname">blue</tt><big>(</big><em>N</em><big>)</big><a class="reference internal" href="_modules/acoustics/generator.html#blue"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Blue noise.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of samples.</td>
+</tr>
+</tbody>
+</table>
+<p>Power increases with 6 dB per octave.
+Power density increases with 3 dB per octave.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">acoustics.generator.</tt><tt class="descname">brown</tt><big>(</big><em>N</em><big>)</big><a class="reference internal" href="_modules/acoustics/generator.html#brown"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Violet noise.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of samples.</td>
+</tr>
+</tbody>
+</table>
+<p>Power decreases with -3 dB per octave.
+Power density decreases with 6 dB per octave.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">acoustics.generator.</tt><tt class="descname">pink</tt><big>(</big><em>N</em><big>)</big><a class="reference internal" href="_modules/acoustics/generator.html#pink"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Pink noise.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of samples.</td>
+</tr>
+</tbody>
+</table>
+<p>Pink noise has equal power in bands that are proportionally wide.
+Power density decreases with 3 dB per octave.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">acoustics.generator.</tt><tt class="descname">violet</tt><big>(</big><em>N</em><big>)</big><a class="reference internal" href="_modules/acoustics/generator.html#violet"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Violet noise. Power increases with 6 dB per octave.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of samples.</td>
+</tr>
+</tbody>
+</table>
+<p>Power increases with +9 dB per octave.
+Power density increases with +6 dB per octave.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descclassname">acoustics.generator.</tt><tt class="descname">white</tt><big>(</big><em>N</em><big>)</big><a class="reference internal" href="_modules/acoustics/generator.html#white"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>White noise.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of samples.</td>
+</tr>
+</tbody>
+</table>
+<p>White noise has a constant power density. It&#8217;s narrowband spectrum is therefore flat.
+The power in white noise will increase by a factor of two for each octave band, 
+and therefore increases with 3 dB per octave.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Generator</a><ul>
+<li><a class="reference internal" href="#noise">Noise</a></li>
+<li><a class="reference internal" href="#waveforms">Waveforms</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="criterion.html"
+                        title="previous chapter">Criterion</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="descriptors.html"
+                        title="next chapter">Descriptors</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/generator.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="descriptors.html" title="Descriptors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="criterion.html" title="Criterion"
+             >previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" >Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

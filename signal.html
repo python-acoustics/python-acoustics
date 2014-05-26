@@ -54,9 +54,21 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="signal">
+  <span class="target" id="module-acoustics.signal"></span><div class="section" id="signal">
 <h1>Signal<a class="headerlink" href="#signal" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-acoustics.signal"></span><p>This module constains a function to perform a convolution of signal with a Linear Time-Variant system.</p>
+<p>The signal module constains all kinds of signal processing related functions.</p>
+<p class="graphviz">
+<img src="_images/inheritance-93b8544a3b2dfe605d0b1c5c4ef6493022b58354.png" alt="Inheritance diagram of acoustics.signal" usemap="#inheritance751d2db886" class="inheritance"/>
+<map id="inheritance751d2db886" name="inheritance751d2db886">
+<area shape="rect" id="node1" href="#acoustics.signal.Band" title="Frequency band object." alt="" coords="27,107,187,133"/>
+<area shape="rect" id="node2" href="#acoustics.signal.EqualBand" title="Equal bandwidth spectrum. Generally used for narrowband data." alt="" coords="261,31,456,57"/>
+<area shape="rect" id="node3" href="#acoustics.signal.Frequencies" title="Object describing frequency bands." alt="" coords="5,56,208,83"/>
+<area shape="rect" id="node6" href="#acoustics.signal.OctaveBand" title="Fractional&#45;octave band spectrum." alt="" coords="256,81,461,108"/>
+<area shape="rect" id="node5" href="#acoustics.signal.Filterbank" title="Fractional&#45;Octave filter bank." alt="" coords="13,5,200,32"/>
+</map>
+</p>
+<div class="section" id="filtering">
+<h2>Filtering<a class="headerlink" href="#filtering" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="acoustics.signal.butter_bandpass_filter">
 <tt class="descclassname">acoustics.signal.</tt><tt class="descname">butter_bandpass_filter</tt><big>(</big><em>data</em>, <em>lowcut</em>, <em>highcut</em>, <em>fs</em>, <em>order=3</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#butter_bandpass_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.butter_bandpass_filter" title="Permalink to this definition">¶</a></dt>
@@ -108,6 +120,337 @@ In the time-variant case (LTV), every column can contain a unique impulse respon
 The input matrix <tt class="docutils literal"><span class="pre">ltv</span></tt> thus represents the non-shifted version of the Toeplitz matrix.</p>
 </dd></dl>
 
+</div>
+<div class="section" id="windowing">
+<h2>Windowing<a class="headerlink" href="#windowing" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="acoustics.signal.window_scaling_factor">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">window_scaling_factor</tt><big>(</big><em>window</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#window_scaling_factor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.window_scaling_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate window scaling factor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>window</strong> &#8211; Window.</td>
+</tr>
+</tbody>
+</table>
+<p>When analysing broadband (filtered noise) signals it is common to normalise
+the windowed signal so that it has the same power as the un-windowed one.</p>
+<div class="math">
+<p><img src="_images/math/c882103d4b2b66cf56fb938a74110e0a97172d6e.png" alt="S = \sqrt{\frac{\sum_{i=0}^N w_i^2}{N}}"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.apply_window">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">apply_window</tt><big>(</big><em>x</em>, <em>window</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#apply_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.apply_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply window to signal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; Instantaneous signal <img class="math" src="_images/math/9b5babd4eddd2d7d7c87ad736865a588c2d4d9f8.png" alt="x(t)"/>.</li>
+<li><strong>window</strong> &#8211; Vector representing window.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Signal with window applied to it.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/9abb5fa151a79d48fc2e32f2fbf6c35470049a69.png" alt="x_s(t) = x(t) / S"/></p>
+</div><p>where <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/> is the window scaling factor. See also <a class="reference internal" href="#acoustics.signal.window_scaling_factor" title="acoustics.signal.window_scaling_factor"><tt class="xref py py-func docutils literal"><span class="pre">window_scaling_factor()</span></tt></a>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="spectra">
+<h2>Spectra<a class="headerlink" href="#spectra" title="Permalink to this headline">¶</a></h2>
+<p>Different types of spectra exist.</p>
+<dl class="function">
+<dt id="acoustics.signal.amplitude_spectrum">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">amplitude_spectrum</tt><big>(</big><em>x</em>, <em>fs</em>, <em>N=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#amplitude_spectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.amplitude_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amplitude spectrum of instantaneous signal <img class="math" src="_images/math/9b5babd4eddd2d7d7c87ad736865a588c2d4d9f8.png" alt="x(t)"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; Instantaneous signal <img class="math" src="_images/math/9b5babd4eddd2d7d7c87ad736865a588c2d4d9f8.png" alt="x(t)"/>.</li>
+<li><strong>fs</strong> &#8211; Sample frequency <img class="math" src="_images/math/a2750eb24a00e1c35b2e560ee2981dbcb52d7b3c.png" alt="f_s"/>.</li>
+<li><strong>N</strong> &#8211; Amount of FFT bins.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The amplitude spectrum gives the amplitudes of the sinusoidal the signal is built 
+up from, and the RMS (root-mean-square) amplitudes can easily be found by dividing 
+these amplitudes with <img class="math" src="_images/math/f8117cd5193e9c43e4cac4a86cc0298690ef3f79.png" alt="\sqrt{2}"/>.</p>
+<p>The amplitude spectrum is double-sided.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.auto_spectrum">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">auto_spectrum</tt><big>(</big><em>x</em>, <em>fs</em>, <em>N=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#auto_spectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.auto_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auto-spectrum of instantaneous signal <img class="math" src="_images/math/9b5babd4eddd2d7d7c87ad736865a588c2d4d9f8.png" alt="x(t)"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; Instantaneous signal <img class="math" src="_images/math/9b5babd4eddd2d7d7c87ad736865a588c2d4d9f8.png" alt="x(t)"/>.</li>
+<li><strong>fs</strong> &#8211; Sample frequency <img class="math" src="_images/math/a2750eb24a00e1c35b2e560ee2981dbcb52d7b3c.png" alt="f_s"/>.</li>
+<li><strong>N</strong> &#8211; Amount of FFT bins.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The auto-spectrum contains the squared amplitudes of the signal. Squared amplitudes
+are used when presenting data as it is a measure of the power/energy in the signal.</p>
+<div class="math">
+<p><img src="_images/math/7a64e67eb8639aba7738cb0e9f903c6a07483ebb.png" alt="S_{xx} (f_n) = \overline{X (f_n)} \cdot X (f_n)"/></p>
+</div><p>The auto-spectrum is double-sided. For a single-sided autospectrum, see <tt class="xref py py-func docutils literal"><span class="pre">single_sided_auto_spectrum()</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.power_spectrum">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">power_spectrum</tt><big>(</big><em>x</em>, <em>fs</em>, <em>N=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#power_spectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.power_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power spectrum of instantaneous signal <img class="math" src="_images/math/9b5babd4eddd2d7d7c87ad736865a588c2d4d9f8.png" alt="x(t)"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; Instantaneous signal <img class="math" src="_images/math/9b5babd4eddd2d7d7c87ad736865a588c2d4d9f8.png" alt="x(t)"/>.</li>
+<li><strong>fs</strong> &#8211; Sample frequency <img class="math" src="_images/math/a2750eb24a00e1c35b2e560ee2981dbcb52d7b3c.png" alt="f_s"/>.</li>
+<li><strong>N</strong> &#8211; Amount of FFT bins.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The power spectrum, or single-sided autospectrum, contains the squared RMS amplitudes of the signal.</p>
+<p>A power spectrum is a spectrum with squared RMS values. The power spectrum is 
+calculated from the autospectrum of the signal.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.density_spectrum">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">density_spectrum</tt><big>(</big><em>x</em>, <em>fs</em>, <em>N=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#density_spectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.density_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Density spectrum of instantaneous signal <img class="math" src="_images/math/9b5babd4eddd2d7d7c87ad736865a588c2d4d9f8.png" alt="x(t)"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; Instantaneous signal <img class="math" src="_images/math/9b5babd4eddd2d7d7c87ad736865a588c2d4d9f8.png" alt="x(t)"/>.</li>
+<li><strong>fs</strong> &#8211; Sample frequency <img class="math" src="_images/math/a2750eb24a00e1c35b2e560ee2981dbcb52d7b3c.png" alt="f_s"/>.</li>
+<li><strong>N</strong> &#8211; Amount of FFT bins.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>A density spectrum considers the amplitudes per unit frequency. 
+Density spectra are used to compare spectra with different frequency resolution as the 
+magnitudes are not influenced by the resolution because it is per Hertz. The amplitude 
+spectra on the other hand depend on the chosen frequency resolution.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="frequency-bands">
+<h2>Frequency bands<a class="headerlink" href="#frequency-bands" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="acoustics.signal.Band">
+<em class="property">class </em><tt class="descclassname">acoustics.signal.</tt><tt class="descname">Band</tt><big>(</big><em>center</em>, <em>lower</em>, <em>upper</em>, <em>bandwidth=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#Band"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Band" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Frequency band object.</p>
+<dl class="method">
+<dt id="acoustics.signal.Band.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>center</em>, <em>lower</em>, <em>upper</em>, <em>bandwidth=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#Band.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Band.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.Band.bandwidth">
+<tt class="descname">bandwidth</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.signal.Band.bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bandwidth.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.Band.center">
+<tt class="descname">center</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.signal.Band.center" title="Permalink to this definition">¶</a></dt>
+<dd><p>Center frequency.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.Band.lower">
+<tt class="descname">lower</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.signal.Band.lower" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lower frequency.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.Band.upper">
+<tt class="descname">upper</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.signal.Band.upper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upper frequency.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="acoustics.signal.Frequencies">
+<em class="property">class </em><tt class="descclassname">acoustics.signal.</tt><tt class="descname">Frequencies</tt><big>(</big><em>center</em>, <em>lower</em>, <em>upper</em>, <em>bandwidth=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#Frequencies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Frequencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Object describing frequency bands.</p>
+<dl class="method">
+<dt id="acoustics.signal.Frequencies.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>center</em>, <em>lower</em>, <em>upper</em>, <em>bandwidth=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#Frequencies.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Frequencies.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.Frequencies.bandwidth">
+<tt class="descname">bandwidth</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.signal.Frequencies.bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bandwidth.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.Frequencies.center">
+<tt class="descname">center</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.signal.Frequencies.center" title="Permalink to this definition">¶</a></dt>
+<dd><p>Center frequencies.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.Frequencies.lower">
+<tt class="descname">lower</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.signal.Frequencies.lower" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lower frequencies.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.Frequencies.upper">
+<tt class="descname">upper</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.signal.Frequencies.upper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upper frequencies.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="acoustics.signal.EqualBand">
+<em class="property">class </em><tt class="descclassname">acoustics.signal.</tt><tt class="descname">EqualBand</tt><big>(</big><em>center=None</em>, <em>fstart=None</em>, <em>fstop=None</em>, <em>nbands=None</em>, <em>bandwidth=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#EqualBand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.EqualBand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#acoustics.signal.Frequencies" title="acoustics.signal.Frequencies"><tt class="xref py py-class docutils literal"><span class="pre">acoustics.signal.Frequencies</span></tt></a></p>
+<p>Equal bandwidth spectrum. Generally used for narrowband data.</p>
+<dl class="method">
+<dt id="acoustics.signal.EqualBand.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>center=None</em>, <em>fstart=None</em>, <em>fstop=None</em>, <em>nbands=None</em>, <em>bandwidth=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#EqualBand.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.EqualBand.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>center</strong> &#8211; Vector of center frequencies.</li>
+<li><strong>fstart</strong> &#8211; First center frequency.</li>
+<li><strong>fstop</strong> &#8211; Last center frequency.</li>
+<li><strong>nbands</strong> &#8211; Amount of frequency bands.</li>
+<li><strong>bandwidth</strong> &#8211; Bandwidth of bands.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="acoustics.signal.OctaveBand">
+<em class="property">class </em><tt class="descclassname">acoustics.signal.</tt><tt class="descname">OctaveBand</tt><big>(</big><em>center=None</em>, <em>fstart=None</em>, <em>fstop=None</em>, <em>nbands=None</em>, <em>fraction=1</em>, <em>reference=1000.0</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#OctaveBand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.OctaveBand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#acoustics.signal.Frequencies" title="acoustics.signal.Frequencies"><tt class="xref py py-class docutils literal"><span class="pre">acoustics.signal.Frequencies</span></tt></a></p>
+<p>Fractional-octave band spectrum.</p>
+<dl class="method">
+<dt id="acoustics.signal.OctaveBand.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>center=None</em>, <em>fstart=None</em>, <em>fstop=None</em>, <em>nbands=None</em>, <em>fraction=1</em>, <em>reference=1000.0</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#OctaveBand.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.OctaveBand.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.OctaveBand.fraction">
+<tt class="descname">fraction</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.signal.OctaveBand.fraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fraction of fractional-octave filter.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.OctaveBand.reference">
+<tt class="descname">reference</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.signal.OctaveBand.reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reference center frequency.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.integrate_bands">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">integrate_bands</tt><big>(</big><em>data</em>, <em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#integrate_bands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.integrate_bands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduce frequency resolution of power spectrum. Merges frequency bands by integration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> &#8211; Vector with narrowband powers.</li>
+<li><strong>a</strong> &#8211; Instance of <a class="reference internal" href="#acoustics.signal.Frequencies" title="acoustics.signal.Frequencies"><tt class="xref py py-class docutils literal"><span class="pre">Frequencies</span></tt></a>.</li>
+<li><strong>b</strong> &#8211; Instance of <a class="reference internal" href="#acoustics.signal.Frequencies" title="acoustics.signal.Frequencies"><tt class="xref py py-class docutils literal"><span class="pre">Frequencies</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Needs rewriting so that the summation goes over axis=1.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.octaves">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">octaves</tt><big>(</big><em>p</em>, <em>fs</em>, <em>density=False</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#octaves"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.octaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate level per 1/1-octave.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> &#8211; Instantaneous pressure <img class="math" src="_images/math/1e9194773ee92c201d9ca785b348761aeae8001a.png" alt="p(t)"/>.</li>
+<li><strong>fs</strong> &#8211; Sample frequency.</li>
+<li><strong>density</strong> &#8211; Power density instead of power.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.third_octaves">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">third_octaves</tt><big>(</big><em>p</em>, <em>fs</em>, <em>density=False</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#third_octaves"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.third_octaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate level per 1/3-octave.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>p</strong> &#8211; Instantaneous pressure <img class="math" src="_images/math/1e9194773ee92c201d9ca785b348761aeae8001a.png" alt="p(t)"/>.</li>
+<li><strong>fs</strong> &#8211; Sample frequency.</li>
+<li><strong>density</strong> &#8211; Power density instead of power.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="conversion">
+<h2>Conversion<a class="headerlink" href="#conversion" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="acoustics.signal.decibel_to_neper">
 <tt class="descclassname">acoustics.signal.</tt><tt class="descname">decibel_to_neper</tt><big>(</big><em>decibel</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#decibel_to_neper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.decibel_to_neper" title="Permalink to this definition">¶</a></dt>
@@ -118,11 +461,139 @@ The input matrix <tt class="docutils literal"><span class="pre">ltv</span></tt> 
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>decibel</strong> &#8211; Value in decibel (dB).</td>
 </tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Value in neper (Np).</td>
+</tr>
 </tbody>
 </table>
 <p>The conversion is done according to</p>
 <div class="math">
 <p><img src="_images/math/063ecae2abc0191c1a15d2a61ebab65170c47520.png" alt="\mathrm{dB} = \frac{\log{10}}{20} \mathrm{Np}"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.neper_to_decibel">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">neper_to_decibel</tt><big>(</big><em>neper</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#neper_to_decibel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.neper_to_decibel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert neper to decibel.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>neper</strong> &#8211; Value in neper (Np).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Value in decibel (dB).</td>
+</tr>
+</tbody>
+</table>
+<p>The conversion is done according to</p>
+<div class="math">
+<p><img src="_images/math/4a85e40d436e46c0b8a98f23ef0581362b8e8a22.png" alt="\mathrm{Np} = \frac{20}{\log{10}} \mathrm{dB}"/></p>
+</div></dd></dl>
+
+</div>
+<div class="section" id="other">
+<h2>Other<a class="headerlink" href="#other" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="acoustics.signal.Filterbank">
+<em class="property">class </em><tt class="descclassname">acoustics.signal.</tt><tt class="descname">Filterbank</tt><big>(</big><em>frequencies</em>, <em>sample_frequency=44100</em>, <em>order=3</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#Filterbank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Filterbank" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Fractional-Octave filter bank.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For high frequencies the filter coefficients are wrong for low frequencies. Therefore, to improve the response for lower frequencies the signal should be downsampled. Currently, there is no easy way to do so within the Filterbank.</p>
+</div>
+<dl class="method">
+<dt id="acoustics.signal.Filterbank.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>frequencies</em>, <em>sample_frequency=44100</em>, <em>order=3</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#Filterbank.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Filterbank.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.Filterbank.filters">
+<tt class="descname">filters</tt><a class="reference internal" href="_modules/acoustics/signal.html#Filterbank.filters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Filterbank.filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters this filterbank consists of.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.signal.Filterbank.filtfilt">
+<tt class="descname">filtfilt</tt><big>(</big><em>signal</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#Filterbank.filtfilt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Filterbank.filtfilt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter signal with filterbank.
+Returns a list consisting of a filtered signal per filter.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This function uses <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v0.14.0)"><tt class="xref py py-func docutils literal"><span class="pre">scipy.signal.filtfilt()</span></tt></a> and therefore has a zero-phase response.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.Filterbank.frequencies">
+<tt class="descname">frequencies</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.signal.Filterbank.frequencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frequencies object.</p>
+<p>See also <a class="reference internal" href="#acoustics.signal.Frequencies" title="acoustics.signal.Frequencies"><tt class="xref py py-class docutils literal"><span class="pre">Frequencies</span></tt></a> and subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A frequencies object should have the attributes center, lower and upper.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.signal.Filterbank.lfilter">
+<tt class="descname">lfilter</tt><big>(</big><em>signal</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#Filterbank.lfilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Filterbank.lfilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter signal with filterbank.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This function uses <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.lfilter.html#scipy.signal.lfilter" title="(in SciPy v0.14.0)"><tt class="xref py py-func docutils literal"><span class="pre">scipy.signal.lfilter()</span></tt></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.Filterbank.order">
+<tt class="descname">order</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.signal.Filterbank.order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter order of Butterworth filter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.signal.Filterbank.plot_power">
+<tt class="descname">plot_power</tt><big>(</big><em>signal</em>, <em>filename=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#Filterbank.plot_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Filterbank.plot_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot power in signal.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.signal.Filterbank.plot_response">
+<tt class="descname">plot_response</tt><big>(</big><em>filename=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#Filterbank.plot_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Filterbank.plot_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot frequency response.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The follow phase response is obtained in case <a class="reference internal" href="#acoustics.signal.Filterbank.lfilter" title="acoustics.signal.Filterbank.lfilter"><tt class="xref py py-meth docutils literal"><span class="pre">lfilter()</span></tt></a> is used. The method <a class="reference internal" href="#acoustics.signal.Filterbank.filtfilt" title="acoustics.signal.Filterbank.filtfilt"><tt class="xref py py-meth docutils literal"><span class="pre">filtfilt()</span></tt></a> results in a zero-phase response.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.signal.Filterbank.power">
+<tt class="descname">power</tt><big>(</big><em>signal</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#Filterbank.power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Filterbank.power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power per band in signal.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.signal.Filterbank.sample_frequency">
+<tt class="descname">sample_frequency</tt><a class="reference internal" href="_modules/acoustics/signal.html#Filterbank.sample_frequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.Filterbank.sample_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample frequency.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.signal.rms">
+<tt class="descclassname">acoustics.signal.</tt><tt class="descname">rms</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#rms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.rms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Root mean square.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x</strong> &#8211; Dynamic quantity.</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/acb199abe8b2c2d945ccc1b5a008d643d3099c85.png" alt="x_{rms} = lim_{T \to \infty} \sqrt{\frac{1}{T} \int_0^T |f(x)|^2 \mathrm{d} t }"/></p>
 </div></dd></dl>
 
 <dl class="function">
@@ -150,23 +621,7 @@ Corrections are then applied to obtain the single-sided spectrum.</p>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="acoustics.signal.neper_to_decibel">
-<tt class="descclassname">acoustics.signal.</tt><tt class="descname">neper_to_decibel</tt><big>(</big><em>neper</em><big>)</big><a class="reference internal" href="_modules/acoustics/signal.html#neper_to_decibel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.signal.neper_to_decibel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert neper to decibel.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>neper</strong> &#8211; Value in neper (Np).</td>
-</tr>
-</tbody>
-</table>
-<p>The conversion is done according to</p>
-<div class="math">
-<p><img src="_images/math/4a85e40d436e46c0b8a98f23ef0581362b8e8a22.png" alt="\mathrm{Np} = \frac{20}{\log{10}} \mathrm{dB}"/></p>
-</div></dd></dl>
-
+</div>
 </div>
 
 
@@ -175,6 +630,19 @@ Corrections are then applied to obtain the single-sided spectrum.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Signal</a><ul>
+<li><a class="reference internal" href="#filtering">Filtering</a></li>
+<li><a class="reference internal" href="#windowing">Windowing</a></li>
+<li><a class="reference internal" href="#spectra">Spectra</a></li>
+<li><a class="reference internal" href="#frequency-bands">Frequency bands</a></li>
+<li><a class="reference internal" href="#conversion">Conversion</a></li>
+<li><a class="reference internal" href="#other">Other</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="room.html"
                         title="previous chapter">Room</a></p>

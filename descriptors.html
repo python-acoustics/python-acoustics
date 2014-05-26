@@ -26,7 +26,7 @@
     <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
     <link rel="up" title="Reference" href="reference.html" />
     <link rel="next" title="Directivity" href="directivity.html" />
-    <link rel="prev" title="Criterion" href="criterion.html" /> 
+    <link rel="prev" title="Generator" href="generator.html" /> 
   </head>
   <body>
     <div class="related">
@@ -42,7 +42,7 @@
           <a href="directivity.html" title="Directivity"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="criterion.html" title="Criterion"
+          <a href="generator.html" title="Generator"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
           <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
@@ -54,13 +54,322 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="descriptors">
+  <span class="target" id="module-acoustics.descriptors"></span><div class="section" id="descriptors">
 <h1>Descriptors<a class="headerlink" href="#descriptors" title="Permalink to this headline">¶</a></h1>
+<p>The descriptors module offers all kinds of acoustics related descriptors.</p>
 <div class="toctree-wrapper compound">
 <ul class="simple">
 </ul>
 </div>
-<span class="target" id="module-acoustics.descriptors"></span><dl class="function">
+<div class="section" id="descriptors-from-iso-tr-25417-2007">
+<h2>Descriptors from ISO/TR 25417:2007<a class="headerlink" href="#descriptors-from-iso-tr-25417-2007" title="Permalink to this headline">¶</a></h2>
+<p>Descriptors from <a class="reference internal" href="standards.html#module-acoustics.standards.iso_tr_25417_2007" title="acoustics.standards.iso_tr_25417_2007"><tt class="xref py py-mod docutils literal"><span class="pre">acoustics.standards.iso_tr_25417_2007</span></tt></a>.</p>
+<dl class="attribute">
+<dt id="acoustics.descriptors.REFERENCE_PRESSURE">
+<tt class="descclassname">descriptors.</tt><tt class="descname">REFERENCE_PRESSURE</tt><em class="property"> = 2e-05</em><a class="headerlink" href="#acoustics.descriptors.REFERENCE_PRESSURE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.sound_pressure_level">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">sound_pressure_level</tt><big>(</big><em>pressure</em>, <em>reference_pressure=2e-05</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.sound_pressure_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sound pressure level <img class="math" src="_images/math/354f73df2b487ef4ac026de9e35cb4b0ff40d87a.png" alt="L_p"/> in dB.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pressure</strong> &#8211; Instantaneous sound pressure <img class="math" src="_images/math/3eca8557203e86160952e1c0f735f7417f3285b1.png" alt="p"/>.</li>
+<li><strong>reference_pressure</strong> &#8211; Reference value <img class="math" src="_images/math/2aa528e29c4df6e3a7e44783f02f45e46012b948.png" alt="p_0"/>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/c63d286f6d26d380aa7efe183fc0829e7731372f.png" alt="L_p = 10 \log_{10}{ \left( \frac{p^2}{p_0^2} \right)}"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.equivalent_sound_pressure_level">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">equivalent_sound_pressure_level</tt><big>(</big><em>pressure</em>, <em>reference_pressure=2e-05</em>, <em>axis=1</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.equivalent_sound_pressure_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time-averaged sound pressure level <img class="math" src="_images/math/fc1b8af33a9308d51072d82bf7e277c756dd236a.png" alt="L_{p,T}"/> or equivalent-continious sound pressure level <img class="math" src="_images/math/f6eabb7210952f693aa3ae410942a8577a723c4b.png" alt="L_{p,eqT}"/> in dB.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pressure</strong> &#8211; Instantaneous sound pressure <img class="math" src="_images/math/3eca8557203e86160952e1c0f735f7417f3285b1.png" alt="p"/>.</li>
+<li><strong>reference_pressure</strong> &#8211; Reference value <img class="math" src="_images/math/2aa528e29c4df6e3a7e44783f02f45e46012b948.png" alt="p_0"/>.</li>
+<li><strong>axis</strong> &#8211; Axis.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/35a70f1f209e9413a666f691aefea0d9d8c48e2f.png" alt="L_{p,T} = L_{p,eqT} = 10.0 \log_{10}{ \left( \frac{\frac{1}{T} \int_{t_1}^{t_2} p^2 (t) \mathrm{d} t  }{p_0^2} \right)}"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.peak_sound_pressure">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">peak_sound_pressure</tt><big>(</big><em>pressure</em>, <em>axis=1</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.peak_sound_pressure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Peak sound pressure <img class="math" src="_images/math/4273ff8f04a41f4422d78d8e989bed836ec82170.png" alt="p_{peak}"/> is the greatest absolute sound pressure during a certain time interval.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pressure</strong> &#8211; Instantaneous sound pressure <img class="math" src="_images/math/3eca8557203e86160952e1c0f735f7417f3285b1.png" alt="p"/>.</li>
+<li><strong>axis</strong> &#8211; Axis.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/136b1a68ce1ea990281456ffed628d885dadc444.png" alt="p_{peak} = \mathrm{max}(|p|)"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.peak_sound_pressure_level">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">peak_sound_pressure_level</tt><big>(</big><em>peak_sound_pressure</em>, <em>reference_pressure=2e-05</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.peak_sound_pressure_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Peak sound pressure level <img class="math" src="_images/math/798b872b52edcdc9fe0f76a4d1a07f090025d034.png" alt="L_{p,peak}"/> in dB.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>peak_sound_pressure</strong> &#8211; Peak sound pressure <img class="math" src="_images/math/4273ff8f04a41f4422d78d8e989bed836ec82170.png" alt="p_{peak}"/>.</li>
+<li><strong>reference_pressure</strong> &#8211; Reference value <img class="math" src="_images/math/2aa528e29c4df6e3a7e44783f02f45e46012b948.png" alt="p_0"/>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/961ef6a72a320564272e74773a6873e891881ed9.png" alt="L_{p,peak} = 10.0 \log \frac{p_{peak}^2.0}{p_0^2}"/></p>
+</div></dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.descriptors.REFERENCE_SOUND_EXPOSURE">
+<tt class="descclassname">descriptors.</tt><tt class="descname">REFERENCE_SOUND_EXPOSURE</tt><em class="property"> = 4e-12</em><a class="headerlink" href="#acoustics.descriptors.REFERENCE_SOUND_EXPOSURE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.sound_exposure">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">sound_exposure</tt><big>(</big><em>pressure</em>, <em>axis=1</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.sound_exposure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sound exposure <img class="math" src="_images/math/e8a20b6fcc397603e5dc628a0c7b9facbe561158.png" alt="E_{T}"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pressure</strong> &#8211; Instantaneous sound pressure <img class="math" src="_images/math/3eca8557203e86160952e1c0f735f7417f3285b1.png" alt="p"/>.</li>
+<li><strong>axis</strong> &#8211; Axis.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/0b3f7ec7ecd10f66b7a897e4c93f57659f85b209.png" alt="E_T = \int_{t_1}^{t_2} p^2 (t) \mathrm{d}t"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.sound_exposure_level">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">sound_exposure_level</tt><big>(</big><em>sound_exposure</em>, <em>reference_sound_exposure=4e-12</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.sound_exposure_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sound exposure level <img class="math" src="_images/math/20b2e1becd5bf8afa6dd07b47a221a2f84e67e2d.png" alt="L_{E,T}"/> in dB.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sound_exposure</strong> &#8211; Sound exposure <img class="math" src="_images/math/e8a20b6fcc397603e5dc628a0c7b9facbe561158.png" alt="E_{T}"/>.</li>
+<li><strong>reference_sound_exposure</strong> &#8211; Reference value <img class="math" src="_images/math/7521e13eef556703af1c7bfbd1cd0d0487af2e89.png" alt="E_{0}"/></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/571898b6c0a982d25eb61068030fbce654cb0697.png" alt="L_{E,T} = 10 \log_{10}{ \frac{E_T}{E_0}  }"/></p>
+</div></dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.descriptors.REFERENCE_POWER">
+<tt class="descclassname">descriptors.</tt><tt class="descname">REFERENCE_POWER</tt><em class="property"> = 1e-12</em><a class="headerlink" href="#acoustics.descriptors.REFERENCE_POWER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.sound_power_level">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">sound_power_level</tt><big>(</big><em>power</em>, <em>reference_power=1e-12</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.sound_power_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sound power level <img class="math" src="_images/math/86fad856767a5e13728c66d9555dd109e5ce4405.png" alt="L_{W}"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>power</strong> &#8211; Sound power <img class="math" src="_images/math/f48b617185733d8dd6712643f1ab17c736661a06.png" alt="P"/>.</li>
+<li><strong>reference_power</strong> &#8211; Reference sound power <img class="math" src="_images/math/95196e6bce8bf14a36797ee839126fe757ec864c.png" alt="P_0"/>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/8f847159f29babc708e92c8bdbadfdbf99652069.png" alt="10 \log_{10}{ \frac{P}{P_0}  }"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.sound_energy">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">sound_energy</tt><big>(</big><em>power</em>, <em>axis=1</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.sound_energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sound energy <img class="math" src="_images/math/372c2a0702e1e5866656215408b37a2ddb8d2d45.png" alt="J"/>..</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>power</strong> &#8211; Sound power <img class="math" src="_images/math/f48b617185733d8dd6712643f1ab17c736661a06.png" alt="P"/>.</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/61f21786c335ffd86c2a992fb1465216218745c6.png" alt="J = \int_{t_1}^{t_2} P(t) \mathrm{d} t"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.sound_energy_level">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">sound_energy_level</tt><big>(</big><em>energy</em>, <em>reference_energy=1e-12</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.sound_energy_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sound energy level L_{J} in dB.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>energy</strong> &#8211; Sound energy <img class="math" src="_images/math/372c2a0702e1e5866656215408b37a2ddb8d2d45.png" alt="J"/>.</li>
+<li><strong>reference_energy</strong> &#8211; Reference sound energy <img class="math" src="_images/math/4d91d6697998096d0a587990d9d65c7915cb47c7.png" alt="J_0"/>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/7fdea02b35b17599659f015ae4c9c43503491f26.png" alt="L_{J} = 10 \log_{10}{ \frac{J}{J_0} }"/></p>
+</div></dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.descriptors.REFERENCE_ENERGY">
+<tt class="descclassname">descriptors.</tt><tt class="descname">REFERENCE_ENERGY</tt><em class="property"> = 1e-12</em><a class="headerlink" href="#acoustics.descriptors.REFERENCE_ENERGY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.sound_intensity">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">sound_intensity</tt><big>(</big><em>pressure</em>, <em>velocity</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.sound_intensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sound intensity <img class="math" src="_images/math/43a236732c08956973ebda2a9c4484e0c336c95e.png" alt="\mathbf{i}"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pressure</strong> &#8211; Sound pressure <img class="math" src="_images/math/1e9194773ee92c201d9ca785b348761aeae8001a.png" alt="p(t)"/>.</li>
+<li><strong>velocity</strong> &#8211; Particle velocity <img class="math" src="_images/math/cc4acc111e225d60b0b0c06cadb870f97b4ea408.png" alt="\mathbf{u}(t)"/>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/d352918ab8ee50bb025d0d54e79743ec203d7914.png" alt="\mathbf{i} = p(t) \cdot \mathbf{u}(t)"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.time_averaged_sound_intensity">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">time_averaged_sound_intensity</tt><big>(</big><em>intensity</em>, <em>axis=1</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.time_averaged_sound_intensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time-averaged sound intensity <img class="math" src="_images/math/4d75f54d4827f09d61a68b1abf08f2df5a5856e7.png" alt="\mathbf{I}_T"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>intensity</strong> &#8211; Sound intensity <img class="math" src="_images/math/43a236732c08956973ebda2a9c4484e0c336c95e.png" alt="\mathbf{i}"/>.</li>
+<li><strong>axis</strong> &#8211; Axis.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/8d508c57048785fa8da030fdfdfb8bf3ce770bb1.png" alt="\mathbf{I}_T = \frac{1}{T} \int_{t_1}^{t_2} \mathbf{i}(t)"/></p>
+</div></dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.descriptors.REFERENCE_INTENSITY">
+<tt class="descclassname">descriptors.</tt><tt class="descname">REFERENCE_INTENSITY</tt><em class="property"> = 1e-12</em><a class="headerlink" href="#acoustics.descriptors.REFERENCE_INTENSITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.time_averaged_sound_intensity_level">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">time_averaged_sound_intensity_level</tt><big>(</big><em>time_averaged_sound_intensity</em>, <em>reference_intensity=1e-12</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.time_averaged_sound_intensity_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time-averaged sound intensity level <img class="math" src="_images/math/044e9dc09ca2189c8e9fd9ceb86bedd86d589a0a.png" alt="L_{I,T}"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time_averaged_sound_intensity</strong> &#8211; Time-averaged sound intensity <img class="math" src="_images/math/4d75f54d4827f09d61a68b1abf08f2df5a5856e7.png" alt="\mathbf{I}_T"/>.</li>
+<li><strong>reference_intensity</strong> &#8211; Reference sound intensity <img class="math" src="_images/math/b384912b575da3b4822cf0dac6c0aa00b0a5d770.png" alt="I_0"/>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/1e7d07903593e18609a6148f2727c4a0f1a01fcd.png" alt="L_{I,T} = 10 \log_{10} { \frac{|\mathbf{I}_T|}{I_0} }"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.normal_time_averaged_sound_intensity">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">normal_time_averaged_sound_intensity</tt><big>(</big><em>time_averaged_sound_intensity</em>, <em>unit_normal_vector</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.normal_time_averaged_sound_intensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normal time-averaged sound intensity <img class="math" src="_images/math/2f3a6ac4015742422ac7f66f4a659836fee0a1da.png" alt="I_{n,T}"/>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time_averaged_sound_intensity</strong> &#8211; Time-averaged sound intensity <img class="math" src="_images/math/4d75f54d4827f09d61a68b1abf08f2df5a5856e7.png" alt="\mathbf{I}_T"/>.</li>
+<li><strong>unit_normal_vector</strong> &#8211; Unit normal vector <img class="math" src="_images/math/dcaebebec7d04be2e374331a571b4f5ef8bcb437.png" alt="\mathbf{n}"/>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/1e64fe850b844673574a41d76c3c689d7557426c.png" alt="I_{n,T} = \mathbf{I}_T \cdot \mathbf{n}"/></p>
+</div></dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.normal_time_averaged_sound_intensity_level">
+<tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">normal_time_averaged_sound_intensity_level</tt><big>(</big><em>normal_time_averaged_sound_intensity</em>, <em>reference_intensity=1e-12</em><big>)</big><a class="headerlink" href="#acoustics.descriptors.normal_time_averaged_sound_intensity_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normal time-averaged sound intensity level <img class="math" src="_images/math/d3df12b5689498730044cf408615c0d841b01332.png" alt="L_{In,T}"/> in dB.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>normal_time_averaged_sound_intensity</strong> &#8211; Normal time-averaged sound intensity <img class="math" src="_images/math/4f17c87224ab761d11be5d538aec658f6a0b1bea.png" alt="I{n,T}"/>.</li>
+<li><strong>reference_intensity</strong> &#8211; Reference sound intensity <img class="math" src="_images/math/b384912b575da3b4822cf0dac6c0aa00b0a5d770.png" alt="I_0"/>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+<p><img src="_images/math/1e9cf6516990253cef93c7408bb0ae70d4d1646b.png" alt="I_{n,T} = 10 \log_{10} { \frac{|I_{n,T}|}{I_0}}"/></p>
+</div></dd></dl>
+
+</div>
+<div class="section" id="other-descriptors">
+<h2>Other descriptors<a class="headerlink" href="#other-descriptors" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
 <dt id="acoustics.descriptors.lden">
 <tt class="descclassname">acoustics.descriptors.</tt><tt class="descname">lden</tt><big>(</big><em>lday</em>, <em>levening</em>, <em>lnight</em><big>)</big><a class="reference internal" href="_modules/acoustics/descriptors.html#lden"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.lden" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate <img class="math" src="_images/math/aa21619472c43e27c2a2612a272d4c31ea98086d.png" alt="L_{den}"/> from <img class="math" src="_images/math/77b658d08eeeff1e9fbd3e6e7db3df33478d68f0.png" alt="L_{day}"/>, <img class="math" src="_images/math/33d9af6c29d01e8d189f533ae02bda2e9ea01ba5.png" alt="L_{evening}"/> and <img class="math" src="_images/math/1da848b92815ea58805ce962248df3f43251102d.png" alt="L_{night}"/>.</p>
@@ -150,6 +459,7 @@
 </dd></dl>
 
 </div>
+</div>
 
 
           </div>
@@ -157,9 +467,18 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Descriptors</a><ul>
+<li><a class="reference internal" href="#descriptors-from-iso-tr-25417-2007">Descriptors from ISO/TR 25417:2007</a></li>
+<li><a class="reference internal" href="#other-descriptors">Other descriptors</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="criterion.html"
-                        title="previous chapter">Criterion</a></p>
+  <p class="topless"><a href="generator.html"
+                        title="previous chapter">Generator</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="directivity.html"
                         title="next chapter">Directivity</a></p>
@@ -198,7 +517,7 @@
           <a href="directivity.html" title="Directivity"
              >next</a> |</li>
         <li class="right" >
-          <a href="criterion.html" title="Criterion"
+          <a href="generator.html" title="Generator"
              >previous</a> |</li>
         <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
           <li><a href="reference.html" >Reference</a> &raquo;</li> 

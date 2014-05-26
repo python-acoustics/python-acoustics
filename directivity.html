@@ -54,19 +54,9 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="directivity">
+  <span class="target" id="module-acoustics.directivity"></span><div class="section" id="directivity">
 <h1>Directivity<a class="headerlink" href="#directivity" title="Permalink to this headline">¶</a></h1>
-<p class="graphviz">
-<img src="_images/inheritance-e6694c457fe1afd0ae0893312492b73cf885ebf9.png" alt="Inheritance diagram of acoustics.directivity" usemap="#inheritanced27c5fa74d" class="inheritance"/>
-<map id="inheritanced27c5fa74d" name="inheritanced27c5fa74d">
-<area shape="rect" id="node1" href="#acoustics.directivity.Cardioid" title="Cardioid directivity." alt="" coords="276,5,476,32"/>
-<area shape="rect" id="node2" href="#acoustics.directivity.Directivity" title="Abstract directivity class." alt="" coords="7,81,217,108"/>
-<area shape="rect" id="node4" href="#acoustics.directivity.Custom" title="A class to work with directivity." alt="" coords="277,56,475,83"/>
-<area shape="rect" id="node6" href="#acoustics.directivity.FigureEight" title="Figure of eight directivity." alt="" coords="267,107,485,133"/>
-<area shape="rect" id="node8" href="#acoustics.directivity.Omni" title="Class to work with omni&#45;directional directivity." alt="" coords="285,157,467,184"/>
-</map>
-</p>
-<span class="target" id="module-acoustics.directivity"></span><p>Class and functions to work with directivity.</p>
+<p>The directivity module provides tools to work with directivity.</p>
 <p>The following conventions are used within this module:</p>
 <ul class="simple">
 <li>The angle <img class="math" src="_images/math/a9cfbeb8ebee1f365919e147a79e242dcb67ee5d.png" alt="\theta"/> has a range <img class="math" src="_images/math/382cd28a1b99d9ce284e1888b78cd9554e6f335c.png" alt="[0, \pi]"/>.</li>
@@ -84,6 +74,12 @@
 <em class="property">class </em><tt class="descclassname">acoustics.directivity.</tt><tt class="descname">Custom</tt><big>(</big><em>theta=None</em>, <em>phi=None</em>, <em>r=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#Custom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.Custom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#acoustics.directivity.Directivity" title="acoustics.directivity.Directivity"><tt class="xref py py-class docutils literal"><span class="pre">acoustics.directivity.Directivity</span></tt></a></p>
 <p>A class to work with directivity.</p>
+<dl class="method">
+<dt id="acoustics.directivity.Custom.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>theta=None</em>, <em>phi=None</em>, <em>r=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#Custom.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.Custom.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="acoustics.directivity.Custom.phi">
 <tt class="descname">phi</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.directivity.Custom.phi" title="Permalink to this definition">¶</a></dt>
@@ -110,6 +106,11 @@
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Abstract directivity class.</p>
 <p>This class defines several methods to be implemented by subclasses.</p>
+<dl class="method">
+<dt id="acoustics.directivity.Directivity.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>rotation=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#Directivity.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.Directivity.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="acoustics.directivity.Directivity.plot">
 <tt class="descname">plot</tt><big>(</big><em>filename=None</em>, <em>include_rotation=True</em><big>)</big><a class="reference internal" href="_modules/acoustics/directivity.html#Directivity.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.directivity.Directivity.plot" title="Permalink to this definition">¶</a></dt>

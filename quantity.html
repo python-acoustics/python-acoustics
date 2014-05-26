@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Quantities and units &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
+    <link rel="up" title="Reference" href="reference.html" />
+    <link rel="prev" title="Standards" href="standards.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="standards.html" title="Standards"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-acoustics.quantity"></span><div class="section" id="quantities-and-units">
+<h1>Quantities and units<a class="headerlink" href="#quantities-and-units" title="Permalink to this headline">¶</a></h1>
+<p>The Quantity module provides two classes to work with quantities and units.</p>
+<p class="graphviz">
+<img src="_images/inheritance-d2be19a9d969b2973e24e888f656386ecf2b4c2a.png" alt="Inheritance diagram of acoustics.quantity" usemap="#inheritance26ab394329" class="inheritance"/>
+<map id="inheritance26ab394329" name="inheritance26ab394329">
+<area shape="rect" id="node1" href="#acoustics.quantity.Quantity" title="Quantity." alt="" coords="5,56,200,83"/>
+<area shape="rect" id="node2" href="#acoustics.quantity.Unit" title="Unit of quantity." alt="" coords="20,5,185,32"/>
+</map>
+</p>
+<dl class="class">
+<dt id="acoustics.quantity.Quantity">
+<em class="property">class </em><tt class="descclassname">acoustics.quantity.</tt><tt class="descname">Quantity</tt><big>(</big><em>name</em>, <em>unit</em>, <em>dynamic</em>, <em>symbol=None</em>, <em>symbol_latex=None</em>, <em>reference=1.0</em><big>)</big><a class="reference internal" href="_modules/acoustics/quantity.html#Quantity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.quantity.Quantity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Quantity.</p>
+<dl class="method">
+<dt id="acoustics.quantity.Quantity.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>unit</em>, <em>dynamic</em>, <em>symbol=None</em>, <em>symbol_latex=None</em>, <em>reference=1.0</em><big>)</big><a class="reference internal" href="_modules/acoustics/quantity.html#Quantity.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.quantity.Quantity.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.quantity.Quantity.dynamic">
+<tt class="descname">dynamic</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.quantity.Quantity.dynamic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dynamic quantity (<cite>True</cite>) or energetic (<cite>False</cite>).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.quantity.Quantity.energetic">
+<tt class="descname">energetic</tt><a class="reference internal" href="_modules/acoustics/quantity.html#Quantity.energetic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.quantity.Quantity.energetic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Energetic quantity (<cite>True</cite>) or dynamic (<cite>False</cite>).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.quantity.Quantity.name">
+<tt class="descname">name</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.quantity.Quantity.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the quantity.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.quantity.Quantity.reference">
+<tt class="descname">reference</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.quantity.Quantity.reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reference value of the quantity.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.quantity.Quantity.symbol">
+<tt class="descname">symbol</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.quantity.Quantity.symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symbol of the quantity.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.quantity.Quantity.symbol_latex">
+<tt class="descname">symbol_latex</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.quantity.Quantity.symbol_latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symbol of the unit in LaTeX.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.quantity.Quantity.unit">
+<tt class="descname">unit</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.quantity.Quantity.unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unit. See <a class="reference internal" href="#acoustics.quantity.Unit" title="acoustics.quantity.Unit"><tt class="xref py py-class docutils literal"><span class="pre">Unit</span></tt></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="acoustics.quantity.Unit">
+<em class="property">class </em><tt class="descclassname">acoustics.quantity.</tt><tt class="descname">Unit</tt><big>(</big><em>name</em>, <em>symbol</em>, <em>symbol_latex</em><big>)</big><a class="reference internal" href="_modules/acoustics/quantity.html#Unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.quantity.Unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Unit of quantity.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Perhaps inherit from tuple or <tt class="xref py py-class docutils literal"><span class="pre">collections.namedTuple</span></tt>?</p>
+</div>
+<dl class="method">
+<dt id="acoustics.quantity.Unit.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>symbol</em>, <em>symbol_latex</em><big>)</big><a class="reference internal" href="_modules/acoustics/quantity.html#Unit.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.quantity.Unit.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.quantity.Unit.name">
+<tt class="descname">name</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.quantity.Unit.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the unit.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.quantity.Unit.symbol">
+<tt class="descname">symbol</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.quantity.Unit.symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symbol of the unit.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.quantity.get_quantity">
+<tt class="descclassname">acoustics.quantity.</tt><tt class="descname">get_quantity</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/acoustics/quantity.html#get_quantity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.quantity.get_quantity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get quantity by name. Returns instance of <a class="reference internal" href="#acoustics.quantity.Quantity" title="acoustics.quantity.Quantity"><tt class="xref py py-class docutils literal"><span class="pre">Quantity</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; Name of the quantity.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.quantity.quantities">
+<tt class="descclassname">acoustics.quantity.</tt><tt class="descname">quantities</tt><em class="property"> = {'pressure': ('Pressure', 'pascal', True, 'p', '$p$', 2e-05)}</em><a class="headerlink" href="#acoustics.quantity.quantities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary with quantities. Each quantity is stored as a tuple.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.quantity.units">
+<tt class="descclassname">acoustics.quantity.</tt><tt class="descname">units</tt><em class="property"> = {'pascal': ('pascal', 'Pa', '$Pa$'), 'meter': ('meter', 'm', '$m$')}</em><a class="headerlink" href="#acoustics.quantity.units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary with units. Each unit is stored as a tuple.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="standards.html"
+                        title="previous chapter">Standards</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/quantity.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="standards.html" title="Standards"
+             >previous</a> |</li>
+        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li><a href="reference.html" >Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

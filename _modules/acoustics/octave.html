@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
+    <link rel="up" title="acoustics" href="../acoustics.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,7 +37,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../acoustics.html" accesskey="U">acoustics</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -48,6 +49,9 @@
             
   <h1>Source code for acoustics.octave</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Octave</span>
+<span class="sd">======</span>
+
 <span class="sd">Module for working with octaves.</span>
 
 <span class="sd">The following is an example on how to use :class:`acoustics.octave.Octave`.</span>
@@ -80,8 +84,8 @@
 <span class="sd">    Calculate center frequency of band ``n``.</span>
 <span class="sd">    </span>
 <span class="sd">    :param n: band ``n`.</span>
-<span class="sd">    :order: Order of octave.</span>
-<span class="sd">    :ref: Reference center frequency.</span>
+<span class="sd">    :param order: Order of octave.</span>
+<span class="sd">    :param ref: Reference center frequency.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ref</span> <span class="o">*</span> <span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="mf">3.0</span><span class="o">/</span><span class="n">order</span><span class="o">/</span><span class="mf">10.0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2.0</span><span class="o">**</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">order</span><span class="p">)</span>
 
@@ -89,6 +93,9 @@
 <div class="viewcode-block" id="upper_frequency"><a class="viewcode-back" href="../../octave.html#acoustics.octave.upper_frequency">[docs]</a><span class="k">def</span> <span class="nf">upper_frequency</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Upper frequency of frequency band given a center frequency and order.</span>
+<span class="sd">    </span>
+<span class="sd">    :param centr: Center frequencies.</span>
+<span class="sd">    :param order: Fraction of octave.</span>
 <span class="sd">    </span>
 <span class="sd">    .. math:: f_u = f_c \cdot 2^{\\frac{+1}{2N}}</span>
 <span class="sd">    </span>
@@ -99,6 +106,9 @@
 <div class="viewcode-block" id="lower_frequency"><a class="viewcode-back" href="../../octave.html#acoustics.octave.lower_frequency">[docs]</a><span class="k">def</span> <span class="nf">lower_frequency</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Lower frequency of frequency band given a center frequency and order.</span>
+<span class="sd">    </span>
+<span class="sd">    :param centr: Center frequencies.</span>
+<span class="sd">    :param order: Fraction of octave.</span>
 <span class="sd">    </span>
 <span class="sd">    .. math:: f_l = f_c \cdot 2^{\\frac{-1}{2N}}</span>
 <span class="sd">    </span>
@@ -111,7 +121,7 @@
 <span class="sd">    Class to calculate octave center frequencies.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">REFERENCE</span><span class="p">):</span>
+<div class="viewcode-block" id="Octave.__init__"><a class="viewcode-back" href="../../octave.html#acoustics.octave.Octave.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">REFERENCE</span><span class="p">):</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">reference</span> <span class="o">=</span> <span class="n">reference</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -120,7 +130,7 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="n">order</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Order</span>
+<span class="sd">        Fraction of octave.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">if</span> <span class="p">(</span><span class="n">interval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">fmin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">fmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">):</span>
@@ -138,7 +148,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">unique</span> <span class="o">=</span> <span class="n">unique</span>
         <span class="sd">&quot;&quot;&quot;Whether or not to calculate the requested values for every value of ``interval``.&quot;&quot;&quot;</span>
         
-        
+        </div>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">fmin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Minimum frequency of an interval.&quot;&quot;&quot;</span>
@@ -200,7 +210,8 @@
 <span class="sd">        See also :func:`frequency_of_band`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">frequency_of_band</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
-        
+    
+    <span class="nd">@property</span>
 <div class="viewcode-block" id="Octave.n"><a class="viewcode-back" href="../../octave.html#acoustics.octave.Octave.n">[docs]</a>    <span class="k">def</span> <span class="nf">n</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return band ``n`` for a given frequency.</span>
@@ -209,7 +220,8 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interval</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fmin</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fmax</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-            </div>
+    </div>
+    <span class="nd">@property</span>
 <div class="viewcode-block" id="Octave.center"><a class="viewcode-back" href="../../octave.html#acoustics.octave.Octave.center">[docs]</a>    <span class="k">def</span> <span class="nf">center</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return center frequencies :math:`f_c`.</span>
@@ -217,9 +229,10 @@
 <span class="sd">        .. math::  f_c = f_{ref} \cdot 2^{n/N} \\cdot 10^{\\frac{3}{10N}}</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">()</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fc</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
      </div>
+    <span class="nd">@property</span> 
 <div class="viewcode-block" id="Octave.bandwidth"><a class="viewcode-back" href="../../octave.html#acoustics.octave.Octave.bandwidth">[docs]</a>    <span class="k">def</span> <span class="nf">bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Bandwidth of bands.</span>
@@ -227,8 +240,9 @@
 <span class="sd">        .. math:: B = f_u - f_l</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span>
     </div>
+    <span class="nd">@property</span>
 <div class="viewcode-block" id="Octave.lower"><a class="viewcode-back" href="../../octave.html#acoustics.octave.Octave.lower">[docs]</a>    <span class="k">def</span> <span class="nf">lower</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Lower frequency limits of bands.</span>
@@ -238,7 +252,8 @@
 <span class="sd">        See also :func:`lower_frequency`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lower_frequency</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">)</span>
-        </div>
+    </div>
+    <span class="nd">@property</span>
 <div class="viewcode-block" id="Octave.upper"><a class="viewcode-back" href="../../octave.html#acoustics.octave.Octave.upper">[docs]</a>    <span class="k">def</span> <span class="nf">upper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upper frequency limits of bands.</span>
@@ -303,7 +318,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../acoustics.html" >acoustics</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

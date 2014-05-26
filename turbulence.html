@@ -54,8 +54,11 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="turbulence">
+  <span class="target" id="module-acoustics.turbulence"></span><div class="section" id="turbulence">
 <h1>Turbulence<a class="headerlink" href="#turbulence" title="Permalink to this headline">¶</a></h1>
+<p>Turbulence in the atmosphere affects wave propagation.
+This module contains implementations of models that can be used to create random turbulence fields.</p>
+<p>References are made to the book &#8216;Computational Atmospheric Acoustics&#8217; by &#8216;Erik M. Salomons&#8217;, published in 2001.</p>
 <div class="section" id="abstract-classes">
 <h2>Abstract classes<a class="headerlink" href="#abstract-classes" title="Permalink to this headline">¶</a></h2>
 <p class="graphviz">
@@ -251,6 +254,11 @@
 <em class="property">class </em><tt class="descclassname">acoustics._turbulence.</tt><tt class="descname">Spectrum</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/acoustics/_turbulence.html#Spectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics._turbulence.Spectrum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Abstract turbulence spectrum.</p>
+<dl class="method">
+<dt id="acoustics._turbulence.Spectrum.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/acoustics/_turbulence.html#Spectrum.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics._turbulence.Spectrum.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="acoustics._turbulence.Spectrum.max_mode_order">
 <tt class="descname">max_mode_order</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics._turbulence.Spectrum.max_mode_order" title="Permalink to this definition">¶</a></dt>
@@ -476,6 +484,11 @@ and <img class="math" src="_images/math/183421431fcc0a42e22f825a33dcc3c51607fa6e
 <em class="property">class </em><tt class="descclassname">acoustics._turbulence.</tt><tt class="descname">abstractstaticmethod</tt><big>(</big><em>function</em><big>)</big><a class="reference internal" href="_modules/acoustics/_turbulence.html#abstractstaticmethod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics._turbulence.abstractstaticmethod" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">staticmethod</span></tt></p>
 <p>Abstract static method.</p>
+<dl class="method">
+<dt id="acoustics._turbulence.abstractstaticmethod.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>function</em><big>)</big><a class="reference internal" href="_modules/acoustics/_turbulence.html#abstractstaticmethod.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics._turbulence.abstractstaticmethod.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -511,14 +524,16 @@ and <img class="math" src="_images/math/183421431fcc0a42e22f825a33dcc3c51607fa6e
 <area shape="rect" id="node17" href="#acoustics.turbulence.Field2D" title="Refractive index field." alt="" coords="17,166,179,188"/>
 </map>
 </p>
-<span class="target" id="module-acoustics.turbulence"></span><p>Turbulence in the atmosphere affects wave propagation.
-This module contains implementations of models that can be used to create random turbulence fields.</p>
-<p>References are made to the book &#8216;Computational Atmospheric Acoustics&#8217; by &#8216;Erik M. Salomons&#8217;, published in 2001.</p>
 <dl class="class">
 <dt id="acoustics.turbulence.Comparison">
 <em class="property">class </em><tt class="descclassname">acoustics.turbulence.</tt><tt class="descname">Comparison</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="_modules/acoustics/turbulence.html#Comparison"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.turbulence.Comparison" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Compare turbulence spectra.</p>
+<dl class="method">
+<dt id="acoustics.turbulence.Comparison.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="_modules/acoustics/turbulence.html#Comparison.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.turbulence.Comparison.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="acoustics.turbulence.Comparison.items">
 <tt class="descname">items</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.turbulence.Comparison.items" title="Permalink to this definition">¶</a></dt>
@@ -544,6 +559,11 @@ This module contains implementations of models that can be used to create random
 <em class="property">class </em><tt class="descclassname">acoustics.turbulence.</tt><tt class="descname">Field2D</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>spatial_resolution</em>, <em>spectrum</em><big>)</big><a class="reference internal" href="_modules/acoustics/turbulence.html#Field2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.turbulence.Field2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Refractive index field.</p>
+<dl class="method">
+<dt id="acoustics.turbulence.Field2D.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>spatial_resolution</em>, <em>spectrum</em><big>)</big><a class="reference internal" href="_modules/acoustics/turbulence.html#Field2D.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.turbulence.Field2D.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="acoustics.turbulence.Field2D.mu">
 <tt class="descname">mu</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.turbulence.Field2D.mu" title="Permalink to this definition">¶</a></dt>
@@ -559,7 +579,7 @@ This module contains implementations of models that can be used to create random
 <dl class="method">
 <dt id="acoustics.turbulence.Field2D.randomize">
 <tt class="descname">randomize</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/acoustics/turbulence.html#Field2D.randomize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.turbulence.Field2D.randomize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create new random values. This is a shortcut to <tt class="xref py py-meth docutils literal"><span class="pre">Spectrum2D.randomize()</span></tt>.</p>
+<dd><p>Create new random values. This is a shortcut to <a class="reference internal" href="#acoustics._turbulence.Spectrum2D.randomize" title="acoustics._turbulence.Spectrum2D.randomize"><tt class="xref py py-meth docutils literal"><span class="pre">Spectrum2D.randomize()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="attribute">

@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
+    <link rel="up" title="acoustics" href="../acoustics.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,7 +37,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../acoustics.html" accesskey="U">acoustics</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -48,10 +49,25 @@
             
   <h1>Source code for acoustics.turbulence</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Turbulence</span>
+<span class="sd">==========</span>
+
 <span class="sd">Turbulence in the atmosphere affects wave propagation.</span>
 <span class="sd">This module contains implementations of models that can be used to create random turbulence fields.</span>
 
 <span class="sd">References are made to the book &#39;Computational Atmospheric Acoustics&#39; by &#39;Erik M. Salomons&#39;, published in 2001.</span>
+
+<span class="sd">================    </span>
+<span class="sd">Abstract classes</span>
+<span class="sd">================</span>
+<span class="sd">.. inheritance-diagram:: acoustics._turbulence</span>
+<span class="sd">.. automodule:: acoustics._turbulence</span>
+
+<span class="sd">==========    </span>
+<span class="sd">Turbulence</span>
+<span class="sd">==========</span>
+
+<span class="sd">.. inheritance-diagram:: acoustics.turbulence</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
@@ -354,13 +370,13 @@
 <span class="sd">    Compare turbulence spectra.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+<div class="viewcode-block" id="Comparison.__init__"><a class="viewcode-back" href="../../turbulence.html#acoustics.turbulence.Comparison.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Turbulence spectra.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-    
+    </div>
 <div class="viewcode-block" id="Comparison.plot_mode_amplitudes"><a class="viewcode-back" href="../../turbulence.html#acoustics.turbulence.Comparison.plot_mode_amplitudes">[docs]</a>    <span class="k">def</span> <span class="nf">plot_mode_amplitudes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a plot of the mode amplitudes for all turbulence spectra.</span>
@@ -444,7 +460,7 @@
 <span class="sd">    Refractive index.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">spatial_resolution</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">):</span>
+<div class="viewcode-block" id="Field2D.__init__"><a class="viewcode-back" href="../../turbulence.html#acoustics.turbulence.Field2D.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">spatial_resolution</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">):</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -472,7 +488,7 @@
         <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_generate</span> <span class="o">=</span> <span class="n">_generate</span>
         
-    
+    </div>
 <div class="viewcode-block" id="Field2D.randomize"><a class="viewcode-back" href="../../turbulence.html#acoustics.turbulence.Field2D.randomize">[docs]</a>    <span class="k">def</span> <span class="nf">randomize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create new random values. This is a shortcut to :meth:`Spectrum2D.randomize()`.</span>
@@ -608,7 +624,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../acoustics.html" >acoustics</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
+    <link rel="up" title="acoustics" href="../acoustics.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,7 +37,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../acoustics.html" accesskey="U">acoustics</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -47,15 +48,77 @@
           <div class="body">
             
   <h1>Source code for acoustics.descriptors</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Descriptors</span>
+<span class="sd">============</span>
+
+<span class="sd">The descriptors module offers all kinds of acoustics related descriptors.</span>
+
+<span class="sd">.. toctree::</span>
+<span class="sd">    :maxdepth: 2</span>
+
+<span class="sd">Descriptors from ISO/TR 25417:2007</span>
+<span class="sd">**********************************</span>
+
+<span class="sd">Descriptors from :mod:`acoustics.standards.iso_tr_25417_2007`.</span>
+
+<span class="sd">.. autoattribute:: acoustics.descriptors.REFERENCE_PRESSURE </span>
+<span class="sd">.. autofunction:: acoustics.descriptors.sound_pressure_level </span>
+<span class="sd">.. autofunction:: acoustics.descriptors.equivalent_sound_pressure_level</span>
+<span class="sd">.. autofunction:: acoustics.descriptors.peak_sound_pressure</span>
+<span class="sd">.. autofunction:: acoustics.descriptors.peak_sound_pressure_level</span>
+<span class="sd">.. autoattribute:: acoustics.descriptors.REFERENCE_SOUND_EXPOSURE</span>
+<span class="sd">.. autofunction:: acoustics.descriptors.sound_exposure</span>
+<span class="sd">.. autofunction:: acoustics.descriptors.sound_exposure_level</span>
+<span class="sd">.. autoattribute:: acoustics.descriptors.REFERENCE_POWER</span>
+<span class="sd">.. autofunction:: acoustics.descriptors.sound_power_level</span>
+<span class="sd">.. autofunction:: acoustics.descriptors.sound_energy</span>
+<span class="sd">.. autofunction:: acoustics.descriptors.sound_energy_level</span>
+<span class="sd">.. autoattribute:: acoustics.descriptors.REFERENCE_ENERGY</span>
+<span class="sd">.. autofunction:: acoustics.descriptors.sound_intensity</span>
+<span class="sd">.. autofunction:: acoustics.descriptors.time_averaged_sound_intensity</span>
+<span class="sd">.. autoattribute:: acoustics.descriptors.REFERENCE_INTENSITY</span>
+<span class="sd">.. autofunction:: acoustics.descriptors.time_averaged_sound_intensity_level</span>
+<span class="sd">.. autofunction:: acoustics.descriptors.normal_time_averaged_sound_intensity</span>
+<span class="sd">.. autofunction:: acoustics.descriptors.normal_time_averaged_sound_intensity_level</span>
+
+
+<span class="sd">Other descriptors</span>
+<span class="sd">*****************</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">acoustics.standards.iso_tr_25417_2007</span> <span class="kn">import</span> <span class="p">(</span><span class="n">REFERENCE_PRESSURE</span><span class="p">,</span> 
+                                                   <span class="n">sound_pressure_level</span><span class="p">,</span> 
+                                                   <span class="n">equivalent_sound_pressure_level</span><span class="p">,</span>
+                                                   <span class="n">peak_sound_pressure</span><span class="p">,</span>
+                                                   <span class="n">peak_sound_pressure_level</span><span class="p">,</span>
+                                                   <span class="n">REFERENCE_SOUND_EXPOSURE</span><span class="p">,</span>
+                                                   <span class="n">sound_exposure</span><span class="p">,</span>
+                                                   <span class="n">sound_exposure_level</span><span class="p">,</span>
+                                                   <span class="n">REFERENCE_POWER</span><span class="p">,</span>
+                                                   <span class="n">sound_power_level</span><span class="p">,</span>
+                                                   <span class="n">sound_energy</span><span class="p">,</span>
+                                                   <span class="n">REFERENCE_ENERGY</span><span class="p">,</span>
+                                                   <span class="n">sound_energy_level</span><span class="p">,</span>
+                                                   <span class="n">sound_intensity</span><span class="p">,</span>
+                                                   <span class="n">time_averaged_sound_intensity</span><span class="p">,</span>
+                                                   <span class="n">REFERENCE_INTENSITY</span><span class="p">,</span>
+                                                   <span class="n">time_averaged_sound_intensity_level</span><span class="p">,</span>
+                                                   <span class="n">normal_time_averaged_sound_intensity</span><span class="p">,</span>
+                                                   <span class="n">normal_time_averaged_sound_intensity_level</span><span class="p">,</span>
+                                                   <span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_leq</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
         <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
     <span class="k">return</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">((</span><span class="mf">1.0</span><span class="o">/</span><span class="n">time</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="n">levels</span><span class="o">/</span><span class="mf">10.0</span><span class="p">)))</span>
+
 
 <div class="viewcode-block" id="leq"><a class="viewcode-back" href="../../descriptors.html#acoustics.descriptors.leq">[docs]</a><span class="k">def</span> <span class="nf">leq</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">int_time</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -165,7 +228,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../acoustics.html" >acoustics</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

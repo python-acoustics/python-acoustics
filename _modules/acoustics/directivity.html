@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
+    <link rel="up" title="acoustics" href="../acoustics.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,7 +37,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../acoustics.html" accesskey="U">acoustics</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -48,12 +49,17 @@
             
   <h1>Source code for acoustics.directivity</h1><div class="highlight"><pre>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Class and functions to work with directivity.</span>
+<span class="sd">Directivity</span>
+<span class="sd">===========</span>
+
+<span class="sd">The directivity module provides tools to work with directivity.</span>
 
 <span class="sd">The following conventions are used within this module:</span>
 
 <span class="sd">* The angle :math:`\\theta` has a range :math:`[0, \\pi]`.</span>
 <span class="sd">* The angle :math:`\\phi` has a range :math:`[-pi, pi]`.</span>
+
+<span class="sd">.. inheritance-diagram:: acoustics.room</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
@@ -161,13 +167,13 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Directivity.__init__"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Directivity.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">rotation</span> <span class="k">if</span> <span class="n">rotation</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="c"># X, Y, Z rotation</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rotation of the directivity pattern.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
+</div>
     <span class="nd">@abc.abstractmethod</span>
     <span class="k">def</span> <span class="nf">_directivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -294,7 +300,7 @@
 <span class="sd">    A class to work with directivity.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Custom.__init__"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Custom.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -311,7 +317,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Magnitude or radius. 2-D array.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-    
+    </div>
     <span class="k">def</span> <span class="nf">_directivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Custom directivity.</span>
@@ -355,7 +361,8 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../acoustics.html" >acoustics</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
