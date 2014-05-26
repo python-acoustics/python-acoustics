@@ -1,4 +1,7 @@
 """
+Room
+====
+
 The room acoustics module contains several functions to calculate the reverberation time in spaces.
 """
 

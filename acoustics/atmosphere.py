@@ -1,5 +1,9 @@
 """
-Module containing functions and a classes related to atmospheric acoustics.
+Atmosphere
+==========
+
+The atmosphere module contains functions and classes related to atmospheric acoustics.
+
 """
 from __future__ import division, print_function
 

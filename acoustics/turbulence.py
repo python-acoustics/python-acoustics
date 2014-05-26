@@ -1,8 +1,23 @@
 """
+Turbulence
+==========
+
 Turbulence in the atmosphere affects wave propagation.
 This module contains implementations of models that can be used to create random turbulence fields.
 
 References are made to the book 'Computational Atmospheric Acoustics' by 'Erik M. Salomons', published in 2001.
+
+================    
+Abstract classes
+================
+.. inheritance-diagram:: acoustics._turbulence
+.. automodule:: acoustics._turbulence
+
+==========    
+Turbulence
+==========
+
+.. inheritance-diagram:: acoustics.turbulence
 """
 
 

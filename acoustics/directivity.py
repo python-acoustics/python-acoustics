@@ -1,10 +1,15 @@
 """
-Class and functions to work with directivity.
+Directivity
+===========
+
+The directivity module provides tools to work with directivity.
 
 The following conventions are used within this module:
 
 * The angle :math:`\\theta` has a range :math:`[0, \\pi]`.
 * The angle :math:`\\phi` has a range :math:`[-pi, pi]`.
+
+.. inheritance-diagram:: acoustics.room
 
 """
 from __future__ import division

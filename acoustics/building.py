@@ -1,5 +1,9 @@
 """
-This module contains functions related to building acoustics.
+Building
+========
+
+The building module contains functions related to building acoustics.
+
 """
 from __future__ import division
 

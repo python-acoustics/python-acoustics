@@ -1,4 +1,7 @@
 """
+Reflection
+==========
+
 The reflection module contains functions for calculating reflection factors and impedances.
 """
 from __future__ import division
