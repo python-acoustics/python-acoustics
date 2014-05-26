@@ -2,7 +2,32 @@
 Atmosphere
 ==========
 
-The atmosphere module contains functions and classes related to atmospheric acoustics.
+The atmosphere module contains functions and classes related to atmospheric acoustics and is based on :mod:`acoustics.standards.iso_9613_1_1993`.
+
+From ISO 9613-1 1993
+********************
+
+Constants
+---------
+
+.. autoattribute:: acoustics.standards.iso_9613_1_1993.SOUNDSPEED
+.. autoattribute:: acoustics.standards.iso_9613_1_1993.REFERENCE_TEMPERATURE
+.. autoattribute:: acoustics.standards.iso_9613_1_1993.REFERENCE_PRESSURE
+.. autoattribute:: acoustics.standards.iso_9613_1_1993.TRIPLE_TEMPERATURE
+
+Functions
+---------
+
+.. autofunction:: acoustics.standards.iso_9613_1_1993.soundspeed
+.. autofunction:: acoustics.standards.iso_9613_1_1993.saturation_pressure
+.. autofunction:: acoustics.standards.iso_9613_1_1993.molar_concentration_water_vapour
+.. autofunction:: acoustics.standards.iso_9613_1_1993.relaxation_frequency_nitrogen
+.. autofunction:: acoustics.standards.iso_9613_1_1993.relaxation_frequency_oxygen
+.. autofunction:: acoustics.standards.iso_9613_1_1993.attenuation_coefficient
+
+
+Atmosphere class
+****************
 
 """
 from __future__ import division, print_function
@@ -15,104 +40,8 @@ try:
 except ImportError:                                    # Use monkey-patching np.fft perhaps instead?
     from numpy.fft import ifft
 
-SOUNDSPEED = 343.2
-"""
-Speed of sound.
-"""
-
-def soundspeed(ref_temp, temp):
-    """
-    Speed of sound :math:`c`.
-    
-    :param ref_temp: Reference temperature :math:`T`
-    :param temp: Ambient temperature :math:`T_0`
-    
-    According to ISO9613-1:1993.
-    
-    ..  math:: c = 343.2 \\left( \\frac{T}{T_0} \\right)
-    
-    """
-    return 343.2 * np.sqrt(temp / ref_temp)
-    
-def saturation_pressure(ref_pressure, triple_temp, temp):
-    """
-    Saturation vapour pressure :math:`p_{sat}`.
-    
-    :param ref_pressure: Reference pressure :math:`p_r`
-    :param triple_temp: Triple point temperature water :math:`T_{01}`
-    :param temp: Ambient temperature :math:`T`
-    
-    According to ISO9613-1:1993.
-    
-    .. math:: p_{sat} = 10^C \cdot p_r
-    
-    with exponent :math:`C` given by
-    
-    .. math:: C = -6.8346 \cdot \\left( \\frac{T_{01}}{T} \\right)^{1.261}  + 4.6151
-    
-    """
-    return ref_pressure * 10.0** (-6.8346 *(triple_temp/temp)**(1.261) + 4.6151)
-
-def molar_concentration_water_vapour(relative_humidity, saturation_pressure, pressure):
-    """
-    Molar concentration of water vapour :math:`h`.
-    
-    :param relative_humidity: Relative humidity :math:`h_r`
-    :param saturation_pressure: Saturation pressure :math:`p_{sat}`
-    :param pressure: Ambient pressure :math:`p`
-    
-    According to ISO9613-1:1993.
-    
-    .. math:: h = h_r  \\frac{p_{sat}}{p_a}
-    
-    """
-    return relative_humidity * saturation_pressure / pressure
-
-def relaxation_frequency_oxygen(pressure, ref_pressure, h):
-    """
-    Relaxation frequency of oxygen :math:`f_{r,O}`.
-    
-    :param pressure: Ambient pressure :math:`p_a`
-    :param ref_pressure: Reference pressure :math:`p_r`
-    :param h: Molar concentration of water vapour :math:`h`
-    
-    According to ISO9613-1:1993.
-    
-    .. math:: f_{r,O} = \\frac{p_a}{p_r} \\left( 24 + 4.04 \cdot 10^4 h \\frac{0.02 + h}{0.391 + h}  \\right)
-    
-    """
-    return pressure / ref_pressure * ( 24.0 + 4.04 * 10.0**4.0 * h * (0.02 + h) / (0.391 + h) )
-
-def relaxation_frequency_nitrogen(pressure, ref_pressure, temperature, ref_temperature, h):        
-    """
-    Relaxation frequency of nitrogen :math:`f_{r,N}`.
-    
-    :param pressure: Ambient pressure :math:`p_a`
-    :param ref_pressure: Reference pressure :math:`p_{ref}`
-    :param temperature: Ambient temperature :math:`T`
-    :param ref_temperature: Reference temperature :math:`T_{ref}`
-    :param h: Molar concentration of water vapour :math:`h`
-    
-    According to ISO9613-1:1993.
-    
-    .. math:: f_{r,N} = \\frac{p_a}{p_r} \\left( \\frac{T}{T_0} \\right)^{-1/2} \cdot \\left( 9 + 280 h \exp{\\left\{ -4.170 \\left[ \\left(\\frac{T}{T_0} \\right)^{-1/3} -1 \\right] \\right\} } \\right)
-    
-    """
-    return pressure / ref_pressure * (temperature/ref_temperature)**(-0.5) * (9.0 + 280.0 * h * np.exp(-4.170 * ((temperature/ref_temperature)**(-1.0/3.0) - 1.0 ) ) )
-
-def attenuation_coefficient(pressure, reference_pressure, temperature, reference_temperature, relaxation_frequency_nitrogen, relaxation_frequency_oxygen, frequency):
-    """
-    Attenuation coefficient :math:`\\alpha` describing atmospheric absorption in dB/m for the specified ``frequency``.
-    
-    :param temperature: Ambient temperature :math:`T`
-    :param pressure: Ambient pressure :math:`T`
-    
-    :param frequency: Frequencies to calculate :math:`\\alpha` for.
-    
-    According to ISO9613-1:1993.
-    """
-    return 8.686 * frequency**2.0 * ( ( 1.84 * 10.0**(-11.0) * (reference_pressure/pressure) * (temperature/reference_temperature)**(0.5)) + (temperature/reference_temperature)**(-2.5) * ( 0.01275 * np.exp(-2239.1 / temperature) * (relaxation_frequency_oxygen + (frequency**2.0/relaxation_frequency_oxygen))**(-1.0) + 0.1068 * np.exp(-3352.0/temperature) * (relaxation_frequency_nitrogen + (frequency**2.0/relaxation_frequency_nitrogen))**(-1.0) ) )
-
+from acoustics.standards.iso_9613_1_1993 import *
+                                                
 
 class Atmosphere(object):
     """
@@ -128,18 +57,22 @@ class Atmosphere(object):
     TRIPLE_TEMP = 273.16
     """Triple point isotherm temperature."""
 
-    def __init__(self, temperature=293.15, pressure=101.325, relative_humidity=0.0):
+    def __init__(self, 
+                 temperature=REFERENCE_TEMPERATURE, 
+                 pressure=REFERENCE_PRESSURE,
+                 relative_humidity=0.0, 
+                 reference_temperature=REFERENCE_TEMPERATURE,
+                 reference_pressure=REFERENCE_PRESSURE,
+                 triple_temperature=TRIPLE_TEMPERATURE):
         """
-        Constructor
-        
+
         :param temperature: Temperature
         :param pressure: Pressure
         :param relative_humidity: Relative humidity
+        :param reference_temperature: Reference temperature.
+        :param reference_pressure: Reference pressure.
+        :param triple_temperature: Triple temperature.
         """
-        
-        ###self.__class__.temperature.add_callback(self, self._update)
-        ###self.__class__.pressure.add_callback(self, self._update)
-        ###self.__class__.relative_humidity.add_callback(self, self._update)
         
         self.temperature = temperature
         """Ambient temperature :math:`T`."""
@@ -150,19 +83,34 @@ class Atmosphere(object):
         self.relative_humidity = relative_humidity
         """Relative humidity"""
         
+        self.reference_temperature = reference_temperature
+        """
+        Reference temperature.
+        """
+        
+        self.reference_pressure = reference_pressure
+        """
+        Reference pressure.
+        """
+        
+        self.triple_temperature = triple_temperature
+        """
+        Triple temperature.
+        """
+       
     @property
     def soundspeed(self):
         """
         Speed of sound :math:`c` calculated using :func:`soundspeed`.
         """
-        return soundspeed(self.temperature, self.REF_TEMP)
+        return soundspeed(self.temperature, self.reference_temperature)
         
     @property
     def saturation_pressure(self):
         """
-        Saturation pressure :math:`p_{sat}` calculated using :func:`saturation_pressure`.
+        Saturation pressure :math:`p_{sat}` calculated using :func:`acoustics.standards.iso_9613_1_1993.saturation_pressure`.
         """
-        return saturation_pressure(self.REF_PRESSURE, self.TRIPLE_TEMP, self.temperature)
+        return saturation_pressure(self.temperature, self.reference_pressure, self.triple_temperature)
     
     @property
     def molar_concentration_water_vapour(self):
@@ -176,15 +124,14 @@ class Atmosphere(object):
         """
         Resonance frequency of nitrogen :math:`f_{r,N}` calculated using :func:`relaxation_frequency_nitrogen`.
         """
-        return relaxation_frequency_nitrogen(self.pressure, self.REF_PRESSURE, self.temperature, self.REF_TEMP, self.molar_concentration_water_vapour)
+        return relaxation_frequency_nitrogen(self.pressure, self.temperature, self.molar_concentration_water_vapour, self.reference_pressure, self.reference_temperature)
     
     @property
     def relaxation_frequency_oxygen(self):
         """
         Resonance frequency of oxygen :math:`f_{r,O}` calculated using :func:`relaxation_frequency_oxygen`.
         """
-        return relaxation_frequency_oxygen(self.pressure, self.REF_PRESSURE, self.molar_concentration_water_vapour)
-    
+        return relaxation_frequency_oxygen(self.pressure, self.molar_concentration_water_vapour, self.reference_pressure)
     
     def attenuation_coefficient(self, frequency):
         """
@@ -192,7 +139,7 @@ class Atmosphere(object):
         
         :param frequency: Frequencies to be considered.
         """
-        return attenuation_coefficient(self.pressure, self.REF_PRESSURE, self.temperature, self.REF_TEMP, self.relaxation_frequency_nitrogen, self.relaxation_frequency_oxygen, frequency)
+        return attenuation_coefficient(self.pressure, self.temperature, self.reference_pressure, self.reference_temperature, self.relaxation_frequency_nitrogen, self.relaxation_frequency_oxygen, frequency)
         
     ###def atmospheric_absorption(self, signal):
         ###"""
