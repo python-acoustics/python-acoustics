@@ -1,12 +1,12 @@
 """
-An example of how to use :class:`Acoustics.Octave.Octave`.
+An example of how to use :class:`acoustics.octave.Octave`.
 """
 
 from acoustics.octave import Octave
 import numpy as np
 
 def main():
-   
+
     """We happen to have the following frequency vector."""
     f = np.logspace(2, 4, 100)
 
@@ -37,12 +37,12 @@ def main():
     print(o.upper)
 
     """
-    So far we used a frequency interval. Sometimes you have a lower frequency and an upper frequency. 
+    So far we used a frequency interval. Sometimes you have a lower frequency and an upper frequency.
     Instead of requiring to generate a frequency vector you can just give these boundary values as well.
     """
     o = Octave(fmin=100.0, fmax=20000, order=6)
-    
-    print(o.center())
+
+    print(o.center)
 
 if __name__ == '__main__':
     main()
