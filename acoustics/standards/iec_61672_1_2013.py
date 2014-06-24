@@ -60,7 +60,9 @@ def time_averaged_sound_level(pressure, sample_frequency, averaging_time, refere
     :param reference_pressure: Reference pressure.
     
     """
-    return 10.0 * np.log10( average(pressure**2.0, sample_frequency, averaging_time) / reference_pressure**2.0)
+    levels = 10.0 * np.log10( average(pressure**2.0, sample_frequency, averaging_time) / reference_pressure**2.0)
+    times = np.arange(len(levels)) * averaging_time
+    return times, levels
 
 
 def average(data, sample_frequency, averaging_time):
@@ -91,8 +93,9 @@ def time_weighted_sound_level(pressure, sample_frequency, integration_time, refe
     :param integration_time: Integration time.
     :param reference_pressure: Reference pressure.
     """
-    return 10.0 * np.log10( integrate(pressure**2.0, sample_frequency, integration_time) / reference_pressure**2.0)
-
+    levels = 10.0 * np.log10( integrate(pressure**2.0, sample_frequency, integration_time) / reference_pressure**2.0)
+    times = np.arange(len(levels)) * integration_time
+    return times, levels
     
 def integrate(data, sample_frequency, integration_time):
     """
