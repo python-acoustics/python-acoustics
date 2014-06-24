@@ -60,7 +60,9 @@ def time_averaged_sound_level(pressure, sample_frequency, averaging_time, refere
     :param reference_pressure: Reference pressure.
     
     """
-    return 10.0 * np.log10( average(pressure**2.0, sample_frequency, averaging_time) / reference_pressure**2.0)
+    levels = 10.0 * np.log10( average(pressure**2.0, sample_frequency, averaging_time) / reference_pressure**2.0)
+    times = np.arange(len(levels)) * averaging_time
+    return times, levels
 
 
 def average(data, sample_frequency, averaging_time):
@@ -91,8 +93,9 @@ def time_weighted_sound_level(pressure, sample_frequency, integration_time, refe
     :param integration_time: Integration time.
     :param reference_pressure: Reference pressure.
     """
-    return 10.0 * np.log10( integrate(pressure**2.0, sample_frequency, integration_time) / reference_pressure**2.0)
-
+    levels = 10.0 * np.log10( integrate(pressure**2.0, sample_frequency, integration_time) / reference_pressure**2.0)
+    times = np.arange(len(levels)) * integration_time
+    return times, levels
     
 def integrate(data, sample_frequency, integration_time):
     """
@@ -108,7 +111,7 @@ def integrate(data, sample_frequency, integration_time):
     .. note:: Because :math:`f_s \\cdot t_i` is generally not an integer, samples are discarded. This results in a drift of samples for longer signals (e.g. 60 minutes at 44.1 kHz).
     
     """
-    b, a = bilinear([1.0], [1.0, integration_time], sample_frequency=sample_frequency) # Bilinear: Analog to Digital filter.
+    b, a = bilinear([1.0], [1.0, integration_time], fs=sample_frequency) # Bilinear: Analog to Digital filter.
     n = int(floor(integration_time * sample_frequency))
     data = data[0:n*(len(data)//n)]
     data = data.reshape((-1, n)) # Divide in chunks over which to perform the integration.
