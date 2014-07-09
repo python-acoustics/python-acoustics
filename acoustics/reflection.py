@@ -166,7 +166,7 @@ class Boundary(object):
         if filename:
             fig.savefig(filename, transparant=True)
         else:
-            fig.show()
+            return fig
     
     
     def plot_reflection_factor(self, filename=None):
@@ -246,7 +246,7 @@ class Boundary(object):
         if filename:
             fig.savefig(filename, transparant=True)
         else:
-            fig.show()
+            return fig
     
     
   
@@ -313,7 +313,7 @@ def reflection_factor_spherical_wave(impedance, angle, distance, wavenumber):
 
 def impedance_delany_and_bazley(frequency, flow_resistivity):
     """
-    Impedance according to the empirical one-parameter model by Delany and Bazley.
+    Normalised specific acoustic impedance according to the empirical one-parameter model by Delany and Bazley.
     
     :param frequency: Frequency :math:`f`.
     :param flow_resistivity: Flow resistivity :math:`\\sigma`.
@@ -328,7 +328,7 @@ def impedance_delany_and_bazley(frequency, flow_resistivity):
     
 def impedance_attenborough(frequency, flow_resistivity, density=DENSITY, soundspeed=SOUNDSPEED, porosity_decrease=POROSITY_DECREASE, specific_heat_ratio=SPECIFIC_HEAT_RATIO):
     """
-    Impedance according to the two-parameter model by Attenborough.
+    Normalised specific acoustics impedance according to the two-parameter model by Attenborough.
     
     :param frequency: Frequency :math:`f`.
     :param flow_resistivity: Flow resistivity :math:`\\sigma`.
