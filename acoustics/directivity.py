@@ -14,6 +14,8 @@ The following conventions are used within this module:
 """
 from __future__ import division
 
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import abc
 from scipy.interpolate import interp2d as interpolate
@@ -169,44 +171,49 @@ class Directivity(object):
         :param filename: Filename
         :param include_rotation: Apply the rotation to the directivity. By default the rotation is applied in this figure.
         """
-        try:
-            from mayavi import mlab
-        except ImportError:
-            raise ImportWarning("mayavi is not available.")
-            return
         
-        phi = np.linspace(-np.pi, +np.pi, 50)
-        theta = np.linspace(0.0, np.pi, 50)
+        return plot(self, filename, include_rotation)
         
-        theta_n, phi_n = np.meshgrid(theta, phi)    # Create a 2-D mesh
+        
+        ##try:
+            ##from mayavi import mlab
+        ##except ImportError:
+            ##raise ImportWarning("mayavi is not available.")
+            ##return
+        
+        #phi = np.linspace(-np.pi, +np.pi, 50)
+        #theta = np.linspace(0.0, np.pi, 50)
+        
+        #theta_n, phi_n = np.meshgrid(theta, phi)    # Create a 2-D mesh
     
-        d = self._directivity(theta_n, phi_n.ravel)
+        #d = self._directivity(theta_n, phi_n.ravel)
+        
+        ##fig = plt.figure()
+        ##ax0 = fig.add_subplot(111, projection='3d')
+        ##ax0.set_title('Directivity')
+        
+        ##ax0.pcolormesh(u*180.0/np.pi, v*180.0/np.pi, r)
+        #(x, y, z) = spherical_to_cartesian(d, theta_n, phi_n)
+        
         
         #fig = plt.figure()
-        #ax0 = fig.add_subplot(111, projection='3d')
-        #ax0.set_title('Directivity')
+        #fig.add_subplot(111, projection='3d')
+        #fig.surface()
         
-        #ax0.pcolormesh(u*180.0/np.pi, v*180.0/np.pi, r)
-        (x, y, z) = spherical_to_cartesian(d, theta_n, phi_n)
+        ##fig = mlab.figure()
+        ##s = mlab.mesh(x,y,z)
+        ##fig.add(s)
+        ##mlab.axes()
+        ##mlab.outline()
+        ##mlab.show()
         
+        ##ax0.plot_wireframe(x*180.0/np.pi, y*180.0/np.pi, z)
+        ##ax0.set_xlabel(r'Latitude $u$ in degree')
+        ##ax0.set_ylabel(r'Longitude $v$ in degree')
+        ##ax0.grid()
         
-        fig = mlab.figure()
-        
-        s = mlab.mesh(x,y,z)
-        
-        fig.add(s)
-        
-        mlab.axes()
-        mlab.outline()
-        mlab.show()
-        
-        #ax0.plot_wireframe(x*180.0/np.pi, y*180.0/np.pi, z)
-        #ax0.set_xlabel(r'Latitude $u$ in degree')
-        #ax0.set_ylabel(r'Longitude $v$ in degree')
-        #ax0.grid()
-        
-        #if filename:
-            #fig.savefig(filename)
+        ##if filename:
+            ##fig.savefig(filename)
     
 
 
@@ -277,3 +284,34 @@ class Custom(Directivity):
         f = interpolate(self.theta, self.phi, self.r)
         
         return f(theta, phi)
+
+
+def plot(d, filename=None, include_rotation=True):
+    """
+    Plot directivity `d`.
+    
+    :param d: Directivity
+    :type d: :class:`Directivity`
+    
+    :returns: Figure
+    """
+    
+    phi = np.linspace(-np.pi, +np.pi, 50)
+    theta = np.linspace(0.0, np.pi, 50)
+    THETA, PHI = np.meshgrid(theta, phi)
+    
+    x, y, z = spherical_to_cartesian( d.using_spherical(1.0, THETA, PHI), THETA, PHI )
+    
+    R, THETA, PHI = cartesian_to_spherical(x, y, z)
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    #ax = plt.axes(projection='3d')
+    ax.plot_surface(x, y, z, cmap=plt.cm.jet, rstride=1, cstride=1, linewidth=0)
+    
+    
+    
+    if filename:
+        fig.savefig(filename)
+    else:
+        return fig
