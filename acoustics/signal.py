@@ -475,7 +475,7 @@ def auto_spectrum(x, fs, N=None):
     
     """
     f, a = amplitude_spectrum(x, fs, N=N)
-    return f, a*a.conj()
+    return f, (a*a.conj()).real
 
 
 def power_spectrum(x, fs, N=None):
