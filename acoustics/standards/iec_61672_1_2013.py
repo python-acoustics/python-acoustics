@@ -122,10 +122,10 @@ def fast(data, fs):
     """
     Apply fast (F) time-weighting.
     """
-    return integrate(data, fs, 0.125)
+    return time_weighted_sound_level(data, fs, 0.125)
 
 def slow(data, fs):
     """
     Apply slow (S) time-weighting.
     """
-    return integrate(data, fs, 1.0)
+    return time_weighted_sound_level(data, fs, 1.0)
