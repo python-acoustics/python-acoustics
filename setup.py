@@ -4,8 +4,8 @@ from setuptools import setup, find_packages
 if os.path.exists('README.md'):
     long_description = open('README.md').read()
 else:
-    long_description = "A Python library aimed at acousticians." 
-    
+    long_description = "A Python library aimed at acousticians."
+
 setup(
       name='acoustics',
       version='0.0',
@@ -14,7 +14,7 @@ setup(
       author='Python Acoustics',
       author_email='fridh@fridh.nl',
       license='LICENSE',
-      packages=find_packages(),
+      packages=find_packages(exclude=["tests"]),
       scripts=[],
       zip_safe=False,
       install_requires=[
@@ -24,7 +24,7 @@ setup(
           'six >= 1.4.1',
           ],
       extras_require={
-          'jit' : 'numba',
-          'fast_fft' : 'pyFFTW',          
+          'jit': 'numba',
+          'fast_fft': 'pyFFTW',
           }
       )
