@@ -501,6 +501,39 @@ def power_spectrum(x, fs, N=None):
         a[..., -1] /= 2.0 # And neither should fs/2 be.
     return f, a
   
+
+def phase_spectrum(x, fs, N=None):
+    """
+    Phase spectrum of instantaneous signal :math:`x(t)`.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency :math:`f_s`.
+    :param N: Amount of FFT bins.
+    
+    This function returns the phase of a single-sided (amplitude) spectrum.
+    
+    """
+    f, a = amplitude_spectrum(x, fs, N)
+    f = f[N//2:]
+    a = np.angle(f[N//2:])
+    return f, a
+
+#def power_and_phase_spectrum(x, fs, N=None):
+    #"""
+    #Power spectrum and phase of instantaneous signal :math:`x(t)`.
+    
+    #:param x: Instantaneous signal :math:`x(t)`.
+    #:param fs: Sample frequency :math:`f_s`.
+    #:param N: Amount of FFT bins.
+    
+    #Often one is interested in both the power spectrum and the phase. This function returns the power and a single-sided phase spectrum.
+    #For an explanation of the power spectrum, see :func:`power_spectrum`.
+    #"""
+    
+    
+    #returns f, power, phase
+    
+
   
 def density_spectrum(x, fs, N=None):
     """
