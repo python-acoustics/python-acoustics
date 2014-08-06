@@ -764,3 +764,15 @@ class Filterbank(object):
         #pass
         
         
+def zero_crossings(data):
+    """
+    Determine amount of zero crossings in `data`.
+    
+    :param data: Vector
+    
+    :returns: Vector with indices of samples *before* the zero crossing.
+    
+    """
+    pos = data > 0
+    npos = ~pos
+    return ((pos[:-1] & npos[1:]) | (npos[:-1] & pos[1:])).nonzero()[0]
