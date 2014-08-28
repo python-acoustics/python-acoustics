@@ -26,5 +26,6 @@ setup(
       extras_require={
           'jit': 'numba',
           'fast_fft': 'pyFFTW',
+          'io': 'pandas',
           }
       )
