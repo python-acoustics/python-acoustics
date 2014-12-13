@@ -169,3 +169,11 @@ def violet(N):
     #"""
     #raise NotImplementedError
     
+
+def heaviside(N):
+    """Heaviside.
+    
+    Returns the value 0 for `x < 0`, 1 for `x > 0`, and 1/2 for `x = 0`.
+    """
+    return 0.5 * (np.sign(N) + 1)
+    
