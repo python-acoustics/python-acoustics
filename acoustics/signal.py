@@ -300,6 +300,7 @@ class Band(object):
     def __repr__(self):
         return "Band({})".format(str(self.center))
     
+    
 class Frequencies(object):
     """
     Object describing frequency bands.
@@ -307,29 +308,47 @@ class Frequencies(object):
     
     def __init__(self, center, lower, upper, bandwidth=None):
         
-        self.center = center
+        self.center = np.asarray(center)
         """
         Center frequencies.
         """
         
-        self.lower = lower
+        self.lower = np.asarray(lower)
         """
         Lower frequencies.
         """
         
-        self.upper = upper
+        self.upper = np.asarray(upper)
         """
         Upper frequencies.
         """
         
-        self.bandwidth = bandwidth if bandwidth is not None else self.upper - self.lower
+        self.bandwidth = np.asarray(bandwidth) if bandwidth is not None else np.asarray(self.upper) - np.asarray(self.lower)
         """
         Bandwidth.
         """
     
     def __iter__(self):
         for i in range(len(self.center)):
-            yield Band(self.center[i], self.lower[i], self.upper[i], self.bandwidth[i])
+            yield self[i]
+            #yield Band(self.center[i], self.lower[i], self.upper[i], self.bandwidth[i])
+    
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            return [Band(self.center[i], self.lower[i], self.upper[i], self.bandwidth[i]) for i in range(*key.indices(len(self))) ]
+        elif isinstance(key, np.ndarray):
+            if key.dtype == 'bool':
+                return [Band(self.center[i], self.lower[i], self.upper[i], self.bandwidth[i]) for i, v in enumerate(key) if v ]
+            else:
+                raise NotImplementedError
+        else:    
+            return Band(self.center[key], self.lower[key], self.upper[key], self.bandwidth[key])
+    
+    def __setitem__(self, key, value):
+        self.center[key] = value.center
+        self.lower[key] = value.lower
+        self.upper[key] = value.upper
+        self.bandwidth[key] = value.bandwidth
     
     def __len__(self):
         return len(self.center)
@@ -340,6 +359,25 @@ class Frequencies(object):
     def __repr__(self):
         return "Frequencies({})".format(str(self.center))
     
+    def angular(self):
+        """Angular center frequency in radians per second.
+        """
+        return 2.0 * np.pi * self.center
+    
+    @classmethod
+    def from_bands(cls, bands):
+        """Frequencies object from a list of bands.
+        """
+        n = len(bands)
+        obj = cls(nbands=n, fstart=1000.0) # Fake values
+        #center = np.empty(n)
+        #lower = np.empty(n)
+        #upper = np.empty(n)
+        #bandwidth = np.empty(n)
+        for i, band in enumerate(bands):
+            obj[i] = band
+            #center[i] = band.center
+        return obj    
     
 class EqualBand(Frequencies):
     """
@@ -412,23 +450,23 @@ class OctaveBand(Frequencies):
             fstop = center[-1]
         
         if fstart and fstop:
-            o = acoustics.octave.Octave(order=fraction, fmin=fstart, fmax=fstop, reference=reference)
+            o = acoustics.octave.Octave(fraction=fraction, fmin=fstart, fmax=fstop, reference=reference)
             center = o.center
             nbands = len(center)
         
         if fstart and nbands:
-            nstart = acoustics.octave.band_of_frequency(fstart, order=fraction, ref=reference)
+            nstart = acoustics.octave.band_of_frequency(fstart, fraction=fraction, ref=reference)
             nstop = nstart + nbands-1
-            fstop = acoustics.octave.frequency_of_band(nstop, order=fraction, ref=reference)
+            fstop = acoustics.octave.frequency_of_band(nstop, fraction=fraction, ref=reference)
         elif fstop and nbands:
-            nstop = acoustics.octave.band_of_frequency(fstop, order=fraction, ref=reference)
+            nstop = acoustics.octave.band_of_frequency(fstop, fraction=fraction, ref=reference)
             nstart = nstop - nbands+1
-            fstart = acoustics.octave.band_of_frequency(nstart, order=fraction, ref=reference)
+            fstart = acoustics.octave.band_of_frequency(nstart, fraction=fraction, ref=reference)
         else:
             raise ValueError("Insufficient parameters. Cannot determine fstart and/or fstop.")    
         
         
-        center = acoustics.octave.Octave(order=fraction, 
+        center = acoustics.octave.Octave(fraction=fraction, 
                                        fmin=fstart, 
                                        fmax=fstop, 
                                        reference=reference).center
