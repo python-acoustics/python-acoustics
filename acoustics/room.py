@@ -13,7 +13,7 @@ from scipy.io import wavfile
 from scipy import stats
 
 from acoustics.utils import _is_1d
-from acoustics.signal import butter_bandpass_filter
+from acoustics.signal import bandpass
 from acoustics.bands import (_check_band_type, octave_low, octave_high,
                                   third_low, third_high)
 
@@ -199,7 +199,7 @@ def t60_impulse(file_name, bands, rt='t30'):
 
     for band in range(bands.size):
         # Filtering signal
-        filtered_signal = butter_bandpass_filter(raw_signal, low[band],
+        filtered_signal = bandpass(raw_signal, low[band],
                                                  high[band], fs, order=3)
         abs_signal = np.abs(filtered_signal) / np.max(np.abs(filtered_signal))
 
@@ -246,7 +246,7 @@ def clarity(time, signal, fs, bands=None):
 
     c = np.zeros(bands.size)
     for band in range(bands.size):
-        filtered_signal = butter_bandpass_filter(signal, low[band],high[band],
+        filtered_signal = bandpass(signal, low[band],high[band],
                                                  fs, order=3)
         h2 = filtered_signal**2.0
         t = int((time/1000.0)*fs + 1)
