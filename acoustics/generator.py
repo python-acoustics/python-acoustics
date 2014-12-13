@@ -43,7 +43,28 @@ import random
 import itertools
 #import scipy.signal.sawtooth
 
-            
+try:
+    from pyfftw.interfaces.numpy_fft import rfft, irfft       # Performs much better than numpy's fftpack
+except ImportError:                                    # Use monkey-patching np.fft perhaps instead?
+    from numpy.fft import rfft, irfft
+
+from .signal import normalise
+
+
+def noise(N, color='white'):
+    """Noise generator.
+    
+    :param N: Amount of samples.
+    :param color: Color of noise.
+    
+    """
+    try:
+        return noise_generators[color](N)
+    except KeyError:
+        raise ValueError("Incorrect color.")
+
+
+
 def white(N):
     """
     White noise.
@@ -55,6 +76,8 @@ def white(N):
     and therefore increases with 3 dB per octave.
     """
     return np.random.randn(N)
+
+
 
 def pink(N):
     """
@@ -73,10 +96,11 @@ def pink(N):
     
     # Another way would be using the FFT
     x = np.random.randn(N)
-    X = np.fft.rfft(x) / N
+    X = rfft(x) / N
     S = np.sqrt(np.arange(len(X))+1.) # +1 to avoid divide by zero
-    y = (np.fft.irfft(X/S)).real[0:N]
-    return y
+    y = (irfft(X/S)).real[0:N]
+    return normalise(y)
+
 
 def blue(N):
     """
@@ -89,10 +113,10 @@ def blue(N):
     
     """
     x = np.random.randn(N)
-    X = np.fft.rfft(x) / N
+    X = rfft(x) / N
     S = np.sqrt(np.arange(len(X)))# Filter
-    y = (np.fft.irfft(X*S)).real[0:N]
-    return y
+    y = (irfft(X*S)).real[0:N]
+    return normalise(y)
 
 
 def brown(N):
@@ -106,10 +130,11 @@ def brown(N):
 
     """
     x = np.random.randn(N)
-    X = np.fft.rfft(x) / N
+    X = rfft(x) / N
     S = (np.arange(len(X))+1)# Filter
-    y = (np.fft.irfft(X/S)).real[0:N]
-    return y
+    y = (irfft(X/S)).real[0:N]
+    return normalise(y)
+
 
 def violet(N):
     """
@@ -122,10 +147,30 @@ def violet(N):
     
     """
     x = np.random.randn(N)
-    X = np.fft.rfft(x) / N
+    X = rfft(x) / N
     S = (np.arange(len(X)))# Filter
-    y = (np.fft.irfft(X*S)).real[0:N]
-    return y
+    y = (irfft(X*S)).real[0:N]
+    return normalise(y)
+
+
+noise_generators = {
+    'white'  : white,
+    'pink'   : pink,
+    'blue'   : blue,
+    'brown'  : brown,
+    'violet' : violet,
+    }
+
+
+def noise_frequency_dependent(N, frequencies, gains):
+    """Frequency-dependent noise signal.
+    
+    :param N: Amount of samples.
+    :param frequencies: Normalized frequencies.
+    :param gains: Gains.
+    :param gains: Gain for given frequency.
+    :type gains: List of tuples or 2xN array. The first item in the 
+
 
 
 #def sawtooth(f, fs, width=1):
