@@ -79,24 +79,91 @@ try:
 except ImportError:
     from numpy.fft import rfft
 
-
-def butter_bandpass_filter(data, lowcut, highcut, fs, order=3):
-    """
-    Butterworth bandpass filter.
+def bandpass_filter(lowcut, highcut, fs, order=3):
+    """Band-pass filter.
     
-    :param data: data
     :param lowcut: Lower cut-off frequency
     :param highcut: Upper cut-off frequency
     :param fs: Sample frequency
-    :param order: Order
+    :param order: Filter order
+    
     """
     nyq = 0.5 * fs
     low = lowcut / nyq
     high = highcut / nyq
     b, a = butter(order, [low, high], btype='band')
-    y = lfilter(b, a, data)
-    return y
+    return b, a
 
+
+def bandpass(signal, lowcut, highcut, fs, order=3):
+    """Filter signal with band-pass filter.
+    
+    :param signal: Signal
+    :param lowcut: Lower cut-off frequency
+    :param highcut: Upper cut-off frequency
+    :param fs: Sample frequency
+    :param order: Filter order
+    
+    """
+    #nyq = 0.5 * fs
+    #low = lowcut / nyq
+    #high = highcut / nyq
+    #b, a = butter(order, [low, high], btype='band')
+    b, a = bandpass_filter(lowcut, highcut, fs, order)
+    return lfilter(b, a, signal)
+    
+    
+def lowpass(signal, cutoff, fs, order=3):
+    """Filter signal with low-pass filter.
+    
+    :param signal: Signal
+    :param fs: Sample frequency
+    :param cutoff: Cut-off frequency
+    :param order: Filter order
+    
+    """
+    b, a = butter(order, cutoff/(fs/2.0), btype='low')
+    return lfilter(b, a, signal)
+    
+    
+def highpass(signal, cutoff, fs, order=3):
+    """Filter signal with low-pass filter.
+    
+    :param signal: Signal
+    :param fs: Sample frequency
+    :param cutoff: Cut-off frequency
+    :param order: Filter order
+    
+    """
+    b, a = butter(order, cutoff/(fs/2.0), btype='high')
+    return lfilter(b, a, signal)
+
+
+def octave_filter(center, fs, fraction, order=3):
+    """Fractional-octave band-pass filter.
+    
+    :param center: Centerfrequency of fractional-octave band.
+    :param fs: Sample frequency
+    :param fraction: Fraction of fractional-octave band.
+    :param order: Filter order
+    """
+    ob = OctaveBand(center=center, fraction=fraction)
+    return bandpass_filter(ob.lower[0], ob.upper[0], fs, order)
+    
+
+def octavepass(signal, center, fs, fraction, order=3):
+    """Filter signal with fractional-octave bandpass filter.
+    
+    :param signal: Signal
+    :param center: Centerfrequency of fractional-octave band.
+    :param fs: Sample frequency
+    :param fraction: Fraction of fractional-octave band.
+    :param order: Filter order
+    
+    """
+    b, a = octave_filter(center, fs, fraction, order)
+    return lfilter(b, a, signal)
+    
 
 def convolve(signal, ltv, mode='full'):
     """
