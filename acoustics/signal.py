@@ -735,8 +735,7 @@ def integrate_bands(data, a, b):
 
 
 def octaves(p, fs, density=False):
-    """
-    Calculate level per 1/1-octave.
+    """Calculate level per 1/1-octave.
     
     :param p: Instantaneous pressure :math:`p(t)`.
     :param fs: Sample frequency.
@@ -753,8 +752,7 @@ def octaves(p, fs, density=False):
 
 
 def third_octaves(p, fs, density=False):
-    """
-    Calculate level per 1/3-octave.
+    """Calculate level per 1/3-octave.
     
     :param p: Instantaneous pressure :math:`p(t)`.
     :param fs: Sample frequency.
