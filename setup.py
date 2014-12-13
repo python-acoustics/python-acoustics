@@ -1,5 +1,6 @@
 import os
 from setuptools import setup, find_packages
+from Cython.Build import cythonize
 
 if os.path.exists('README.md'):
     long_description = open('README.md').read()
@@ -14,7 +15,8 @@ setup(
       author='Python Acoustics',
       author_email='fridh@fridh.nl',
       license='LICENSE',
-      packages=find_packages(exclude=["tests"]),
+      #packages=find_packages(exclude=["tests"]),
+      py_modules=['turbulence'],
       scripts=[],
       zip_safe=False,
       install_requires=[
@@ -26,5 +28,6 @@ setup(
       extras_require={
           'jit': 'numba',
           'fast_fft': 'pyFFTW',
-          }
+          },
+      ext_modules = cythonize('acoustics/*.pyx')
       )

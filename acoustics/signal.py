@@ -79,24 +79,91 @@ try:
 except ImportError:
     from numpy.fft import rfft
 
-
-def butter_bandpass_filter(data, lowcut, highcut, fs, order=3):
-    """
-    Butterworth bandpass filter.
+def bandpass_filter(lowcut, highcut, fs, order=3):
+    """Band-pass filter.
     
-    :param data: data
     :param lowcut: Lower cut-off frequency
     :param highcut: Upper cut-off frequency
     :param fs: Sample frequency
-    :param order: Order
+    :param order: Filter order
+    
     """
     nyq = 0.5 * fs
     low = lowcut / nyq
     high = highcut / nyq
     b, a = butter(order, [low, high], btype='band')
-    y = lfilter(b, a, data)
-    return y
+    return b, a
 
+
+def bandpass(signal, lowcut, highcut, fs, order=3):
+    """Filter signal with band-pass filter.
+    
+    :param signal: Signal
+    :param lowcut: Lower cut-off frequency
+    :param highcut: Upper cut-off frequency
+    :param fs: Sample frequency
+    :param order: Filter order
+    
+    """
+    #nyq = 0.5 * fs
+    #low = lowcut / nyq
+    #high = highcut / nyq
+    #b, a = butter(order, [low, high], btype='band')
+    b, a = bandpass_filter(lowcut, highcut, fs, order)
+    return lfilter(b, a, signal)
+    
+    
+def lowpass(signal, cutoff, fs, order=3):
+    """Filter signal with low-pass filter.
+    
+    :param signal: Signal
+    :param fs: Sample frequency
+    :param cutoff: Cut-off frequency
+    :param order: Filter order
+    
+    """
+    b, a = butter(order, cutoff/(fs/2.0), btype='low')
+    return lfilter(b, a, signal)
+    
+    
+def highpass(signal, cutoff, fs, order=3):
+    """Filter signal with low-pass filter.
+    
+    :param signal: Signal
+    :param fs: Sample frequency
+    :param cutoff: Cut-off frequency
+    :param order: Filter order
+    
+    """
+    b, a = butter(order, cutoff/(fs/2.0), btype='high')
+    return lfilter(b, a, signal)
+
+
+def octave_filter(center, fs, fraction, order=3):
+    """Fractional-octave band-pass filter.
+    
+    :param center: Centerfrequency of fractional-octave band.
+    :param fs: Sample frequency
+    :param fraction: Fraction of fractional-octave band.
+    :param order: Filter order
+    """
+    ob = OctaveBand(center=center, fraction=fraction)
+    return bandpass_filter(ob.lower[0], ob.upper[0], fs, order)
+    
+
+def octavepass(signal, center, fs, fraction, order=3):
+    """Filter signal with fractional-octave bandpass filter.
+    
+    :param signal: Signal
+    :param center: Centerfrequency of fractional-octave band.
+    :param fs: Sample frequency
+    :param fraction: Fraction of fractional-octave band.
+    :param order: Filter order
+    
+    """
+    b, a = octave_filter(center, fs, fraction, order)
+    return lfilter(b, a, signal)
+    
 
 def convolve(signal, ltv, mode='full'):
     """
@@ -233,6 +300,7 @@ class Band(object):
     def __repr__(self):
         return "Band({})".format(str(self.center))
     
+    
 class Frequencies(object):
     """
     Object describing frequency bands.
@@ -240,29 +308,47 @@ class Frequencies(object):
     
     def __init__(self, center, lower, upper, bandwidth=None):
         
-        self.center = center
+        self.center = np.asarray(center)
         """
         Center frequencies.
         """
         
-        self.lower = lower
+        self.lower = np.asarray(lower)
         """
         Lower frequencies.
         """
         
-        self.upper = upper
+        self.upper = np.asarray(upper)
         """
         Upper frequencies.
         """
         
-        self.bandwidth = bandwidth if bandwidth is not None else self.upper - self.lower
+        self.bandwidth = np.asarray(bandwidth) if bandwidth is not None else np.asarray(self.upper) - np.asarray(self.lower)
         """
         Bandwidth.
         """
     
     def __iter__(self):
         for i in range(len(self.center)):
-            yield Band(self.center[i], self.lower[i], self.upper[i], self.bandwidth[i])
+            yield self[i]
+            #yield Band(self.center[i], self.lower[i], self.upper[i], self.bandwidth[i])
+    
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            return [Band(self.center[i], self.lower[i], self.upper[i], self.bandwidth[i]) for i in range(*key.indices(len(self))) ]
+        elif isinstance(key, np.ndarray):
+            if key.dtype == 'bool':
+                return [Band(self.center[i], self.lower[i], self.upper[i], self.bandwidth[i]) for i, v in enumerate(key) if v ]
+            else:
+                raise NotImplementedError
+        else:    
+            return Band(self.center[key], self.lower[key], self.upper[key], self.bandwidth[key])
+    
+    def __setitem__(self, key, value):
+        self.center[key] = value.center
+        self.lower[key] = value.lower
+        self.upper[key] = value.upper
+        self.bandwidth[key] = value.bandwidth
     
     def __len__(self):
         return len(self.center)
@@ -273,6 +359,25 @@ class Frequencies(object):
     def __repr__(self):
         return "Frequencies({})".format(str(self.center))
     
+    def angular(self):
+        """Angular center frequency in radians per second.
+        """
+        return 2.0 * np.pi * self.center
+    
+    @classmethod
+    def from_bands(cls, bands):
+        """Frequencies object from a list of bands.
+        """
+        n = len(bands)
+        obj = cls(nbands=n, fstart=1000.0) # Fake values
+        #center = np.empty(n)
+        #lower = np.empty(n)
+        #upper = np.empty(n)
+        #bandwidth = np.empty(n)
+        for i, band in enumerate(bands):
+            obj[i] = band
+            #center[i] = band.center
+        return obj    
     
 class EqualBand(Frequencies):
     """
@@ -345,23 +450,23 @@ class OctaveBand(Frequencies):
             fstop = center[-1]
         
         if fstart and fstop:
-            o = acoustics.octave.Octave(order=fraction, fmin=fstart, fmax=fstop, reference=reference)
+            o = acoustics.octave.Octave(fraction=fraction, fmin=fstart, fmax=fstop, reference=reference)
             center = o.center
             nbands = len(center)
         
         if fstart and nbands:
-            nstart = acoustics.octave.band_of_frequency(fstart, order=fraction, ref=reference)
+            nstart = acoustics.octave.band_of_frequency(fstart, fraction=fraction, ref=reference)
             nstop = nstart + nbands-1
-            fstop = acoustics.octave.frequency_of_band(nstop, order=fraction, ref=reference)
+            fstop = acoustics.octave.frequency_of_band(nstop, fraction=fraction, ref=reference)
         elif fstop and nbands:
-            nstop = acoustics.octave.band_of_frequency(fstop, order=fraction, ref=reference)
+            nstop = acoustics.octave.band_of_frequency(fstop, fraction=fraction, ref=reference)
             nstart = nstop - nbands+1
-            fstart = acoustics.octave.band_of_frequency(nstart, order=fraction, ref=reference)
+            fstart = acoustics.octave.band_of_frequency(nstart, fraction=fraction, ref=reference)
         else:
             raise ValueError("Insufficient parameters. Cannot determine fstart and/or fstop.")    
         
         
-        center = acoustics.octave.Octave(order=fraction, 
+        center = acoustics.octave.Octave(fraction=fraction, 
                                        fmin=fstart, 
                                        fmax=fstop, 
                                        reference=reference).center
@@ -384,18 +489,46 @@ class OctaveBand(Frequencies):
         
     def __repr__(self):
         return "OctaveBand({})".format(str(self.center))
+
+
+def ms(x):
+    """Mean value of signal `x` squared.
     
+    """
+    return (np.abs(x)**2.0).mean()
   
 def rms(x):
     """
-    Root mean square.
+    Root mean squared.
     
     :param x: Dynamic quantity.
     
     .. math:: x_{rms} = lim_{T \\to \\infty} \\sqrt{\\frac{1}{T} \int_0^T |f(x)|^2 \\mathrm{d} t }
     
+    :seealso: :func:`ms`.
+    
     """
-    return np.sqrt((np.abs(x)**2.0).mean())
+    return np.linalg.norm(x)
+    #return np.sqrt((np.abs(x)**2.0).mean())
+
+def normalise(y, x=None):
+    """Normalise power in y to a (standard normal) white noise signal.
+    
+    Optionally normalise to power in signal `x`.
+    
+    #The mean power of a Gaussian with :math:`\\mu=0` and :math:`\\sigma=1` is 1.
+    """
+    #return y * np.sqrt( (np.abs(x)**2.0).mean() / (np.abs(y)**2.0).mean() )
+    if x is not None:
+        x = ms(x)
+    else:
+        x = 1.0
+    return y * np.sqrt( x / ms(y) )
+    #return y * np.sqrt( 1.0 / (np.abs(y)**2.0).mean() )
+    
+    ## Broken? Caused correlation in auralizations....weird!
+    
+    
 
 
 def window_scaling_factor(window):
@@ -501,6 +634,39 @@ def power_spectrum(x, fs, N=None):
         a[..., -1] /= 2.0 # And neither should fs/2 be.
     return f, a
   
+
+def phase_spectrum(x, fs, N=None):
+    """
+    Phase spectrum of instantaneous signal :math:`x(t)`.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency :math:`f_s`.
+    :param N: Amount of FFT bins.
+    
+    This function returns the phase of a single-sided (amplitude) spectrum.
+    
+    """
+    f, a = amplitude_spectrum(x, fs, N)
+    f = f[N//2:]
+    a = np.angle(f[N//2:])
+    return f, a
+
+#def power_and_phase_spectrum(x, fs, N=None):
+    #"""
+    #Power spectrum and phase of instantaneous signal :math:`x(t)`.
+    
+    #:param x: Instantaneous signal :math:`x(t)`.
+    #:param fs: Sample frequency :math:`f_s`.
+    #:param N: Amount of FFT bins.
+    
+    #Often one is interested in both the power spectrum and the phase. This function returns the power and a single-sided phase spectrum.
+    #For an explanation of the power spectrum, see :func:`power_spectrum`.
+    #"""
+    
+    
+    #returns f, power, phase
+    
+
   
 def density_spectrum(x, fs, N=None):
     """
@@ -569,8 +735,7 @@ def integrate_bands(data, a, b):
 
 
 def octaves(p, fs, density=False):
-    """
-    Calculate level per 1/1-octave.
+    """Calculate level per 1/1-octave.
     
     :param p: Instantaneous pressure :math:`p(t)`.
     :param fs: Sample frequency.
@@ -587,8 +752,7 @@ def octaves(p, fs, density=False):
 
 
 def third_octaves(p, fs, density=False):
-    """
-    Calculate level per 1/3-octave.
+    """Calculate level per 1/3-octave.
     
     :param p: Instantaneous pressure :math:`p(t)`.
     :param fs: Sample frequency.
@@ -764,3 +928,15 @@ class Filterbank(object):
         #pass
         
         
+def zero_crossings(data):
+    """
+    Determine amount of zero crossings in `data`.
+    
+    :param data: Vector
+    
+    :returns: Vector with indices of samples *before* the zero crossing.
+    
+    """
+    pos = data > 0
+    npos = ~pos
+    return ((pos[:-1] & npos[1:]) | (npos[:-1] & pos[1:])).nonzero()[0]

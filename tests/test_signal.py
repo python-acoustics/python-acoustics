@@ -1,5 +1,5 @@
 """
-Tests for :func:`Acoustics.LTV.convolve`
+Tests for :func:`acoustics.signal`
 """
 
 from acoustics.signal import convolve as convolveLTV
@@ -8,11 +8,11 @@ from scipy.signal import convolve as convolveLTI
 import numpy as np
 import itertools
 
-from acoustics.signal import decibel_to_neper, neper_to_decibel, ir2fr
-from numpy.testing import assert_almost_equal, assert_array_almost_equal, assert_array_equal
+from acoustics.signal import decibel_to_neper, neper_to_decibel, ir2fr, zero_crossings
+from numpy.testing import assert_almost_equal, assert_array_almost_equal, assert_array_equal, assert_approx_equal
 
 
-class TestConvolve:#(unittest.TestCase):
+class TestConvolve:
     
     def test_LTI(self):
         """
@@ -156,8 +156,37 @@ class Test_integrate_bands():
         y = integrate_bands(x, nb, ob)
         assert_array_equal(y, np.array([1, 1, 2]))
     
-    
 
+
+class Test_zero_crossings():
+    
+    def test_sine(self):
+        
+        duration = 2.0
+        fs = 44100.0
+        f = 1000.0
+        samples = int(duration*fs)
+        t = np.arange(samples) / fs
+        x = np.sin(2.0*np.pi*f*t)
+        
+        z = zero_crossings(x)
+        
+        """Amount of zero crossings."""
+        assert(len(z)==f*duration*2)
+        
+
+        y = np.arange(0, samples, round(fs/f/2), dtype='int64')
+        print(y)    
+        assert((np.abs(z-y) <= 1).all())
+        
+        
+        
+        
+        
+        
+    
+    
+    
     
     
 #if __name__ == '__main__':

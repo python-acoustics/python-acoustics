@@ -27,10 +27,12 @@ from scipy.special import iv as bessel  # Modified Bessel function of the first 
 
 from ._turbulence import *
 
-try:
-    import numba
-except ImportError:
-    pass
+import numexpr as ne
+    
+#try:
+    #import numba
+#except ImportError:
+    #pass
 
 class Gaussian1DTemp(GaussianTemp, Spectrum1D):
     """
@@ -372,7 +374,10 @@ class Comparison(object):
         else:
             fig.show()
     
-    
+
+def _mu(G, r_mesh, k_nr, z_mesh, k_nz, alpha_n):
+    return ne.evaluate("G * cos(r_mesh * k_nr + z_mesh * k_nz + alpha_n)") 
+      
 def _generate(r, z, delta_k, mode_amplitudes, modes, theta, alpha):
     
     mu = np.zeros((len(r), len(z)), dtype='float64')
@@ -394,7 +399,9 @@ def _generate(r, z, delta_k, mode_amplitudes, modes, theta, alpha):
         k_nr = k_n * np.cos(theta_n)    # Wavenumber component
         k_nz = k_n * np.sin(theta_n)    # Wavenumber component
 
-        mu_n = G * np.cos(r_mesh * k_nr + z_mesh * k_nz + alpha_n)
+        #mu_n = G * np.cos(r_mesh * k_nr + z_mesh * k_nz + alpha_n)
+        
+        mu_n = _mu(G, r_mesh, k_nr, z_mesh, k_nz, alpha_n)
         mu += mu_n
     
     return mu
@@ -433,10 +440,10 @@ class Field2D(object):
         Spectrum.
         """
         
-        try:
-            self._generate = numba.autojit(_generate)
-        except NameError:
-            self._generate = _generate
+        #try:
+            #self._generate = numba.autojit(_generate)
+        #except NameError:
+        self._generate = _generate
         
     
     def randomize(self):
