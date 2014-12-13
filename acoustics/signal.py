@@ -928,6 +928,22 @@ class Filterbank(object):
         #pass
         
         
+  
+def isolate(signals):
+    """Isolate signals.
+    
+    :param signals: Array of shape N x M where N is the amount of samples and M the amount of signals. Thus, each column is a signal.
+    :returns: Array of isolated signals. Each column is a signal.
+    
+    Isolate signals using Singular Value Decomposition.
+    
+    """
+    x = np.asarray(signals)
+    
+    W, s, v = np.linalg.svd( (np.tile( (x*x).sum(axis=0), (len(x), 1) ) * x).dot(x.T) )
+    return v.T  
+  
+  
 def zero_crossings(data):
     """
     Determine amount of zero crossings in `data`.
