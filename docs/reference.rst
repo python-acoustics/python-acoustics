@@ -32,6 +32,7 @@ This section contains a description of all classes and functions.
    weighting
    standards
    quantity
+   signals
 
     
 
