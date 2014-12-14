@@ -24,6 +24,7 @@ setup(
           'scipy >= 0.13',
           'matplotlib',
           'six >= 1.4.1',
+          'cython',
           ],
       extras_require={
           'jit': 'numba',
