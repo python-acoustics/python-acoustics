@@ -1,10 +1,9 @@
-import unittest
 import numpy as np
 
 from acoustics.atmosphere import Atmosphere
 from tests.get_data_path import data_path
 
-class AtmosphereCase(unittest.TestCase):
+class TestAtmosphere:
     
     
     def test_standard_atmosphere(self):
@@ -12,16 +11,16 @@ class AtmosphereCase(unittest.TestCase):
         a = Atmosphere()
         
         """Default values."""
-        self.assertEqual(a.temperature, 293.15)
-        self.assertEqual(a.pressure, 101.325)
-        self.assertEqual(a.relative_humidity, 0.0)
+        assert(a.temperature == 293.15)
+        assert(a.pressure == 101.325)
+        assert(a.relative_humidity == 0.0)
         
         """Calculated values belonging to default values."""
-        self.assertAlmostEqual(a.soundspeed, 343.2)
-        self.assertAlmostEqual(a.saturation_pressure, 2.33663045)
-        self.assertAlmostEqual(a.molar_concentration_water_vapour, 0.0)
-        self.assertAlmostEqual(a.relaxation_frequency_nitrogen, 9.0)
-        self.assertAlmostEqual(a.relaxation_frequency_oxygen, 24.0)
+        assert(abs(a.soundspeed - 343.2) < 1.0e-9)
+        assert(abs(a.saturation_pressure - 2.33663045) < 1.0e-8)
+        assert(abs(a.molar_concentration_water_vapour - 0.0) < 1.0e-9)
+        assert(abs(a.relaxation_frequency_nitrogen - 9.0) < 1.0e-9)
+        assert(abs(a.relaxation_frequency_oxygen - 24.0) < 1.0e-9)
     
     
     def test_attenuation_coefficient(self):
@@ -46,12 +45,34 @@ class AtmosphereCase(unittest.TestCase):
     
     def test_ir_attenuation_coefficient(self):
         
+        from scipy.signal import fftconvolve
+        from acoustics.generator import white
+        from acoustics.signal import OctaveBand
+        
+        fs = 22050.0
+        duration = 5.0
+        samples = int(fs*duration)
+        distance = 1000.0
+        
+        
+        ob = OctaveBand(fstart=20.0, fstop=10000)
+        freq = ob.center
+        
         a = Atmosphere()
         
-        N = 1024
+        # Attenuation per frequency for given distance
+        attenuation = a.attenuation_coefficient(freq) * distance
         
-        assert(len(a.ir_attenuation_coefficient(d=100.0, N=N))==N) 
+        ir = a.ir_attenuation_coefficient(d=distance, N=samples)
         
-    
-if __name__ == '__main__':
-    unittest.main()
+        assert(len(ir)==samples) 
+        
+        print(ir.shape)
+        
+        assert(True==False)
+        
+        signal = white(samples)
+        ir = np.squeeze(ir)
+        out = fftconvolve(signal, ir)
+        
+        
