@@ -252,11 +252,15 @@ class Cardioid(Directivity):
         return cardioid(theta)
     
 class FigureEight(Directivity):
-    """
-    Figure of eight directivity.
+    """Directivity of a figure of eight.
     """
     
     def _directivity(self, theta, phi):
+        """Directivity
+        """
+        return figure_eight(theta, phi)
+        
+
 class SphericalHarmonic(Directivity):
     """Directivity of a spherical harmonic of degree `n` and order `m`.
     """
