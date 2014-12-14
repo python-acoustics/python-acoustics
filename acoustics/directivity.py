@@ -29,13 +29,14 @@ def cardioid(theta, a=1.0, k=1.0):
     """
     return np.abs( a + a * np.cos(k*theta) )
 
-def figure_eight(theta):
+def figure_eight(theta, phi=0.0):
     """
     A figure-of-eight pattern.
     
     :param theta: angle :math:`\\theta`
     """
-    return np.abs( np.cos(theta) )
+    return spherical_harmonic(theta, phi, m=0, n=1)
+    #return np.abs( np.cos(theta) )
 
 def spherical_harmonic(theta, phi, m=0, n=0):
     """Spherical harmonic of order `m` and degree `n`.
