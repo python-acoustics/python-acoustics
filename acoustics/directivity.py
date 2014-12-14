@@ -14,6 +14,8 @@ from __future__ import division
 
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.cm as cm
+from matplotlib.colors import Normalize
 import numpy as np
 import abc
 from scipy.interpolate import interp2d as interpolate
@@ -310,7 +312,7 @@ class Custom(Directivity):
         return f(theta, phi)
 
 
-def plot(d, filename=None, include_rotation=True):
+def plot(d, sphere=False):
     """
     Plot directivity `d`.
     
@@ -320,22 +322,36 @@ def plot(d, filename=None, include_rotation=True):
     :returns: Figure
     """
     
-    phi = np.linspace(-np.pi, +np.pi, 50)
+    #phi = np.linspace(-np.pi, +np.pi, 50)
+    #theta = np.linspace(0.0, np.pi, 50)
+    phi = np.linspace(0.0, +2.0*np.pi, 50)
     theta = np.linspace(0.0, np.pi, 50)
     THETA, PHI = np.meshgrid(theta, phi)
     
-    x, y, z = spherical_to_cartesian( d.using_spherical(1.0, THETA, PHI), THETA, PHI )
+    # Directivity strength. Real-valued. Can be positive and negative.
+    dr = d.using_spherical(THETA, PHI)
     
-    R, THETA, PHI = cartesian_to_spherical(x, y, z)
+    if sphere:
+        x, y, z = spherical_to_cartesian(1.0, THETA, PHI)
+        
+    else:
+        x, y, z = spherical_to_cartesian( np.abs(dr), THETA, PHI )
+    #R, THETA, PHI = cartesian_to_spherical(x, y, z)
     
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    #ax = plt.axes(projection='3d')
-    ax.plot_surface(x, y, z, cmap=plt.cm.jet, rstride=1, cstride=1, linewidth=0)
+    #p = ax.plot_surface(x, y, z, cmap=plt.cm.jet, rstride=1, cstride=1, linewidth=0)
+
+
+    norm = Normalize()
+    norm.autoscale(dr)
+    colors = cm.jet(norm(dr))
+    m = cm.ScalarMappable(cmap=cm.jet, norm=norm)
+    m.set_array(dr)
+    p = ax.plot_surface(x, y, z, facecolors=colors, rstride=1, cstride=1, linewidth=0)
+    plt.colorbar(m, ax=ax)
     
-    
-    
-    if filename:
-        fig.savefig(filename)
-    else:
-        return fig
+    ax.set_xlabel('$x$')
+    ax.set_ylabel('$y$')
+    ax.set_zlabel('$z$')
+    return fig
