@@ -1,6 +1,7 @@
 import os
 from setuptools import setup, find_packages
 from Cython.Build import cythonize
+import numpy as np
 
 if os.path.exists('README.md'):
     long_description = open('README.md').read()
@@ -30,5 +31,6 @@ setup(
           'jit': 'numba',
           'fast_fft': 'pyFFTW',
           },
-      ext_modules = cythonize('acoustics/*.pyx')
+      ext_modules = cythonize('acoustics/*.pyx'),
+      include_dirs=[np.get_include()]
       )
