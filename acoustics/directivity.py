@@ -6,10 +6,8 @@ The directivity module provides tools to work with directivity.
 
 The following conventions are used within this module:
 
-* The angle :math:`\\theta` has a range :math:`[0, \\pi]`.
-* The angle :math:`\\phi` has a range :math:`[-pi, pi]`.
-
-.. inheritance-diagram:: acoustics.room
+* The inclination angle :math:`\\theta` has a range :math:`[0, \\pi]`.
+* The azimuth angle :math:`\\phi` has a range :math:`[0 , 2 \\pi]`.
 
 """
 from __future__ import division
@@ -19,7 +17,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import abc
 from scipy.interpolate import interp2d as interpolate
-
+from scipy.special import sph_harm
     
     
 def cardioid(theta, a=1.0, k=1.0):
@@ -39,6 +37,16 @@ def figure_eight(theta):
     """
     return np.abs( np.cos(theta) )
 
+def spherical_harmonic(theta, phi, m=0, n=0):
+    """Spherical harmonic of order `m` and degree `n`.
+    
+    .. note:: The degree `n` is often denoted `l`.
+    
+    .. seealso:: :func:`scipy.special.sph_harm`
+    
+    """
+    return sph_harm(m, n, phi, theta).real
+    
 
 def spherical_to_cartesian(r, theta , phi):
     """
@@ -246,10 +254,25 @@ class FigureEight(Directivity):
     """
     
     def _directivity(self, theta, phi):
+class SphericalHarmonic(Directivity):
+    """Directivity of a spherical harmonic of degree `n` and order `m`.
+    """
+    
+    def __init__(self, rotation=None, m=None, n=None):
+        
+        super().__init__(rotation=rotation)
+        self.m = m
+        """Order `m`.
         """
-        Directivity
+        self.n = n
+        """Degree `n`.
         """
-        return figure_eight(theta)
+        
+    def _directivity(self, theta, phi):
+        """Directivity
+        """
+        return spherical_harmonic(theta, phi, self.m, self.n)
+        
         
 
 class Custom(Directivity):
