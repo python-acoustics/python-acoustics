@@ -87,7 +87,7 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 
 install:
-  - conda create -n testenv python=$PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib six pytest pip nose
+  - conda create -n testenv python=$PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib six pytest pip cython
   - source activate testenv
 #   - conda install --yes 
   - pip install .
