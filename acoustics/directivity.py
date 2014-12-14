@@ -79,7 +79,7 @@ def cartesian_to_spherical(x, y, z):
     .. math:: \\theta = \\arccos{\\frac{z}{r}}
     .. math:: \\phi = \\arccos{\\frac{y}{x}}
     """
-    r = np.sqrt(np.sum(np.abs(np.vstack((x,y,z)))**2.0, axis=0))
+    r = np.linalg.norm(np.vstack((x,y,z)), axis=0)
     return r, np.arccos(z/r), np.arctan(y/x)
 
 
