@@ -8,7 +8,7 @@ from scipy.signal import convolve as convolveLTI
 import numpy as np
 import itertools
 
-from acoustics.signal import decibel_to_neper, neper_to_decibel, ir2fr, zero_crossings
+from acoustics.signal import * #decibel_to_neper, neper_to_decibel, ir2fr, zero_crossings
 from numpy.testing import assert_almost_equal, assert_array_almost_equal, assert_array_equal, assert_approx_equal
 
 
@@ -180,11 +180,36 @@ class Test_zero_crossings():
         assert((np.abs(z-y) <= 1).all())
         
         
-        
-        
-        
-        
+def test_ms():
     
+    duration = 2.0
+    fs = 8000.0
+    f = 1000.0
+    samples = int(duration*fs)
+    t = np.arange(samples) / fs
+    x = np.sin(2.0*np.pi*f*t)
+    
+    assert(ms(x)==0.5)
+    
+    x *= 4.0
+    
+    assert(ms(x)==8.0)
+        
+        
+def test_rms():
+    
+    duration = 2.0
+    fs = 8000.0
+    f = 1000.0
+    samples = int(duration*fs)
+    t = np.arange(samples) / fs
+    x = np.sin(2.0*np.pi*f*t)
+    
+    assert(rms(x)==np.sqrt(0.5))
+    
+    x *= 4.0
+    
+    assert(rms(x)==np.sqrt(8.0))
     
     
     
