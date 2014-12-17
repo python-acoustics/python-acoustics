@@ -158,26 +158,23 @@ class Test_integrate_bands():
     
 
 
-class Test_zero_crossings():
+def test_zero_crossings():
     
-    def test_sine(self):
-        
-        duration = 2.0
-        fs = 44100.0
-        f = 1000.0
-        samples = int(duration*fs)
-        t = np.arange(samples) / fs
-        x = np.sin(2.0*np.pi*f*t)
-        
-        z = zero_crossings(x)
-        
-        """Amount of zero crossings."""
-        assert(len(z)==f*duration*2)
-        
-
-        y = np.arange(0, samples, round(fs/f/2), dtype='int64')
-        print(y)    
-        assert((np.abs(z-y) <= 1).all())
+    duration = 2.0
+    fs = 44100.0
+    f = 1000.0
+    samples = int(duration*fs)
+    t = np.arange(samples) / fs
+    x = np.sin(2.0*np.pi*f*t)
+    
+    z = zero_crossings(x)
+    
+    # Amount of zero crossings.
+    assert(len(z)==f*duration*2)
+  
+    # Position of zero crossings.
+    y = np.linspace(0, samples, len(z), endpoint=False).astype(int)
+    assert((np.abs(z-y) <= 1).all())
         
         
 def test_ms():
