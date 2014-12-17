@@ -433,8 +433,7 @@ class EqualBand(Frequencies):
 
     
 class OctaveBand(Frequencies):
-    """
-    Fractional-octave band spectrum.
+    """Fractional-octave band spectrum.
     """
     
     def __init__(self, center=None, fstart=None, fstop=None, nbands=None, fraction=1, reference=acoustics.octave.REFERENCE):
@@ -478,13 +477,11 @@ class OctaveBand(Frequencies):
         super(OctaveBand, self).__init__(center, lower, upper, bandwidth)
         
         self.fraction = fraction
-        """
-        Fraction of fractional-octave filter.
+        """Fraction of fractional-octave filter.
         """
         
         self.reference = reference
-        """
-        Reference center frequency.
+        """Reference center frequency.
         """
         
     def __repr__(self):
@@ -738,6 +735,11 @@ def octaves(p, fs, density=False):
     :param p: Instantaneous pressure :math:`p(t)`.
     :param fs: Sample frequency.
     :param density: Power density instead of power.
+    
+    .. note:: Based on power spectrum (FFT)
+    
+    .. seealso:: :attr:`acoustics.bands.OCTAVE_CENTER_FREQUENCIES`
+    
     """
     fob = OctaveBand(acoustics.bands.OCTAVE_CENTER_FREQUENCIES, fraction=1)
     f, p = power_spectrum(p, fs)
@@ -755,6 +757,11 @@ def third_octaves(p, fs, density=False):
     :param p: Instantaneous pressure :math:`p(t)`.
     :param fs: Sample frequency.
     :param density: Power density instead of power.
+    
+    .. note:: Based on power spectrum (FFT)
+    
+    .. seealso:: :attr:`acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES`
+    
     """
     fob = OctaveBand(acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES, fraction=3)
     f, p = power_spectrum(p, fs)
