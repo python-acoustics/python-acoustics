@@ -11,14 +11,16 @@ class Signal(numpy.ndarray):
     
     `Signal` is a container for acoustics signals.
     """
-    fs = 0.0
+    #fs = 0.0
     
     def __new__(cls, data, fs):
         
-        if np.asarray(data).ndim!=1:
-            raise ValueError("Incorrect amount of dimensions. One dimension is required.")
+        #if np.asarray(data).ndim!=1:
+            #raise ValueError("Incorrect amount of dimensions. One dimension is required.")
+        
         obj = np.asarray(data).view(cls)
-        obj.fs = fs
+        #obj = np.atleast_2d(np.asarray(data)).view(cls)
+        obj.fs = fs #if fs is not None else 1000
         return obj
     
     def __array_prepare__(self, array, context=None):
@@ -43,8 +45,11 @@ class Signal(numpy.ndarray):
         # see InfoArray.__array_finalize__ for comments
         if obj is None: 
             return
-        self.fs = getattr(obj, 'fs', None)
-        
+        #attr = getattr(obj, 'fs', None)
+        #print(attr)
+        #self.fs = attr if attr is not None else 44100.0
+        self.fs = getattr(obj, 'fs', None)#44100.0)
+        #self.fs = 1000
         
    
     #def __add__(self, other):
@@ -191,10 +196,10 @@ class Signal(numpy.ndarray):
         #self._data[key] = value
     
     def __repr__(self):
-        return "Signal({})".format(self._data.__str__())
+        return "Signal({})".format(str(self))
     
-    def __str__(self):
-        return self._data.__str__()
+    #def __str__(self):
+        #return self._data.__str__()
     
     #def __iter__(self):
         #return self._data.__iter__()
@@ -208,9 +213,18 @@ class Signal(numpy.ndarray):
         #return self.__class__(self._data.imag, self.fs)
     
     @property
-    def size(self):
+    def samples(self):
         """Amount of samples in signal."""
-        return len(self)
+        return self.shape[-1]
+    
+    @property
+    def channels(self):
+        """Amount of channels.
+        """
+        if self.ndim > 1:
+            return self.shape[-2]
+        else:
+            return 1
     
     #def min(self):
         #"""Minimum value."""
@@ -257,7 +271,7 @@ class Signal(numpy.ndarray):
         .. math:: E = \\sum_{n=0}^{N-1} |x_n|^2
         
         """
-        return (self**2.0).sum()
+        return (self*self).sum()
     
     def power(self):
         """
@@ -325,11 +339,14 @@ class Signal(numpy.ndarray):
         
         :param filename: Name of file.
         """
+        if self.channels > 1:
+            raise ValueError("Cannot plot spectrogram of multichannel signal. Please select a single channel.")
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
         ax0.set_title('Spectrogram')
         #f = ax0.specgram(self, Fs=self.fs)
-        f = ax0.specgram(self, Fs=self.fs, noverlap=128, NFFT=4096)#, vmin=self._data.min(), vmax=self._data.max())
+        data = np.squeeze(self)
+        f = ax0.specgram(data, Fs=self.fs, noverlap=128, NFFT=4096)#, vmin=self._data.min(), vmax=self._data.max())
         cb = fig.colorbar(mappable=f[3])
         ax0.set_xlabel(r'$t$ in s')
         ax0.set_ylabel(r'$f$ in Hz')
@@ -340,10 +357,9 @@ class Signal(numpy.ndarray):
     
     
     def leq(self):
+        """Equivalent level.
         """
-        Equivalent level.
-        """
-        return acoustics.standards.iec_61672_1_2013.fast(self, self.fs)
+        return acoustics.standards.iec_61672_1_2013.fast_level(self, self.fs)
     
     
     def plot_leq(self, filename=None):
@@ -354,10 +370,11 @@ class Signal(numpy.ndarray):
         L_masked = np.ma.masked_where(np.isinf(L), L)
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.set_title('Equivalent level')
-        ax.plot(t, L_masked)
-        ax.set_xlabel('$t$ in s')
-        ax.set_ylabel('$L_{eq,F}$ in dB')
+        ax.set_title('Sound Pressure Level')
+        ax.plot(t, L_masked.T)
+        ax.set_xlabel(r'$t$ in s')
+        ax.set_ylabel(r'$L_{p,F}$ in dB')
+        ax.legend(np.arange(self.channels))
         
         if filename:
             fig.savefig(filename)
@@ -382,10 +399,11 @@ class Signal(numpy.ndarray):
         f, o = self.octaves()
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
-        ax0.set_title('SPL')
-        ax0.semilogx(f.center, o)
+        ax0.set_title('1/1-Octaves SPL')
+        ax0.semilogx(f.center, o.T)
         ax0.set_ylabel(r"$L_{p}$ in dB")
         ax0.set_xlabel(r"$f$ in Hz")
+        ax0.legend(np.arange(self.channels))
         
         if filename:
             fig.savefig(filename)
@@ -405,10 +423,12 @@ class Signal(numpy.ndarray):
         f, o = self.third_octaves()
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
-        ax0.set_title('SPL')
-        ax0.semilogx(f.center, o)
+        ax0.set_title('1/3-Octaves SPL')
+        ax0.semilogx(f.center, o.T)
         ax0.set_ylabel(r"$L_{p}$ in dB")
         ax0.set_xlabel(r"$f$ in Hz")
+        ax0.legend(np.arange(self.channels))
+        
         if filename:
             fig.savefig(filename)
         else:
@@ -426,10 +446,12 @@ class Signal(numpy.ndarray):
         f, o = self.fractional_octaves(fraction)
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
-        ax0.set_title('SPL')
-        ax0.semilogx(f.center, o)
+        ax0.set_title('1/{}-Octaves SPL'.format(fraction))
+        ax0.semilogx(f.center, o.T)
         ax0.set_ylabel(r"$L_{p}$ in dB")
         ax0.set_xlabel(r"$f$ in Hz")
+        ax0.legend(np.arange(self.channels))
+        
         if filename:
             fig.savefig(filename)
         else:
@@ -530,7 +552,7 @@ class Signal(numpy.ndarray):
         #if depth:
             #data = (data * 2.0**depth).astype(dtype)
         #print(data)
-        wavfile.write(filename, int(self.fs), data)
+        wavfile.write(filename, int(self.fs), data.T)
         #wavfile.write(filename, int(self.fs), self._data/np.abs(self._data).max() *  0.5)
         #wavfile.write(filename, int(self.fs), np.int16(self._data/(np.abs(self._data).max()) * 32767) )
     
