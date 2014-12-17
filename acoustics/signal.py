@@ -586,7 +586,7 @@ def amplitude_spectrum(x, fs, N=None):
     N = N if N else x.shape[-1]
     fr = np.fft.fft(x, n=N) / N
     f = np.fft.fftfreq(N, 1.0/fs)
-    return np.fft.fftshift(f), np.fft.fftshift(fr)
+    return np.fft.fftshift(f), np.fft.fftshift(fr, axes=[-1])
 
 
 def auto_spectrum(x, fs, N=None):
@@ -624,8 +624,8 @@ def power_spectrum(x, fs, N=None):
     """
     N = N if N else x.shape[-1]
     f, a = auto_spectrum(x, fs, N=N)
-    a = a[N//2:]
-    f = f[N//2:]
+    a = a[..., N//2:]
+    f = f[..., N//2:]
     a *= 2.0
     a[..., 0] /= 2.0    # DC component should not be doubled.
     if not N%2: # if not uneven
@@ -729,7 +729,7 @@ def integrate_bands(data, a, b):
     upper, _ = np.meshgrid(b.upper, a.center)
     _, center= np.meshgrid(b.center, a.center)
 
-    return ((lower < center) * (center <= upper) * data[:,None]).sum(axis=0)
+    return ((lower < center) * (center <= upper) * data[...,None]).sum(axis=-2)
 
 
 def octaves(p, fs, density=False):
