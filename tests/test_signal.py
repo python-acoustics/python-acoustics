@@ -189,11 +189,11 @@ def test_ms():
     t = np.arange(samples) / fs
     x = np.sin(2.0*np.pi*f*t)
     
-    assert(ms(x)==0.5)
+    assert(np.abs( ms(x) - 0.5) < 1e-9 ) 
     
     x *= 4.0
     
-    assert(ms(x)==8.0)
+    assert(np.abs( ms(x) - 8.0) < 1e-9 )
         
         
 def test_rms():
@@ -205,11 +205,11 @@ def test_rms():
     t = np.arange(samples) / fs
     x = np.sin(2.0*np.pi*f*t)
     
-    assert(rms(x)==np.sqrt(0.5))
+    assert(np.abs( rms(x) - np.sqrt(0.5) ) < 1e-9 )
     
     x *= 4.0
     
-    assert(rms(x)==np.sqrt(8.0))
+    assert(np.abs( rms(x) - np.sqrt(8.0) ) < 1e-9 )
     
     
     
