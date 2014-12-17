@@ -498,8 +498,7 @@ def ms(x):
     return (np.abs(x)**2.0).mean()
   
 def rms(x):
-    """
-    Root mean squared.
+    """Root mean squared of signal `x`.
     
     :param x: Dynamic quantity.
     
@@ -508,9 +507,8 @@ def rms(x):
     :seealso: :func:`ms`.
     
     """
-    return np.linalg.norm(x)
-    #return np.sqrt((np.abs(x)**2.0).mean())
-
+    return np.sqrt(ms(x))
+    
 def normalise(y, x=None):
     """Normalise power in y to a (standard normal) white noise signal.
     
