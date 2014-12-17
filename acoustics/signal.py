@@ -965,7 +965,7 @@ def isolate(signals):
   
 def zero_crossings(data):
     """
-    Determine amount of zero crossings in `data`.
+    Determine the positions of zero crossings in `data`.
     
     :param data: Vector
     
