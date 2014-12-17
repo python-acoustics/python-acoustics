@@ -529,7 +529,7 @@ def normalise(y, x=None):
     
 
 
-def window_scaling_factor(window):
+def window_scaling_factor(window, axis=-1):
     """
     Calculate window scaling factor.
     
@@ -541,7 +541,7 @@ def window_scaling_factor(window):
     .. math:: S = \\sqrt{\\frac{\\sum_{i=0}^N w_i^2}{N}}
     
     """
-    return np.sqrt((window**2.0).sum()/len(window))
+    return np.sqrt((window*window).mean(axis=axis))
 
 
 def apply_window(x, window):
