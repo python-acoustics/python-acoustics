@@ -67,12 +67,12 @@ class TestAtmosphere:
         
         assert(len(ir)==samples) 
         
-        print(ir.shape)
+        #print(ir.shape)
         
-        assert(True==False)
+        #assert(True==False)
         
-        signal = white(samples)
-        ir = np.squeeze(ir)
-        out = fftconvolve(signal, ir)
+        #signal = white(samples)
+        #ir = np.squeeze(ir)
+        #out = fftconvolve(signal, ir)
         
         
