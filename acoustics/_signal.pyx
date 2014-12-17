@@ -322,7 +322,7 @@ class Signal(numpy.ndarray):
         ax0 = fig.add_subplot(111)
         ax0.set_title('SPL')
         #if linear:
-        ax0.plot(f, 10.0*np.log10(o))
+        ax0.plot(f, 10.0*np.log10(o.T))
         if scale=='log':
             ax0.set_xscale('log')
         #ax0.semilogx(f, 10.0*np.log10(o))
@@ -458,10 +458,8 @@ class Signal(numpy.ndarray):
             return fig
     
     
-    def plot(self, filename=None, start=None, stop=None):
-        """
-        Plot signal as function of time.
-        By default the entire signal is plotted.
+    def plot(self, filename=None, start=None, stop=None, channels=None):
+        """Plot signal as function of time. By default the entire signal is plotted.
         
         :param filename: Name of file.
         :param start: First sample index.
@@ -472,7 +470,7 @@ class Signal(numpy.ndarray):
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
         ax0.set_title('Signal')
-        ax0.plot(self[start:stop])
+        ax0.plot(self[channels, start:stop])
         ax0.set_xlabel(r'$t$ in n')
         ax0.set_ylabel(r'$x$ in -') 
         if filename:
