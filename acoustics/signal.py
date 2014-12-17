@@ -773,6 +773,20 @@ def third_octaves(p, fs, density=False):
     return fob, level
 
 
+def fractional_octaves(p, fs, start=5.0, stop=16000.0, fraction=3, density=False):
+    """Calculate level per 1/N-octave where N is `fraction`.
+    
+    .. note:: Based on power spectrum (FFT)
+    
+    """
+    fob = OctaveBand(fstart=start, fstop=stop, fraction=fraction)
+    f, p = power_spectrum(p, fs)
+    fnb = EqualBand(f)
+    power = integrate_bands(p, fnb, fob)
+    if density:
+        power /= (fob.bandwidth/fnb.bandwidth)
+    level = 10.0*np.log10(power)
+    return fob, level
 
 #def plot_signal(x, fs, bands):
     #"""
