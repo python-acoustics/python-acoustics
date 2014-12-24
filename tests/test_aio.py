@@ -7,7 +7,7 @@ import numpy as np
 from .get_data_path import data_path
 
 try:
-    from acoustics.aio import read_csv_cirrus
+    import pandas
     HAS_PANDAS = True
 except ImportError:
     HAS_PANDAS = False
@@ -31,6 +31,7 @@ cirrus_files.extend(list(itertools.product(["overall_third"], weighting,
 @pytest.mark.skipif('not HAS_PANDAS')
 @pytest.mark.parametrize('filename', cirrus_files)
 def test_read_csv_cirrus_details(filename):
+    from acoustics.aio import read_csv_cirrus
     file = "_".join(filename) + ".csv"
     csv_path = os.path.join(data_path(), "cirrus", file)
     data = read_csv_cirrus(csv_path)
