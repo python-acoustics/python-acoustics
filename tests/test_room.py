@@ -13,9 +13,9 @@ from tests.get_data_path import data_path
 def setup_module(room):
     room.surfaces = np.array([240, 600, 500])
     room.alpha = np.array([0.1, 0.25, 0.45])
-    room.alpha_bands = np.array([[0.1,   0.1, 0.1, 0.1],
-                                          [0.25, 0.25, 0.25, 0.25],
-                                          [0.45, 0.45, 0.45, 0.45]])
+    room.alpha_bands = np.array([[0.1,   0.1,  0.1, 0.1],
+                                 [0.25, 0.25, 0.25, 0.25],
+                                 [0.45, 0.45, 0.45, 0.45]])
     room.volume = 3000
 
 
@@ -130,89 +130,67 @@ def test_nrc_2d():
     assert_array_almost_equal(calculated, real)
 
 
-#@pytest.mark.parametrize("file_name, bands, rt, expected", [
-    #(data_path() + 'ir_sportscentre_omni.wav', octave(125, 4000), 't30',
-     #np.array([7.24027654, 8.47019681, 6.79466752,
-               #6.51780663, 4.79692643, 4.08912686])),
-    #(data_path() + 'ir_sportscentre_omni.wav', octave(125, 4000), 'edt',
-     #np.array([4.71644743, 5.94075422, 6.00702329,
-               #5.94062563, 5.03778274, 3.73465316])),
-    #(data_path() + 'living_room_1.wav', octave(63, 8000), 't30',
-     #np.array([0.27658574, 0.36466480, 0.30282462, 0.25946725, 0.22710926,
-               #0.21056449, 0.20445301, 0.18080435])),
-    #(data_path() + 'living_room_1.wav', octave(63, 8000), 't20',
-     #np.array([0.30418539, 0.36486166, 0.15138373, 0.15594470, 0.10192937,
-               #0.07587109, 0.14564938, 0.15231023])),
-    #(data_path() + 'living_room_1.wav', octave(63, 8000), 't10',
-     #np.array([0.18067203, 0.06121885, 0.10898306, 0.02377203, 0.03865264,
-               #0.02303814, 0.10484486, 0.07141563])),
-    #(data_path() + 'living_room_1.wav', octave(63, 8000), 'edt',
-     #np.array([0.27998887, 0.15885362, 0.07971810, 0.03710582, 0.02143263,
-               #0.00962214, 0.02179504, 0.01961945])),
-    #(data_path() + 'living_room_1.wav', third(100, 5000), 't30',
-     #np.array([0.28442960, 0.34634621, 0.25757467,
-               #0.31086982, 0.26658673, 0.37620645,
-               #0.34203975, 0.26774014, 0.21206741,
-               #0.24635442, 0.21050635, 0.23151149,
-               #0.19184106, 0.23050360, 0.25227970,
-               #0.20164536, 0.18413574, 0.21605655])),
-    #(data_path() + 'living_room_1.wav', third(100, 5000), 't20',
-     #np.array([0.20768170, 0.39155525, 0.18814558,
-               #0.17202362, 0.14049935, 0.20770758,
-               #0.32284992, 0.22108431, 0.10189647,
-               #0.10997154, 0.08072728, 0.12806066,
-               #0.07219205, 0.07380865, 0.08706586,
-               #0.12925068, 0.13712873, 0.17112382])),
-    #(data_path() + 'living_room_1.wav', third(100, 5000), 't10',
-     #np.array([0.21147617, 0.10531143, 0.13209715,
-               #0.16484339, 0.13578831, 0.04089752,
-               #0.11978640, 0.22370033, 0.02502991,
-               #0.02363114, 0.04751902, 0.05045455,
-               #0.01003664, 0.01754925, 0.03906140,
-               #0.08439052, 0.15418884, 0.09357333])),
-    #(data_path() + 'living_room_1.wav', third(100, 5000), 'edt',
-     #np.array([0.34939884, 0.31141886, 0.28158889,
-               #0.21030131, 0.13179537, 0.11555684,
-               #0.08503427, 0.11378130, 0.06413555,
-               #0.04531878, 0.04672024, 0.04721689,
-               #0.02432437, 0.01723772, 0.01637013,
-               #0.02170071, 0.02044526, 0.03593397])),
-#])
-#def test_t60_impulse(file_name, bands, rt, expected):
-    #calculated = t60_impulse(file_name, bands, rt)
-    #assert_array_almost_equal(calculated, expected, decimal=3)
+@pytest.mark.parametrize("file_name, bands, rt, expected", [
+    (data_path() + 'ir_sportscentre_omni.wav', octave(125, 4000), 't30',
+     np.array([7.388, 8.472, 6.795, 6.518, 4.797, 4.089])),
+    (data_path() + 'ir_sportscentre_omni.wav', octave(125, 4000), 'edt',
+     np.array([4.667, 5.942, 6.007, 5.941, 5.038, 3.735])),
+    (data_path() + 'living_room_1.wav', octave(63, 8000), 't30',
+     np.array([0.274, 0.365, 0.303, 0.259, 0.227, 0.211, 0.204, 0.181])),
+    (data_path() + 'living_room_1.wav', octave(63, 8000), 't20',
+     np.array([0.300, 0.365, 0.151, 0.156, 0.102, 0.076, 0.146, 0.152])),
+    (data_path() + 'living_room_1.wav', octave(63, 8000), 't10',
+     np.array([0.185, 0.061, 0.109, 0.024, 0.039, 0.023, 0.105, 0.071])),
+    (data_path() + 'living_room_1.wav', octave(63, 8000), 'edt',
+     np.array([0.267, 0.159, 0.080, 0.037, 0.021, 0.010, 0.022, 0.020])),
+    (data_path() + 'living_room_1.wav', third(100, 5000), 't30',
+     np.array([0.318, 0.340, 0.259, 0.311, 0.267, 0.376,
+               0.342, 0.268, 0.212, 0.246, 0.211, 0.232,
+               0.192, 0.231, 0.252, 0.202, 0.184, 0.216])),
+    (data_path() + 'living_room_1.wav', third(100, 5000), 't20',
+     np.array([0.202, 0.383, 0.189, 0.173, 0.141, 0.208,
+               0.323, 0.221, 0.102, 0.110, 0.081, 0.128,
+               0.072, 0.074, 0.087, 0.129, 0.137, 0.171])),
+    (data_path() + 'living_room_1.wav', third(100, 5000), 't10',
+     np.array([0.110, 0.104, 0.132, 0.166, 0.135, 0.040,
+               0.119, 0.223, 0.025, 0.023, 0.047, 0.050,
+               0.010, 0.017, 0.039, 0.084, 0.154, 0.093])),
+    (data_path() + 'living_room_1.wav', third(100, 5000), 'edt',
+     np.array([0.354, 0.328, 0.284, 0.210, 0.132, 0.116,
+               0.085, 0.114, 0.064, 0.045, 0.047, 0.047,
+               0.024, 0.017, 0.016, 0.022, 0.020, 0.036])),
+])
+def test_t60_impulse(file_name, bands, rt, expected):
+    calculated = t60_impulse(file_name, bands, rt)
+    assert_array_almost_equal(calculated, expected, decimal=3)
 
 
-#@pytest.mark.parametrize("file_name, bands, expected", [
-    #(data_path() + 'living_room_1.wav', octave(63, 8000),
-     #np.array([9.810090860, 17.78107771, 23.63256910, 26.59021365,
-               #29.91912315, 31.17249929, 27.26166407, 28.93600729])),
-    #(data_path() + 'living_room_1.wav', third(100, 5000),
-     #np.array([7.48464265,  12.15184964, 12.87283779, 14.80677394,
-               #22.96706923, 23.21976252, 20.08290893, 19.84378251,
-               #28.50723841, 30.62900321, 29.67155789, 27.40158394,
-               #31.95718416, 30.73367102, 30.46496850, 28.48307909,
-               #29.35669929, 24.7029713])),
-#])
-#def test_c50_from_file(file_name, bands, expected):
-    #calculated = c50_from_file(file_name, bands)
-    #assert_array_almost_equal(calculated, expected)
+@pytest.mark.parametrize("file_name, bands, expected", [
+    (data_path() + 'living_room_1.wav', octave(63, 8000),
+     np.array([10.265, 17.784, 23.632, 26.590,
+               29.919, 31.172, 27.261, 28.936])),
+    (data_path() + 'living_room_1.wav', third(100, 5000),
+     np.array([9.441,  12.387, 12.741, 14.792, 22.959, 23.219,
+               20.083, 19.844, 28.507, 30.629, 29.672, 27.402,
+               31.957, 30.734, 30.465, 28.483, 29.357, 24.703])),
+])
+def test_c50_from_file(file_name, bands, expected):
+    calculated = c50_from_file(file_name, bands)
+    assert_array_almost_equal(calculated, expected, decimal=3)
 
 
-#@pytest.mark.parametrize("file_name, bands, expected", [
-    #(data_path() + 'living_room_1.wav', octave(63, 8000),
-     #np.array([18.56362713, 23.07404213, 27.01531388, 31.74336460,
-               #35.46917050, 36.83616671, 33.46332100, 36.06266455])),
-    #(data_path() + 'living_room_1.wav', third(100, 5000),
-     #np.array([15.46541178, 17.43681184, 20.47858056, 24.82982021,
-               #27.83519017, 27.46105495, 22.48741892, 26.65080093,
-               #34.58317523, 34.98894487, 34.69216874, 32.8265513 ,
-               #38.33906658, 38.39338847, 34.32216410, 34.1181196 ,
-               #34.85016284, 31.88701492])),
-#])
-#def test_c80_from_file(file_name, bands, expected):
-    #calculated = c80_from_file(file_name, bands)
-    #assert_array_almost_equal(calculated, expected)
+@pytest.mark.parametrize("file_name, bands, expected", [
+    (data_path() + 'living_room_1.wav', octave(63, 8000),
+     np.array([18.542, 23.077, 27.015, 31.743,
+               35.469, 36.836, 33.463, 36.062])),
+    (data_path() + 'living_room_1.wav', third(100, 5000),
+     np.array([19.272, 17.455, 20.482, 24.806, 27.835, 27.461,
+               22.487, 26.651, 34.583, 34.989, 34.692, 32.827,
+               38.339, 38.393, 34.322, 34.118, 34.850, 31.887])),
+])
+def test_c80_from_file(file_name, bands, expected):
+    calculated = c80_from_file(file_name, bands)
+    assert_array_almost_equal(calculated, expected, decimal=3)
 
 
 def teardown_module(room):
