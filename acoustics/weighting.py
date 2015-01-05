@@ -94,26 +94,38 @@ def _weighting(filter_type, first, last):
 
 
 def z2a(levels, first, last):
+    """Apply A-weighting to Z-weighted signal.
+    """
     return levels + a_weighting(first, last)
 
 
 def a2z(levels, first, last):
+    """Remove A-weighting from A-weighted signal.
+    """
     return levels - a_weighting(first, last)
 
 
 def z2c(levels, first, last):
+    """Apply C-weighting to Z-weighted signal.
+    """
     return levels + c_weighting(first, last)
 
 
 def c2z(levels, first, last):
+    """Remove C-weighting from C-weighted signal.
+    """
     return levels - c_weighting(first, last)
 
 
 def a2c(levels, first, last):
+    """Go from A-weighted to C-weighted.
+    """
     dB = a2z(levels, first, last)
     return z2c(dB, first, last)
 
 
 def c2a(levels, first, last):
+    """Go from C-weighted to A-weighted.
+    """
     dB = c2z(levels, first, last)
     return z2a(dB, first, last)
