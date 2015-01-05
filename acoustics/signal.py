@@ -87,6 +87,8 @@ def bandpass_filter(lowcut, highcut, fs, order=3):
     :param fs: Sample frequency
     :param order: Filter order
     
+    A Butterworth filter (see :func:`scipy.signal.butter`) is used.
+    
     """
     nyq = 0.5 * fs
     low = lowcut / nyq
@@ -103,6 +105,8 @@ def bandpass(signal, lowcut, highcut, fs, order=3):
     :param highcut: Upper cut-off frequency
     :param fs: Sample frequency
     :param order: Filter order
+    
+    .. seealso:: :func:`bandpass_filter`
     
     """
     #nyq = 0.5 * fs
@@ -121,6 +125,8 @@ def lowpass(signal, cutoff, fs, order=3):
     :param cutoff: Cut-off frequency
     :param order: Filter order
     
+    A Butterworth filter (see :func:`scipy.signal.butter`) is used.
+    
     """
     b, a = butter(order, cutoff/(fs/2.0), btype='low')
     return lfilter(b, a, signal)
@@ -134,6 +140,8 @@ def highpass(signal, cutoff, fs, order=3):
     :param cutoff: Cut-off frequency
     :param order: Filter order
     
+    A Butterworth filter (see :func:`scipy.signal.butter`) is used.
+    
     """
     b, a = butter(order, cutoff/(fs/2.0), btype='high')
     return lfilter(b, a, signal)
@@ -146,6 +154,9 @@ def octave_filter(center, fs, fraction, order=3):
     :param fs: Sample frequency
     :param fraction: Fraction of fractional-octave band.
     :param order: Filter order
+    
+    .. seealso:: :func:`bandpass_filter`
+    
     """
     ob = OctaveBand(center=center, fraction=fraction)
     return bandpass_filter(ob.lower[0], ob.upper[0], fs, order)
@@ -159,6 +170,8 @@ def octavepass(signal, center, fs, fraction, order=3):
     :param fs: Sample frequency
     :param fraction: Fraction of fractional-octave band.
     :param order: Filter order
+    
+    .. seealso:: :func:`octave_filter`
     
     """
     b, a = octave_filter(center, fs, fraction, order)
@@ -490,6 +503,9 @@ class OctaveBand(Frequencies):
 
 def ms(x):
     """Mean value of signal `x` squared.
+    
+    :param x: Dynamic quantity.
+    :returns: Mean squared of `x`.
     
     """
     return (np.abs(x)**2.0).mean()
