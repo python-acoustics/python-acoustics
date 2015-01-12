@@ -862,10 +862,13 @@ class Filterbank(object):
         """
         Filters this filterbank consists of.
         """
-        order = self.order
-        filters = list()
-        nyq = self.sample_frequency / 2.0
-        return [ butter(order, [lower/nyq, upper/nyq], btype='band', analog=False) for lower, upper in zip(self.frequencies.lower, self.frequencies.upper) ]
+        fs = self.sample_frequency
+        return ( bandpass_filter(lower, upper, fs, order=self.order) for lower, upper in zip(self.frequencies.lower, self.frequencies.upper) )
+        
+        #order = self.order
+        #filters = list()
+        #nyq = self.sample_frequency / 2.0
+        #return ( butter(order, [lower/nyq, upper/nyq], btype='band', analog=False) for lower, upper in zip(self.frequencies.lower, self.frequencies.upper) )
 
     def lfilter(self, signal):
         """
@@ -873,7 +876,7 @@ class Filterbank(object):
         
         .. note:: This function uses :func:`scipy.signal.lfilter`.
         """
-        return [ lfilter(f[0], f[1], signal) for f in self.filters ]
+        return ( lfilter(b, a, signal) for b, a in self.filters )
 
     def filtfilt(self, signal):
         """
@@ -882,7 +885,7 @@ class Filterbank(object):
         
         .. note:: This function uses :func:`scipy.signal.filtfilt` and therefore has a zero-phase response.
         """
-        return [ filtfilt(f[0], f[1], signal) for f in self.filters ]
+        return ( filtfilt(b, a, signal) for b, a in self.filters )
             
     def power(self, signal):
         """
