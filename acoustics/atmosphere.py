@@ -97,7 +97,7 @@ class Atmosphere(object):
         """
         Triple temperature.
         """
-       
+    
     @property
     def soundspeed(self):
         """
@@ -283,7 +283,7 @@ class Atmosphere(object):
     
     
     
-    def plot_attenuation_coefficient(self, frequency, filename=None):
+    def plot_attenuation_coefficient(self, frequency):
         """
         Plot the attenuation coefficient :math:`\\alpha` as function of frequency and write the figure to ``filename``.
         
@@ -305,8 +305,4 @@ class Atmosphere(object):
         ax0.legend()
         ax0.grid()
         
-        if filename:
-            fig.savefig(filename)
-        else:
-            fig.show()
-            
+        return fig
