@@ -5,17 +5,11 @@ python:
   - 3.4
 
 env:
-  global:
-    - NUMPY_VERSION=1.9
-    - SCIPY_VERSION=0.14
-    - INSTALL_OPTIONAL=false
-  
-matrix:
-  include:
-  - python: 2.7
-    env: INSTALL_OPTIONAL=true
-  - python: 3.4
-    env: INSTALL_OPTIONAL=true
+  - NUMPY_VERSION=1.8
+  - NUMPY_VERSION=1.9
+  - SCIPY_VERSION=0.14
+  - INSTALL_OPTIONAL=true
+
 
 before_install:
   - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
