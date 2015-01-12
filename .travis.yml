@@ -7,8 +7,9 @@ python:
 env:
   - NUMPY_VERSION=1.8
   - NUMPY_VERSION=1.9
-  - SCIPY_VERSION=0.14
-  - INSTALL_OPTIONAL=true
+  global:
+    - SCIPY_VERSION=0.14
+    - INSTALL_OPTIONAL=true
 
 
 before_install:
