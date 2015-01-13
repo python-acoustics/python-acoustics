@@ -35,7 +35,7 @@ install:
   # Optional dependencies
   - if $INSTALL_OPTIONAL; then conda install --yes pandas=0.14.1; fi
 
-  - pip install .
+  #- pip install .
   - python setup.py install
 
 script:
