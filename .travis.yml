@@ -1,97 +1,42 @@
 language: python
 
-# python:
-#   - "2.7"
-#   - "3.3"
+python:
+  - 2.7
+  - 3.4
 
-# env:
-#   - NUMPY_VERSION=1.8
-#   - NUMPY_VERSION=1.7
-  
-# env:
-#   global:
-#     - SCIPY_VERSION=0.14
-       
-cache:
-  directories:
-  - $HOME/anaconda/pkgs
-  
+env:
+  global:
+    - NUMPY_VERSION=1.9.1
+    - SCIPY_VERSION=0.14
+    - INSTALL_OPTIONAL=true
+
 matrix:
-    fast_finish: true
-    include:
-#     - python: 2.7
-#       env:
-#       - PYTHON_VERSION=2.7
-#       - NUMPY_VERSION=1.7
-#       - SCIPY_VERSION=0.13
-#       - JOB_NAME: "python_27_numpy_17_scipy_013"
+  include:
     - python: 2.7
-      env:
-      - PYTHON_VERSION=2.7
-      - NUMPY_VERSION=1.8
-      - SCIPY_VERSION=0.13
-      - JOB_NAME: "python_27_numpy_18_scipy_013"
-#     - python: 2.7
-#       env:
-#       - PYTHON_VERSION=3.3
-#       - NUMPY_VERSION=1.7
-#       - SCIPY_VERSION=0.13
-#       - JOB_NAME: "python_33_numpy_17_scipy_013"
-    - python: 2.7
-      env:
-      - PYTHON_VERSION=3.4
-      - NUMPY_VERSION=1.8
-      - SCIPY_VERSION=0.13
-      - JOB_NAME: "python_34_numpy_18_scipy_013"
-#     - python: 2.7
-#       env:
-#       - PYTHON_VERSION=2.7
-#       - NUMPY_VERSION=1.7
-#       - SCIPY_VERSION=0.14
-#       - JOB_NAME: "python_27_numpy_17_scipy_014"
-#     - python: 2.7
-#       env:
-#       - PYTHON_VERSION=2.7
-#       - NUMPY_VERSION=1.8
-#       - SCIPY_VERSION=0.14
-#       - JOB_NAME: "python_27_numpy_18_scipy_014"
-#     - python: 2.7
-#       env:
-#       - PYTHON_VERSION=3.3
-#       - NUMPY_VERSION=1.7
-#       - SCIPY_VERSION=0.14
-#       - JOB_NAME: "python_33_numpy_17_scipy_014"
-    - python: 2.7
-      env:
-      - PYTHON_VERSION=3.4
-      - NUMPY_VERSION=1.9
-      - SCIPY_VERSION=0.14
-      - JOB_NAME: "python_34_numpy_19_scipy_014"
-      
-      
+      env: NUMPY_VERSION=1.8.2
+    - python: 3.4
+      env: NUMPY_VERSION=1.8.2
+
 before_install:
-  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
-#   - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then wget http://repo.continuum.io/miniconda/Miniconda-2.2.2-Linux-x86_64.sh -O miniconda.sh; else wget http://repo.continuum.io/miniconda/Miniconda3-3.4.2-Linux-x86_64.sh -O miniconda.sh; fi
-#   - chmod +x miniconda.sh
-  - bash miniconda.sh -b
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - sudo rm -rf /dev/shm
-  - sudo ln -s /run/shm /dev/shm
-  - conda update --quiet conda
-  - conda info -a
-  
+  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b
+  - export PATH=/home/travis/miniconda/bin:$PATH
+  - conda update --yes conda
+
   # Fix for headless TravisCI
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
 
 install:
-  - conda create -n testenv python=$PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib six pytest pip cython
+  - conda create --yes -n testenv python=$TRAVIS_PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib six pytest pip cython numexpr
   - source activate testenv
-#   - conda install --yes 
+
+  # Optional dependencies
+  - if $INSTALL_OPTIONAL; then conda install --yes pandas=0.14.1; fi
+
   - pip install .
   - python setup.py install
-  
+
 script:
   - py.test
