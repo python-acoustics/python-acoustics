@@ -6,16 +6,16 @@ python:
 
 env:
   global:
-    - NUMPY_VERSION=1.9.1
+    - NUMPY_VERSION=1.9
     - SCIPY_VERSION=0.14
     - INSTALL_OPTIONAL=true
 
 matrix:
   include:
     - python: 2.7
-      env: NUMPY_VERSION=1.8.2
+      env: NUMPY_VERSION=1.8
     - python: 3.4
-      env: NUMPY_VERSION=1.8.2
+      env: NUMPY_VERSION=1.8
 
 before_install:
   - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
@@ -33,10 +33,9 @@ install:
   - source activate testenv
 
   # Optional dependencies
-  - if $INSTALL_OPTIONAL; then conda install --yes pandas=0.14.1; fi
+  - if $INSTALL_OPTIONAL; then conda install --yes pandas=0.14; fi
 
-  #- pip install .
-  - python setup.py install
+  - python setup.py develop
 
 script:
   - py.test
