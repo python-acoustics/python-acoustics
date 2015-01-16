@@ -311,25 +311,47 @@ class Signal(numpy.ndarray):
         """
         return power_spectrum(self, self.fs)
     
-    def plot_spectrum(self, filename=None, scale='log'):
+    def plot_spectrum(self, **kwargs):#filename=None, scale='log'):
         """
         Plot spectrum of signal.
         
-        :param filename: Name of file.
+        Valid kwargs:
+        
+        - xscale
+        - yscale
+        - xlim
+        - ylim
+        - filename
+        
         """
+        params = {
+            'xscale': 'log',
+            'yscale': 'linear',
+            'xlim'  : None,
+            'ylim'  : None,
+            'xlabel': "$f$ in Hz",
+            'ylabel': "$L_{p}$ in dB",
+            'title' : 'SPL',
+            'filename' : None,
+            }
+        params.update(kwargs)
+        
+        
         f, o = self.spectrum()
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
         ax0.set_title('SPL')
         #if linear:
         ax0.plot(f, 10.0*np.log10(o.T))
-        if scale=='log':
-            ax0.set_xscale('log')
-        #ax0.semilogx(f, 10.0*np.log10(o))
-        ax0.set_ylabel(r"$L_{p}$ in dB")
-        ax0.set_xlabel(r"$f$ in Hz")
-        if filename:
-            fig.savefig(filename)
+        ax0.set_xscale(params['xscale'])
+        ax0.set_yscale(params['yscale'])
+        ax0.set_ylabel(params['ylabel'])
+        ax0.set_xlabel(params['xlabel'])
+        ax0.set_xlim(params['xlim'])
+        ax0.set_ylim(params['ylim'])
+        
+        if params['filename'] is not None:
+            fig.savefig(params['filename'])
         else:
             return fig
     
@@ -337,8 +359,22 @@ class Signal(numpy.ndarray):
         """
         Plot spectrograms of the signals.
         
-        :param filename: Name of file.
+        Valid kwargs:
+        
+        - xlim
+        - ylim
+        - clim
+        - filename
+        
         """
+        params = {
+            'xlim' : None,
+            'ylim' : None,
+            'clim' : None,
+            'filename' : None,
+            }
+        params.update(kwargs)
+        
         if self.channels > 1:
             raise ValueError("Cannot plot spectrogram of multichannel signal. Please select a single channel.")
         fig = plt.figure()
@@ -350,19 +386,15 @@ class Signal(numpy.ndarray):
         cb = fig.colorbar(mappable=im)
         cb.set_label('SPL in dB')
         
-        if 'xlim' in kwargs:
-            ax0.set_xlim(kwargs['xlim'])
-        if 'ylim' in kwargs:
-            ax0.set_ylim(kwargs['ylim'])
-        if 'clim' in kwargs:
-            im.set_clim(kwargs['clim'])
-        
-        
+        #ax0.set_xlim(params['xlim'])
+        ax0.set_ylim(params['ylim'])
+        im.set_clim(params['clim'])
+
         ax0.set_xlabel(r'$t$ in s')
         ax0.set_ylabel(r'$f$ in Hz')
         
-        if 'filename' in kwargs:
-            fig.savefig(kwargs['filename'])
+        if params['filename'] is not None:
+            fig.savefig(params['filename'])
         else:
             return fig
     
@@ -373,10 +405,20 @@ class Signal(numpy.ndarray):
         return acoustics.standards.iec_61672_1_2013.fast_level(self, self.fs)
     
     
-    def plot_leq(self, filename=None):
+    def plot_leq(self, **kwargs):
         """
         Plot equivalent level.
         """
+        params = {
+            #'xscale': 'linear',
+            #'yscale': 'linear',
+            'xlim'  : None,
+            'ylim'  : None,
+            'filename' : None,
+            }
+        params.update(kwargs)
+        
+        
         t, L = self.leq()
         L_masked = np.ma.masked_where(np.isinf(L), L)
         fig = plt.figure()
@@ -386,9 +428,11 @@ class Signal(numpy.ndarray):
         ax.set_xlabel(r'$t$ in s')
         ax.set_ylabel(r'$L_{p,F}$ in dB')
         ax.legend(np.arange(self.channels))
+        ax.set_xlim(params['xlim'])
+        ax.set_ylim(params['ylim'])
         
-        if filename:
-            fig.savefig(filename)
+        if 'filename' in params is not None:
+            fig.savefig(params['filename'])
         else:
             return fig
     
@@ -403,10 +447,19 @@ class Signal(numpy.ndarray):
         #return acoustics.signal.fractional_octaves(self, self.fs
         return acoustics.signal.octaves(self, self.fs)
     
-    def plot_octaves(self, filename=None):
+    def plot_octaves(self, **kwargs):
         """
         Plot octaves.
         """
+        params = {
+            'xscale': 'log',
+            'yscale': 'linear',
+            'xlim'  : None,
+            'ylim'  : None,
+            'filename' : None,
+            }
+        params.update(kwargs)
+        
         f, o = self.octaves()
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
@@ -415,9 +468,13 @@ class Signal(numpy.ndarray):
         ax0.set_ylabel(r"$L_{p}$ in dB")
         ax0.set_xlabel(r"$f$ in Hz")
         ax0.legend(np.arange(self.channels))
+        ax0.set_xscale(params['xscale'])
+        ax0.set_yscale(params['yscale'])
+        ax0.set_xlim(params['xlim'])
+        ax0.set_ylim(params['ylim'])
         
-        if filename:
-            fig.savefig(filename)
+        if params['filename'] is not None:
+            fig.savefig(params['filename'])
         else:
             return fig
     
@@ -427,10 +484,19 @@ class Signal(numpy.ndarray):
         """
         return acoustics.signal.third_octaves(self, self.fs)
     
-    def plot_third_octaves(self, filename=None):
+    def plot_third_octaves(self, **kwargs):
         """
         Plot octaves.
         """
+        params = {
+            'xscale': 'log',
+            'yscale': 'linear',
+            'xlim'  : None,
+            'ylim'  : None,
+            'filename' : None,
+            }
+        params.update(kwargs)
+        
         f, o = self.third_octaves()
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
@@ -439,9 +505,13 @@ class Signal(numpy.ndarray):
         ax0.set_ylabel(r"$L_{p}$ in dB")
         ax0.set_xlabel(r"$f$ in Hz")
         ax0.legend(np.arange(self.channels))
+        ax0.set_xscale(params['xscale'])
+        ax0.set_yscale(params['yscale'])
+        ax0.set_xlim(params['xlim'])
+        ax0.set_ylim(params['ylim'])
         
-        if filename:
-            fig.savefig(filename)
+        if params['filename'] is not None:
+            fig.savefig(params['filename'])
         else:
             return fig
     
@@ -450,10 +520,18 @@ class Signal(numpy.ndarray):
         """
         return acoustics.signal.fractional_octaves(self, self.fs, fraction=fraction)
     
-    def plot_fractional_octaves(self, fraction, filename=None):
+    def plot_fractional_octaves(self, fraction, **kwargs):
+        """Plot fractional octaves.
         """
-        Plot octaves.
-        """
+        params = {
+            'xscale': 'log',
+            'yscale': 'linear',
+            'xlim'  : None,
+            'ylim'  : None,
+            'filename' : None,
+        }
+        params.update(kwargs)
+        
         f, o = self.fractional_octaves(fraction)
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
@@ -462,9 +540,13 @@ class Signal(numpy.ndarray):
         ax0.set_ylabel(r"$L_{p}$ in dB")
         ax0.set_xlabel(r"$f$ in Hz")
         ax0.legend(np.arange(self.channels))
+        ax0.set_xscale(params['xscale'])
+        ax0.set_yscale(params['yscale'])
+        ax0.set_xlim(params['xlim'])
+        ax0.set_ylim(params['ylim'])
         
-        if filename:
-            fig.savefig(filename)
+        if params['filename'] is not None:
+            fig.savefig(params['filename'])
         else:
             return fig
     
@@ -474,10 +556,13 @@ class Signal(numpy.ndarray):
         
         :param filename: Name of file.
         :param start: First sample index.
-        :type start: int
+        :type start: Start time in seconds from start of signal.
         :param stop: Last sample index.
-        :type stop: int
+        :type stop: Stop time in seconds. from stop of signal.
         """
+        start = int(start*self.fs)
+        stop = int(stop*self.fs)
+        
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
         ax0.set_title('Signal')
