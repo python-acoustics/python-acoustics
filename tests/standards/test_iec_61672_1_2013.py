@@ -1,6 +1,19 @@
+import pytest
 import numpy as np
 
 from acoustics.standards.iec_61672_1_2013 import *
+
+    
+@pytest.fixture
+def signal_fs():
+    fs = 4000.0
+    f = 400.0
+    duration = 3.0
+    samples = int(duration*fs)
+    t = np.arange(samples) / fs
+    x = np.sin(2.0*np.pi*f*t)
+    return x, fs
+
 
 def test_fast_level():
     """Test whether integration with time-constant FAST gives the correct level.
@@ -15,41 +28,51 @@ def test_fast_level():
     .. math:: L = 10 \cdot \\log_{10}{\\left(\\frac{0.5}{(2e-5)^2} \\right)} = 91
     
     """
-    
-    fs = 4000.0
-    f = 400.0
-    duration = 3.0
-    samples = int(duration*fs)
-    t = np.arange(samples) / fs
-    
-    x = np.sin(2.0*np.pi*f*t)
+    x, fs = signal_fs()
+
     times, levels = fast_level(x, fs)
     assert( abs(levels.mean() - 91 ) < 0.05 ) 
-    
     
     x *= 4.0
     times, levels = fast_level(x, fs)
     assert( abs(levels.mean() - 103 ) < 0.05 ) 
+
+
+def test_time_weighted_sound_level():
+    x, fs = signal_fs()
+    fast = 0.125
     
+    times, levels = time_weighted_sound_level(x, fs, fast)
+    assert( abs(levels.mean() - 91 ) < 0.05 ) 
+    
+    x *= 4.0
+    times, levels = time_weighted_sound_level(x, fs, fast)
+    assert( abs(levels.mean() - 103 ) < 0.05 ) 
+
+
+def test_time_averaged_sound_level():
+    x, fs = signal_fs()
+    fast = 0.125
+    
+    times, levels = time_averaged_sound_level(x, fs, fast)
+    assert( abs(levels.mean() - 91 ) < 0.05 ) 
+    
+    x *= 4.0
+    times, levels = time_averaged_sound_level(x, fs, fast)
+    assert( abs(levels.mean() - 103 ) < 0.05 ) 
+
     
 def test_slow_level():
     """Test whether integration with time-constant SLOW gives the correct level.
     """
-    
-    fs = 4000.0
-    f = 400.0
-    duration = 3.0
-    samples = int(duration*fs)
-    t = np.arange(samples) / fs
-    
-    x = np.sin(2.0*np.pi*f*t)
+    x, fs = signal_fs()
+
     times, levels = fast_level(x, fs)
     assert( abs(levels.mean() - 91 ) < 0.05 ) 
-    
-    
+
     x *= 4.0
     times, levels = fast_level(x, fs)
     assert( abs(levels.mean() - 103 ) < 0.05 ) 
     
+            
         
-    
