@@ -431,7 +431,7 @@ class Signal(numpy.ndarray):
         ax.set_xlim(params['xlim'])
         ax.set_ylim(params['ylim'])
         
-        if 'filename' in params is not None:
+        if params['filename'] is not None:
             fig.savefig(params['filename'])
         else:
             return fig
