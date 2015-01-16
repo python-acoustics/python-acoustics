@@ -70,7 +70,7 @@ def time_averaged_sound_level(pressure, sample_frequency, averaging_time, refere
     
     """
     levels = 10.0 * np.log10( average(pressure**2.0, sample_frequency, averaging_time) / reference_pressure**2.0)
-    times = np.arange(level.shape[-1]) * averaging_time
+    times = np.arange(levels.shape[-1]) * averaging_time
     return times, levels
 
 
