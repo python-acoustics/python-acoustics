@@ -27,13 +27,12 @@ setup(
           'six >= 1.4.1',
           'cython',
           'numexpr',
-          'setuptools',
           ],
       extras_require={
           'jit': 'numba',
           'fast_fft': 'pyFFTW',
           'io': 'pandas',
           },
-      ext_modules = cythonize('acoustics/*.pyx'),
+      ext_modules=cythonize('acoustics/*.pyx'),
       include_dirs=[np.get_include()]
       )
