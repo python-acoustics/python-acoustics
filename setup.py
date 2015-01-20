@@ -1,12 +1,27 @@
 import os
 from setuptools import setup, find_packages
-from Cython.Build import cythonize
+from setuptools.command.test import test as TestCommand
+from setuptools.extension import Extension
+import sys
+
 import numpy as np
 
 if os.path.exists('README.md'):
     long_description = open('README.md').read()
 else:
     long_description = "A Python library aimed at acousticians."
+
+
+class PyTest(TestCommand):
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        import pytest
+        errno = pytest.main(self.test_args)
+        sys.exit(errno)
 
 setup(
       name='acoustics',
@@ -25,7 +40,6 @@ setup(
           'scipy >= 0.14',
           'matplotlib',
           'six >= 1.4.1',
-          'cython',
           'numexpr',
           ],
       extras_require={
@@ -33,6 +47,8 @@ setup(
           'fast_fft': 'pyFFTW',
           'io': 'pandas',
           },
-      ext_modules=cythonize('acoustics/*.pyx'),
+      tests_require=['pytest'],
+      cmdclass={'test': PyTest},
+      ext_modules=[Extension('acoustics._signal', ['acoustics/_signal.c'])],
       include_dirs=[np.get_include()]
       )
