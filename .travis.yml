@@ -35,7 +35,6 @@ install:
   # Optional dependencies
   - if $INSTALL_OPTIONAL; then conda install --yes pandas=0.14; fi
 
-  - python setup.py develop
-
 script:
-  - py.test
+  - python setup.py test
+  - python setup.py install

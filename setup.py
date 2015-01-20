@@ -1,12 +1,27 @@
 import os
 from setuptools import setup, find_packages
-from Cython.Build import cythonize
+from setuptools.command.test import test as TestCommand
+import sys
+
 import numpy as np
+from Cython.Build import cythonize
 
 if os.path.exists('README.md'):
     long_description = open('README.md').read()
 else:
     long_description = "A Python library aimed at acousticians."
+
+
+class PyTest(TestCommand):
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        import pytest
+        errno = pytest.main(self.test_args)
+        sys.exit(errno)
 
 setup(
       name='acoustics',
@@ -33,6 +48,8 @@ setup(
           'fast_fft': 'pyFFTW',
           'io': 'pandas',
           },
+      tests_require=['pytest'],
+      cmdclass={'test': PyTest},
       ext_modules=cythonize('acoustics/*.pyx'),
       include_dirs=[np.get_include()]
       )
