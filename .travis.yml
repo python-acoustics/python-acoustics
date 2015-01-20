@@ -29,13 +29,12 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 
 install:
-  - conda create --yes -n testenv python=$TRAVIS_PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib six pytest pip cython numexpr
+  - conda create --yes -n testenv python=$TRAVIS_PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib six pytest pip numexpr
   - source activate testenv
 
   # Optional dependencies
   - if $INSTALL_OPTIONAL; then conda install --yes pandas=0.14; fi
 
-  - python setup.py develop
-
 script:
-  - py.test
+  - python setup.py test
+  - python setup.py install
