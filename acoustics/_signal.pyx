@@ -50,168 +50,10 @@ class Signal(numpy.ndarray):
         #self.fs = attr if attr is not None else 44100.0
         self.fs = getattr(obj, 'fs', None)#44100.0)
         #self.fs = 1000
-        
-   
-    #def __add__(self, other):
-        #return op('__add__', self, other)
-
-    #def __sub__(self, other):
-        #return op('__sub__', self, other)
-    
-    #def __mul__(self, other):
-        #return op('__mul__', self, other)
-    
-    #def __div__(self, other):
-        #return op('__div__', self, other)
-    
-    #def __mod__(self, other):
-        #return op('__mod__', self, other)
-    
-    #def __iadd__(self, other):
-        #return op('__iadd__', self, other)
-
-    #def __isub__(self, other):
-        #return op('__isub__', self, other)
-    
-    #def __imul__(self, other):
-        #return op('__imul__', self, other)
-    
-    #def __idiv__(self, other):
-        #return op('__idiv__', self, other)
-    
-    #def __imod__(self, other):
-        #return op('__imod__', self, other)
-    
-
-    
-###class Signal(object):
-    ###"""
-    ###Class for containing a signal in time-domain.
-    
-    ###This class provides methods for plotting the signal in time- and/or frequency-domain.
-    ###Signals can be created from a WAV file or written to one.
-    ###"""
-    
-    
-    ####@property
-    ####def data(self):
-        ####return self._data
-    
-    ####@data.setter
-    ####def data(self, data):
-        ####if data.ndim==1:
-            ####self._data = data
-        ####else:
-            ####raise ValueError("Wrong shape.")
-
-    ###def __init__(self, data, fs=44100):
-        ###"""
-        ###Constructor
-        
-        ###:param input_array: Array describing the time data.
-        ###:param fs: Sample frequency :math:`f_s`
-        ###:type fs: int
-        ###"""
-        
-        
-        ###try:
-            ###data = data._data
-        ###except AttributeError:
-            ###pass
-        ###if data.ndim==1:
-            ###self._data = data
-        ###else:
-            ###raise ValueError("Wrong shape.")
-        
-        ###self.fs = fs
-        ###"""Sample frequency"""
-    
-    ###def __add__(self, other):
-        ###return op('__add__', self, other)
-
-    ###def __sub__(self, other):
-        ###return op('__sub__', self, other)
-    
-    ###def __mul__(self, other):
-        ###return op('__mul__', self, other)
-    
-    ###def __div__(self, other):
-        ###return op('__div__', self, other)
-    
-    #def __mod__(self, other):
-        #if isinstance(other, Signal):
-            #return self.__class__(self._data % other._data, fs=self.fs)
-        #else:
-            #return self.__class__(self._data % other, fs=self.fs)
-    
-    #def __iadd__(self, other):
-        #if isinstance(other, Signal):
-            #if self.fs == other.fs:
-                #self._data += other._data
-        #else:
-            #self._data += other
-        #return self
-    
-    #def __isub__(self, other):
-        #if isinstance(other, Signal):
-            #if self.fs == other.fs:
-                #self._data -= other._data
-        #else:
-            #self._data -= other
-        #return self
-    
-    #def __imul__(self, other):
-        #if isinstance(other, Signal):
-            #if self.fs == other.fs:
-                #self._data *= other._data
-        #else:
-            #self._data *= other
-        #return self
-    
-    #def __idiv__(self, other):
-        #if isinstance(other, Signal):
-            #if self.fs == other.fs:
-                #self._data /= other._data
-        #else:
-            #self._data /= other
-        #return self
-    
-    #def __abs__(self):
-        #return self * self
-    
-    #def __pos__(self):
-        #return self.__class__(+self._data, fs=self.fs)
-    
-    #def __neg__(self):
-        #return self.__class__(-self._data, fs=self.fs)
-    
-    #def __len__(self):
-        #return len(self._data)
-    
-    #def __getitem__(self, key):
-        #return self._data[key]
-        ##return self.__class__(self._data[key], self.fs)
-        
-    #def __setitem__(self, key, value):
-        #self._data[key] = value
-    
+            
     def __repr__(self):
         return "Signal({})".format(str(self))
-    
-    #def __str__(self):
-        #return self._data.__str__()
-    
-    #def __iter__(self):
-        #return self._data.__iter__()
-    
-    #@property
-    #def real(self):
-        #return self.__class__(self._data.real, self.fs)
-    
-    #@property
-    #def imag(self):
-        #return self.__class__(self._data.imag, self.fs)
-    
+        
     @property
     def samples(self):
         """Amount of samples in signal."""
@@ -226,41 +68,20 @@ class Signal(numpy.ndarray):
         else:
             return 1
     
-    #def min(self):
-        #"""Minimum value."""
-        #return self._data.min()
-    
-    #def max(self):
-        #"""Maximum value."""
-        #return self._data.max()
-    
-    #def argmin(self):
-        #"""Index of minimum value."""
-        #return self._data.argmin()
-    
-    #def argmax(self):
-        #"""Index of maximum value."""
-        #return self._data.argmax()
-    
-    #def conjugate(self):
-        #"""Complex conjugate."""
-        #return self._data.conjugate()
-    
-    #def mean(self):
-        #"""
-        #Signal mean value.
+    def pick(self, start=0.0, stop=None):
+        """Get signal from start time to stop time.
+        """
+        if start is not None:
+            start = np.floor(start*self.fs)
+        if stop is not None:
+            stop  = np.floor(stop*self.fs)
+        return self[..., start:stop]
         
-        #.. math:: \\mu = \\frac{1}{N} \\sum_{n=0}^{N-1} x_n
-        
-        #"""
-        #return self._data.mean()
-    
-    #@property
-    #def fs(self):
-        #return self.fs
-    
     def times(self):
         """Time vector.
+        
+        Creates a vector with a timestamp for every sample.
+        
         """
         return np.arange(0, self.samples) / self.fs
     
@@ -271,49 +92,42 @@ class Signal(numpy.ndarray):
         .. math:: E = \\sum_{n=0}^{N-1} |x_n|^2
         
         """
-        return (self*self).sum()
+        return float((self*self).sum())
     
     def power(self):
-        """
-        Signal power.
+        """Signal power.
         
         .. math:: P = \\frac{1}{N} \\sum_{n=0}^{N-1} |x_n|^2
         """
         return self.energy() / len(self)
     
-    def rms(self):
-        """
-        RMS signal power.
+    def ms(self):
+        """Mean value squared of signal.
         
-        .. math:: P_{RMS} = \\sqrt{P}
+        .. seealso:: `acoustics.signal.ms`
         
         """
-        return np.sqrt(self.power())
-
-    #def std(self):
-        #"""
-        #Standard deviation.
-        #"""
-        #return self._data.std()
+        return acoustics.signal.ms(self)
     
-    #def var(self):
-        #"""
-        #Signal variance.
+    def rms(self):
+        """Root mean squared of signal.
         
-        #.. math:: \\sigma^2 = \\frac{1}{N} \\sum_{n=0}^{N-1} |x_n - \\mu |^2
+        .. seealso:: `acoustics.signal.rms`
         
-        #"""
-        #return self._data.var()
+        """
+        return acoustics.signal.rms(self)
+        #return np.sqrt(self.power())
     
     def spectrum(self):
-        """
-        Create spectrum.
+        """Power spectrum.
+        
+        .. seealso:: :func:`acoustics.signal.power_spectrum`
+        
         """
         return power_spectrum(self, self.fs)
     
     def plot_spectrum(self, **kwargs):#filename=None, scale='log'):
-        """
-        Plot spectrum of signal.
+        """Plot spectrum of signal.
         
         Valid kwargs:
         
@@ -322,6 +136,8 @@ class Signal(numpy.ndarray):
         - xlim
         - ylim
         - filename
+        
+        .. seealso:: :meth:`spectrum`
         
         """
         params = {
@@ -399,42 +215,79 @@ class Signal(numpy.ndarray):
             return fig
     
     
+    def levels(self, time=0.125, method='average'):
+        """Calculate sound pressure level as function of time.
+        
+        :param time: Averaging time or integration time constant. Default value is 0.125 corresponding to FAST.
+        :param method: Use time `average` or time `weighting`. Default option is `average`.
+        :returns: sound pressure level as function of time.
+        
+        .. seealso:: :func:`acoustics.standards.iec_61672_1_2013.time_averaged_sound_level`
+        .. seealso:: :func:`acoustics.standards.iec_61672_1_2013.time_weighted_sound_level`
+        
+        """
+        if method=='average':
+            return acoustics.standards.iec_61672_1_2013.time_averaged_sound_level(self, self.fs, time)
+        elif method=='weighting':
+            return acoustics.standards.iec_61672_1_2013.time_weighted_sound_level(self, self.fs, time)
+        else:
+            raise ValueError("Invalid method")
+    
     def leq(self):
-        """Equivalent level.
+        """Equivalent level. Single-value number.
+        
+        .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level`
+        
         """
-        return acoustics.standards.iec_61672_1_2013.fast_level(self, self.fs)
+        return acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level(self)
+
     
-    
-    def plot_leq(self, **kwargs):
-        """
-        Plot equivalent level.
+    def plot_levels(self, **kwargs):
+        """Plot sound pressure level as function of time.
+        
+        .. seealso:: :meth:`levels`
+        
         """
         params = {
             #'xscale': 'linear',
             #'yscale': 'linear',
-            'xlim'  : None,
-            'ylim'  : None,
-            'filename' : None,
+            'xlim'      : None,
+            'ylim'      : None,
+            'filename'  : None,
+            'time'      : 0.125,
+            'method'    : 'average',
             }
         params.update(kwargs)
         
         
-        t, L = self.leq()
+        t, L = self.levels(params['time'], params['method'])
         L_masked = np.ma.masked_where(np.isinf(L), L)
         fig = plt.figure()
-        ax = fig.add_subplot(111)
-        ax.set_title('Sound Pressure Level')
-        ax.plot(t, L_masked.T)
-        ax.set_xlabel(r'$t$ in s')
-        ax.set_ylabel(r'$L_{p,F}$ in dB')
-        ax.legend(np.arange(self.channels))
-        ax.set_xlim(params['xlim'])
-        ax.set_ylim(params['ylim'])
+        ax0 = fig.add_subplot(111)
+        ax0.set_title('Sound Pressure Level')
+        ax0.plot(t, L_masked.T)
+        ax0.set_xlabel(r'$t$ in s')
+        ax0.set_ylabel(r'$L_{p,F}$ in dB')
+        ax0.set_xlim(params['xlim'])
+        ax0.set_ylim(params['ylim'])
+        if self.channels > 1:
+            ax0.legend(np.arange(self.channels))
         
         if params['filename'] is not None:
             fig.savefig(params['filename'])
         else:
             return fig
+        
+    
+    def octave(self, frequency, fraction=1):
+        """Determine fractional-octave `fraction` at `frequency`.
+        
+        .. seealso:: :func:`acoustics.signal.fractional_octaves`
+        
+        """
+        return acoustics.signal.fractional_octaves(self, self.fs, frequency, 
+                                                  frequency, fraction, False)[1]
+    
     
     def octaves(self):#, fraction=1):
         """
@@ -448,8 +301,10 @@ class Signal(numpy.ndarray):
         return acoustics.signal.octaves(self, self.fs)
     
     def plot_octaves(self, **kwargs):
-        """
-        Plot octaves.
+        """Plot octaves.
+        
+        .. seealso:: :meth:`octaves`
+        
         """
         params = {
             'xscale': 'log',
@@ -467,11 +322,12 @@ class Signal(numpy.ndarray):
         ax0.semilogx(f.center, o.T)
         ax0.set_ylabel(r"$L_{p}$ in dB")
         ax0.set_xlabel(r"$f$ in Hz")
-        ax0.legend(np.arange(self.channels))
         ax0.set_xscale(params['xscale'])
         ax0.set_yscale(params['yscale'])
         ax0.set_xlim(params['xlim'])
         ax0.set_ylim(params['ylim'])
+        if self.channels > 1:
+            ax0.legend(np.arange(self.channels))
         
         if params['filename'] is not None:
             fig.savefig(params['filename'])
@@ -479,14 +335,18 @@ class Signal(numpy.ndarray):
             return fig
     
     def third_octaves(self):
-        """
-        Calculate time-series of octaves.
+        """Calculate time-series of 1/3-octaves.
+        
+        .. seealso:: :func:`acoustics.signal.third_octaves`
+        
         """
         return acoustics.signal.third_octaves(self, self.fs)
     
     def plot_third_octaves(self, **kwargs):
-        """
-        Plot octaves.
+        """Plot 1/3-octaves.
+        
+        .. seealso:: :meth:`third_octaves`
+        
         """
         params = {
             'xscale': 'log',
@@ -504,11 +364,12 @@ class Signal(numpy.ndarray):
         ax0.semilogx(f.center, o.T)
         ax0.set_ylabel(r"$L_{p}$ in dB")
         ax0.set_xlabel(r"$f$ in Hz")
-        ax0.legend(np.arange(self.channels))
         ax0.set_xscale(params['xscale'])
         ax0.set_yscale(params['yscale'])
         ax0.set_xlim(params['xlim'])
         ax0.set_ylim(params['ylim'])
+        if self.channels > 1:
+            ax0.legend(np.arange(self.channels))
         
         if params['filename'] is not None:
             fig.savefig(params['filename'])
@@ -539,11 +400,12 @@ class Signal(numpy.ndarray):
         ax0.semilogx(f.center, o.T)
         ax0.set_ylabel(r"$L_{p}$ in dB")
         ax0.set_xlabel(r"$f$ in Hz")
-        ax0.legend(np.arange(self.channels))
         ax0.set_xscale(params['xscale'])
         ax0.set_yscale(params['yscale'])
         ax0.set_xlim(params['xlim'])
         ax0.set_ylim(params['ylim'])
+        if self.channels > 1:
+            ax0.legend(np.arange(self.channels))
         
         if params['filename'] is not None:
             fig.savefig(params['filename'])
@@ -551,7 +413,7 @@ class Signal(numpy.ndarray):
             return fig
     
     
-    def plot(self, filename=None, start=None, stop=None, channels=None):
+    def plot(self, filename=None, start=0, stop=None, channels=None):
         """Plot signal as function of time. By default the entire signal is plotted.
         
         :param filename: Name of file.
@@ -560,13 +422,13 @@ class Signal(numpy.ndarray):
         :param stop: Last sample index.
         :type stop: Stop time in seconds. from stop of signal.
         """
-        start = int(start*self.fs)
-        stop = int(stop*self.fs)
+        #start = int(start*self.fs)
+        #stop = int(stop*self.fs)
         
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
         ax0.set_title('Signal')
-        ax0.plot(self[channels, start:stop])
+        ax0.plot(self.pick(start, stop))
         ax0.set_xlabel(r'$t$ in n')
         ax0.set_ylabel(r'$x$ in -') 
         if filename:
@@ -578,11 +440,11 @@ class Signal(numpy.ndarray):
         #"""
         #Plot scalogram 
         #"""
-        #from scipy.signal import ricker
+        #from scipy.signal import ricker, cwt
         
         #wavelet = ricker
-        #widths = np.logspace(-1, 3.5, 100)
-        #x = cwt(self._signal, wavelet, widths)
+        #widths = np.logspace(-1, 3.5, 10)
+        #x = cwt(self, wavelet, widths)
         
         #interpolation = 'nearest'
         
@@ -653,24 +515,13 @@ class Signal(numpy.ndarray):
     @classmethod
     def from_wav(cls, filename):
         """
-        Create signal from WAV file.
+        Create an instance of `Signal` from a WAV file.
         
         :param filename: Filename
+        
         """
         fs, data = wavfile.read(filename)  
         data = data.astype(np.float32, copy=False)
         data /= np.max(np.abs(data))
         return cls(data, fs=fs)
-    
-    #def to_mat(filename):
-        #"""
-        #Save signal to MAT file.
-        #"""
-        #raise NotImplementedError
-    
-    #@classmethod
-    #def from_mat(cls, filename):
-        #"""
-        #Load signal from MAT file.
-        #"""
-        #raise NotImplementedError
+
