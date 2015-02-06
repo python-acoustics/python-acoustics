@@ -1,9 +1,7 @@
 """
 Tests for :func:`acoustics.signal`
 """
-
 from acoustics.signal import convolve as convolveLTV
-from acoustics.signal import EqualBand, OctaveBand, integrate_bands
 from scipy.signal import convolve as convolveLTI
 import numpy as np
 import itertools
@@ -13,59 +11,43 @@ from numpy.testing import assert_almost_equal, assert_array_almost_equal, assert
 
 import pytest
 
-class TestConvolve:
+
+@pytest.mark.parametrize(
+    "u,h", [
+    ( np.array([1,2,3,4,3,2,1], dtype='float'), np.array([1,2,3,4], dtype='float') ),
+    ( np.array([1,2,3,4,3,2,1,1], dtype='float'), np.array([1,2,3,4,5], dtype='float') ),
+    ])
+def test_convolve_lti(u, h):
+    """Test whether :func:`acoustics.signal.convolve` behaves properly when 
+    performing a convolution with a time-invariant system.
+    """
+    H = np.tile(h, (len(u), 1)).T
+
+    np.testing.assert_array_almost_equal(convolveLTV(u,H), convolveLTI(u,h))
+    np.testing.assert_array_almost_equal(convolveLTV(u,H,mode='full'), convolveLTI(u,h,mode='full'))
+    np.testing.assert_array_almost_equal(convolveLTV(u,H,mode='valid'), convolveLTI(u,h,mode='valid'))
+    np.testing.assert_array_almost_equal(convolveLTV(u,H,mode='same'), convolveLTI(u,h,mode='same'))
     
-    def test_LTI(self):
-        """
-        Test whether it gives correct results for the LTI case.
-        """
 
-        """Input signals."""
-        signals = [np.array([1,2,3,4,3,2,1], dtype='float'),
-                   np.array([1,2,3,4,3,2,1,1], dtype='float'),
-                   ]
-        
-        """Filters"""
-        filters = [np.array([1,2,3,4], dtype='float'),
-                   np.array([1,2,3,4,5], dtype='float'),
-                   ]
-        
-        """Test for every combination of input signal and filter."""
-        for u, h in itertools.product(signals, filters):
+def test_convolve_ltv():
+    """Test whether :func:`acoustics.signal.convolve` behaves properly when 
+    performing a convolution with a time-variant system.
+    """
 
-            H = np.tile(h, (len(u), 1)).T
-        
-            #"""The array C represents here a linear time-invariant system."""
-            #y_ltv = convolveLTV(u, H)
-            #y_lti = convolveLTI(u, h)
-            #"""Check whether the output is indeed the same."""
-            #np.testing.assert_array_equal(y_ltv, y_lti)
-        
-            np.testing.assert_array_almost_equal(convolveLTV(u,H), convolveLTI(u,h))
-            np.testing.assert_array_almost_equal(convolveLTV(u,H,mode='full'), convolveLTI(u,h,mode='full'))
-            np.testing.assert_array_almost_equal(convolveLTV(u,H,mode='valid'), convolveLTI(u,h,mode='valid'))
-            np.testing.assert_array_almost_equal(convolveLTV(u,H,mode='same'), convolveLTI(u,h,mode='same'))
-
-            
-    def test_LTV(self):
-        """
-        Test whether it gives correct results for the LTV case.
-        """
-        
-        """Input signal"""
-        u = np.array([1, 1, 1])
-        
-        """Impulse responses where each column represents an impulse response."""
-        C = np.array([
-            [1, 0, 0],
-            [2, 1, 1]
-            ])
-        
-        """The result calculated manually."""
-        y_manual = np.array([1, 2, 1, 1])
-        
-        y_ltv = convolveLTV(u, C)
-        np.testing.assert_array_equal(y_ltv, y_manual)
+    """Input signal"""
+    u = np.array([1, 1, 1])
+    
+    """Impulse responses where each column represents an impulse response."""
+    C = np.array([
+        [1, 0, 0],
+        [2, 1, 1]
+        ])
+    
+    """The result calculated manually."""
+    y_manual = np.array([1, 2, 1, 1])
+    
+    y_ltv = convolveLTV(u, C)
+    np.testing.assert_array_equal(y_ltv, y_manual)
         
         
 def test_decibel_to_neper():
@@ -209,6 +191,7 @@ def test_rms():
     
     assert(np.abs( rms(x) - np.sqrt(8.0) ) < 1e-9 )
 
+
 @pytest.fixture(params=[4000.0, 20000.0, 44100.0])
 def fs(request):
     return request.param
@@ -238,8 +221,6 @@ def test_amplitude_envelope(amplitude, frequency, fs):
     
     assert( amplitude == amplitude_determined )  
     
-#if __name__ == '__main__':
-    #unittest.main()
 
 #def test_instantaneous_frequency(amplitude, frequency, fs):
 
