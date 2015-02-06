@@ -3,8 +3,7 @@ import numpy as np
 
 from acoustics.standards.iec_61672_1_2013 import *
 
-    
-@pytest.fixture
+   
 def signal_fs():
     fs = 4000.0
     f = 400.0
@@ -38,6 +37,19 @@ def test_fast_level():
     assert( abs(levels.mean() - 103 ) < 0.05 ) 
 
 
+def test_slow_level():
+    """Test whether integration with time-constant SLOW gives the correct level.
+    """
+    x, fs = signal_fs()
+
+    times, levels = fast_level(x, fs)
+    assert( abs(levels.mean() - 91 ) < 0.05 ) 
+
+    x *= 4.0
+    times, levels = fast_level(x, fs)
+    assert( abs(levels.mean() - 103 ) < 0.05 ) 
+
+
 def test_time_weighted_sound_level():
     x, fs = signal_fs()
     fast = 0.125
@@ -62,17 +74,7 @@ def test_time_averaged_sound_level():
     assert( abs(levels.mean() - 103 ) < 0.05 ) 
 
     
-def test_slow_level():
-    """Test whether integration with time-constant SLOW gives the correct level.
-    """
-    x, fs = signal_fs()
 
-    times, levels = fast_level(x, fs)
-    assert( abs(levels.mean() - 91 ) < 0.05 ) 
-
-    x *= 4.0
-    times, levels = fast_level(x, fs)
-    assert( abs(levels.mean() - 103 ) < 0.05 ) 
     
             
         
