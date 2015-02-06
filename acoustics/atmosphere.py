@@ -66,7 +66,7 @@ class Atmosphere(object):
                  triple_temperature=TRIPLE_TEMPERATURE):
         """
 
-        :param temperature: Temperature
+        :param temperature: Temperature in kelvin
         :param pressure: Pressure
         :param relative_humidity: Relative humidity
         :param reference_temperature: Reference temperature.
@@ -141,114 +141,54 @@ class Atmosphere(object):
         """
         return attenuation_coefficient(self.pressure, self.temperature, self.reference_pressure, self.reference_temperature, self.relaxation_frequency_nitrogen, self.relaxation_frequency_oxygen, frequency)
         
-    ###def atmospheric_absorption(self, signal):
-        ###"""
-        ###Calculate the signal for the atmospheric absorption.
         
-        ###:param signal:
-        ###:type signal: `Auraliser.Signal.Signal`
-        ###"""
+    #def ir_attenuation_coefficient(self, distances, fs=44100.0, n_blocks=2048, sign=-1):
+        #"""
+        #Calculate the impulse response due to air absorption.
         
-        ###"""Octaves object"""
-        ###o = Acoustics.Octave.Octave(fmin=1.0, fmax=signal.sample_frequency/2.0, order=24)
-        ###frequencies = o.center()
-        
-        ###t = np.arange(0, len(signal))               # Time signal
-        
-        ###alpha = self.atmosphere.attenuation_coefficient(frequencies)
-        
-        ###A = 10.0**(alpha/10.0)      # Convert from decibel/m to linear/m
-        
-        ###A *= o.bandwidth()          # Integrate over the frequency band
-        
-        ###phi = np.random.randn(len(frequencies))     # Random phase
-        ####phi = np.zeros(len(frequencies))
-        
-        ###d = self.geometry.distance  # Distance. Final Multiplier for signal strength.
-        
-        ###print  A * np.sin(2.0 * np.pi * np.outer(t, frequencies)+ phi)
-        
-        ###"""Absorption time signal."""
-        ###s = d * np.sum( A * np.sin(2.0 * np.pi * np.outer(t, frequencies)+ phi))
-        
-        ####s /= np.sum(o.bandwidth())
+        #:param fs: Sample frequency
+        #:param distances: Distances
+        #:param blocks: Blocks
+        #:param sign: Multiply (+1) or divide (-1) by transfer function. Multiplication is used for applying the absorption while -1 is used for undoing the absorption.
+        #""" 
+        #distances = np.atleast_1d(distances)
 
-        ###return s
+        #f = np.fft.rfftfreq(n_blocks, 1./fs)
+
+        #tf = np.zeros((len(distances), len(f)), dtype='float64')                          # Transfer function needs to be complex, and same size.
+        #tf += 10.0**( float(sign) * distances.reshape((-1,1)) * self.attenuation_coefficient(f) / 20.0  )  # Calculate the actual transfer function.
+
+        #ir = np.fft.ifftshift( np.fft.irfft(tf, n=n_blocks) )
+        #print(ir.shape)
+        #return ir.real.T / 2.0   
     
-    ##def absorption_coefficient(self, frequencies):
-        ##"""
-        ##Calculate the absorption coefficient in dB/m for the given frequencies.
-        
-        ##According to ISO9613-1:1993.
-        
-        ##:param frequencies: Frequencies to calculate alpha for.
-        ##:type frequencies: :class:`np.ndarray`
-        ##"""
-        
-        ###T = np.array(self.temperature, dtype='float128')                        # Ambient temperature
-        ###p_a = np.array(self.pressure, dtype='float128')                         # Ambient pressure
-        ###h = np.array(self.molar_concentration_water_vapour, dtype='float128')   # Ambient molar...
-        
-        ###p_r = np.array(self.REF_PRESSURE, dtype='float128')                     # Reference pressure
-        ###T0 = np.array(self.REF_TEMP, dtype='float128')                          # Reference temperature
-        
-        ###f = np.array(frequencies, dtype='float128')
-        
-        
-        ##T = self.temperature                        # Ambient temperature
-        ##p_a = self.pressure                         # Ambient pressure
-        ##h = self.molar_concentration_water_vapour   # Ambient molar...
-        
-        ##p_r = self.REF_PRESSURE                     # Reference pressure
-        ##T0 = self.REF_TEMP                          # Reference temperature
-        
-        ##f = frequencies
-        
-        
-        ##"""Relaxation frequency of oxygen."""
-        ##f_rO = p_a / p_r * ( 24.0 + 4.04 * 10.0**4.0 * h * (0.02 + h) / (0.391 + h) )
-        
-        ##"""Relaxation frequency of nitrogen."""
-        ##f_rN = p_a / p_r * (T/T0)**(-0.5) * (9.0 + 280.0 * h * np.exp(-4.170 * ((T/T0)**(-1.0/3.0) - 1.0 ) ) )
-        
-        ##alpha = 8.686 * f**2.0 * ( ( 1.84 * 10.0**(-11.0) * (p_r/p_a) * (T/T0)**(0.5)) + (T/T0)**(-2.5) * ( 0.01275 * np.exp(-2239.1 / T) * (f_rO + (f**2.0/f_rO))**(-1.0) + 0.1068 * np.exp(-3352.0/T) * (f_rN + (f**2.0/f_rN))**(-1.0) ) )
-        
-        ##return alpha
     
-    def ir_attenuation_coefficient(self, d, fs=44100, N=2048, sign=+1):
+    def ir_attenuation_coefficient(self, distances, fs=44100., n_blocks=2048, sign=-1):
         """
         Calculate the impulse response due to air absorption.
         
         :param fs: Sample frequency
-        :param d: Distance
+        :param distances: Distances
         :param N: Blocks
         :param sign: Multiply (+1) or divide (-1) by transfer function. Multiplication is used for applying the absorption while -1 is used for undoing the absorption.
         """ 
+        distances = np.atleast_1d(distances)
         
-        d = d if isinstance(d, np.ndarray) else np.array([d])
+        f = np.fft.rfftfreq(n_blocks, 1./fs)
         
-        f = np.linspace(0.0, fs/2.0, N/2.0) # Frequency vector. A bin for every signal sample.
-        
-        tf = np.zeros((len(d), len(f)), dtype='complex')                          # Transfer function needs to be complex, and same size.
-        tf += 10.0**( float(sign) * d.reshape((-1,1)) * self.attenuation_coefficient(f) / 20.0  )  # Calculate the actual transfer function.
-        
-        #print('TF: ' + str(tf.shape))
-        
-        #tf = np.concatenate( ( tf, np.conj(tf[::-1]) ))                 
-        tf = np.hstack( (tf, np.conj(tf[::-1, :]))) # Positive frequencies first, and then mirrored the conjugate negative frequencies.
-        
-        #print('TF reshaped: ' + str(tf.shape))
-        
-        #n = 2**int(np.ceil(np.log2(len(tf))))   # Blocksize for the IFFT. Zeros are padded.
+        # Transfer function needs to be complex, and same size. Complex?? Mehh
+        tf = np.zeros((len(distances), len(f)), dtype='float64')
+        # Calculate the actual transfer function.    
+        tf += 10.0**( float(sign) * distances.reshape((-1,1)) * self.attenuation_coefficient(f) / 20.0  )
+        # Positive frequencies first, and then mirrored the conjugate negative frequencies.
+        tf = np.hstack( (tf, np.conj(tf[::-1, :]))) 
 
-        ir = ifft( tf , n=N)     # Obtain the impulse response through the IFFT.
-        
-        ir = np.hstack((ir[:, N/2:N], ir[:, 0:N/2]))
-        
-        #ir = np.real(ir[0:N/2])
+        # Obtain the impulse response through the IFFT.
+        ir = ifft( tf , n=n_blocks)     
+        ir = np.hstack((ir[:, n_blocks/2:n_blocks], ir[:, 0:n_blocks/2]))
         
         ir = np.real(ir).T
-        
+
         return ir   # Note that the reduction is a factor two too much! Too much energy loss now that we use a double-sided spectrum.
     
     def plot_ir_attenuation_coefficient(self, fs, N, d, filename=None):
