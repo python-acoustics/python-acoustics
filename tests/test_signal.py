@@ -11,6 +11,7 @@ import itertools
 from acoustics.signal import * #decibel_to_neper, neper_to_decibel, ir2fr, zero_crossings
 from numpy.testing import assert_almost_equal, assert_array_almost_equal, assert_array_equal, assert_approx_equal
 
+import pytest
 
 class TestConvolve:
     
@@ -207,9 +208,50 @@ def test_rms():
     x *= 4.0
     
     assert(np.abs( rms(x) - np.sqrt(8.0) ) < 1e-9 )
+
+@pytest.fixture(params=[4000.0, 20000.0, 44100.0])
+def fs(request):
+    return request.param
+
+@pytest.fixture(params=[1.0, 2.0, 3.0])
+def amplitude(request):
+    return request.param
+
+@pytest.fixture(params=[100.0, 200.0, 300.0])
+def frequency(request):
+    return request.param
+
+
+def test_amplitude_envelope(amplitude, frequency, fs):
+    """Test amplitude envelope.
+    """
+    duration = 5.0
+    samples = int(fs*duration)
+    t = np.arange(samples) / fs
     
+    signal = amplitude * np.sin(2.0*np.pi*frequency*t)
     
+    out = amplitude_envelope(signal, fs)
+    # Rounding is necessary. We take the first element because occasionally
+    # there is also a zero.
+    amplitude_determined = np.unique(np.round(out), 6)[0]
     
+    assert( amplitude == amplitude_determined )  
     
 #if __name__ == '__main__':
     #unittest.main()
+
+#def test_instantaneous_frequency(amplitude, frequency, fs):
+
+    #duration = 5.0
+    #samples = int(fs*duration)
+    #t = np.arange(samples) / fs
+    
+    #signal = amplitude * np.sin(2.0*np.pi*frequency*t)
+    
+    #out = instantaneous_frequency(signal, fs)
+    ## Rounding is necessary. We take the first element because occasionally
+    ## there is also a zero.
+    #frequency_determined = np.unique(np.round(out), 0)
+    
+    #assert( frequency == frequency_determined )  

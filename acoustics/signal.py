@@ -994,3 +994,28 @@ def zero_crossings(data):
     pos = data > 0
     npos = ~pos
     return ((pos[:-1] & npos[1:]) | (npos[:-1] & pos[1:])).nonzero()[0]
+
+
+def amplitude_envelope(signal, fs):
+    """Instantaneous amplitude of tone.
+    
+    .. seealso:: :func:`scipy.signal.hilbert`
+    
+    """
+    return np.abs(hilbert(signal))
+
+def instantaneous_phase(signal, fs):
+    """Instantaneous phase of tone.
+    
+    .. seealso:: :func:`scipy.signal.hilbert`
+    
+    """
+    return np.angle(hilbert(signal))
+
+def instantaneous_frequency(signal, fs):
+    """Determine instantaneous frequency of tone.
+    
+    .. seealso:: :func:`instantaneous_phase`
+    
+    """
+    return np.gradient( instantaneous_phase(signal, fs)) / (2.0*np.pi) * fs
