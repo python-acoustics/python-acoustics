@@ -72,6 +72,7 @@ import acoustics.octave
 #from acoustics.octave import REFERENCE
 
 import acoustics.bands
+from scipy.signal import hilbert
 
 
 try:
