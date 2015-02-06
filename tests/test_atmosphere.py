@@ -63,7 +63,7 @@ class TestAtmosphere:
         # Attenuation per frequency for given distance
         attenuation = a.attenuation_coefficient(freq) * distance
         
-        ir = a.ir_attenuation_coefficient(d=distance, N=samples)
+        ir = a.ir_attenuation_coefficient(distances=distance, N=samples)
         
         assert(len(ir)==samples) 
         

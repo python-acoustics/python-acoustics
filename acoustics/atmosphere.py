@@ -191,7 +191,7 @@ class Atmosphere(object):
 
         return ir   # Note that the reduction is a factor two too much! Too much energy loss now that we use a double-sided spectrum.
     
-    def plot_ir_attenuation_coefficient(self, fs, N, d, filename=None):
+    def plot_ir_attenuation_coefficient(self, distances, fs=44100., n_blocks=2048):
         """
         Plot the impulse response of the attenuation due to atmospheric absorption.
         The impulse response is calculated using :meth:`ir_attenuation_coefficient`.
@@ -202,27 +202,20 @@ class Atmosphere(object):
         :param d: Distance
         
         """
-        fig = plt.figure()
+        ir = self.ir_attenuation_coefficient(distances, fs, n_blocks)
         
+        fig = plt.figure()
         ax0 = fig.add_subplot(111)
         ax0.set_title('Impulse response atmospheric attenuation')
-        
-        ir = self.ir_attenuation_coefficient(fs, N, d)
-        
         xsignal = np.arange(0.0, len(ir)) / fs
         ax0.plot(xsignal, ir)
         ax0.set_xlabel(r'$t$ in s')
         ax0.set_ylabel(r'Some')
         ax0.set_yscale('log')
         ax0.grid()
-        
-        if filename:
-            fig.savefig(filename)
-        else:
-            fig.show()
+        return fig
     
-    
-    
+            
     def plot_attenuation_coefficient(self, frequency):
         """
         Plot the attenuation coefficient :math:`\\alpha` as function of frequency and write the figure to ``filename``.
