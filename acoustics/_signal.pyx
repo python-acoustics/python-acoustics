@@ -239,7 +239,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level`
         
         """
-        return acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level(self)
+        return np.asarray(acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level(self))
 
     
     def plot_levels(self, **kwargs):
