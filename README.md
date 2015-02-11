@@ -20,6 +20,9 @@ This way one can easily update to the latest version using
 
 `git pull`
 
+and running again
+
+`python setup.py develop`
 
 ## Examples
 
