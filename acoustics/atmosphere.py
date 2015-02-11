@@ -35,11 +35,6 @@ from __future__ import division, print_function
 import numpy as np
 import matplotlib.pyplot as plt
 
-try:
-    from pyfftw.interfaces.numpy_fft import ifft       # Performs much better than numpy's fftpack
-except ImportError:                                    # Use monkey-patching np.fft perhaps instead?
-    from numpy.fft import ifft
-
 from acoustics.standards.iso_9613_1_1993 import *
                                                 
 
@@ -140,81 +135,7 @@ class Atmosphere(object):
         :param frequency: Frequencies to be considered.
         """
         return attenuation_coefficient(self.pressure, self.temperature, self.reference_pressure, self.reference_temperature, self.relaxation_frequency_nitrogen, self.relaxation_frequency_oxygen, frequency)
-        
-        
-    #def ir_attenuation_coefficient(self, distances, fs=44100.0, n_blocks=2048, sign=-1):
-        #"""
-        #Calculate the impulse response due to air absorption.
-        
-        #:param fs: Sample frequency
-        #:param distances: Distances
-        #:param blocks: Blocks
-        #:param sign: Multiply (+1) or divide (-1) by transfer function. Multiplication is used for applying the absorption while -1 is used for undoing the absorption.
-        #""" 
-        #distances = np.atleast_1d(distances)
-
-        #f = np.fft.rfftfreq(n_blocks, 1./fs)
-
-        #tf = np.zeros((len(distances), len(f)), dtype='float64')                          # Transfer function needs to be complex, and same size.
-        #tf += 10.0**( float(sign) * distances.reshape((-1,1)) * self.attenuation_coefficient(f) / 20.0  )  # Calculate the actual transfer function.
-
-        #ir = np.fft.ifftshift( np.fft.irfft(tf, n=n_blocks) )
-        #print(ir.shape)
-        #return ir.real.T / 2.0   
-    
-    
-    def ir_attenuation_coefficient(self, distances, fs=44100., n_blocks=2048, sign=-1):
-        """
-        Calculate the impulse response due to air absorption.
-        
-        :param fs: Sample frequency
-        :param distances: Distances
-        :param N: Blocks
-        :param sign: Multiply (+1) or divide (-1) by transfer function. Multiplication is used for applying the absorption while -1 is used for undoing the absorption.
-        """ 
-        distances = np.atleast_1d(distances)
-        
-        f = np.fft.rfftfreq(n_blocks, 1./fs)
-        
-        # Transfer function needs to be complex, and same size. Complex?? Mehh
-        tf = np.zeros((len(distances), len(f)), dtype='float64')
-        # Calculate the actual transfer function.    
-        tf += 10.0**( float(sign) * distances.reshape((-1,1)) * self.attenuation_coefficient(f) / 20.0  )
-        # Positive frequencies first, and then mirrored the conjugate negative frequencies.
-        tf = np.hstack( (tf, np.conj(tf[::-1, :]))) 
-
-        # Obtain the impulse response through the IFFT.
-        ir = ifft( tf , n=n_blocks)     
-        ir = np.hstack((ir[:, n_blocks/2:n_blocks], ir[:, 0:n_blocks/2]))
-        
-        ir = np.real(ir).T
-
-        return ir   # Note that the reduction is a factor two too much! Too much energy loss now that we use a double-sided spectrum.
-    
-    def plot_ir_attenuation_coefficient(self, distances, fs=44100., n_blocks=2048):
-        """
-        Plot the impulse response of the attenuation due to atmospheric absorption.
-        The impulse response is calculated using :meth:`ir_attenuation_coefficient`.
-        
-        :param filename: Filename
-        :param fs: Sample frequency
-        :param N: Blocks
-        :param d: Distance
-        
-        """
-        ir = self.ir_attenuation_coefficient(distances, fs, n_blocks)
-        
-        fig = plt.figure()
-        ax0 = fig.add_subplot(111)
-        ax0.set_title('Impulse response atmospheric attenuation')
-        xsignal = np.arange(0.0, len(ir)) / fs
-        ax0.plot(xsignal, ir)
-        ax0.set_xlabel(r'$t$ in s')
-        ax0.set_ylabel(r'Some')
-        ax0.set_yscale('log')
-        ax0.grid()
-        return fig
-    
+            
             
     def plot_attenuation_coefficient(self, frequency):
         """
@@ -228,13 +149,11 @@ class Atmosphere(object):
         """
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
-        
         ax0.plot(frequency, self.attenuation_coefficient(frequency)*1000.0)
         ax0.set_xscale('log')
         ax0.set_yscale('log')
         ax0.set_xlabel(r'$f$ in Hz')
         ax0.set_ylabel(r'$\alpha$ in dB/km')
-        
         ax0.legend()
         ax0.grid()
         

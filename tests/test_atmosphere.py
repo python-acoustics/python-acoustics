@@ -41,38 +41,5 @@ class TestAtmosphere:
             calculated_alpha = a.attenuation_coefficient(f)
             
             np.testing.assert_array_almost_equal(alpha, calculated_alpha, decimal=2)
-    
-    
-    def test_ir_attenuation_coefficient(self):
-        
-        from scipy.signal import fftconvolve
-        from acoustics.generator import white
-        from acoustics.signal import OctaveBand
-        
-        fs = 22050.0
-        duration = 5.0
-        samples = int(fs*duration)
-        distance = 1000.0
-        
-        
-        ob = OctaveBand(fstart=20.0, fstop=10000)
-        freq = ob.center
-        
-        a = Atmosphere()
-        
-        # Attenuation per frequency for given distance
-        attenuation = a.attenuation_coefficient(freq) * distance
-        
-        ir = a.ir_attenuation_coefficient(distances=distance, N=samples)
-        
-        assert(len(ir)==samples) 
-        
-        #print(ir.shape)
-        
-        #assert(True==False)
-        
-        #signal = white(samples)
-        #ir = np.squeeze(ir)
-        #out = fftconvolve(signal, ir)
-        
+            
         
