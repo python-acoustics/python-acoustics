@@ -126,6 +126,42 @@ class Signal(numpy.ndarray):
         """
         return power_spectrum(self, self.fs)
     
+    def peak(self):
+        """Peak sound pressure.
+        
+        .. seealso:: :func:`acoustic.standards.iso_tr_25417_2007.peak_sound_pressure`
+        
+        """
+        return acoustics.standards.iso_tr_25417_2007.peak_sound_pressure(self)
+    
+    
+    def peak_level(self):
+        """Peak sound pressure level.
+        
+        .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.peak_sound_pressure_level`
+        
+        """
+        return acoustics.standards.iso_tr_25417_2007.peak_sound_pressure_level(self.peak())
+            
+    
+    def sound_exposure(self):
+        """Sound exposure.
+        
+        .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.sound_exposure`
+        
+        """
+        return acoustics.standards.iso_tr_25417_2007.sound_exposure(self)
+    
+    
+    def sound_exposure_level(self):
+        """Sound exposure level.
+        
+        .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.sound_exposure_level`
+        
+        """
+        return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self.sound_exposure)
+        
+    
     def plot_spectrum(self, **kwargs):#filename=None, scale='log'):
         """Plot spectrum of signal.
         
