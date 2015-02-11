@@ -171,7 +171,9 @@ def noise_generator(N=44100, color='white'):
     Generate `N` amount of unique samples and cycle over these samples.
     
     """
-    yield from itertools.cycle(noise(N, color))
+    #yield from itertools.cycle(noise(N, color)) # Python 3.3
+    for sample in itertools.cycle(noise(N, color)):
+        yield sample
     
 
 def heaviside(N):
