@@ -12,8 +12,9 @@ the principal aim of harmonizing the terminology used [ISO25417]_.
 .. inheritance-diagram:: acoustics.standards.iso_tr_25417_2007
 
 """
+import numpy as np
 
-REFERENCE_PRESSURE = 20.0e-6
+REFERENCE_PRESSURE = 2.0e-5
 """
 Reference value of the sound pressure :math:`p_0` is :math:`2 \cdot 10^{-5}` Pa.
 """
@@ -31,7 +32,7 @@ def sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE):
     return 10.0 * np.log10( pressure**2.0 / reference_pressure**2.0 )
 
 
-def equivalent_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE, axis=1):
+def equivalent_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE, axis=-1):
     """
     Time-averaged sound pressure level :math:`L_{p,T}` or equivalent-continious sound pressure level :math:`L_{p,eqT}` in dB.
     
@@ -45,7 +46,7 @@ def equivalent_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESS
     return 10.0 * np.log10( (pressure**2.0).mean(axis=axis) / reference_pressure**2.0)
 
 
-def peak_sound_pressure(pressure, axis=1):
+def peak_sound_pressure(pressure, axis=-1):
     """
     Peak sound pressure :math:`p_{peak}` is the greatest absolute sound pressure during a certain time interval.
     
@@ -76,7 +77,7 @@ REFERENCE_SOUND_EXPOSURE = 4.0e-12
 Reference value of the sound exposure :math:`E_0` is :math:`4 \cdot 10^{-12} \\mathrm{Pa}^2\\mathrm{s}`.
 """
 
-def sound_exposure(pressure, axis=1):
+def sound_exposure(pressure, axis=-1):
     """
     Sound exposure :math:`E_{T}`.
     
@@ -119,7 +120,7 @@ def sound_power_level(power, reference_power=REFERENCE_POWER):
     return 10.0 * np.log10(power/reference_power)
 
 
-def sound_energy(power, axis=1):
+def sound_energy(power, axis=-1):
     """
     Sound energy :math:`J`..
     
@@ -165,7 +166,7 @@ REFERENCE_INTENSITY = 1.0e-12
 Reference value of the sound intensity :math:`I_0` is :math:`\\mathrm{1 pW/m^2}`.
 """
 
-def time_averaged_sound_intensity(intensity, axis=1):
+def time_averaged_sound_intensity(intensity, axis=-1):
     """
     Time-averaged sound intensity :math:`\\mathbf{I}_T`.
     
@@ -178,7 +179,7 @@ def time_averaged_sound_intensity(intensity, axis=1):
     return intensity.mean(axis=axis)
 
 
-def time_averaged_sound_intensity_level(time_averaged_sound_intensity, reference_intensity=REFERENCE_INTENSITY, axis=0):
+def time_averaged_sound_intensity_level(time_averaged_sound_intensity, reference_intensity=REFERENCE_INTENSITY, axis=-1):
     """
     Time-averaged sound intensity level :math:`L_{I,T}`.
     
