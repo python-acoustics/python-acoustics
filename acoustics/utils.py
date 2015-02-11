@@ -20,7 +20,7 @@ def esum(levels, axis=None):
     .. math:: L = 10 \\log_{10} \\left( \sum_{i=0}^N 10^{L_i/10}   \\right)
     
     """
-    levels = np.array(levels)
+    levels = np.asarray(levels)
     return np.squeeze( 10.0 * np.log10((10.0**(levels/10.0)).sum(axis=axis)) )
 
 def mean_tl(tl, surfaces):
