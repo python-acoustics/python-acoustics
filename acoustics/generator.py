@@ -162,57 +162,16 @@ noise_generators = {
     }
 
 
-def noise_frequency_dependent(N, frequencies, gains):
-    """Frequency-dependent noise signal.
+def noise_generator(N=44100, color='white'):
+    """Noise generator. 
+
+    :param N: Amount of unique samples to generate.
+    :param color: Color of noise.
+     
+    Generate `N` amount of unique samples and cycle over these samples.
     
-    :param N: Amount of samples.
-    :param frequencies: Normalized frequencies.
-    :param gains: Gains.
-    :param gains: Gain for given frequency.
-    :type gains: List of tuples or 2xN array. The first item in the 
-
-
-
-#def sawtooth(f, fs, width=1):
-    #"""
-    #Sawtooth. Return f sawteeth per second.
-    
-    
-    #"""
-    #t = np.arange()
-
-#def white_generator(N=44100):
-    #"""
-    #White noise generator. Repeat every ``N`` samples.
-    #"""
-    #return itertools.cycle(white(N))
-
-#def pink_generator(N=44100):
-    #"""
-    #Pink noise generator. Repeat every ``N`` samples.
-    #"""
-    #return itertools.cycle(white(N))
-
-#def brown_generator(N=44100):
-    #"""
-    #Brown noise generator. Repeat every ``N`` samples.
-    #"""
-    #return itertools.cycle(brown(N))
-
-#def generate(iterable):
-    #"""
-    #Return indefinetely long generator of iterable.
-    
-    #.. note:: :func:`itertools.cycle`
-    #"""
-    #return itertools.cycle(iterable)
-
-
-#def sawtooth_generator(f, fs=44100):
-    #"""
-    #Sawtooth generator. Repeat....
-    #"""
-    #raise NotImplementedError
+    """
+    yield from itertools.cycle(noise(N, color))
     
 
 def heaviside(N):
