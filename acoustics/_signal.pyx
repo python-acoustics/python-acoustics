@@ -179,34 +179,15 @@ class Signal(numpy.ndarray):
         params = {
             'xscale': 'log',
             'yscale': 'linear',
-            'xlim'  : None,
-            'ylim'  : None,
             'xlabel': "$f$ in Hz",
             'ylabel': "$L_{p}$ in dB",
             'title' : 'SPL',
-            'filename' : None,
             }
         params.update(kwargs)
         
-        
         f, o = self.spectrum()
-        fig = plt.figure()
-        ax0 = fig.add_subplot(111)
-        ax0.set_title('SPL')
-        #if linear:
-        ax0.plot(f, 10.0*np.log10(o.T))
-        ax0.set_xscale(params['xscale'])
-        ax0.set_yscale(params['yscale'])
-        ax0.set_ylabel(params['ylabel'])
-        ax0.set_xlabel(params['xlabel'])
-        ax0.set_xlim(params['xlim'])
-        ax0.set_ylim(params['ylim'])
-        
-        if params['filename'] is not None:
-            fig.savefig(params['filename'])
-        else:
-            return fig
-    
+        return _base_plot(f, 10.0*np.log10(o.T), params)
+
     def spectrogram(self, **kwargs):
         """
         Plot spectrograms of the signals.
@@ -263,9 +244,9 @@ class Signal(numpy.ndarray):
         
         """
         if method=='average':
-            return acoustics.standards.iec_61672_1_2013.time_averaged_sound_level(self, self.fs, time)
+            return np.asarray(acoustics.standards.iec_61672_1_2013.time_averaged_sound_level(self, self.fs, time))
         elif method=='weighting':
-            return acoustics.standards.iec_61672_1_2013.time_weighted_sound_level(self, self.fs, time)
+            return np.asarray(acoustics.standards.iec_61672_1_2013.time_weighted_sound_level(self, self.fs, time))
         else:
             raise ValueError("Invalid method")
     
@@ -277,7 +258,6 @@ class Signal(numpy.ndarray):
         """
         return np.asarray(acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level(self))
 
-    
     def plot_levels(self, **kwargs):
         """Plot sound pressure level as function of time.
         
@@ -285,36 +265,19 @@ class Signal(numpy.ndarray):
         
         """
         params = {
-            #'xscale': 'linear',
-            #'yscale': 'linear',
-            'xlim'      : None,
-            'ylim'      : None,
-            'filename'  : None,
-            'time'      : 0.125,
-            'method'    : 'average',
+            'xscale'    :   'linear',
+            'yscale'    :   'linear',
+            'xlabel'    :   '$t$ in s',
+            'ylabel'    :   '$L_{p,F}$ in dB',
+            'time'      :   0.125,
+            'method'    :   'average',
+            'labels'    :   None,
             }
         params.update(kwargs)
-        
-        
         t, L = self.levels(params['time'], params['method'])
         L_masked = np.ma.masked_where(np.isinf(L), L)
-        fig = plt.figure()
-        ax0 = fig.add_subplot(111)
-        ax0.set_title('Sound Pressure Level')
-        ax0.plot(t, L_masked.T)
-        ax0.set_xlabel(r'$t$ in s')
-        ax0.set_ylabel(r'$L_{p,F}$ in dB')
-        ax0.set_xlim(params['xlim'])
-        ax0.set_ylim(params['ylim'])
-        if self.channels > 1:
-            ax0.legend(np.arange(self.channels))
-        
-        if params['filename'] is not None:
-            fig.savefig(params['filename'])
-        else:
-            return fig
-        
-    
+        return _base_plot(t, L_masked.T, params)
+
     def octave(self, frequency, fraction=1):
         """Determine fractional-octave `fraction` at `frequency`.
         
@@ -323,17 +286,11 @@ class Signal(numpy.ndarray):
         """
         return acoustics.signal.fractional_octaves(self, self.fs, frequency, 
                                                   frequency, fraction, False)[1]
-    
-    
-    def octaves(self):#, fraction=1):
+
+    def octaves(self):
         """
         Calculate time-series of octaves.
         """
-        #if fraction==1:
-            #fob = OctaveBand(acoustics.bands.OCTAVE_CENTER_FREQUENCIES, fraction=1)
-        #elif fraction==3:
-            #fob = OctaveBand(acoustics.bands.OCTAVE_CENTER_FREQUENCIES, fraction=3)
-        #return acoustics.signal.fractional_octaves(self, self.fs
         return acoustics.signal.octaves(self, self.fs)
     
     def plot_octaves(self, **kwargs):
@@ -343,33 +300,16 @@ class Signal(numpy.ndarray):
         
         """
         params = {
-            'xscale': 'log',
-            'yscale': 'linear',
-            'xlim'  : None,
-            'ylim'  : None,
-            'filename' : None,
+            'xscale'    :   'log',
+            'yscale'    :   'linear',
+            'xlabel'    :   '$f$ in Hz',
+            'ylabel'    :   '$L_{p}$ in dB',
+            'title'     :   '1/1-Octaves SPL',
             }
         params.update(kwargs)
-        
         f, o = self.octaves()
-        fig = plt.figure()
-        ax0 = fig.add_subplot(111)
-        ax0.set_title('1/1-Octaves SPL')
-        ax0.semilogx(f.center, o.T)
-        ax0.set_ylabel(r"$L_{p}$ in dB")
-        ax0.set_xlabel(r"$f$ in Hz")
-        ax0.set_xscale(params['xscale'])
-        ax0.set_yscale(params['yscale'])
-        ax0.set_xlim(params['xlim'])
-        ax0.set_ylim(params['ylim'])
-        if self.channels > 1:
-            ax0.legend(np.arange(self.channels))
-        
-        if params['filename'] is not None:
-            fig.savefig(params['filename'])
-        else:
-            return fig
-    
+        return _base_plot(f.center, o.T, params)
+
     def third_octaves(self):
         """Calculate time-series of 1/3-octaves.
         
@@ -385,33 +325,16 @@ class Signal(numpy.ndarray):
         
         """
         params = {
-            'xscale': 'log',
-            'yscale': 'linear',
-            'xlim'  : None,
-            'ylim'  : None,
-            'filename' : None,
+            'xscale'    :   'log',
+            'yscale'    :   'linear',
+            'xlabel'    :   '$f$ in Hz',
+            'ylabel'    :   '$L_{p}$ in dB',
+            'title'     :   '1/3-Octaves SPL',
             }
         params.update(kwargs)
-        
         f, o = self.third_octaves()
-        fig = plt.figure()
-        ax0 = fig.add_subplot(111)
-        ax0.set_title('1/3-Octaves SPL')
-        ax0.semilogx(f.center, o.T)
-        ax0.set_ylabel(r"$L_{p}$ in dB")
-        ax0.set_xlabel(r"$f$ in Hz")
-        ax0.set_xscale(params['xscale'])
-        ax0.set_yscale(params['yscale'])
-        ax0.set_xlim(params['xlim'])
-        ax0.set_ylim(params['ylim'])
-        if self.channels > 1:
-            ax0.legend(np.arange(self.channels))
-        
-        if params['filename'] is not None:
-            fig.savefig(params['filename'])
-        else:
-            return fig
-    
+        return _base_plot(f.center, o.T, params)
+
     def fractional_octaves(self, fraction):
         """Fractional octaves.
         """
@@ -420,36 +343,20 @@ class Signal(numpy.ndarray):
     def plot_fractional_octaves(self, fraction, **kwargs):
         """Plot fractional octaves.
         """
+        title = '1/{}-Octaves SPL'.format(fraction)
+        
         params = {
-            'xscale': 'log',
-            'yscale': 'linear',
-            'xlim'  : None,
-            'ylim'  : None,
-            'filename' : None,
+            'xscale'    :   'log',
+            'yscale'    :   'linear',
+            'xlabel'    :   '$f$ in Hz',
+            'ylabel'    :   '$L_p$ in dB',
+            'title'     :   title,
         }
         params.update(kwargs)
-        
         f, o = self.fractional_octaves(fraction)
-        fig = plt.figure()
-        ax0 = fig.add_subplot(111)
-        ax0.set_title('1/{}-Octaves SPL'.format(fraction))
-        ax0.semilogx(f.center, o.T)
-        ax0.set_ylabel(r"$L_{p}$ in dB")
-        ax0.set_xlabel(r"$f$ in Hz")
-        ax0.set_xscale(params['xscale'])
-        ax0.set_yscale(params['yscale'])
-        ax0.set_xlim(params['xlim'])
-        ax0.set_ylim(params['ylim'])
-        if self.channels > 1:
-            ax0.legend(np.arange(self.channels))
-        
-        if params['filename'] is not None:
-            fig.savefig(params['filename'])
-        else:
-            return fig
-    
-    
-    def plot(self, filename=None, start=0, stop=None, channels=None):
+        return _base_plot(f.center, o.T, params)
+
+    def plot(self, filename=None, start=0, stop=None, channels=None, **kwargs):
         """Plot signal as function of time. By default the entire signal is plotted.
         
         :param filename: Name of file.
@@ -458,20 +365,17 @@ class Signal(numpy.ndarray):
         :param stop: Last sample index.
         :type stop: Stop time in seconds. from stop of signal.
         """
-        #start = int(start*self.fs)
-        #stop = int(stop*self.fs)
-        
-        fig = plt.figure()
-        ax0 = fig.add_subplot(111)
-        ax0.set_title('Signal')
-        ax0.plot(self.pick(start, stop))
-        ax0.set_xlabel(r'$t$ in n')
-        ax0.set_ylabel(r'$x$ in -') 
-        if filename:
-            fig.savefig(filename)
-        else:
-            return fig
-        
+        params = {
+            'xscale'    :   'linear',
+            'yscale'    :   'linear',
+            'xlabel'    :   '$t$ in s',
+            'ylabel'    :   '$x$ in -',
+            'title'     :   'Signal',
+            }
+        params.update(kwargs)
+        signal = self.pick(start, stop)
+        return _base_plot(signal.times, signal, params)
+
     #def plot_scalo(self, filename=None):
         #"""
         #Plot scalogram 
@@ -561,3 +465,38 @@ class Signal(numpy.ndarray):
         data /= np.max(np.abs(data))
         return cls(data, fs=fs)
 
+
+_base_params = {
+    'title'     :   None,
+    'xlabel'    :   None,
+    'ylabel'    :   None,
+    'xscale'    :   'linear',
+    'yscale'    :   'linear',
+    'xlim'      :   (None, None),
+    'ylim'      :   (None, None),
+    'labels'    :   None,
+    }
+
+def _base_plot(x, y, given_params):
+    
+    params = dict()
+    params.update(_base_params)
+    params.update(given_params)
+    
+    fig = plt.figure()
+    ax0 = fig.add_subplot(111)
+    ax0.set_title(params['title'])
+    ax0.plot(x, y)
+    ax0.set_xlabel(params['xlabel'])
+    ax0.set_ylabel(params['ylabel'])
+    ax0.set_xscale(params['xscale'])
+    ax0.set_yscale(params['yscale'])
+    ax0.set_xlim(params['xlim'])
+    ax0.set_ylim(params['ylim'])
+    
+    if not params['labels'] and y.ndim > 1:
+        params['labels'] = np.arange(y.shape[-2])
+    if params['labels'] is not None:
+        ax0.legend(labels=params['labels'])
+    
+    return fig
