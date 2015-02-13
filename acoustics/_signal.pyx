@@ -268,6 +268,7 @@ class Signal(numpy.ndarray):
             'yscale'    :   'linear',
             'xlabel'    :   '$t$ in s',
             'ylabel'    :   '$L_{p,F}$ in dB',
+            'title'     :   'SPL',   
             'time'      :   0.125,
             'method'    :   'average',
             'labels'    :   None,
