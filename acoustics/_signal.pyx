@@ -494,7 +494,7 @@ def _base_plot(x, y, given_params):
     ax0.set_xlim(params['xlim'])
     ax0.set_ylim(params['ylim'])
     
-    if not params['labels'] and y.ndim > 1:
+    if params['labels'] is None and y.ndim > 1:
         params['labels'] = np.arange(y.shape[-2])
     if params['labels'] is not None:
         ax0.legend(labels=params['labels'])
