@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
 import acoustics
-from .signal import power_spectrum
 
 class Signal(numpy.ndarray):
     """Container for signals.Signal
@@ -124,7 +123,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.signal.power_spectrum`
         
         """
-        return power_spectrum(self, self.fs)
+        return acoustics.signal.power_spectrum(self, self.fs)
     
     def peak(self):
         """Peak sound pressure.
