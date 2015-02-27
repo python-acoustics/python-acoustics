@@ -434,7 +434,6 @@ class Signal(numpy.ndarray):
         #fig.savefig(filename)
     
     def to_wav(self, filename, normalize=True, depth=16):
-        """
         """Save signal as WAV file.
         
         :param filename: Name of file to save to.
