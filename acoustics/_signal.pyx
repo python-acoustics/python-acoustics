@@ -435,19 +435,21 @@ class Signal(numpy.ndarray):
     
     def to_wav(self, filename, normalize=True, depth=16):
         """
-        Save signal as WAV file.
+        """Save signal as WAV file.
         
-        .. warning:: The WAV file will have 16-bit depth!
-        
-        :param filename: Filename
+        :param filename: Name of file to save to.
+        :param normalize: Normalize signal. Furthermore, the normalized signal is multiplied by 0.5 leaving a 6 dB gap till clipping occurs.
+        :param depth: If given, convert to integer with specified depth. Else, try to store using the original data type.
+
+        By default, this function saves a normalized 16-bit version of the signal with at least 6 dB range till clipping occurs.
+
         """
         data = self
         dtype = data.dtype if not depth else 'int'+str(depth)
         if normalize:
             data = data / data.max() * 0.5
-        #if depth:
-            #data = (data * 2.0**depth).astype(dtype)
-        #print(data)
+        if depth:
+            data = (data * 2**(depth-1)-1).astype(dtype)
         wavfile.write(filename, int(self.fs), data.T)
         #wavfile.write(filename, int(self.fs), self._data/np.abs(self._data).max() *  0.5)
         #wavfile.write(filename, int(self.fs), np.int16(self._data/(np.abs(self._data).max()) * 32767) )

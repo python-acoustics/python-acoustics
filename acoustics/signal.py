@@ -655,12 +655,14 @@ def phase_spectrum(x, fs, N=None):
     :param fs: Sample frequency :math:`f_s`.
     :param N: Amount of FFT bins.
     
-    This function returns the phase of a single-sided (amplitude) spectrum.
+    This function returns a single-sided phase spectrum.
     
     """
+    N = N if N else x.shape[-1]
     f, a = amplitude_spectrum(x, fs, N)
-    f = f[N//2:]
-    a = np.angle(f[N//2:])
+    a = np.angle(a)
+    a = a[..., N//2:]
+    f = f[..., N//2:]
     return f, a
 
 #def power_and_phase_spectrum(x, fs, N=None):
