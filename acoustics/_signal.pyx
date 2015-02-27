@@ -433,11 +433,28 @@ class Signal(numpy.ndarray):
         
         #fig.savefig(filename)
     
-    def to_wav(self, filename, normalize=True, depth=16):
+    def normalize(self, gap=6, inplace=False):
+        """Normalize signal.
+        
+        :param gap: Gap between maximum value and ceiling in decibel.
+        :param inplace: Normalize signal in place.
+        
+        The parameter `gap` can be understood as using `gap` decibels fewer for the dynamic range.
+        By default a 6 decibel gap is used.
+        
+        """
+        
+        if inplace:
+            self /= (self.max() * 10.0**(gap/20.0))
+            return self
+        else:
+            return self / (self.max() * 10.0**(gap/20.0))
+        
+    
+    def to_wav(self, filename, depth=16):
         """Save signal as WAV file.
         
         :param filename: Name of file to save to.
-        :param normalize: Normalize signal. Furthermore, the normalized signal is multiplied by 0.5 leaving a 6 dB gap till clipping occurs.
         :param depth: If given, convert to integer with specified depth. Else, try to store using the original data type.
 
         By default, this function saves a normalized 16-bit version of the signal with at least 6 dB range till clipping occurs.
@@ -445,8 +462,6 @@ class Signal(numpy.ndarray):
         """
         data = self
         dtype = data.dtype if not depth else 'int'+str(depth)
-        if normalize:
-            data = data / data.max() * 0.5
         if depth:
             data = (data * 2**(depth-1)-1).astype(dtype)
         wavfile.write(filename, int(self.fs), data.T)
