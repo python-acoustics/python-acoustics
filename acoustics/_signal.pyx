@@ -118,12 +118,19 @@ class Signal(numpy.ndarray):
         #return np.sqrt(self.power())
     
     def spectrum(self):
+        return self.power_spectrum()
+    
+    def power_spectrum(self, N=None):
         """Power spectrum.
         
         .. seealso:: :func:`acoustics.signal.power_spectrum`
         
         """
-        return acoustics.signal.power_spectrum(self, self.fs)
+        return acoustics.signal.power_spectrum(self, self.fs, N=N)
+    
+    def phase_spectrum(self):
+        return acoustics.signal.phase_spectrum(self, self.fs)
+    
     
     def peak(self):
         """Peak sound pressure.
@@ -161,7 +168,7 @@ class Signal(numpy.ndarray):
         return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self.sound_exposure)
         
     
-    def plot_spectrum(self, **kwargs):#filename=None, scale='log'):
+    def plot_spectrum(self, N=None, **kwargs):#filename=None, scale='log'):
         """Plot spectrum of signal.
         
         Valid kwargs:
@@ -184,8 +191,23 @@ class Signal(numpy.ndarray):
             }
         params.update(kwargs)
         
-        f, o = self.spectrum()
+        f, o = self.power_spectrum(N=N)
         return _base_plot(f, 10.0*np.log10(o.T), params)
+
+    def plot_phase_spectrum(self, **kwargs):
+        """Plot phase spectrum of signal.
+        """
+        params = {
+            'xscale': 'log',
+            'yscale': 'linear',
+            'xlabel': "$f$ in Hz",
+            'ylabel': "$\\angle \phi$",
+            'title' : 'Phase angle',
+            }
+        params.update(kwargs)
+        f, o = self.phase_spectrum()
+        return _base_plot(f, o, params)
+        
 
     def spectrogram(self, **kwargs):
         """
@@ -276,7 +298,7 @@ class Signal(numpy.ndarray):
         params.update(kwargs)
         t, L = self.levels(params['time'], params['method'])
         L_masked = np.ma.masked_where(np.isinf(L), L)
-        return _base_plot(t, L_masked.T, params)
+        return _base_plot(t, L_masked, params)
 
     def octave(self, frequency, fraction=1):
         """Determine fractional-octave `fraction` at `frequency`.
@@ -308,7 +330,7 @@ class Signal(numpy.ndarray):
             }
         params.update(kwargs)
         f, o = self.octaves()
-        return _base_plot(f.center, o.T, params)
+        return _base_plot(f.center, o, params)
 
     def third_octaves(self):
         """Calculate time-series of 1/3-octaves.
@@ -333,7 +355,7 @@ class Signal(numpy.ndarray):
             }
         params.update(kwargs)
         f, o = self.third_octaves()
-        return _base_plot(f.center, o.T, params)
+        return _base_plot(f.center, o, params)
 
     def fractional_octaves(self, fraction):
         """Fractional octaves.
@@ -354,9 +376,9 @@ class Signal(numpy.ndarray):
         }
         params.update(kwargs)
         f, o = self.fractional_octaves(fraction)
-        return _base_plot(f.center, o.T, params)
+        return _base_plot(f.center, o, params)
 
-    def plot(self, filename=None, start=0, stop=None, channels=None, **kwargs):
+    def plot(self, **kwargs):
         """Plot signal as function of time. By default the entire signal is plotted.
         
         :param filename: Name of file.
@@ -373,8 +395,7 @@ class Signal(numpy.ndarray):
             'title'     :   'Signal',
             }
         params.update(kwargs)
-        signal = self.pick(start, stop)
-        return _base_plot(signal.times, signal, params)
+        return _base_plot(self.times(), self, params)
 
     #def plot_scalo(self, filename=None):
         #"""
@@ -502,7 +523,7 @@ def _base_plot(x, y, given_params):
     fig = plt.figure()
     ax0 = fig.add_subplot(111)
     ax0.set_title(params['title'])
-    ax0.plot(x, y)
+    ax0.plot(x, y.T)
     ax0.set_xlabel(params['xlabel'])
     ax0.set_ylabel(params['ylabel'])
     ax0.set_xscale(params['xscale'])
