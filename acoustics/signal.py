@@ -897,7 +897,7 @@ class Filterbank(object):
         filtered = self.filtfilt(signal)
         return np.array([(x**2.0).sum()/len(x) / bw for x, bw in zip(filtered, self.frequencies.bandwidth)])
     
-    def plot_response(self, filename=None):
+    def plot_response(self):
         """
         Plot frequency response.
         
@@ -919,13 +919,10 @@ class Filterbank(object):
         ax1.legend(loc=5)
         ax2.legend(loc=5)
         ax1.set_ylim(-60.0, +10.0)
-        
-        if filename:
-            fig.savefig(filename)
-        else:
-            return fig
+
+        return fig
     
-    def plot_power(self, signal, filename=None):
+    def plot_power(self, signal):
         """
         Plot power in signal.
         """
@@ -940,10 +937,7 @@ class Filterbank(object):
         ax.set_ylabel('$L$ in dB re. 1')
         ax.set_xscale('log')
         
-        if filename:
-            fig.savefig(filename)
-        else:
-            return fig
+        return fig
         
         
 #class FilterbankFFT(object):
