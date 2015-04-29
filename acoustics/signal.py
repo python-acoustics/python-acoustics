@@ -897,7 +897,7 @@ class Filterbank(object):
         filtered = self.filtfilt(signal)
         return np.array([(x**2.0).sum()/len(x) / bw for x, bw in zip(filtered, self.frequencies.bandwidth)])
     
-    def plot_response(self, filename=None):
+    def plot_response(self):
         """
         Plot frequency response.
         
@@ -919,13 +919,10 @@ class Filterbank(object):
         ax1.legend(loc=5)
         ax2.legend(loc=5)
         ax1.set_ylim(-60.0, +10.0)
-        
-        if filename:
-            fig.savefig(filename)
-        else:
-            return fig
+
+        return fig
     
-    def plot_power(self, signal, filename=None):
+    def plot_power(self, signal):
         """
         Plot power in signal.
         """
@@ -940,10 +937,7 @@ class Filterbank(object):
         ax.set_ylabel('$L$ in dB re. 1')
         ax.set_xscale('log')
         
-        if filename:
-            fig.savefig(filename)
-        else:
-            return fig
+        return fig
         
         
 #class FilterbankFFT(object):
@@ -1022,3 +1016,54 @@ def instantaneous_frequency(signal, fs):
     
     """
     return np.gradient( instantaneous_phase(signal, fs)) / (2.0*np.pi) * fs
+def dbsum(levels, axis=None):
+    """Energetic sum.
+    """
+    return 10.0 * np.log10((10.0**(levels/10.0)).sum(axis=axis))
+
+
+def dbmean(levels, axis=None):
+    """Energetic average.
+    """
+    return 10.0 * np.log10((10.0**(levels/10.0)).mean(axis=axis))
+    
+
+def wvd(signal, fs, analytic=True):
+    """Wigner-Ville Distribution
+    
+    :param signal: Signal
+    :param fs: Sample frequency
+    :param analytic: Use the analytic signal, calculated using Hilbert transform.
+    
+    .. math:: W_z(n, \\omega) = 2 \\sum_k z^*[n-k]z[n+k] e^{-j\\omega 2kT}
+    
+    Includes positive and negative frequencies.
+    
+    """
+    signal = np.asarray(signal)
+    
+    N = int(len(signal)+len(signal)%2)
+    length_FFT = N # Take an even value of N
+    
+    if N != len(signal):
+        signal = np.concatenate(signal, [0])
+    
+    length_time = len(signal)
+
+    if analytic:
+        signal = hilbert(signal)
+    s = np.concatenate((np.zeros(length_time), signal, np.zeros(length_time)))
+    W = np.zeros((length_FFT,length_time))
+    tau = np.arange(0, N//2)
+    
+    R = np.zeros((N, length_time), dtype='float64')
+
+    i = length_time
+    for t in range(length_time):
+        R[t, tau1] = ( s[i+tau] * s[i-tau].conj() ) # In one direction
+        R[t, N-(tau+1)] = R[t, tau+1].conj() # And the other direction
+        i += 1
+    W = np.fft.fft(R, length_FFT) / (2*length_FFT)
+
+    f = np.fft.fftfreq(N, 1./fs)
+    return f, W.T

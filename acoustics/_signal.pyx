@@ -116,10 +116,7 @@ class Signal(numpy.ndarray):
         """
         return acoustics.signal.rms(self)
         #return np.sqrt(self.power())
-    
-    def spectrum(self):
-        return self.power_spectrum()
-    
+        
     def power_spectrum(self, N=None):
         """Power spectrum.
         
@@ -129,6 +126,11 @@ class Signal(numpy.ndarray):
         return acoustics.signal.power_spectrum(self, self.fs, N=N)
     
     def phase_spectrum(self):
+        """Phase spectrum.
+        
+        .. seealso:: :func:`acoustics.signal.phase_spectrum`
+        
+        """
         return acoustics.signal.phase_spectrum(self, self.fs)
     
     
@@ -167,19 +169,18 @@ class Signal(numpy.ndarray):
         """
         return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self.sound_exposure)
         
-    
-    def plot_spectrum(self, N=None, **kwargs):#filename=None, scale='log'):
+    def plot_power_spectrum(self, N=None, **kwargs):#filename=None, scale='log'):
         """Plot spectrum of signal.
         
         Valid kwargs:
         
-        - xscale
-        - yscale
-        - xlim
-        - ylim
-        - filename
+        * xscale
+        * yscale
+        * xlim
+        * ylim
+        * filename
         
-        .. seealso:: :meth:`spectrum`
+        .. seealso:: :meth:`power_spectrum`
         
         """
         params = {
@@ -192,9 +193,9 @@ class Signal(numpy.ndarray):
         params.update(kwargs)
         
         f, o = self.power_spectrum(N=N)
-        return _base_plot(f, 10.0*np.log10(o.T), params)
+        return _base_plot(f, 10.0*np.log10(o), params)
 
-    def plot_phase_spectrum(self, **kwargs):
+    def plot_phase_spectrum(self, N=None, **kwargs):
         """Plot phase spectrum of signal.
         """
         params = {
@@ -205,7 +206,7 @@ class Signal(numpy.ndarray):
             'title' : 'Phase angle',
             }
         params.update(kwargs)
-        f, o = self.phase_spectrum()
+        f, o = self.phase_spectrum(N=N)
         return _base_plot(f, o, params)
         
 
@@ -215,17 +216,15 @@ class Signal(numpy.ndarray):
         
         Valid kwargs:
         
-        - xlim
-        - ylim
-        - clim
-        - filename
+        * xlim
+        * ylim
+        * clim
         
         """
         params = {
             'xlim' : None,
             'ylim' : None,
             'clim' : None,
-            'filename' : None,
             }
         params.update(kwargs)
         
@@ -247,10 +246,7 @@ class Signal(numpy.ndarray):
         ax0.set_xlabel(r'$t$ in s')
         ax0.set_ylabel(r'$f$ in Hz')
         
-        if params['filename'] is not None:
-            fig.savefig(params['filename'])
-        else:
-            return fig
+        return fig
     
     
     def levels(self, time=0.125, method='average'):

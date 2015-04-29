@@ -5,7 +5,7 @@ Acoustics
 The acoustics module...
 
 """
-
+import acoustics.ambisonics
 import acoustics.utils
 import acoustics.octave
 import acoustics.doppler
