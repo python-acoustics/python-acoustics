@@ -10,6 +10,7 @@ is limited to areas where people reside and to related long-term land uses.
 
 
 """
+import numpy as np
 
 def composite_rating_level(levels, hours, adjustment):
     """Composite rating level.
