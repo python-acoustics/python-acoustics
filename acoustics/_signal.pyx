@@ -126,6 +126,11 @@ class Signal(numpy.ndarray):
         return acoustics.signal.power_spectrum(self, self.fs, N=N)
     
     def phase_spectrum(self):
+        """Phase spectrum.
+        
+        .. seealso:: :func:`acoustics.signal.phase_spectrum`
+        
+        """
         return acoustics.signal.phase_spectrum(self, self.fs)
     
     
@@ -190,7 +195,7 @@ class Signal(numpy.ndarray):
         f, o = self.power_spectrum(N=N)
         return _base_plot(f, 10.0*np.log10(o), params)
 
-    def plot_phase_spectrum(self, **kwargs):
+    def plot_phase_spectrum(self, N=None, **kwargs):
         """Plot phase spectrum of signal.
         """
         params = {
@@ -201,7 +206,7 @@ class Signal(numpy.ndarray):
             'title' : 'Phase angle',
             }
         params.update(kwargs)
-        f, o = self.phase_spectrum()
+        f, o = self.phase_spectrum(N=N)
         return _base_plot(f, o, params)
         
 
