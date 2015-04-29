@@ -103,35 +103,37 @@ def lw(W, Wref=1.0e-12):
     return 10.0 * np.log10(W/Wref)
 
 
-def lden(lday, levening, lnight):
+def lden(lday, levening, lnight, hours=(12.0, 4.0, 8.0), adjustment=(0.0, 5.0, 10.0)):
     """
     Calculate :math:`L_{den}` from :math:`L_{day}`, :math:`L_{evening}` and :math:`L_{night}`.
     
     :param lday: Equivalent level during day period :math:`L_{day}`.
     :param levening: Equivalent level during evening period :math:`L_{evening}`.
     :param lnight: Equivalent level during night period :math:`L_{night}`.
+    :param hours: Hours per period.
+    :param adjustment: Correction factor per period.
     :returns: :math:`L_{den}`
+    
+    .. seealso:: :func:`acoustics.standards.iso_1996_1_2003.composite_rating_level`
     """
     lday = np.asarray(lday)
     levening = np.asarray(levening)
     lnight = np.asarray(lnight)
-    day = 12.0 * 10.0**(lday/10.0)
-    evening = 4.0 * 10.0**((levening+5.0) / 10.0)
-    night = 8.0 * 10.0**((lnight+10.0) / 10.0)
-    return 10.0 * np.log10((day + evening + night) / 24.0)
+    return composite_rating_level(np.vstack(lday, levening, lnight).T, hours, adjustment)
 
 
-def ldn(lday, lnight):
+def ldn(lday, lnight, hours=(15.0, 9.0), adjustment=(0.0, 10.0)):
     """
     Calculate :math:`L_{dn}` from :math:`L_{day}` and :math:`L_{night}`.
     
     :param lday: Equivalent level during day period :math:`L_{day}`.
     :param lnight: Equivalent level during night period :math:`L_{night}`.
+    :param hours: Hours per period.
+    :param adjustment: Correction factor per period.
     :returns: :math:`L_{dn}`
     
+    .. seealso:: :func:`acoustics.standards.iso_1996_1_2003.composite_rating_level`
     """
     lday = np.asarray(lday)
     lnight = np.asarray(lnight)
-    day = 15.0 * 10.0**(lday/10.0)
-    night = 9.0 * 10.0**((lnight+10.0) / 10.0)
-    return 10.0 * np.log10((day + night) / 24.0)
+    return composite_rating_level(np.vstack(lday, lnight).T, hours, adjustment)
