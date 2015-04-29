@@ -1027,3 +1027,43 @@ def dbmean(levels, axis=None):
     """
     return 10.0 * np.log10((10.0**(levels/10.0)).mean(axis=axis))
     
+
+def wvd(signal, fs, analytic=True):
+    """Wigner-Ville Distribution
+    
+    :param signal: Signal
+    :param fs: Sample frequency
+    :param analytic: Use the analytic signal, calculated using Hilbert transform.
+    
+    .. math:: W_z(n, \\omega) = 2 \\sum_k z^*[n-k]z[n+k] e^{-j\\omega 2kT}
+    
+    Includes positive and negative frequencies.
+    
+    """
+    signal = np.asarray(signal)
+    
+    N = int(len(signal)+len(signal)%2)
+    length_FFT = N # Take an even value of N
+    
+    if N != len(signal):
+        signal = np.concatenate(signal, [0])
+    
+    length_time = len(signal)
+
+    if analytic:
+        signal = hilbert(signal)
+    s = np.concatenate((np.zeros(length_time), signal, np.zeros(length_time)))
+    W = np.zeros((length_FFT,length_time))
+    tau = np.arange(0, N//2)
+    
+    R = np.zeros((N, length_time), dtype='float64')
+
+    i = length_time
+    for t in range(length_time):
+        R[t, tau1] = ( s[i+tau] * s[i-tau].conj() ) # In one direction
+        R[t, N-(tau+1)] = R[t, tau+1].conj() # And the other direction
+        i += 1
+    W = np.fft.fft(R, length_FFT) / (2*length_FFT)
+
+    f = np.fft.fftfreq(N, 1./fs)
+    return f, W.T
