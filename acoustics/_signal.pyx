@@ -215,17 +215,15 @@ class Signal(numpy.ndarray):
         
         Valid kwargs:
         
-        - xlim
-        - ylim
-        - clim
-        - filename
+        * xlim
+        * ylim
+        * clim
         
         """
         params = {
             'xlim' : None,
             'ylim' : None,
             'clim' : None,
-            'filename' : None,
             }
         params.update(kwargs)
         
