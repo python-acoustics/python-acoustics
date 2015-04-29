@@ -64,6 +64,8 @@ from acoustics.standards.iso_tr_25417_2007 import (REFERENCE_PRESSURE,
                                                    )
 
 
+from acoustics.standards.iso_1996_1_2003 import composite_rating_level
+
 def _leq(levels, time):
     levels = np.asarray(levels)
     return 10.0 * np.log10((1.0/time) * np.sum(10.0**(levels/10.0)))
@@ -119,7 +121,7 @@ def lden(lday, levening, lnight, hours=(12.0, 4.0, 8.0), adjustment=(0.0, 5.0, 1
     lday = np.asarray(lday)
     levening = np.asarray(levening)
     lnight = np.asarray(lnight)
-    return composite_rating_level(np.vstack(lday, levening, lnight).T, hours, adjustment)
+    return composite_rating_level(np.vstack((lday, levening, lnight)).T, hours, adjustment)
 
 
 def ldn(lday, lnight, hours=(15.0, 9.0), adjustment=(0.0, 10.0)):
@@ -136,4 +138,4 @@ def ldn(lday, lnight, hours=(15.0, 9.0), adjustment=(0.0, 10.0)):
     """
     lday = np.asarray(lday)
     lnight = np.asarray(lnight)
-    return composite_rating_level(np.vstack(lday, lnight).T, hours, adjustment)
+    return composite_rating_level(np.vstack((lday, lnight)).T, hours, adjustment)
