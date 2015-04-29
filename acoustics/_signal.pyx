@@ -192,7 +192,7 @@ class Signal(numpy.ndarray):
         params.update(kwargs)
         
         f, o = self.power_spectrum(N=N)
-        return _base_plot(f, 10.0*np.log10(o.T), params)
+        return _base_plot(f, 10.0*np.log10(o), params)
 
     def plot_phase_spectrum(self, **kwargs):
         """Plot phase spectrum of signal.
