@@ -247,10 +247,7 @@ class Signal(numpy.ndarray):
         ax0.set_xlabel(r'$t$ in s')
         ax0.set_ylabel(r'$f$ in Hz')
         
-        if params['filename'] is not None:
-            fig.savefig(params['filename'])
-        else:
-            return fig
+        return fig
     
     
     def levels(self, time=0.125, method='average'):
