@@ -116,10 +116,7 @@ class Signal(numpy.ndarray):
         """
         return acoustics.signal.rms(self)
         #return np.sqrt(self.power())
-    
-    def spectrum(self):
-        return self.power_spectrum()
-    
+        
     def power_spectrum(self, N=None):
         """Power spectrum.
         
@@ -167,19 +164,18 @@ class Signal(numpy.ndarray):
         """
         return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self.sound_exposure)
         
-    
-    def plot_spectrum(self, N=None, **kwargs):#filename=None, scale='log'):
+    def plot_power_spectrum(self, N=None, **kwargs):#filename=None, scale='log'):
         """Plot spectrum of signal.
         
         Valid kwargs:
         
-        - xscale
-        - yscale
-        - xlim
-        - ylim
-        - filename
+        * xscale
+        * yscale
+        * xlim
+        * ylim
+        * filename
         
-        .. seealso:: :meth:`spectrum`
+        .. seealso:: :meth:`power_spectrum`
         
         """
         params = {
