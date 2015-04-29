@@ -21,9 +21,9 @@ class TestSignal():
     def signal(self, request):
         return Signal(np.random.randn(request.param[0], request.param[1]), request.param[2])
     
-    def test_spectrum(self, signal):
+    def test_power_spectrum(self, signal):
         
-        freq, power = signal.spectrum()
+        freq, power = signal.power_spectrum()
     
     
     def test_octaves(self, signal):
@@ -100,8 +100,8 @@ class TestSignal():
         signal.plot_fractional_octaves(6)
         signal.plot_fractional_octaves(9)
     
-    def plot_spectrum(self, signal):
-        signal.plot_spectrum()
+    def plot_power_spectrum(self, signal):
+        signal.plot_power_spectrum()
     
     def test_spectrogram(self, signal):
         if signal.channels > 1:
