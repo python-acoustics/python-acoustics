@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from scipy.io import wavfile
 import acoustics
 
+from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
+
 class Signal(numpy.ndarray):
     """Container for signals.Signal
     
@@ -178,7 +180,7 @@ class Signal(numpy.ndarray):
         * yscale
         * xlim
         * ylim
-        * filename
+        * reference: Reference power
         
         .. seealso:: :meth:`power_spectrum`
         
@@ -189,11 +191,12 @@ class Signal(numpy.ndarray):
             'xlabel': "$f$ in Hz",
             'ylabel': "$L_{p}$ in dB",
             'title' : 'SPL',
+            'reference' : REFERENCE_PRESSURE**2.0,
             }
         params.update(kwargs)
         
         f, o = self.power_spectrum(N=N)
-        return _base_plot(f, 10.0*np.log10(o), params)
+        return _base_plot(f, 10.0*np.log10(o/params['reference']), params)
 
     def plot_phase_spectrum(self, N=None, **kwargs):
         """Plot phase spectrum of signal.
