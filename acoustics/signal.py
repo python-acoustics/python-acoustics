@@ -423,13 +423,13 @@ class EqualBand(Frequencies):
                 raise ValueError("Given center frequencies are not equally spaced.")
             fstart = center[0] #- bandwidth/2.0
             fstop = center[-1] #+ bandwidth/2.0
-        elif fstart and fstop and nbands:
+        elif fstart is not None and fstop is not None and nbands:
             bandwidth = (fstop - fstart) / (nbands-1)
-        elif fstart and fstop and bandwidth:
+        elif fstart is not None and fstop is not None and bandwidth:
             nbands = round((fstop - fstart) / bandwidth) + 1
-        elif fstart and bandwidth and nbands:
+        elif fstart is not None and bandwidth and nbands:
             fstop = fstart + nbands * bandwidth
-        elif fstop and bandwidth and nbands:
+        elif fstop is not None and bandwidth and nbands:
             fstart = fstop - (nbands-1) * bandwidth
         else:
             raise ValueError("Insufficient parameters. Cannot determine fstart, fstop, bandwidth.")
@@ -462,16 +462,16 @@ class OctaveBand(Frequencies):
             fstart = center[0]
             fstop = center[-1]
         
-        if fstart and fstop:
+        if fstart is not None and fstop is not None:
             o = acoustics.octave.Octave(fraction=fraction, fmin=fstart, fmax=fstop, reference=reference)
             center = o.center
             nbands = len(center)
         
-        if fstart and nbands:
+        if fstart is not None and nbands is not None:
             nstart = acoustics.octave.band_of_frequency(fstart, fraction=fraction, ref=reference)
             nstop = nstart + nbands-1
             fstop = acoustics.octave.frequency_of_band(nstop, fraction=fraction, ref=reference)
-        elif fstop and nbands:
+        elif fstop is not None and nbands is not None:
             nstop = acoustics.octave.band_of_frequency(fstop, fraction=fraction, ref=reference)
             nstart = nstop - nbands+1
             fstart = acoustics.octave.band_of_frequency(nstart, fraction=fraction, ref=reference)
