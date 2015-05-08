@@ -1016,16 +1016,8 @@ def instantaneous_frequency(signal, fs):
     
     """
     return np.gradient( instantaneous_phase(signal, fs)) / (2.0*np.pi) * fs
-def dbsum(levels, axis=None):
-    """Energetic sum.
-    """
-    return 10.0 * np.log10((10.0**(levels/10.0)).sum(axis=axis))
 
 
-def dbmean(levels, axis=None):
-    """Energetic average.
-    """
-    return 10.0 * np.log10((10.0**(levels/10.0)).mean(axis=axis))
     
 
 def wvd(signal, fs, analytic=True):
