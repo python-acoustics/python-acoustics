@@ -11,7 +11,7 @@ from __future__ import division
 
 import numpy as np
 
-from acoustics.utils import esum
+from acoustics.decibel import dbsum
 
 OCTAVE_CENTER_FREQUENCIES = np.array([16, 31.5, 63, 125, 250, 500,
                              1000, 2000, 4000, 8000, 16000])
@@ -121,7 +121,7 @@ def third2oct(levels, axis=None):
     shape[axis] = shape[axis] // 3
     shape.insert(axis+1, 3)
     levels = np.reshape(levels, shape)
-    return esum(levels, axis=axis+1)
+    return dbsum(levels, axis=axis+1)
 
 def _check_band_type(freqs):
     """Check if an array contains octave or third octave bands values sorted
