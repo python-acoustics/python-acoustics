@@ -14,7 +14,7 @@ def dbsum(levels, axis=None):
     :param levels: Sequence of levels.
     :param axis: Axis over which to perform the operation.
     
-    .. math:: 10 \\log_{10}{\\sum_i^n{10^{L/10}}}
+    .. math:: L_{sum} = 10 \\log_{10}{\\sum_{i=0}^n{10^{L/10}}}
     
     """
     levels = np.asanyarray(levels)
@@ -27,7 +27,7 @@ def dbmean(levels, axis=None):
     :param levels: Sequence of levels.
     :param axis: Axis over which to perform the operation.
     
-    .. math:: 10 \\log_{10}{\\frac{1}{n}\\sum_i^n{10^{L/10}}}
+    .. math:: L_{mean} = 10 \\log_{10}{\\frac{1}{n}\\sum_{i=0}^n{10^{L/10}}}
     
     """
     levels = np.asanyarray(levels)
@@ -40,7 +40,7 @@ def dbadd(a, b):
     :param a: Single level or sequence of levels.
     :param b: Single level or sequence of levels.
     
-    .. math:: 10 \\log_{10}{10^{L_b/10}+10^{L_a/10}}
+    .. math:: L_{a+b} = 10 \\log_{10}{10^{L_b/10}+10^{L_a/10}}
     
     Energetically adds b to a.
     """
@@ -55,7 +55,7 @@ def dbsub(a, b):
     :param a: Single level or sequence of levels.
     :param b: Single level or sequence of levels.
     
-    .. math:: 10 \\log_{10}{10^{L_b/10}-10^{L_a/10}}
+    .. math:: L_{a-b} = 10 \\log_{10}{10^{L_a/10}-10^{L_b/10}}
     
     Energitally subtract b from a.
     """
