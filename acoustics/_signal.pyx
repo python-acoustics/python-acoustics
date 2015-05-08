@@ -228,6 +228,8 @@ class Signal(numpy.ndarray):
             'xlim' : None,
             'ylim' : None,
             'clim' : None,
+            'NFFT' : 4096,
+            'noverlap' : 128,
             }
         params.update(kwargs)
         
