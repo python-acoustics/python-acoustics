@@ -94,12 +94,16 @@ class Atmosphere(object):
         """
     
     def __repr__(self):
-        return "Atmosphere({})".format(self.__str__())
+        return "Atmosphere{}".format(self.__str__())
     
     def __str__(self):
-        return str((self.temperature, self.pressure, self.relative_humidity, 
-                    self.reference_temperature, self.reference_pressure, 
-                    self.triple_temperature))
+        return "(temperature={}, pressure={}, relative_humidity={}, " \
+               "reference_temperature={}, reference_pressure={}, " \
+               "triple_temperature={})".format(self.temperature, self.pressure, 
+                                            self.relative_humidity, 
+                                            self.reference_temperature, 
+                                            self.reference_pressure, 
+                                            self.triple_temperature)
     
     @property
     def soundspeed(self):
