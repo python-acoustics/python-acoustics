@@ -121,7 +121,7 @@ def third2oct(levels, axis=None):
     shape[axis] = shape[axis] // 3
     shape.insert(axis+1, 3)
     levels = np.reshape(levels, shape)
-    return dbsum(levels, axis=axis+1)
+    return np.squeeze(dbsum(levels, axis=axis+1))
 
 def _check_band_type(freqs):
     """Check if an array contains octave or third octave bands values sorted

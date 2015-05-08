@@ -238,7 +238,11 @@ class Signal(numpy.ndarray):
         ax0.set_title('Spectrogram')
         #f = ax0.specgram(self, Fs=self.fs)
         data = np.squeeze(self)
-        _, _, _, im = ax0.specgram(data, Fs=self.fs, noverlap=128, NFFT=4096, mode='magnitude', scale_by_freq=False)#, vmin=self._data.min(), vmax=self._data.max())
+        try:
+            _, _, _, im = ax0.specgram(data, Fs=self.fs, noverlap=params['noverlap'], NFFT=params['NFFT'], mode='magnitude', scale_by_freq=False)
+        except AttributeError:
+            raise NotImplementedError("Your version of matplotlib is incompatible due to lack of support of the mode keyword argument to matplotlib.mlab.specgram.")
+            
         cb = fig.colorbar(mappable=im)
         cb.set_label('SPL in dB')
         
