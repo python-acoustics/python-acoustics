@@ -93,6 +93,14 @@ class Atmosphere(object):
         Triple temperature.
         """
     
+    def __repr__(self):
+        return "Atmosphere({})".format(self.__str__())
+    
+    def __str__(self):
+        return str((self.temperature, self.pressure, self.relative_humidity, 
+                    self.reference_temperature, self.reference_pressure, 
+                    self.triple_temperature))
+    
     @property
     def soundspeed(self):
         """
