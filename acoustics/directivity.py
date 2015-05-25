@@ -63,6 +63,9 @@ def spherical_to_cartesian(r, theta , phi):
     .. math:: y = r \\sin{\\theta}\\sin{\\phi}
     .. math:: z = r \\cos{\\theta}
     """
+    r = np.asanyarray(r)
+    theta = np.asanyarray(theta)
+    phi = np.asanyarray(phi)
     return (
         r * np.sin(theta) * np.cos(phi),
         r * np.sin(theta) * np.sin(phi),
@@ -81,6 +84,9 @@ def cartesian_to_spherical(x, y, z):
     .. math:: \\theta = \\arccos{\\frac{z}{r}}
     .. math:: \\phi = \\arccos{\\frac{y}{x}}
     """
+    x = np.asanyarray(x)
+    y = np.asanyarray(y)
+    z = np.asanyarray(z)
     r = np.linalg.norm(np.vstack((x,y,z)), axis=0)
     return r, np.arccos(z/r), np.arctan(y/x)
 
