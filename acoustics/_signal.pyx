@@ -215,21 +215,28 @@ class Signal(numpy.ndarray):
         * yscale
         * xlim
         * ylim
-        * reference: Reference power
+        * frequency: Boolean indicating whether the x-axis should show time in seconds or quefrency
+        * xlabel_frequency: Label in case frequency is shown.
         
         """
         params = {
             'xscale': 'linear',
             'yscale': 'linear',
-            'xlabel': "$f$ in Hz",
-            'ylabel': "$L_{p}$ in dB",
-            'title' : 'SPL',
-            'reference' : REFERENCE_PRESSURE**2.0,
+            'xlabel': "$t$ in s",
+            'ylabel': "$C$",
+            'title' : 'Complex cepstrum',
+            'frequency' : False,
+            'xlabel_frequency' : "$f$ in Hz",
             }
         params.update(kwargs)
         
-        f, ceps, _ = self.complex_cepstrum(N=N)
-        return _base_plot(f, 10.0*np.log10(ceps/params['reference']), params)
+        t, ceps, _ = self.complex_cepstrum(N=N)
+        if params['frequency']:
+            t = 1./t
+            params['xlabel'] = params['xlabel_frequency']
+            t = t[::-1]
+            ceps = ceps[::-1]
+        return _base_plot(t, ceps, params)
     
     
     def plot_real_cepstrum(self, N=None, **kwargs):
@@ -241,21 +248,28 @@ class Signal(numpy.ndarray):
         * yscale
         * xlim
         * ylim
-        * reference: Reference power
+        * frequency: Boolean indicating whether the x-axis should show time in seconds or quefrency
+        * xlabel_frequency: Label in case frequency is shown.
         
         """
         params = {
             'xscale': 'linear',
             'yscale': 'linear',
-            'xlabel': "$f$ in Hz",
-            'ylabel': "$L_{p}$ in dB",
-            'title' : 'SPL',
-            'reference' : REFERENCE_PRESSURE**2.0,
+            'xlabel': "$t$ in s",
+            'ylabel': "$C$",
+            'title' : 'Real cepstrum',
+            'frequency' : False,
+            'xlabel_frequency' : "$f$ in Hz",
             }
         params.update(kwargs)
         
-        f, ceps, _ = self.real_cepstrum(N=N)
-        return _base_plot(f, 10.0*np.log10(ceps/params['reference']), params)
+        t, ceps = self.real_cepstrum(N=N)
+        if params['frequency']:
+            t = 1./t
+            params['xlabel'] = params['xlabel_frequency']
+            t = t[::-1]
+            ceps = ceps[::-1]
+        return _base_plot(t, ceps, params)
     
     
     def plot_power_spectrum(self, N=None, **kwargs):#filename=None, scale='log'):
