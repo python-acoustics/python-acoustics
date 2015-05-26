@@ -123,7 +123,35 @@ class Signal(numpy.ndarray):
         """
         return acoustics.signal.rms(self)
         #return np.sqrt(self.power())
+    
+    
+    def complex_cepstrum(self, N=None):
+        """Complex cepstrum.
         
+        .. seealso:: :func:`acoustics.cepstrum.complex_cepstrum`
+        
+        """
+        if N is not None:
+            times = np.linspace(0.0, duration, N, endpoint=False)
+        else:    
+            times = self.times()
+        cepstrum, ndelay = acoustics.cepstrum.complex_cepstrum(self, N=N)
+        return times, cepstrum, ndelay
+    
+    
+    def real_cepstrum(self, N=None):
+        """Real cepstrum.
+        
+        .. seealso:: :func:`acoustics.cepstrum.real_cepstrum`
+        
+        """
+        if N is not None:
+            times = np.linspace(0.0, duration, N, endpoint=False)
+        else:    
+            times = self.times()
+        return times, acoustics.cepstrum.real_cepstrum(self, N=N)
+    
+    
     def power_spectrum(self, N=None):
         """Power spectrum.
         
@@ -131,7 +159,8 @@ class Signal(numpy.ndarray):
         
         """
         return acoustics.signal.power_spectrum(self, self.fs, N=N)
-    
+        
+        
     def phase_spectrum(self):
         """Phase spectrum.
         
@@ -175,7 +204,60 @@ class Signal(numpy.ndarray):
         
         """
         return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self.sound_exposure)
+
+    
+    def plot_complex_cepstrum(self, N=None, **kwargs):
+        """Plot complex cepstrum of signal.
         
+        Valid kwargs:
+        
+        * xscale
+        * yscale
+        * xlim
+        * ylim
+        * reference: Reference power
+        
+        """
+        params = {
+            'xscale': 'linear',
+            'yscale': 'linear',
+            'xlabel': "$f$ in Hz",
+            'ylabel': "$L_{p}$ in dB",
+            'title' : 'SPL',
+            'reference' : REFERENCE_PRESSURE**2.0,
+            }
+        params.update(kwargs)
+        
+        f, ceps, _ = self.complex_cepstrum(N=N)
+        return _base_plot(f, 10.0*np.log10(ceps/params['reference']), params)
+    
+    
+    def plot_real_cepstrum(self, N=None, **kwargs):
+        """Plot real cepstrum of signal.
+        
+        Valid kwargs:
+        
+        * xscale
+        * yscale
+        * xlim
+        * ylim
+        * reference: Reference power
+        
+        """
+        params = {
+            'xscale': 'linear',
+            'yscale': 'linear',
+            'xlabel': "$f$ in Hz",
+            'ylabel': "$L_{p}$ in dB",
+            'title' : 'SPL',
+            'reference' : REFERENCE_PRESSURE**2.0,
+            }
+        params.update(kwargs)
+        
+        f, ceps, _ = self.real_cepstrum(N=N)
+        return _base_plot(f, 10.0*np.log10(ceps/params['reference']), params)
+    
+    
     def plot_power_spectrum(self, N=None, **kwargs):#filename=None, scale='log'):
         """Plot spectrum of signal.
         
