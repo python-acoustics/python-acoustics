@@ -14,5 +14,6 @@ import acoustics.directivity
 import acoustics.building
 import acoustics.room
 import acoustics.standards
+import acoustics.cepstrum
 
 from acoustics._signal import Signal
