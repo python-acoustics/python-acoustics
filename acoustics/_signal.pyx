@@ -132,7 +132,7 @@ class Signal(numpy.ndarray):
         
         """
         if N is not None:
-            times = np.linspace(0.0, duration, N, endpoint=False)
+            times = np.linspace(0.0, self.duration, N, endpoint=False)
         else:    
             times = self.times()
         cepstrum, ndelay = acoustics.cepstrum.complex_cepstrum(self, N=N)
@@ -146,7 +146,7 @@ class Signal(numpy.ndarray):
         
         """
         if N is not None:
-            times = np.linspace(0.0, duration, N, endpoint=False)
+            times = np.linspace(0.0, self.duration, N, endpoint=False)
         else:    
             times = self.times()
         return times, acoustics.cepstrum.real_cepstrum(self, N=N)
