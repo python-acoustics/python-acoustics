@@ -69,6 +69,11 @@ class Signal(numpy.ndarray):
         else:
             return 1
     
+    @property
+    def duration(self):
+        """Duration of signal.
+        """
+        return self.fs * self.samples
     def pick(self, start=0.0, stop=None):
         """Get signal from start time to stop time.
         """
