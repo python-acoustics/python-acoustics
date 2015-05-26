@@ -1,7 +1,9 @@
 import numpy as np
 
-from scipy.signal import (complex_cepstrum, inverse_complex_cepstrum, 
-                          real_cepstrum, minimum_phase, sawtooth)
+#from scipy.signal import (complex_cepstrum, inverse_complex_cepstrum, 
+#                          real_cepstrum, minimum_phase, sawtooth)
+from scipy.signal import sawtooth
+from acoustics.cepstrum import *
 
 from numpy.testing import (assert_array_almost_equal)
 
