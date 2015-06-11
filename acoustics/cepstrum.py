@@ -83,13 +83,13 @@ def complex_cepstrum(x, N=None):
     
     """
     def _unwrap(phase):
-        samples = len(phase)
+        samples = phase.shape[-1]
         unwrapped = np.unwrap(phase)
         center = (samples+1)//2
         if samples == 1: 
             center = 0  
-        ndelay = np.round(unwrapped[center]/np.pi)
-        unwrapped -= np.pi * ndelay * np.arange(samples) / center
+        ndelay = np.array(np.round(unwrapped[...,center]/np.pi))
+        unwrapped -= np.pi * ndelay[...,None] * np.arange(samples) / center
         return unwrapped, ndelay
         
     N = N if N is not None else x.shape[-1]
@@ -191,9 +191,10 @@ def inverse_complex_cepstrum(ceps, ndelay):
       
     """
     def _wrap(phase, ndelay):
+        ndelay = np.array(ndelay)
         samples = phase.shape[-1]
         center = (samples+1)//2
-        wrapped = phase + np.pi * ndelay * np.arange(samples) / center
+        wrapped = phase + np.pi * ndelay[...,None] * np.arange(samples) / center
         return wrapped
     
     log_spectrum = np.fft.fft(ceps)
