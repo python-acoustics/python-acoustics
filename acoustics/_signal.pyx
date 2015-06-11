@@ -3,6 +3,7 @@ cimport numpy
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
+from scipy.signal import detrend
 import acoustics
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
@@ -123,8 +124,47 @@ class Signal(numpy.ndarray):
         """
         return acoustics.signal.rms(self)
         #return np.sqrt(self.power())
+
+    def amplitude_envelope(self):
+        """Amplitude envelope.
+        
+        .. seealso:: :func:`acoustics.signal.amplitude_envelope`
+        
+        """
+        return Signal(acoustics.signal.amplitude_envelope(self, self.fs), self.fs)
+
+    def instantaneous_frequency(self):
+        """Instantaneous frequency.
+        
+        .. seealso:: :func:`acoustics.signal.instantaneous_frequency`
+        
+        """
+        return Signal(acoustics.signal.instantaneous_frequency(self, self.fs), self.fs)
+
+    def instantaneous_phase(self):
+        """Instantaneous phase.
+        
+        .. seealso:: :func:`acoustics.signal.instantaneous_phase`
     
+        """
+        return Signal(acoustics.signal.instantaneous_phase(self, self.fs), self.fs)
+
     
+    def detrend(self, **kwargs):
+        """Detrend signal.
+        
+        .. seealso:: :func:`scipy.signal.detrend`
+        
+        """
+        return Signal(detrend(self, **kwargs), self.fs)
+    
+    def unwrap(self):
+        """Unwrap signal in case the signal represents wrapped phase.
+        
+        .. seealso:: :func:`np.unwrap`
+        
+        """
+        return Signal(np.unwrap(self), self.fs)
     def complex_cepstrum(self, N=None):
         """Complex cepstrum.
         
@@ -203,7 +243,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.sound_exposure_level`
         
         """
-        return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self.sound_exposure)
+        return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self.sound_exposure())
 
     
     def plot_complex_cepstrum(self, N=None, **kwargs):
