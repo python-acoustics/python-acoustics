@@ -1016,6 +1016,8 @@ def instantaneous_frequency(signal, fs):
     
     """
     return np.gradient( instantaneous_phase(signal, fs)) / (2.0*np.pi) * fs
+    return np.diff( instantaneous_phase(signal, fs)) / (2.0*np.pi) * fs
+    
 
 
     
