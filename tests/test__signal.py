@@ -21,11 +21,95 @@ class TestSignal():
     def signal(self, request):
         return Signal(np.random.randn(request.param[0], request.param[1]), request.param[2])
     
-    def test_power_spectrum(self, signal):
+    
+    def test_samples(self, signal):
+        signal.samples
+    
+    
+    def test_channels(self, signal):
+        signal.channels
+    
+    
+    def test_duration(self, signal):
+        signal.duration
         
+    
+    def test_pick(self, signal):
+        signal.pick(signal.duration*0.1, signal.duration*0.6)
+    
+    
+    def test_times(self, signal):
+        signal.times()
+    
+    
+    def test_energy(self, signal):
+        signal.energy()
+    
+    
+    def test_power(self, signal):
+        signal.power()
+    
+    
+    def test_ms(self, signal):
+        signal.ms()
+        
+        
+    def test_rms(self, signal):
+        signal.rms()
+        
+        
+    def test_amplitude_envelope(self, signal):
+        signal.amplitude_envelope()
+    
+    
+    def test_instantaneous_frequency(self, signal):
+        signal.instantaneous_frequency()
+    
+    
+    def test_instantaneous_phase(self, signal):
+        signal.instantaneous_phase()
+    
+    
+    def test_detrend(self, signal):
+        signal.detrend()
+    
+    
+    def test_unwrap(self, signal):
+        signal.unwrap()
+    
+    
+    def test_complex_cepstrum(self, signal):
+        signal.complex_cepstrum()
+        
+    
+    def test_real_cepstrum(self, signal):
+        signal.real_cepstrum()
+        
+    
+    def test_power_spectrum(self, signal):
         freq, power = signal.power_spectrum()
     
+
+    def test_phase_spectrum(self, signal):
+        freq, phase = signal.phase_spectrum()
     
+    
+    def test_peak(self, signal):
+        signal.peak()
+    
+    
+    def test_peak_level(self, signal):
+        signal.peak_level()
+    
+    
+    def test_sound_exposure(self, signal):
+        signal.sound_exposure()
+      
+      
+    def test_sound_exposure_level(self, signal):
+        signal.sound_exposure_level()
+        
+        
     def test_octaves(self, signal):
         
         freq, octaves = signal.octaves()
@@ -45,6 +129,17 @@ class TestSignal():
         assert(type(leq) is np.ndarray)
         
         
+
+        
+    
+
+        
+    
+
+    
+    
+
+    
     ## Plot methods with arguments to test.
     #plot_methods = {'plot'                      : None,
                     #'plot_levels'               :   {
@@ -100,7 +195,7 @@ class TestSignal():
         signal.plot_fractional_octaves(6)
         signal.plot_fractional_octaves(9)
     
-    def plot_power_spectrum(self, signal):
+    def test_plot_power_spectrum(self, signal):
         signal.plot_power_spectrum()
     
     def test_spectrogram(self, signal):
