@@ -56,7 +56,7 @@ def peak_sound_pressure(pressure, axis=-1):
     .. math:: p_{peak} = \\mathrm{max}(|p|)
     
     """
-    return np.abs(peak).max(axis=axis)
+    return np.abs(pressure).max(axis=axis)
     
     
 def peak_sound_pressure_level(peak_sound_pressure, reference_pressure=REFERENCE_PRESSURE):
@@ -99,7 +99,7 @@ def sound_exposure_level(sound_exposure, reference_sound_exposure=REFERENCE_SOUN
     .. math:: L_{E,T} = 10 \\log_{10}{ \\frac{E_T}{E_0}  }
     
     """
-    return 10.0 * np.log10(sound_exposure/sound_exposure_level)
+    return 10.0 * np.log10(sound_exposure/reference_sound_exposure)
 
 
 REFERENCE_POWER = 1.0e-12
