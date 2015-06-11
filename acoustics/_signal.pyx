@@ -243,7 +243,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.sound_exposure_level`
         
         """
-        return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self.sound_exposure)
+        return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self.sound_exposure())
 
     
     def plot_complex_cepstrum(self, N=None, **kwargs):
