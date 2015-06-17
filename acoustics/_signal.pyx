@@ -197,8 +197,11 @@ class Signal(numpy.ndarray):
         
         """
         return Signal(np.unwrap(self), self.fs)
+
     def complex_cepstrum(self, N=None):
         """Complex cepstrum.
+        
+        :param N: Amount of bins.
         
         .. seealso:: :func:`acoustics.cepstrum.complex_cepstrum`
         
@@ -214,6 +217,8 @@ class Signal(numpy.ndarray):
     def real_cepstrum(self, N=None):
         """Real cepstrum.
         
+        :param N: Amount of bins.
+        
         .. seealso:: :func:`acoustics.cepstrum.real_cepstrum`
         
         """
@@ -227,19 +232,33 @@ class Signal(numpy.ndarray):
     def power_spectrum(self, N=None):
         """Power spectrum.
         
+        :param N: Amount of bins.
+        
         .. seealso:: :func:`acoustics.signal.power_spectrum`
         
         """
         return acoustics.signal.power_spectrum(self, self.fs, N=N)
         
+    
+    def angle_spectrum(self, N=None):
+        """Phase angle spectrum. Wrapped.
         
-    def phase_spectrum(self):
-        """Phase spectrum.
+        :param N: amount of bins.
         
-        .. seealso:: :func:`acoustics.signal.phase_spectrum`
+        .. seealso:: :func:`acoustics.signal.angle_spectrum`, :func:`acoustics.signal.phase_spectrum` and :meth:`phase_spectrum`.
         
         """
-        return acoustics.signal.phase_spectrum(self, self.fs)
+        return acoustics.signal.angle_spectrum(self, self.fs, N=N)
+    
+    def phase_spectrum(self, N=None):
+        """Phase spectrum. Unwrapped.
+        
+        :param N: Amount of bins.
+        
+        .. seealso:: :func:`acoustics.signal.phase_spectrum`, :func:`acoustics.signal.angle_spectrum` and :meth:`angle_spectrum`.
+        
+        """
+        return acoustics.signal.phase_spectrum(self, self.fs, N=N)
     
     
     def peak(self):
@@ -371,15 +390,49 @@ class Signal(numpy.ndarray):
         f, o = self.power_spectrum(N=N)
         return _base_plot(f, 10.0*np.log10(o/params['reference']), params)
 
-    def plot_phase_spectrum(self, N=None, **kwargs):
-        """Plot phase spectrum of signal.
+    
+    def plot_angle_spectrum(self, N=None, **kwargs):
+        """Plot phase angle spectrum of signal. Wrapped.
+        
+        Valid kwargs:
+        
+        * xscale
+        * yscale
+        * xlim
+        * ylim
+        * reference: Reference power
+        
         """
         params = {
-            'xscale': 'log',
+            'xscale': 'linear',
             'yscale': 'linear',
             'xlabel': "$f$ in Hz",
             'ylabel': "$\\angle \phi$",
-            'title' : 'Phase angle',
+            'title' : 'Phase spectrum',
+            }
+        params.update(kwargs)
+        f, o = self.angle_spectrum(N=N)
+        return _base_plot(f, o, params)
+    
+    
+    def plot_phase_spectrum(self, N=None, **kwargs):
+        """Plot phase spectrum of signal. Unwrapped.
+        
+        Valid kwargs:
+        
+        * xscale
+        * yscale
+        * xlim
+        * ylim
+        * reference: Reference power
+        
+        """
+        params = {
+            'xscale': 'linear',
+            'yscale': 'linear',
+            'xlabel': "$f$ in Hz",
+            'ylabel': "$\\angle \phi$",
+            'title' : 'Phase spectrum',
             }
         params.update(kwargs)
         f, o = self.phase_spectrum(N=N)
