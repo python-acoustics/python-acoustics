@@ -209,4 +209,14 @@ class TestSignal():
                 pass
         
     
-    
+    def test_pickling(self, signal):
+        import pickle
+        
+        p = pickle.dumps(signal)
+        obj = pickle.loads(p)
+        
+        assert((obj==signal).all())
+        assert(obj.fs==signal.fs)
+        assert(type(obj) is type(signal))
+        
+        
