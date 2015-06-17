@@ -57,7 +57,15 @@ class TestSignal():
     def test_rms(self, signal):
         signal.rms()
         
-        
+    
+    def test_correlate(self, signal):
+        signal = signal[..., 0:100]
+        if signal.channels > 1: # Multichannel is not supported
+            with pytest.raises(ValueError):
+                assert((signal.correlate()==signal.correlate(signal)).all())
+        else:
+            assert((signal.correlate()==signal.correlate(signal)).all())
+    
     def test_amplitude_envelope(self, signal):
         signal.amplitude_envelope()
     
@@ -198,6 +206,9 @@ class TestSignal():
     def test_plot_power_spectrum(self, signal):
         signal.plot_power_spectrum()
     
+    def test_plot_phase_spectrum(self, signal):
+        signal.plot_phase_spectrum()
+    
     def test_spectrogram(self, signal):
         if signal.channels > 1:
             with pytest.raises(ValueError):
@@ -209,4 +220,14 @@ class TestSignal():
                 pass
         
     
-    
+    def test_pickling(self, signal):
+        import pickle
+        
+        p = pickle.dumps(signal)
+        obj = pickle.loads(p)
+        
+        assert((obj==signal).all())
+        assert(obj.fs==signal.fs)
+        assert(type(obj) is type(signal))
+        
+        

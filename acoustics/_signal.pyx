@@ -3,7 +3,7 @@ cimport numpy
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
-from scipy.signal import detrend
+from scipy.signal import detrend, correlate
 import acoustics
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
@@ -52,7 +52,20 @@ class Signal(numpy.ndarray):
         #self.fs = attr if attr is not None else 44100.0
         self.fs = getattr(obj, 'fs', None)#44100.0)
         #self.fs = 1000
-            
+    
+    def __reduce__(self):
+        # Get the parent's __reduce__ tuple
+        pickled_state = super(Signal, self).__reduce__()
+        # Create our own tuple to pass to __setstate__
+        new_state = pickled_state[2] + (self.fs,)
+        # Return a tuple that replaces the parent's __setstate__ tuple with our own
+        return (pickled_state[0], pickled_state[1], new_state)
+    
+    def __setstate__(self, state):
+        self.fs = state[-1]  # Set the info attribute
+        # Call the parent's __setstate__ with the other tuple elements.
+        super(Signal, self).__setstate__(state[0:-1])
+    
     def __repr__(self):
         return "Signal({})".format(str(self))
         
@@ -75,6 +88,7 @@ class Signal(numpy.ndarray):
         """Duration of signal.
         """
         return self.fs * self.samples
+    
     def pick(self, start=0.0, stop=None):
         """Get signal from start time to stop time.
         """
@@ -91,7 +105,7 @@ class Signal(numpy.ndarray):
         
         """
         return np.arange(0, self.samples) / self.fs
-    
+
     def energy(self):
         """
         Signal energy.
@@ -125,6 +139,24 @@ class Signal(numpy.ndarray):
         return acoustics.signal.rms(self)
         #return np.sqrt(self.power())
 
+    def correlate(self, other=None, mode='full'):
+        """Correlate signal with `other` signal. In case `other==None` this 
+        method returns the autocorrelation.
+        
+        :param other: Other signal.
+        :param mode: Mode.
+        
+        .. seealso:: :func:`np.correlate`
+        
+        """
+        if other is None:
+            other = self
+        if self.fs != other.fs:
+            raise ValueError("Cannot correlate. Sample frequencies are not the same.")
+        if self.channels > 1 or other.channels > 1:
+            raise ValueError("Cannot correlate. Not supported for multichannel signals.")
+        return correlate(self, other, mode=mode)
+        
     def amplitude_envelope(self):
         """Amplitude envelope.
         
