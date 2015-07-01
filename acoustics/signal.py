@@ -73,7 +73,9 @@ import acoustics.octave
 
 import acoustics.bands
 from scipy.signal import hilbert
-
+from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
+from acoustics.standards.iec_61672_1_2013 import (NOMINAL_OCTAVE_CENTER_FREQUENCIES,
+                                                  NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES)
 
 try:
     from pyfftw.interfaces.numpy_fft import rfft
@@ -762,7 +764,9 @@ def integrate_bands(data, a, b):
 
 
 
-def octaves(p, fs, density=False, frequencies=acoustics.standards.iec_61672_1_2013.NOMINAL_OCTAVE_CENTER_FREQUENCIES):
+def octaves(p, fs, density=False, 
+            frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, 
+            ref=REFERENCE_PRESSURE):
     """Calculate level per 1/1-octave.
     
     :param p: Instantaneous pressure :math:`p(t)`.
@@ -782,11 +786,13 @@ def octaves(p, fs, density=False, frequencies=acoustics.standards.iec_61672_1_20
     power = integrate_bands(p, fnb, fob)
     if density:
         power /= (fob.bandwidth/fnb.bandwidth)
-    level = 10.0*np.log10(power)
+    level = 10.0*np.log10(power / ref**2.0)
     return fob, level
 
 
-def third_octaves(p, fs, density=False, frequencies=acoustics.standards.iec_61672_1_2013.NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES):
+def third_octaves(p, fs, density=False, 
+                  frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, 
+                  ref=REFERENCE_PRESSURE):
     """Calculate level per 1/3-octave.
     
     :param p: Instantaneous pressure :math:`p(t)`.
@@ -806,7 +812,7 @@ def third_octaves(p, fs, density=False, frequencies=acoustics.standards.iec_6167
     power = integrate_bands(p, fnb, fob)
     if density:
         power /= (fob.bandwidth/fnb.bandwidth)
-    level = 10.0*np.log10(power)
+    level = 10.0*np.log10(power / ref**2.0)
     return fob, level
 
 
