@@ -202,3 +202,6 @@ def heaviside(N):
     """
     return 0.5 * (np.sign(N) + 1)
     
+
+__all__ = ['noise', 'white', 'pink', 'blue', 'brown', 'violet',
+           'noise_generator', 'heaviside']
