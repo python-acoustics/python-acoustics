@@ -639,15 +639,17 @@ def power_spectrum(x, fs, N=None):
     return f, a
   
 
-def phase_spectrum(x, fs, N=None):
+def angle_spectrum(x, fs, N=None):
     """
-    Phase spectrum of instantaneous signal :math:`x(t)`.
+    Phase angle spectrum of instantaneous signal :math:`x(t)`.
     
     :param x: Instantaneous signal :math:`x(t)`.
     :param fs: Sample frequency :math:`f_s`.
     :param N: Amount of FFT bins.
     
-    This function returns a single-sided phase spectrum.
+    This function returns a single-sided wrapped phase angle spectrum.
+    
+    .. seealso:: :func:`phase_spectrum` for unwrapped phase spectrum.
     
     """
     N = N if N else x.shape[-1]
@@ -656,6 +658,25 @@ def phase_spectrum(x, fs, N=None):
     a = a[..., N//2:]
     f = f[..., N//2:]
     return f, a
+
+
+def phase_spectrum(x, fs, N=None):
+    """
+    Phase spectrum of instantaneous signal :math:`x(t)`.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency :math:`f_s`.
+    :param N: Amount of FFT bins.
+    
+    This function returns a single-sided unwrapped phase spectrum.
+    
+    .. seealso:: :func:`angle_spectrum` for wrapped phase angle.
+    
+    """
+    f, a = angle_spectrum(x, fs, N=None)
+    return f, np.unwrap(a)
+    
+
 
 #def power_and_phase_spectrum(x, fs, N=None):
     #"""
