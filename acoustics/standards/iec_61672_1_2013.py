@@ -272,3 +272,71 @@ def weighting_function_decibel_z(frequencies):
     frequencies = np.asarray(frequencies)
     return np.zeros_like(frequencies)
     
+    
+WEIGHTING_FUNCTIONS_DECIBEL = {'A': weighting_function_decibel_a,
+                               'C': weighting_function_decibel_c,
+                               'Z': weighting_function_decibel_z,
+                               }
+"""Dictionary with available weighting functions 'A', 'C' and 'Z'.
+"""
+
+def weighting_system_a():
+    """A-weighting filter represented as polynomial transfer function.
+    
+    :returns: Tuple of `num` and `den`.
+    
+    See equation E.6 of the standard.
+    
+    """    
+    f1 = _POLE_FREQUENCIES[1]
+    f2 = _POLE_FREQUENCIES[2]
+    f3 = _POLE_FREQUENCIES[3]
+    f4 = _POLE_FREQUENCIES[4]
+    offset = _NORMALIZATION_CONSTANTS['A']
+    numerator = np.array([(2.0*np.pi*f4)**2.0 * (10**(-offset/20.0)), 0.0, 0.0, 0.0, 0.0])
+    part1 = [1.0, 4.0*np.pi*f4, (2.0*np.pi*f4)**2.0]
+    part2 = [1.0, 4.0*np.pi*f1, (2.0*np.pi*f1)**2.0]
+    part3 = [1.0, 2.0*np.pi*f3]
+    part4 = [1.0, 2.0*np.pi*f2]
+    denomenator = np.convolve(np.convolve(np.convolve(part1, part2), part3), part4)
+    return numerator, denomenator
+    
+    
+def weighting_system_c():
+    """C-weighting filter represented as polynomial transfer function.
+    
+    :returns: Tuple of `num` and `den`.
+    
+    See equation E.1 of the standard.
+    
+    """
+    f1 = _POLE_FREQUENCIES[1]
+    f4 = _POLE_FREQUENCIES[4]
+    offset = _NORMALIZATION_CONSTANTS['C']
+    numerator = np.array([(2.0*np.pi*f4)**2.0 * (10**(-offset/20.0)), 0.0, 0.0])
+    part1 = [1.0, 4.0*np.pi*f4, (2.0*np.pi*f4)**2.0]
+    part2 = [1.0, 4.0*np.pi*f1, (2.0*np.pi*f1)**2.0]
+    denomenator = np.convolve(part1, part2)
+    return numerator, denomenator
+    
+    
+def weighting_system_z():
+    """Z-weighting filter represented as polynomial transfer function.
+    
+    :returns: Tuple of `num` and `den`.
+    
+    Z-weighting is 0.0 dB for all frequencies and therefore corresponds to a 
+    multiplication of 1.
+    
+    """
+    numerator = [1]
+    denomenator = [1]
+    return numerator, denomenator
+
+
+WEIGHTING_SYSTEMS = {'A': weighting_system_a,
+                     'C': weighting_system_c,
+                     'Z': weighting_system_z,
+                     }
+"""Weighting systems.
+"""

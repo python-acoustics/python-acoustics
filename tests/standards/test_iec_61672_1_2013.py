@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 
 from acoustics.standards.iec_61672_1_2013 import *
-
+from scipy.signal import freqresp
    
 def signal_fs():
     fs = 4000.0
@@ -77,18 +77,22 @@ def test_time_averaged_sound_level():
 
 class TestWeighting():
     
+    @pytest.fixture(params=['A', 'C', 'Z'])
+    def weighting(self, request):
+        return request.param
 
-    def test_weighting_functions_decibel(self):
-        
+    def test_weighting_functions_decibel(self, weighting):
         frequencies = NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES
-        for weighting in WEIGHTING_FUNCTIONS_DECIBEL.keys():
-            values = WEIGHTING_VALUES_DECIBEL[weighting]
-            function_values = WEIGHTING_FUNCTIONS_DECIBEL[weighting](frequencies)
-            assert(np.abs(values-function_values).max() < 0.3)
+        values = WEIGHTING_VALUES_DECIBEL[weighting]
+        function_values = WEIGHTING_FUNCTIONS_DECIBEL[weighting](frequencies)
+        assert(np.abs(values-function_values).max() < 0.3)
         
-    
-    
 
-    
+    def test_weighting_systems(self, weighting):
+        frequencies = NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES
+        values = WEIGHTING_VALUES_DECIBEL[weighting]
+        w, H = freqresp((WEIGHTING_SYSTEMS[weighting]()), w=2.0*np.pi*frequencies)
+        results = 20.0*np.log10(np.abs(H))
+        assert(np.abs(values-results).max() < 0.3)
             
         
