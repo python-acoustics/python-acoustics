@@ -4,6 +4,11 @@ Atmosphere
 
 The atmosphere module contains functions and classes related to atmospheric acoustics and is based on :mod:`acoustics.standards.iso_9613_1_1993`.
 
+Atmosphere class
+****************
+
+.. autoclass:: acoustics.atmosphere.Atmosphere
+
 From ISO 9613-1 1993
 ********************
 
@@ -26,8 +31,7 @@ Functions
 .. autofunction:: acoustics.standards.iso_9613_1_1993.attenuation_coefficient
 
 
-Atmosphere class
-****************
+
 
 """
 from __future__ import division, print_function
@@ -108,35 +112,45 @@ class Atmosphere(object):
     @property
     def soundspeed(self):
         """
-        Speed of sound :math:`c` calculated using :func:`soundspeed`.
+        Speed of sound :math:`c`. 
+        
+        The speed of sound is calculated using :func:`acoustics.standards.iso_9613_1_1993.soundspeed`.
         """
         return soundspeed(self.temperature, self.reference_temperature)
         
     @property
     def saturation_pressure(self):
         """
-        Saturation pressure :math:`p_{sat}` calculated using :func:`acoustics.standards.iso_9613_1_1993.saturation_pressure`.
+        Saturation pressure :math:`p_{sat}`.
+        
+        The saturation pressure is calculated using :func:`acoustics.standards.iso_9613_1_1993.saturation_pressure`.
         """
         return saturation_pressure(self.temperature, self.reference_pressure, self.triple_temperature)
     
     @property
     def molar_concentration_water_vapour(self):
         """
-        Molar concentration of water vapour :math:`h` calculated using :func:`molar_concentration_water_vapour`.
+        Molar concentration of water vapour :math:`h`.
+        
+        The molar concentration of water vapour is calculated using :func:`acoustics.standards.iso_9613_1_1993.molar_concentration_water_vapour`.
         """
         return molar_concentration_water_vapour(self.relative_humidity, self.saturation_pressure, self.pressure)
         
     @property
     def relaxation_frequency_nitrogen(self):
         """
-        Resonance frequency of nitrogen :math:`f_{r,N}` calculated using :func:`relaxation_frequency_nitrogen`.
+        Resonance frequency of nitrogen :math:`f_{r,N}`.
+        
+        The resonance frequency is calculated using :func:`acoustics.standards.iso_9613_1_1993.relaxation_frequency_nitrogen`.
         """
         return relaxation_frequency_nitrogen(self.pressure, self.temperature, self.molar_concentration_water_vapour, self.reference_pressure, self.reference_temperature)
     
     @property
     def relaxation_frequency_oxygen(self):
         """
-        Resonance frequency of oxygen :math:`f_{r,O}` calculated using :func:`relaxation_frequency_oxygen`.
+        Resonance frequency of oxygen :math:`f_{r,O}`.
+        
+        The resonance frequency is calculated using :func:`acoustics.standards.iso_9613_1_1993.relaxation_frequency_oxygen`.
         """
         return relaxation_frequency_oxygen(self.pressure, self.molar_concentration_water_vapour, self.reference_pressure)
     
@@ -145,6 +159,8 @@ class Atmosphere(object):
         Attenuation coefficient :math:`\\alpha` describing atmospheric absorption in dB/m as function of ``frequency``.
         
         :param frequency: Frequencies to be considered.
+        
+        The attenuation coefficient is calculated using :func:`acoustics.standards.iso_9613_1_1993.attenuation_coefficient`.
         """
         return attenuation_coefficient(self.pressure, self.temperature, self.reference_pressure, self.reference_temperature, self.relaxation_frequency_nitrogen, self.relaxation_frequency_oxygen, frequency)
             

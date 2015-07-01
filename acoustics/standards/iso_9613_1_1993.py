@@ -37,7 +37,10 @@ def soundspeed(temperature, reference_temperature=REFERENCE_TEMPERATURE):
     
     :param temperature: Ambient temperature :math:`T_0`
     :param reference_temperature: Reference temperature :math:`T`
-        
+    
+    
+    The speed of sound is calculated using
+    
     ..  math:: c = 343.2 \\left( \\frac{T}{T_0} \\right)
     
     """
@@ -50,7 +53,9 @@ def saturation_pressure(temperature, reference_pressure=REFERENCE_PRESSURE, trip
     :param temperature: Ambient temperature :math:`T`
     :param reference_pressure: Reference pressure :math:`p_r`
     :param triple_temperature: Triple point temperature water :math:`T_{01}`
-        
+    
+    The saturation vapour pressure is calculated using
+    
     .. math:: p_{sat} = 10^C \cdot p_r
     
     with exponent :math:`C` given by
@@ -68,6 +73,8 @@ def molar_concentration_water_vapour(relative_humidity, saturation_pressure, pre
     :param saturation_pressure: Saturation pressure :math:`p_{sat}`
     :param pressure: Ambient pressure :math:`p`
    
+    The molar concentration of water vapour is calculated using
+   
     .. math:: h = h_r  \\frac{p_{sat}}{p_a}
     
     """
@@ -80,6 +87,8 @@ def relaxation_frequency_oxygen(pressure, h, reference_pressure=REFERENCE_PRESSU
     :param pressure: Ambient pressure :math:`p_a`
     :param reference_pressure: Reference pressure :math:`p_r`
     :param h: Molar concentration of water vapour :math:`h`
+    
+    The relaxation frequency of oxygen is calculated using
     
     .. math:: f_{r,O} = \\frac{p_a}{p_r} \\left( 24 + 4.04 \cdot 10^4 h \\frac{0.02 + h}{0.391 + h}  \\right)
     
@@ -95,6 +104,8 @@ def relaxation_frequency_nitrogen(pressure, temperature, h, reference_pressure=R
     :param h: Molar concentration of water vapour :math:`h`
     :param reference_pressure: Reference pressure :math:`p_{ref}`
     :param reference_temperature: Reference temperature :math:`T_{ref}`
+    
+    The relaxation frequency of nitrogen is calculated using
     
     .. math:: f_{r,N} = \\frac{p_a}{p_r} \\left( \\frac{T}{T_0} \\right)^{-1/2} \cdot \\left( 9 + 280 h \exp{\\left\{ -4.170 \\left[ \\left(\\frac{T}{T_0} \\right)^{-1/3} -1 \\right] \\right\} } \\right)
     

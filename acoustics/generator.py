@@ -24,14 +24,26 @@ Brown  -3 dB -6 dB
 Violet +9 dB +6 dB
 ====== ===== =============
 
+All colors
+----------
+
+.. autofunction:: noise
+.. autofunction:: noise_generator
+
+Per color
+---------
+
 .. autofunction:: white
 .. autofunction:: pink
 .. autofunction:: blue
 .. autofunction:: brown
 .. autofunction:: violet
 
-Waveforms
-*********
+
+Other
+*****
+
+.. autofunction:: heaviside
 
 For related functions, check :mod:`scipy.signal`.
 
