@@ -186,3 +186,12 @@ class Atmosphere(object):
         ax0.grid()
         
         return fig
+    
+__all__ = ['Atmosphere', 'SOUNDSPEED', 'REFERENCE_TEMPERATURE', 
+           'REFERENCE_TEMPERATURE', 'TRIPLE_TEMPERATURE',
+           'soundspeed', 'saturation_pressure', 
+           'molar_concentration_water_vapour', 
+           'relaxation_frequency_oxygen', 
+           'relaxation_frequency_nitrogen', 
+           'attenuation_coefficient'
+           ]
