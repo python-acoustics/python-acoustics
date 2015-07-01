@@ -71,10 +71,9 @@ def noise(N, color='white'):
     
     """
     try:
-        return noise_generators[color](N)
+        return _noise_generators[color](N)
     except KeyError:
         raise ValueError("Incorrect color.")
-
 
 
 def white(N):
@@ -88,7 +87,6 @@ def white(N):
     and therefore increases with 3 dB per octave.
     """
     return np.random.randn(N)
-
 
 
 def pink(N):
@@ -105,12 +103,15 @@ def pink(N):
     #b = np.array([0.049922035, -0.095993537, 0.050612699, -0.004408786])
     #a = np.array([1, -2.494956002, 2.017265875, -0.522189400])
     #return lfilter(B, A, np.random.randn(N))
-    
     # Another way would be using the FFT
-    x = np.random.randn(N)
-    X = rfft(x) / N
+    #x = np.random.randn(N)
+    #X = rfft(x) / N  
+    uneven = N%2
+    X = np.random.randn(N//2+1+uneven) + 1j * np.random.randn(N//2+1+uneven)
     S = np.sqrt(np.arange(len(X))+1.) # +1 to avoid divide by zero
-    y = (irfft(X/S)).real[0:N]
+    y = (irfft(X/S)).real
+    if uneven:
+        y = y[:-1]
     return normalise(y)
 
 
@@ -124,10 +125,12 @@ def blue(N):
     Power density increases with 3 dB per octave. 
     
     """
-    x = np.random.randn(N)
-    X = rfft(x) / N
+    uneven = N%2
+    X = np.random.randn(N//2+1+uneven) + 1j * np.random.randn(N//2+1+uneven)
     S = np.sqrt(np.arange(len(X)))# Filter
-    y = (irfft(X*S)).real[0:N]
+    y = (irfft(X*S)).real
+    if uneven:
+        y = y[:-1]
     return normalise(y)
 
 
@@ -141,10 +144,12 @@ def brown(N):
     Power density decreases with 6 dB per octave. 
 
     """
-    x = np.random.randn(N)
-    X = rfft(x) / N
+    uneven = N%2
+    X = np.random.randn(N//2+1+uneven) + 1j * np.random.randn(N//2+1+uneven)
     S = (np.arange(len(X))+1)# Filter
-    y = (irfft(X/S)).real[0:N]
+    y = (irfft(X/S)).real
+    if uneven:
+        y = y[:-1]
     return normalise(y)
 
 
@@ -158,14 +163,16 @@ def violet(N):
     Power density increases with +6 dB per octave. 
     
     """
-    x = np.random.randn(N)
-    X = rfft(x) / N
+    uneven = N%2
+    X = np.random.randn(N//2+1+uneven) + 1j * np.random.randn(N//2+1+uneven)
     S = (np.arange(len(X)))# Filter
-    y = (irfft(X*S)).real[0:N]
+    y = (irfft(X*S)).real
+    if uneven:
+        y = y[:-1]
     return normalise(y)
 
 
-noise_generators = {
+_noise_generators = {
     'white'  : white,
     'pink'   : pink,
     'blue'   : blue,
