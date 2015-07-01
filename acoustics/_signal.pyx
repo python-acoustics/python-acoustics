@@ -173,7 +173,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.signal.amplitude_envelope`
         
         """
-        return Signal(acoustics.signal.amplitude_envelope(self, self.fs), self.fs)
+        return type(self)(acoustics.signal.amplitude_envelope(self, self.fs), self.fs)
 
     def instantaneous_frequency(self):
         """Instantaneous frequency.
@@ -181,7 +181,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.signal.instantaneous_frequency`
         
         """
-        return Signal(acoustics.signal.instantaneous_frequency(self, self.fs), self.fs)
+        return type(self)(acoustics.signal.instantaneous_frequency(self, self.fs), self.fs)
 
     def instantaneous_phase(self):
         """Instantaneous phase.
@@ -189,7 +189,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.signal.instantaneous_phase`
     
         """
-        return Signal(acoustics.signal.instantaneous_phase(self, self.fs), self.fs)
+        return type(self)(acoustics.signal.instantaneous_phase(self, self.fs), self.fs)
 
     
     def detrend(self, **kwargs):
@@ -198,7 +198,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`scipy.signal.detrend`
         
         """
-        return Signal(detrend(self, **kwargs), self.fs)
+        return type(self)(detrend(self, **kwargs), self.fs)
     
     def unwrap(self):
         """Unwrap signal in case the signal represents wrapped phase.
@@ -206,7 +206,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`np.unwrap`
         
         """
-        return Signal(np.unwrap(self), self.fs)
+        return type(self)(np.unwrap(self), self.fs)
 
     def complex_cepstrum(self, N=None):
         """Complex cepstrum.
