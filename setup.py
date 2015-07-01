@@ -32,6 +32,8 @@ setup(
       author_email='fridh@fridh.nl',
       license='LICENSE',
       packages=find_packages(exclude=["tests"]),
+      package_dir={'acoustics': 'acoustics'},
+      package_data={'acoustics': ['data/*']},
       #py_modules=['turbulence'],
       scripts=[],
       zip_safe=False,
