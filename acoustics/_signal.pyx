@@ -3,10 +3,11 @@ cimport numpy
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
-from scipy.signal import detrend, correlate
+from scipy.signal import detrend, correlate, lfilter, bilinear
 import acoustics
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
+from acoustics.standards.iec_61672_1_2013 import WEIGHTING_SYSTEMS
 
 class Signal(numpy.ndarray):
     """Container for signals.Signal
@@ -139,6 +140,15 @@ class Signal(numpy.ndarray):
         return acoustics.signal.rms(self)
         #return np.sqrt(self.power())
 
+
+    def weigh(self, weighting='A'):
+        """Apply frequency-weighting. Options are 'A', 'C' and 'Z'.
+        """
+        num, den = WEIGHTING_SYSTEMS[weighting]()
+        b, a = bilinear(num, den, self.fs)
+        return type(self)(lfilter(b, a, self), self.fs)
+
+
     def correlate(self, other=None, mode='full'):
         """Correlate signal with `other` signal. In case `other==None` this 
         method returns the autocorrelation.
@@ -163,7 +173,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.signal.amplitude_envelope`
         
         """
-        return Signal(acoustics.signal.amplitude_envelope(self, self.fs), self.fs)
+        return type(self)(acoustics.signal.amplitude_envelope(self, self.fs), self.fs)
 
     def instantaneous_frequency(self):
         """Instantaneous frequency.
@@ -171,7 +181,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.signal.instantaneous_frequency`
         
         """
-        return Signal(acoustics.signal.instantaneous_frequency(self, self.fs), self.fs)
+        return type(self)(acoustics.signal.instantaneous_frequency(self, self.fs), self.fs)
 
     def instantaneous_phase(self):
         """Instantaneous phase.
@@ -179,7 +189,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.signal.instantaneous_phase`
     
         """
-        return Signal(acoustics.signal.instantaneous_phase(self, self.fs), self.fs)
+        return type(self)(acoustics.signal.instantaneous_phase(self, self.fs), self.fs)
 
     
     def detrend(self, **kwargs):
@@ -188,7 +198,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`scipy.signal.detrend`
         
         """
-        return Signal(detrend(self, **kwargs), self.fs)
+        return type(self)(detrend(self, **kwargs), self.fs)
     
     def unwrap(self):
         """Unwrap signal in case the signal represents wrapped phase.
@@ -196,7 +206,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`np.unwrap`
         
         """
-        return Signal(np.unwrap(self), self.fs)
+        return type(self)(np.unwrap(self), self.fs)
 
     def complex_cepstrum(self, N=None):
         """Complex cepstrum.

@@ -5,9 +5,7 @@ Reference
 
 This section contains a description of all classes and functions.
 
-.. inheritance-diagram:: acoustics
 .. automodule:: acoustics
-    :show-inheritance:
     
     
 .. toctree::

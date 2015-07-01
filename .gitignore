@@ -49,3 +49,9 @@ _build
 [#]*[#]
 .\#*
 .projectile
+
+.kateproject*
+.spyder*
+.ipynb_checkpoints
+
+temp

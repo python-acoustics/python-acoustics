@@ -20,36 +20,50 @@ from scipy.signal import lfilter, bilinear
 from math import floor
 from .iso_tr_25417_2007 import REFERENCE_PRESSURE
 
-NOMINAL_FREQUENCIES = np.array([10.0, 12.5, 16.0, 20.0, 25.0, 31.5, 40.0, 50.0, 63.0, 80.0, 
-                                100.0, 125.0, 160.0, 200.0, 250.0, 315.0, 400.0, 500.0, 630.0, 
-                                800.0, 1000.0, 1250.0, 1600.0, 2000.0, 2500.0, 3150.0, 4000.0, 5000.0, 
-                                6300.0, 8000.0, 10000.0, 12500.0, 16000.0, 20000.0
-                                ])
-"""
-Nominal frequencies.
+import io
+import os
+import pkgutil
+import pandas as pd
+
+WEIGHTING_VALUES = pd.read_table(io.BytesIO(pkgutil.get_data('acoustics', os.path.join('data', 'iec_61672_1_2013.csv'))), sep=',', index_col=0)
+"""DataFrame with indices, nominal frequencies and weighting values.
 """
 
-WEIGHTING_A = np.array([-70.4, -63.4, -56.7, -50.5, -44.7, -39.4, -34.6, -30.2, -26.2, 
-                        -22.5, -19.1, -16.1, -13.4, -10.9, -8.6, -6.6, -4.8, -3.2, -1.9,
-                        -0.8, 0.0, +0.6, +1.0, +1.2, +1.3, +1.2, +1.0, +0.5, -0.1, -1.1, -2.5, -4.3, -6.6, -9.3
-                        ])
-"""
-Frequency weighting A.
+NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES = np.array(WEIGHTING_VALUES.nominal)
+"""Nominal 1/3-octave frequencies. See table 3.
 """
 
-WEIGHTING_C = np.array([-14.3, -11.2,-8.5, -6.2, -4.4, -3.0, -2.0, -1.3, -0.8, -0.5, -0.3, 
-                        -0.2, -0.1, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,0,  0.0,  
-                        -0.1, -0.2, -0.3, -0.5, -0.8, -1.3, -2.0, -3.0, -4.4, -6.2, -8.5, -11.2]) 
-"""
-Frequency weighting C.
+NOMINAL_OCTAVE_CENTER_FREQUENCIES = np.array(WEIGHTING_VALUES.nominal)[2::3]
+"""Nominal 1/1-octave frequencies. Based on table 3.
 """
 
-WEIGHTING_Z = np.array([0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0., 
-                        0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,
-                        0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.])
+REFERENCE_FREQUENCY = 1000.0
+"""Reference frequency. See table 3.
 """
-Frequency weighting Z.
+
+EXACT_THIRD_OCTAVE_CENTER_FREQUENCIES = REFERENCE_FREQUENCY * 10.0**(0.01*(np.arange(10, 44)-30))
+"""Exact third-octave center frequencies. See table 3.
 """
+
+WEIGHTING_A = np.array(WEIGHTING_VALUES.A)
+"""Frequency weighting A. See table 3.
+"""
+
+WEIGHTING_C = np.array(WEIGHTING_VALUES.C)
+"""Frequency weighting C. See table 3.
+"""
+
+WEIGHTING_Z = np.array(WEIGHTING_VALUES.Z)
+"""Frequency weighting Z. See table 3.
+"""
+
+WEIGHTING_VALUES_DECIBEL = {'A': WEIGHTING_A,
+                            'C': WEIGHTING_C,
+                            'Z': WEIGHTING_Z
+                            }
+"""Dictionary with weighting values 'A', 'C' and 'Z' weighting.
+"""
+
 
 FAST = 0.125
 """FAST time-constant.
@@ -183,3 +197,146 @@ def slow_level(data, fs):
     """
     return time_weighted_sound_level(data, fs, SLOW)
 
+
+#---- Annex E - Analytical expressions for frequency-weightings C, A, and Z.-#
+
+_POLE_FREQUENCIES = {1: 20.60,
+                     2: 107.7,
+                     3: 737.9,
+                     4: 12194.0,
+                     }
+"""Approximate values for pole frequencies f_1, f_2, f_3 and f_4.
+
+See section E.4.1 of the standard.
+"""
+
+_NORMALIZATION_CONSTANTS = {'A': -2.000,
+                            'C': -0.062,
+                            }
+"""Normalization constants :math:`C_{1000}` and :math:`A_{1000}`.
+
+See section E.4.2 of the standard.
+"""
+
+def weighting_function_decibel_a(frequencies):
+    """A-weighting function in decibel.
+    
+    :param frequencies: Vector of frequencies at which to evaluate the weighting.
+    :returns: Vector with scaling factors.
+    
+    The weighting curve is
+    
+    .. math:: 20 \\log_{10}{\\frac{(f_4^2 * f^4)}{(f^2 + f_1^2) \sqrt{(f^2 + f_2^2)(f^2 + f_3^2)}(f^2 + f_4^2)}} - A_{1000}
+    
+    with :math:`A_{1000} = -2` dB.
+    
+    See equation E.6 of the standard.
+    
+    """
+    f = np.asarray(frequencies)
+    offset = _NORMALIZATION_CONSTANTS['A']
+    f1, f2, f3, f4 = _POLE_FREQUENCIES.values()
+    weighting = 20.0 * np.log10( (f4**2.0 * f**4.0) / ( (f**2.0+f1**2.0)*np.sqrt(f**2.0+f2**2.0)*np.sqrt(f**2.0+f3**2.0)*(f**2.0+f4**2.0) )) - offset
+    return weighting
+
+
+def weighting_function_decibel_c(frequencies):
+    """C-weighting function in decibel.
+    
+    :param frequencies: Vector of frequencies at which to evaluate the weighting.
+    :returns: Vector with scaling factors.
+    
+    The weighting curve is
+    
+    .. math:: 20 \\log_{10}{\\frac{(f_4^2 f^2)}{(f^2+f_1^2)(f^2+f_4^2)}} - C_{1000}
+    
+    with :math:`C_{1000} = -0.062` dB
+    
+    See equation E.1 of the standard.
+    
+    """
+    f = np.asarray(frequencies)
+    offset = _NORMALIZATION_CONSTANTS['C']
+    f1, f2, f3, f4 = _POLE_FREQUENCIES.values()
+    weighting = 20.0 * np.log10( (f4**2.0 * f**2.0)  / ( (f**2.0 + f1**2.0) * (f**2.0 + f4**2.0) )) - offset
+    return weighting
+    
+    
+def weighting_function_decibel_z(frequencies):
+    """Z-weighting function in decibel.
+    
+    :param frequencies: Vector of frequencies at which to evaluate the weighting.
+    :returns: Vector with scaling factors.
+    
+    """
+    frequencies = np.asarray(frequencies)
+    return np.zeros_like(frequencies)
+    
+    
+WEIGHTING_FUNCTIONS_DECIBEL = {'A': weighting_function_decibel_a,
+                               'C': weighting_function_decibel_c,
+                               'Z': weighting_function_decibel_z,
+                               }
+"""Dictionary with available weighting functions 'A', 'C' and 'Z'.
+"""
+
+def weighting_system_a():
+    """A-weighting filter represented as polynomial transfer function.
+    
+    :returns: Tuple of `num` and `den`.
+    
+    See equation E.6 of the standard.
+    
+    """    
+    f1 = _POLE_FREQUENCIES[1]
+    f2 = _POLE_FREQUENCIES[2]
+    f3 = _POLE_FREQUENCIES[3]
+    f4 = _POLE_FREQUENCIES[4]
+    offset = _NORMALIZATION_CONSTANTS['A']
+    numerator = np.array([(2.0*np.pi*f4)**2.0 * (10**(-offset/20.0)), 0.0, 0.0, 0.0, 0.0])
+    part1 = [1.0, 4.0*np.pi*f4, (2.0*np.pi*f4)**2.0]
+    part2 = [1.0, 4.0*np.pi*f1, (2.0*np.pi*f1)**2.0]
+    part3 = [1.0, 2.0*np.pi*f3]
+    part4 = [1.0, 2.0*np.pi*f2]
+    denomenator = np.convolve(np.convolve(np.convolve(part1, part2), part3), part4)
+    return numerator, denomenator
+    
+    
+def weighting_system_c():
+    """C-weighting filter represented as polynomial transfer function.
+    
+    :returns: Tuple of `num` and `den`.
+    
+    See equation E.1 of the standard.
+    
+    """
+    f1 = _POLE_FREQUENCIES[1]
+    f4 = _POLE_FREQUENCIES[4]
+    offset = _NORMALIZATION_CONSTANTS['C']
+    numerator = np.array([(2.0*np.pi*f4)**2.0 * (10**(-offset/20.0)), 0.0, 0.0])
+    part1 = [1.0, 4.0*np.pi*f4, (2.0*np.pi*f4)**2.0]
+    part2 = [1.0, 4.0*np.pi*f1, (2.0*np.pi*f1)**2.0]
+    denomenator = np.convolve(part1, part2)
+    return numerator, denomenator
+    
+    
+def weighting_system_z():
+    """Z-weighting filter represented as polynomial transfer function.
+    
+    :returns: Tuple of `num` and `den`.
+    
+    Z-weighting is 0.0 dB for all frequencies and therefore corresponds to a 
+    multiplication of 1.
+    
+    """
+    numerator = [1]
+    denomenator = [1]
+    return numerator, denomenator
+
+
+WEIGHTING_SYSTEMS = {'A': weighting_system_a,
+                     'C': weighting_system_c,
+                     'Z': weighting_system_z,
+                     }
+"""Weighting systems.
+"""

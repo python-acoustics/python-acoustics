@@ -73,7 +73,9 @@ import acoustics.octave
 
 import acoustics.bands
 from scipy.signal import hilbert
-
+from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
+from acoustics.standards.iec_61672_1_2013 import (NOMINAL_OCTAVE_CENTER_FREQUENCIES,
+                                                  NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES)
 
 try:
     from pyfftw.interfaces.numpy_fft import rfft
@@ -460,32 +462,24 @@ class OctaveBand(Frequencies):
                 center = [center]
                 nbands = 1
             fstart = center[0]
-            fstop = center[-1]
-        
-        if fstart is not None and fstop is not None:
-            o = acoustics.octave.Octave(fraction=fraction, fmin=fstart, fmax=fstop, reference=reference)
-            center = o.center
-            nbands = len(center)
-        
-        if fstart is not None and nbands is not None:
+            center = np.asarray(center)
+            indices = acoustics.octave.band_of_frequency(center, fraction=fraction, ref=reference)
+        elif fstart is not None and fstop is not None:
             nstart = acoustics.octave.band_of_frequency(fstart, fraction=fraction, ref=reference)
-            nstop = nstart + nbands-1
-            fstop = acoustics.octave.frequency_of_band(nstop, fraction=fraction, ref=reference)
+            nstop = acoustics.octave.band_of_frequency(fstop, fraction=fraction, ref=reference)
+            indices = np.arange(nstart, nstop)
+        elif fstart is not None and nbands is not None:
+            nstart = acoustics.octave.band_of_frequency(fstart, fraction=fraction, ref=reference)
+            indices = np.arange(nstart, nstart+nbands)
         elif fstop is not None and nbands is not None:
             nstop = acoustics.octave.band_of_frequency(fstop, fraction=fraction, ref=reference)
-            nstart = nstop - nbands+1
-            fstart = acoustics.octave.band_of_frequency(nstart, fraction=fraction, ref=reference)
+            indices = np.arange(nstop-nbands, nstop)
         else:
             raise ValueError("Insufficient parameters. Cannot determine fstart and/or fstop.")    
-        
-        
-        center = acoustics.octave.Octave(fraction=fraction, 
-                                       fmin=fstart, 
-                                       fmax=fstop, 
-                                       reference=reference).center
-    
-        upper = acoustics.octave.upper_frequency(center, fraction)
-        lower = acoustics.octave.lower_frequency(center, fraction)
+
+        center = acoustics.octave.frequency_of_band(indices, fraction=fraction, ref=reference)
+        lower = acoustics.octave.lower_frequency(center, fraction=fraction)
+        upper = acoustics.octave.upper_frequency(center, fraction=fraction)
         bandwidth = upper - lower
 
         super(OctaveBand, self).__init__(center, lower, upper, bandwidth)
@@ -647,15 +641,17 @@ def power_spectrum(x, fs, N=None):
     return f, a
   
 
-def phase_spectrum(x, fs, N=None):
+def angle_spectrum(x, fs, N=None):
     """
-    Phase spectrum of instantaneous signal :math:`x(t)`.
+    Phase angle spectrum of instantaneous signal :math:`x(t)`.
     
     :param x: Instantaneous signal :math:`x(t)`.
     :param fs: Sample frequency :math:`f_s`.
     :param N: Amount of FFT bins.
     
-    This function returns a single-sided phase spectrum.
+    This function returns a single-sided wrapped phase angle spectrum.
+    
+    .. seealso:: :func:`phase_spectrum` for unwrapped phase spectrum.
     
     """
     N = N if N else x.shape[-1]
@@ -664,6 +660,25 @@ def phase_spectrum(x, fs, N=None):
     a = a[..., N//2:]
     f = f[..., N//2:]
     return f, a
+
+
+def phase_spectrum(x, fs, N=None):
+    """
+    Phase spectrum of instantaneous signal :math:`x(t)`.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency :math:`f_s`.
+    :param N: Amount of FFT bins.
+    
+    This function returns a single-sided unwrapped phase spectrum.
+    
+    .. seealso:: :func:`angle_spectrum` for wrapped phase angle.
+    
+    """
+    f, a = angle_spectrum(x, fs, N=None)
+    return f, np.unwrap(a)
+    
+
 
 #def power_and_phase_spectrum(x, fs, N=None):
     #"""
@@ -748,7 +763,10 @@ def integrate_bands(data, a, b):
     return ((lower < center) * (center <= upper) * data[...,None]).sum(axis=-2)
 
 
-def octaves(p, fs, density=False):
+
+def octaves(p, fs, density=False, 
+            frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, 
+            ref=REFERENCE_PRESSURE):
     """Calculate level per 1/1-octave.
     
     :param p: Instantaneous pressure :math:`p(t)`.
@@ -759,18 +777,22 @@ def octaves(p, fs, density=False):
     
     .. seealso:: :attr:`acoustics.bands.OCTAVE_CENTER_FREQUENCIES`
     
+    .. note:: Exact center frequencies are always calculated.
+    
     """
-    fob = OctaveBand(acoustics.bands.OCTAVE_CENTER_FREQUENCIES, fraction=1)
+    fob = OctaveBand(center=frequencies, fraction=1)
     f, p = power_spectrum(p, fs)
     fnb = EqualBand(f)
     power = integrate_bands(p, fnb, fob)
     if density:
         power /= (fob.bandwidth/fnb.bandwidth)
-    level = 10.0*np.log10(power)
+    level = 10.0*np.log10(power / ref**2.0)
     return fob, level
 
 
-def third_octaves(p, fs, density=False):
+def third_octaves(p, fs, density=False, 
+                  frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, 
+                  ref=REFERENCE_PRESSURE):
     """Calculate level per 1/3-octave.
     
     :param p: Instantaneous pressure :math:`p(t)`.
@@ -781,14 +803,16 @@ def third_octaves(p, fs, density=False):
     
     .. seealso:: :attr:`acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES`
     
+    .. note:: Exact center frequencies are always calculated.
+    
     """
-    fob = OctaveBand(acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES, fraction=3)
+    fob = OctaveBand(center=frequencies, fraction=3)
     f, p = power_spectrum(p, fs)
     fnb = EqualBand(f)
     power = integrate_bands(p, fnb, fob)
     if density:
         power /= (fob.bandwidth/fnb.bandwidth)
-    level = 10.0*np.log10(power)
+    level = 10.0*np.log10(power / ref**2.0)
     return fob, level
 
 
@@ -797,6 +821,9 @@ def fractional_octaves(p, fs, start=5.0, stop=16000.0, fraction=3, density=False
     
     .. note:: Based on power spectrum (FFT)
     
+    .. note:: This function does *not* use nominal center frequencies.
+    
+    .. note:: Exact center frequencies are always calculated.
     """
     fob = OctaveBand(fstart=start, fstop=stop, fraction=fraction)
     f, p = power_spectrum(p, fs)

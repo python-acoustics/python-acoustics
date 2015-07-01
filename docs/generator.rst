@@ -1,3 +1,3 @@
 .. automodule:: acoustics.generator
-    :show-inheritance:
+    :no-members:
 
