@@ -3,10 +3,11 @@ cimport numpy
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
-from scipy.signal import detrend, correlate
+from scipy.signal import detrend, correlate, lfilter, bilinear
 import acoustics
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
+from acoustics.standards.iec_61672_1_2013 import WEIGHTING_SYSTEMS
 
 class Signal(numpy.ndarray):
     """Container for signals.Signal
@@ -138,6 +139,15 @@ class Signal(numpy.ndarray):
         """
         return acoustics.signal.rms(self)
         #return np.sqrt(self.power())
+
+
+    def weigh(self, weighting='A'):
+        """Apply frequency-weighting. Options are 'A', 'C' and 'Z'.
+        """
+        num, den = WEIGHTING_SYSTEMS[weighting]()
+        b, a = bilinear(num, den, self.fs)
+        return type(self)(lfilter(b, a, self), self.fs)
+
 
     def correlate(self, other=None, mode='full'):
         """Correlate signal with `other` signal. In case `other==None` this 
