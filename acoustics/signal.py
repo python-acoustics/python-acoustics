@@ -460,32 +460,24 @@ class OctaveBand(Frequencies):
                 center = [center]
                 nbands = 1
             fstart = center[0]
-            fstop = center[-1]
-        
-        if fstart is not None and fstop is not None:
-            o = acoustics.octave.Octave(fraction=fraction, fmin=fstart, fmax=fstop, reference=reference)
-            center = o.center
-            nbands = len(center)
-        
-        if fstart is not None and nbands is not None:
+            center = np.asarray(center)
+            indices = acoustics.octave.band_of_frequency(center, fraction=fraction, ref=reference)
+        elif fstart is not None and fstop is not None:
             nstart = acoustics.octave.band_of_frequency(fstart, fraction=fraction, ref=reference)
-            nstop = nstart + nbands-1
-            fstop = acoustics.octave.frequency_of_band(nstop, fraction=fraction, ref=reference)
+            nstop = acoustics.octave.band_of_frequency(fstop, fraction=fraction, ref=reference)
+            indices = np.arange(nstart, nstop)
+        elif fstart is not None and nbands is not None:
+            nstart = acoustics.octave.band_of_frequency(fstart, fraction=fraction, ref=reference)
+            indices = np.arange(nstart, nstart+nbands)
         elif fstop is not None and nbands is not None:
             nstop = acoustics.octave.band_of_frequency(fstop, fraction=fraction, ref=reference)
-            nstart = nstop - nbands+1
-            fstart = acoustics.octave.band_of_frequency(nstart, fraction=fraction, ref=reference)
+            indices = np.arange(nstop-nbands, nstop)
         else:
             raise ValueError("Insufficient parameters. Cannot determine fstart and/or fstop.")    
-        
-        
-        center = acoustics.octave.Octave(fraction=fraction, 
-                                       fmin=fstart, 
-                                       fmax=fstop, 
-                                       reference=reference).center
-    
-        upper = acoustics.octave.upper_frequency(center, fraction)
-        lower = acoustics.octave.lower_frequency(center, fraction)
+
+        center = acoustics.octave.frequency_of_band(indices, fraction=fraction, ref=reference)
+        lower = acoustics.octave.lower_frequency(center, fraction=fraction)
+        upper = acoustics.octave.upper_frequency(center, fraction=fraction)
         bandwidth = upper - lower
 
         super(OctaveBand, self).__init__(center, lower, upper, bandwidth)
