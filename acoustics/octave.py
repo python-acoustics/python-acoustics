@@ -18,53 +18,15 @@ REFERENCE = 1000.0
 Reference frequency.
 """
 
-def band_of_frequency(f, fraction=1, ref=REFERENCE):
-    """
-    Calculate the band ``n`` from a given center frequency.
+from acoustics.standards.iec_61260_1_2014 import (exact_center_frequency,
+                                                  index_of_frequency,
+                                                  lower_frequency,
+                                                  upper_frequency,
+                                                  )
 
-    :param f: Frequency :math:`f`.
-    :param fraction: Band fraction.
-    :param ref: Reference center frequency :math:`f_0`.
-    """
-    return np.round( ( np.log2(f/ref) - 1.0/fraction ) * fraction)
-
-
-def frequency_of_band(n, fraction=1, ref=REFERENCE):
-    """
-    Calculate center frequency of band ``n``.
-    
-    :param n: band ``n``.
-    :param fraction: Order of octave.
-    :param ref: Reference center frequency.
-    """
-    return ref * 10.0**(3.0/fraction/10.0) * 2.0**(n/fraction)
-
-
-def upper_frequency(center, fraction=1):
-    """
-    Upper frequency of frequency band given a center frequency and fraction.
-    
-    :param centr: Center frequencies.
-    :param fraction: Fraction of octave.
-    
-    .. math:: f_u = f_c \cdot 2^{\\frac{+1}{2N}}
-    
-    """
-    return center * 2.0**(+1.0/(2.0*fraction))
-    
-    
-def lower_frequency(center, fraction=1):
-    """
-    Lower frequency of frequency band given a center frequency and fraction.
-    
-    :param center: Center frequencies.
-    :param fraction: Fraction of octave.
-    
-    .. math:: f_l = f_c \cdot 2^{\\frac{-1}{2N}}
-    
-    """
-    return center * 2.0**(-1.0/(2.0*fraction))    
-
+frequency_of_band = exact_center_frequency
+band_of_frequency = index_of_frequency
+ 
 
 class Octave(object):
     """
