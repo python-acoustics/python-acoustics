@@ -8,7 +8,7 @@ env:
   global:
     - NUMPY_VERSION=1.9
     - SCIPY_VERSION=0.14
-    - INSTALL_OPTIONAL=true
+    #- INSTALL_OPTIONAL=true
 
 matrix:
   include:
@@ -29,11 +29,11 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 
 install:
-  - conda create --yes -n testenv python=$TRAVIS_PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib six pytest pip cython numexpr
+  - conda create --yes -n testenv python=$TRAVIS_PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib six pytest pip cython numexpr pandas
   - source activate testenv
 
   # Optional dependencies
-  - if $INSTALL_OPTIONAL; then conda install --yes pandas=0.14; fi
+  #- if $INSTALL_OPTIONAL; then conda install --yes pandas=0.14; fi
 
 script:
   - python setup.py test
