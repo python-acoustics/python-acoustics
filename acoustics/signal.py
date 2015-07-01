@@ -761,7 +761,8 @@ def integrate_bands(data, a, b):
     return ((lower < center) * (center <= upper) * data[...,None]).sum(axis=-2)
 
 
-def octaves(p, fs, density=False):
+
+def octaves(p, fs, density=False, frequencies=acoustics.standards.iec_61672_1_2013.NOMINAL_OCTAVE_CENTER_FREQUENCIES):
     """Calculate level per 1/1-octave.
     
     :param p: Instantaneous pressure :math:`p(t)`.
@@ -772,8 +773,10 @@ def octaves(p, fs, density=False):
     
     .. seealso:: :attr:`acoustics.bands.OCTAVE_CENTER_FREQUENCIES`
     
+    .. note:: Exact center frequencies are always calculated.
+    
     """
-    fob = OctaveBand(acoustics.bands.OCTAVE_CENTER_FREQUENCIES, fraction=1)
+    fob = OctaveBand(center=frequencies, fraction=1)
     f, p = power_spectrum(p, fs)
     fnb = EqualBand(f)
     power = integrate_bands(p, fnb, fob)
@@ -783,7 +786,7 @@ def octaves(p, fs, density=False):
     return fob, level
 
 
-def third_octaves(p, fs, density=False):
+def third_octaves(p, fs, density=False, frequencies=acoustics.standards.iec_61672_1_2013.NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES):
     """Calculate level per 1/3-octave.
     
     :param p: Instantaneous pressure :math:`p(t)`.
@@ -794,8 +797,10 @@ def third_octaves(p, fs, density=False):
     
     .. seealso:: :attr:`acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES`
     
+    .. note:: Exact center frequencies are always calculated.
+    
     """
-    fob = OctaveBand(acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES, fraction=3)
+    fob = OctaveBand(center=frequencies, fraction=3)
     f, p = power_spectrum(p, fs)
     fnb = EqualBand(f)
     power = integrate_bands(p, fnb, fob)
@@ -810,6 +815,9 @@ def fractional_octaves(p, fs, start=5.0, stop=16000.0, fraction=3, density=False
     
     .. note:: Based on power spectrum (FFT)
     
+    .. note:: This function does *not* use nominal center frequencies.
+    
+    .. note:: Exact center frequencies are always calculated.
     """
     fob = OctaveBand(fstart=start, fstop=stop, fraction=fraction)
     f, p = power_spectrum(p, fs)
