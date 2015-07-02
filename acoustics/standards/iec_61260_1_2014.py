@@ -36,6 +36,8 @@ The normalized frequency :math:`\\Omega` is obtained by dividing the frequency :
 .. math::\\Omega = f / f_m.
 
 """
+from __future__ import division
+
 import acoustics
 import numpy as np
 
