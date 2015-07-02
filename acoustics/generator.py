@@ -24,6 +24,11 @@ Brown  -3 dB -6 dB
 Violet +9 dB +6 dB
 ====== ===== =============
 
+The colored noise is created by generating pseudo-random numbers using
+:func:`np.random.randn` and then multiplying these with a curve tyical for the color.
+Afterwards, an inverse DFT is performed using :func:`np.fft.irfft`.
+Finally, the noise is normalized using :func:`acoustics.signal.normalize`.
+
 All colors
 ----------
 

@@ -451,13 +451,14 @@ class Signal(numpy.ndarray):
 
     def spectrogram(self, **kwargs):
         """
-        Plot spectrograms of the signals.
+        Plot spectrogram of the signal.
         
         Valid kwargs:
         
         * xlim
         * ylim
         * clim
+        .. note:: This method only works for a single channel.
         
         """
         params = {
