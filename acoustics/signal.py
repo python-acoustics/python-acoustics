@@ -517,10 +517,10 @@ def rms(x):
     """
     return np.sqrt(ms(x))
     
-def normalise(y, x=None):
-    """Normalise power in y to a (standard normal) white noise signal.
+def normalize(y, x=None):
+    """normalize power in y to a (standard normal) white noise signal.
     
-    Optionally normalise to power in signal `x`.
+    Optionally normalize to power in signal `x`.
     
     #The mean power of a Gaussian with :math:`\\mu=0` and :math:`\\sigma=1` is 1.
     """
