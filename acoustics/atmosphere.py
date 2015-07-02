@@ -2,7 +2,8 @@
 Atmosphere
 ==========
 
-The atmosphere module contains functions and classes related to atmospheric acoustics and is based on :mod:`acoustics.standards.iso_9613_1_1993`.
+The atmosphere module contains functions and classes related to atmospheric 
+acoustics and is based on :mod:`acoustics.standards.iso_9613_1_1993`.
 
 Atmosphere class
 ****************

@@ -10,9 +10,14 @@ The signal module constains all kinds of signal processing related functions.
 Filtering
 *********
 
-.. autofunction:: butter_bandpass_filter
+.. autoclass:: Filterbank
+.. autofunction:: bandpass_filter
+.. autofunction:: octave_filter
+.. autofunction:: bandpass
+.. autofunction:: lowpass
+.. autofunction:: highpass
+.. autofunction:: octavepass
 .. autofunction:: convolve
-
 
 Windowing
 *********
@@ -29,6 +34,8 @@ Different types of spectra exist.
 .. autofunction:: auto_spectrum
 .. autofunction:: power_spectrum
 .. autofunction:: density_spectrum
+.. autofunction:: angle_spectrum
+.. autofunction:: angle_spectrum
 
 Frequency bands
 ***************
@@ -43,6 +50,12 @@ Frequency bands
 .. autofunction:: third_octaves
 
 
+Hilbert transform
+*****************
+
+.. autofunction:: amplitude_envelope
+.. autofunction:: instantaneous_phase
+.. autofunction:: instantaneous_frequency
 
 
 Conversion
@@ -55,10 +68,13 @@ Conversion
 Other
 *****
 
-.. autoclass:: Filterbank
+.. autofunction:: isolate
+.. autofunction:: zero_crossings
 .. autofunction:: rms
+.. autofunction:: ms
+.. autofunction:: normalize
 .. autofunction:: ir2fr
-
+.. autofunction:: wvd
 
 """
 from __future__ import division
@@ -517,10 +533,10 @@ def rms(x):
     """
     return np.sqrt(ms(x))
     
-def normalise(y, x=None):
-    """Normalise power in y to a (standard normal) white noise signal.
+def normalize(y, x=None):
+    """normalize power in y to a (standard normal) white noise signal.
     
-    Optionally normalise to power in signal `x`.
+    Optionally normalize to power in signal `x`.
     
     #The mean power of a Gaussian with :math:`\\mu=0` and :math:`\\sigma=1` is 1.
     """
@@ -1087,3 +1103,40 @@ def wvd(signal, fs, analytic=True):
 
     f = np.fft.fftfreq(N, 1./fs)
     return f, W.T
+
+
+__all__ = ['bandpass',
+           'lowpass',
+           'highpass',
+           'octavepass',
+           'octave_filter',
+           'bandpass_filter',
+           'convolve',
+           'ir2fr',
+           'decibel_to_neper',
+           'neper_to_decibel',
+           'EqualBand',
+           'OctaveBand',
+           'ms',
+           'rms',
+           'normalize',
+           'window_scaling_factor',
+           'apply_window',
+           'amplitude_spectrum',
+           'auto_spectrum',
+           'power_spectrum',
+           'angle_spectrum',
+           'phase_spectrum',
+           'density_spectrum',
+           'integrate_bands',
+           'octaves',
+           'third_octaves',
+           'fractional_octaves',
+           'Filterbank',
+           'isolate',
+           'zero_crossings',
+           'amplitude_envelope',
+           'instantaneous_phase',
+           'instantaneous_frequency',
+           'wvd',
+           ]

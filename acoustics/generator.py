@@ -60,7 +60,7 @@ try:
 except ImportError:                                    # Use monkey-patching np.fft perhaps instead?
     from numpy.fft import rfft, irfft
 
-from .signal import normalise
+from .signal import normalize
 
 
 def noise(N, color='white'):
@@ -112,7 +112,7 @@ def pink(N):
     y = (irfft(X/S)).real
     if uneven:
         y = y[:-1]
-    return normalise(y)
+    return normalize(y)
 
 
 def blue(N):
@@ -131,7 +131,7 @@ def blue(N):
     y = (irfft(X*S)).real
     if uneven:
         y = y[:-1]
-    return normalise(y)
+    return normalize(y)
 
 
 def brown(N):
@@ -150,7 +150,7 @@ def brown(N):
     y = (irfft(X/S)).real
     if uneven:
         y = y[:-1]
-    return normalise(y)
+    return normalize(y)
 
 
 def violet(N):
@@ -169,7 +169,7 @@ def violet(N):
     y = (irfft(X*S)).real
     if uneven:
         y = y[:-1]
-    return normalise(y)
+    return normalize(y)
 
 
 _noise_generators = {
