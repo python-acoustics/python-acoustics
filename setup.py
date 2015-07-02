@@ -47,6 +47,7 @@ setup(
           'pandas',
           ],
       extras_require={
+          'documentation': 'sphinx',
           'jit': 'numba',
           'fast_fft': 'pyFFTW',
           },
