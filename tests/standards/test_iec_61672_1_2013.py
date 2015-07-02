@@ -81,16 +81,16 @@ class TestWeighting():
     def weighting(self, request):
         return request.param
 
-    def test_weighting_functions_decibel(self, weighting):
+    def test_weighting_functions(self, weighting):
         frequencies = NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES
-        values = WEIGHTING_VALUES_DECIBEL[weighting]
-        function_values = WEIGHTING_FUNCTIONS_DECIBEL[weighting](frequencies)
+        values = WEIGHTING_VALUES[weighting]
+        function_values = WEIGHTING_FUNCTIONS[weighting](frequencies)
         assert(np.abs(values-function_values).max() < 0.3)
         
 
     def test_weighting_systems(self, weighting):
         frequencies = NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES
-        values = WEIGHTING_VALUES_DECIBEL[weighting]
+        values = WEIGHTING_VALUES[weighting]
         w, H = freqresp((WEIGHTING_SYSTEMS[weighting]()), w=2.0*np.pi*frequencies)
         results = 20.0*np.log10(np.abs(H))
         assert(np.abs(values-results).max() < 0.3)

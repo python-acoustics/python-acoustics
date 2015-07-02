@@ -25,15 +25,15 @@ import os
 import pkgutil
 import pandas as pd
 
-WEIGHTING_VALUES = pd.read_table(io.BytesIO(pkgutil.get_data('acoustics', os.path.join('data', 'iec_61672_1_2013.csv'))), sep=',', index_col=0)
+WEIGHTING_DATA = pd.read_table(io.BytesIO(pkgutil.get_data('acoustics', os.path.join('data', 'iec_61672_1_2013.csv'))), sep=',', index_col=0)
 """DataFrame with indices, nominal frequencies and weighting values.
 """
 
-NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES = np.array(WEIGHTING_VALUES.nominal)
+NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES = np.array(WEIGHTING_DATA.nominal)
 """Nominal 1/3-octave frequencies. See table 3.
 """
 
-NOMINAL_OCTAVE_CENTER_FREQUENCIES = np.array(WEIGHTING_VALUES.nominal)[2::3]
+NOMINAL_OCTAVE_CENTER_FREQUENCIES = np.array(WEIGHTING_DATA.nominal)[2::3]
 """Nominal 1/1-octave frequencies. Based on table 3.
 """
 
@@ -45,22 +45,22 @@ EXACT_THIRD_OCTAVE_CENTER_FREQUENCIES = REFERENCE_FREQUENCY * 10.0**(0.01*(np.ar
 """Exact third-octave center frequencies. See table 3.
 """
 
-WEIGHTING_A = np.array(WEIGHTING_VALUES.A)
+WEIGHTING_A = np.array(WEIGHTING_DATA.A)
 """Frequency weighting A. See table 3.
 """
 
-WEIGHTING_C = np.array(WEIGHTING_VALUES.C)
+WEIGHTING_C = np.array(WEIGHTING_DATA.C)
 """Frequency weighting C. See table 3.
 """
 
-WEIGHTING_Z = np.array(WEIGHTING_VALUES.Z)
+WEIGHTING_Z = np.array(WEIGHTING_DATA.Z)
 """Frequency weighting Z. See table 3.
 """
 
-WEIGHTING_VALUES_DECIBEL = {'A': WEIGHTING_A,
-                            'C': WEIGHTING_C,
-                            'Z': WEIGHTING_Z
-                            }
+WEIGHTING_VALUES = {'A': WEIGHTING_A,
+                    'C': WEIGHTING_C,
+                    'Z': WEIGHTING_Z
+                    }
 """Dictionary with weighting values 'A', 'C' and 'Z' weighting.
 """
 
@@ -218,7 +218,7 @@ _NORMALIZATION_CONSTANTS = {'A': -2.000,
 See section E.4.2 of the standard.
 """
 
-def weighting_function_decibel_a(frequencies):
+def weighting_function_a(frequencies):
     """A-weighting function in decibel.
     
     :param frequencies: Vector of frequencies at which to evaluate the weighting.
@@ -240,7 +240,7 @@ def weighting_function_decibel_a(frequencies):
     return weighting
 
 
-def weighting_function_decibel_c(frequencies):
+def weighting_function_c(frequencies):
     """C-weighting function in decibel.
     
     :param frequencies: Vector of frequencies at which to evaluate the weighting.
@@ -262,7 +262,7 @@ def weighting_function_decibel_c(frequencies):
     return weighting
     
     
-def weighting_function_decibel_z(frequencies):
+def weighting_function_z(frequencies):
     """Z-weighting function in decibel.
     
     :param frequencies: Vector of frequencies at which to evaluate the weighting.
@@ -273,10 +273,10 @@ def weighting_function_decibel_z(frequencies):
     return np.zeros_like(frequencies)
     
     
-WEIGHTING_FUNCTIONS_DECIBEL = {'A': weighting_function_decibel_a,
-                               'C': weighting_function_decibel_c,
-                               'Z': weighting_function_decibel_z,
-                               }
+WEIGHTING_FUNCTIONS = {'A': weighting_function_a,
+                       'C': weighting_function_c,
+                       'Z': weighting_function_z,
+                       }
 """Dictionary with available weighting functions 'A', 'C' and 'Z'.
 """
 
