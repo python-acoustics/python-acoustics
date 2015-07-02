@@ -501,7 +501,8 @@ class OctaveBand(Frequencies):
         lower = acoustics.octave.lower_frequency(center, fraction=fraction)
         upper = acoustics.octave.upper_frequency(center, fraction=fraction)
         bandwidth = upper - lower
-
+        nominal = acoustics.octave.nominal_center_frequency(None, fraction, indices)
+        
         super(OctaveBand, self).__init__(center, lower, upper, bandwidth)
         
         self.fraction = fraction
@@ -511,6 +512,11 @@ class OctaveBand(Frequencies):
         self.reference = reference
         """Reference center frequency.
         """
+        
+        self.nominal = nominal
+        """Nominal center frequencies.
+        """
+        
         
     def __repr__(self):
         return "OctaveBand({})".format(str(self.center))
