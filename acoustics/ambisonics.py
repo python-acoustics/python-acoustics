@@ -58,4 +58,5 @@ def n3d(m, n):
     return sn3d(m, n) * np.sqrt(2*n+1)
     
     
+__all__ = ['acn', 'sn3d', 'n3d']
     

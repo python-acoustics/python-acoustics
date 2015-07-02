@@ -62,3 +62,6 @@ def dbsub(a, b):
     a = np.asanyarray(a)
     b = np.asanyarray(b)
     return 10.0*np.log10(10.0**(a/10.0)-10.0**(b/10.0))
+
+
+__all__ = ['dbsum', 'dbmean', 'dbadd', 'dbsub']

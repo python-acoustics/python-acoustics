@@ -9,8 +9,6 @@ from __future__ import division
 
 import numpy as np
 
-#from acoustics.utils import w
-
 
 def rw_curve(tl):
     """
@@ -122,3 +120,6 @@ def mass_law(freq, vol_density, thickness, theta=0, c=343, rho0=1.225):
     a = rad_freq * surface_density * np.cos(theta_rad) / (2 * rho0 * c)
     tl_theta = 10 * np.log10(1 + a**2)
     return tl_theta
+
+
+__all__ = ['rw_curve', 'rw', 'rw_c', 'rw_ctr', 'stc_curve', 'stc', 'mass_law']
