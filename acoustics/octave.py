@@ -30,6 +30,7 @@ def exact_center_frequency(frequency=None, fraction=1, n=None, ref=REFERENCE):
     :param fraction: Band designator.
     :param n: Index of band.
     :param ref: Reference frequency.
+    :return: Exact center frequency for the given frequency or band index.
     
     .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.exact_center_frequency`
     .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.index_of_frequency`
@@ -46,6 +47,7 @@ def nominal_center_frequency(frequency=None, fraction=1, n=None):
     :param frequency: Frequency within the band.
     :param fraction: Band designator.
     :param n: Index of band.
+    :returns: The nominal center frequency for the given frequency or band index.
     
     .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.exact_center_frequency`
     .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.nominal_center_frequency`
@@ -57,33 +59,37 @@ def nominal_center_frequency(frequency=None, fraction=1, n=None):
     return acoustics.standards.iec_61260_1_2014.nominal_center_frequency(center, fraction)
     
 
-def lower_frequency(frequency=None, fraction=1, n=None):
+def lower_frequency(frequency=None, fraction=1, n=None, ref=REFERENCE):
     """Lower band-edge frequency.
     
     :param frequency: Frequency within the band.
     :param fraction: Band designator.
     :param n: Index of band.
+    :param ref: Reference frequency.
+    :returns: Lower band-edge frequency for the given frequency or band index.
     
     .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.exact_center_frequency`
     .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.lower_frequency`
     
     """
-    center = exact_center_frequency(frequency, fraction, n)
+    center = exact_center_frequency(frequency, fraction, n, ref=ref)
     return acoustics.standards.iec_61260_1_2014.lower_frequency(center, fraction)
    
    
-def upper_frequency(frequency=None, fraction=1, n=None):
+def upper_frequency(frequency=None, fraction=1, n=None, ref=REFERENCE):
     """Upper band-edge frequency.
     
     :param frequency: Frequency within the band.
     :param fraction: Band designator.
     :param n: Index of band.
+    :param ref: Reference frequency.
+    :returns: Upper band-edge frequency for the given frequency or band index.
     
     .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.exact_center_frequency`
     .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.upper_frequency`
     
     """
-    center = exact_center_frequency(frequency, fraction, n)
+    center = exact_center_frequency(frequency, fraction, n, ref=ref)
     return acoustics.standards.iec_61260_1_2014.upper_frequency(center, fraction)
 
 
