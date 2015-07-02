@@ -241,8 +241,13 @@ class Octave(object):
         """
         return upper_frequency(self.center, self.fraction)
         
-    
-###def center_frequency_octave(frequencies, order=1):
+
+__all__ = ['exact_center_frequency', 'nominal_center_frequency', 
+           'lower_frequency', 'upper_frequency', 'index_of_frequency',
+           'Octave', 'frequency_of_band', 'band_of_frequency', # These three will be deprecated?
+           ]
+
+###def center_frequency_octave(frequencies, fraction=1):
     ###"""
     ###Calculate the center frequencies :math:`f_c` of the octaves that (partially) cover ``frequencies``.
     
