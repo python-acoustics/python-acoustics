@@ -84,10 +84,13 @@ def exact_center_frequency(x, fraction=1, ref=REFERENCE_FREQUENCY, G=OCTAVE_FREQ
     
     See equation 2 and 3 of the standard.
     """
-    if fraction%2==0.0:
-        return ref * G**((x+1) / (2.0*fraction))
-    else:
-        return ref * G**(x / fraction)
+    #if fraction%2==0.0:
+        #return ref * G**((x+1) / (2.0*fraction))
+    #else:
+        #return ref * G**(x / fraction)
+    fraction = np.asarray(fraction)
+    uneven = (fraction%2).astype('bool')
+    return ref * G**((x+1) / (2.0*fraction)) * np.logical_not(uneven) + uneven * ref * G**(x / fraction)
 
 
 def lower_frequency(center, fraction=1, G=OCTAVE_FREQUENCY_RATIO):
