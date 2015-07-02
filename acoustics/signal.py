@@ -485,7 +485,7 @@ class OctaveBand(Frequencies):
         elif fstart is not None and fstop is not None:
             nstart = acoustics.octave.index_of_frequency(fstart, fraction=fraction, ref=reference)
             nstop = acoustics.octave.index_of_frequency(fstop, fraction=fraction, ref=reference)
-            indices = np.arange(nstart, nstop)
+            indices = np.arange(nstart, nstop+1)
         elif fstart is not None and nbands is not None:
             nstart = acoustics.octave.index_of_frequency(fstart, fraction=fraction, ref=reference)
             indices = np.arange(nstart, nstart+nbands)
