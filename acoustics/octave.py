@@ -12,21 +12,86 @@ The following is an example on how to use :class:`acoustics.octave.Octave`.
 from __future__ import division
 
 import numpy as np
+import acoustics
 
-REFERENCE = 1000.0
-"""
-Reference frequency.
-"""
+#REFERENCE = 1000.0
+#"""
+#Reference frequency.
+#"""
 
-from acoustics.standards.iec_61260_1_2014 import (exact_center_frequency,
-                                                  index_of_frequency,
-                                                  lower_frequency,
-                                                  upper_frequency,
-                                                  )
+from acoustics.standards.iec_61260_1_2014 import index_of_frequency
+from acoustics.standards.iec_61260_1_2014 import REFERENCE_FREQUENCY as REFERENCE
 
-frequency_of_band = exact_center_frequency
+
+def exact_center_frequency(frequency=None, fraction=1, n=None, ref=REFERENCE):
+    """Exact center frequency.
+    
+    :param frequency: Frequency within the band.
+    :param fraction: Band designator.
+    :param n: Index of band.
+    :param ref: Reference frequency.
+    
+    .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.exact_center_frequency`
+    .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.index_of_frequency`
+    
+    """
+    if frequency is not None:
+        n = acoustics.standards.iec_61260_1_2014.index_of_frequency(frequency, fraction, ref=ref)
+    return acoustics.standards.iec_61260_1_2014.exact_center_frequency(n, fraction, ref=ref)
+
+
+def nominal_center_frequency(frequency=None, fraction=1, n=None):
+    """Nominal center frequency.
+    
+    :param frequency: Frequency within the band.
+    :param fraction: Band designator.
+    :param n: Index of band.
+    
+    .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.exact_center_frequency`
+    .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.nominal_center_frequency`
+    
+    .. note:: Contrary to the other functions this function silently assumes 1000 Hz reference frequency.
+    
+    """
+    center = exact_center_frequency(frequency, fraction, n)
+    return acoustics.standards.iec_61260_1_2014.nominal_center_frequency(center, fraction)
+    
+
+def lower_frequency(frequency=None, fraction=1, n=None):
+    """Lower band-edge frequency.
+    
+    :param frequency: Frequency within the band.
+    :param fraction: Band designator.
+    :param n: Index of band.
+    
+    .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.exact_center_frequency`
+    .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.lower_frequency`
+    
+    """
+    center = exact_center_frequency(frequency, fraction, n)
+    return acoustics.standards.iec_61260_1_2014.lower_frequency(center, fraction)
+   
+   
+def upper_frequency(frequency=None, fraction=1, n=None):
+    """Upper band-edge frequency.
+    
+    :param frequency: Frequency within the band.
+    :param fraction: Band designator.
+    :param n: Index of band.
+    
+    .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.exact_center_frequency`
+    .. seealso:: :func:`acoustics.standards.iec_61260_1_2014.upper_frequency`
+    
+    """
+    center = exact_center_frequency(frequency, fraction, n)
+    return acoustics.standards.iec_61260_1_2014.upper_frequency(center, fraction)
+
+
+#-- things below will be deprecated?---#
+
+frequency_of_band = acoustics.standards.iec_61260_1_2014.exact_center_frequency
 band_of_frequency = index_of_frequency
- 
+
 
 class Octave(object):
     """

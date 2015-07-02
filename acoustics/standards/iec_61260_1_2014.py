@@ -36,6 +36,7 @@ The normalized frequency :math:`\\Omega` is obtained by dividing the frequency :
 .. math::\\Omega = f / f_m.
 
 """
+import acoustics
 import numpy as np
 
 NOMINAL_OCTAVE_CENTER_FREQUENCIES = np.array([31.5, 63.0, 125.0, 250.0, 
