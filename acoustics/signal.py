@@ -35,7 +35,7 @@ Different types of spectra exist.
 .. autofunction:: power_spectrum
 .. autofunction:: density_spectrum
 .. autofunction:: angle_spectrum
-.. autofunction:: angle_spectrum
+.. autofunction:: phase_spectrum
 
 Frequency bands
 ***************
@@ -106,7 +106,9 @@ def bandpass_filter(lowcut, highcut, fs, order=3):
     :param fs: Sample frequency
     :param order: Filter order
     
-    A Butterworth filter (see :func:`scipy.signal.butter`) is used.
+    A Butterworth filter is used.
+    
+    .. seealso:: :func:`scipy.signal.butter`.
     
     """
     nyq = 0.5 * fs
@@ -125,13 +127,9 @@ def bandpass(signal, lowcut, highcut, fs, order=3):
     :param fs: Sample frequency
     :param order: Filter order
     
-    .. seealso:: :func:`bandpass_filter`
+    .. seealso:: :func:`bandpass_filter` for the filter that is used.
     
     """
-    #nyq = 0.5 * fs
-    #low = lowcut / nyq
-    #high = highcut / nyq
-    #b, a = butter(order, [low, high], btype='band')
     b, a = bandpass_filter(lowcut, highcut, fs, order)
     return lfilter(b, a, signal)
     
@@ -144,7 +142,9 @@ def lowpass(signal, cutoff, fs, order=3):
     :param cutoff: Cut-off frequency
     :param order: Filter order
     
-    A Butterworth filter (see :func:`scipy.signal.butter`) is used.
+    A Butterworth filter is used.
+    
+    .. seealso:: :func:`scipy.signal.butter`.
     
     """
     b, a = butter(order, cutoff/(fs/2.0), btype='low')
@@ -159,7 +159,9 @@ def highpass(signal, cutoff, fs, order=3):
     :param cutoff: Cut-off frequency
     :param order: Filter order
     
-    A Butterworth filter (see :func:`scipy.signal.butter`) is used.
+    A Butterworth filter is used.
+    
+    .. seealso:: :func:`scipy.signal.butter`.
     
     """
     b, a = butter(order, cutoff/(fs/2.0), btype='high')
@@ -219,6 +221,8 @@ def convolve(signal, ltv, mode='full'):
     
     This function assumes all impulse responses are of the same size. 
     The input matrix ``ltv`` thus represents the non-shifted version of the Toeplitz matrix.
+    
+    .. seealso:: :func:`np.convolve`, :func:`scipy.signal.convolve` and :func:`scipy.signal.fftconvolve` for convolution with LTI system.
     
     """
     
@@ -559,7 +563,7 @@ def window_scaling_factor(window, axis=-1):
     
     :param window: Window.
     
-    When analysing broadband (filtered noise) signals it is common to normalise
+    When analysing broadband (filtered noise) signals it is common to normalize
     the windowed signal so that it has the same power as the un-windowed one.
 
     .. math:: S = \\sqrt{\\frac{\\sum_{i=0}^N w_i^2}{N}}
@@ -579,7 +583,9 @@ def apply_window(x, window):
     
     .. math:: x_s(t) = x(t) / S
     
-    where :math:`S` is the window scaling factor. See also :func:`window_scaling_factor`.
+    where :math:`S` is the window scaling factor. 
+    
+    .. seealso:: :func:`window_scaling_factor`.
     
     """
     s = window_scaling_factor(window) # Determine window scaling factor.
@@ -626,7 +632,7 @@ def auto_spectrum(x, fs, N=None):
 
     .. math:: S_{xx} (f_n) = \\overline{X (f_n)} \\cdot X (f_n)
 
-    The auto-spectrum is double-sided. For a single-sided autospectrum, see :func:`single_sided_auto_spectrum`.
+    The auto-spectrum is double-sided.
     
     """
     f, a = amplitude_spectrum(x, fs, N=N)
@@ -645,6 +651,11 @@ def power_spectrum(x, fs, N=None):
     
     A power spectrum is a spectrum with squared RMS values. The power spectrum is 
     calculated from the autospectrum of the signal.
+    
+    .. warning:: Does not include scaling to reference value!
+    
+    .. seealso:: :func:`auto_spectrum`
+    
     """
     N = N if N else x.shape[-1]
     f, a = auto_spectrum(x, fs, N=N)
@@ -863,7 +874,7 @@ class Filterbank(object):
     Fractional-Octave filter bank.
     
     
-    .. note:: For high frequencies the filter coefficients are wrong for low frequencies. Therefore, to improve the response for lower frequencies the signal should be downsampled. Currently, there is no easy way to do so within the Filterbank.
+    .. warning:: For high frequencies the filter coefficients are wrong for low frequencies. Therefore, to improve the response for lower frequencies the signal should be downsampled. Currently, there is no easy way to do so within the Filterbank.
     
     """
     
