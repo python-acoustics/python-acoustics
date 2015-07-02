@@ -2,7 +2,7 @@
 Acoustics
 =========
 
-The acoustics module...
+The acoustics module.
 
 """
 import acoustics.aio

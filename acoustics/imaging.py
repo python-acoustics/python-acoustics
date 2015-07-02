@@ -9,9 +9,6 @@ Plotting functions using matplotlib_ library.
 
 .. _matplotlib: http://matplotlib.org/
 
-
-.. inheritance-diagram:: acoustics.room
-
 """
 
 

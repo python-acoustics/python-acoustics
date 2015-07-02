@@ -1,9 +1,35 @@
 """
-IEC 61260-1
-===========
+IEC 61260-1:2014
+================
 
-IEC 61260-1:2014 specifies performance requirements for analogue, sampled-data, and digital implementations of band-pass filters. 
+IEC 61260-1:2014 specifies performance requirements for analogue, sampled-data, 
+and digital implementations of band-pass filters. 
 
+
+Frequency functions
+**************************************
+
+.. autofunction:: acoustics.standards.iec_61260_1_2014.exact_center_frequency
+.. autofunction:: acoustics.standards.iec_61260_1_2014.lower_frequency
+.. autofunction:: acoustics.standards.iec_61260_1_2014.upper_frequency
+.. autofunction:: acoustics.standards.iec_61260_1_2014.index_of_frequency
+
+
+Nominal center frequencies
+**************************
+
+.. autoattribute:: acoustics.standards.iec_61260_1_2014.NOMINAL_OCTAVE_CENTER_FREQUENCIES
+.. autoattribute:: acoustics.standards.iec_61260_1_2014.NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES
+
+.. autoattribute:: acoustics.standards.iec_61260_1_2014.REFERENCE_FREQUENCY
+.. autoattribute:: acoustics.standards.iec_61260_1_2014.OCTAVE_FREQUENCY_RATIO
+
+"""
+
+
+
+
+"""
 
 The normalized frequency :math:`\\Omega` is obtained by dividing the frequency :math:`f` by the reference frequency :math:`f_m`.
 

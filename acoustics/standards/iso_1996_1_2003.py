@@ -1,4 +1,6 @@
-"""ISO 1996-1-2003
+"""
+ISO 1996-1-2003
+===============
 
 ISO 1996-1:2003 defines the basic quantities to be used for the description of 
 noise in community environments and describes basic assessment procedures. It 
@@ -23,7 +25,7 @@ def composite_rating_level(levels, hours, adjustment):
     
     .. math:: L_R = 10 \\log{\\left[ \\sum_i \\frac{d_i}{24} 10^{(L_i+K_i)/10}  \\right]}
     
-    where $i$ is a period. See equation 6 and 7 of the standard.
+    where :math:`i` is a period. See equation 6 and 7 of the standard.
     
     .. note:: Summation is done over the last axis.
     """

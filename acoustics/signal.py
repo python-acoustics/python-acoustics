@@ -10,9 +10,14 @@ The signal module constains all kinds of signal processing related functions.
 Filtering
 *********
 
-.. autofunction:: butter_bandpass_filter
+.. autoclass:: Filterbank
+.. autofunction:: bandpass_filter
+.. autofunction:: octave_filter
+.. autofunction:: bandpass
+.. autofunction:: lowpass
+.. autofunction:: highpass
+.. autofunction:: octavepass
 .. autofunction:: convolve
-
 
 Windowing
 *********
@@ -29,6 +34,8 @@ Different types of spectra exist.
 .. autofunction:: auto_spectrum
 .. autofunction:: power_spectrum
 .. autofunction:: density_spectrum
+.. autofunction:: angle_spectrum
+.. autofunction:: angle_spectrum
 
 Frequency bands
 ***************
@@ -43,6 +50,12 @@ Frequency bands
 .. autofunction:: third_octaves
 
 
+Hilbert transform
+*****************
+
+.. autofunction:: amplitude_envelope
+.. autofunction:: instantaneous_phase
+.. autofunction:: instantaneous_frequency
 
 
 Conversion
@@ -55,10 +68,13 @@ Conversion
 Other
 *****
 
-.. autoclass:: Filterbank
+.. autofunction:: isolate
+.. autofunction:: zero_crossings
 .. autofunction:: rms
+.. autofunction:: ms
+.. autofunction:: normalize
 .. autofunction:: ir2fr
-
+.. autofunction:: wvd
 
 """
 from __future__ import division
