@@ -129,3 +129,15 @@ def c2a(levels, first, last):
     """
     dB = c2z(levels, first, last)
     return z2a(dB, first, last)
+
+__all__ = ['THIRD_OCTAVE_A_WEIGHTING', 
+           'THIRD_OCTAVE_C_WEIGHTING', 
+           'a_weighting',
+           'c_weighting',
+           'z2a',
+           'a2z',
+           'z2c',
+           'c2z',
+           'a2c',
+           'c2a',
+           ]
