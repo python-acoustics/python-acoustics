@@ -25,17 +25,6 @@ Nominal center frequencies
 .. autoattribute:: acoustics.standards.iec_61260_1_2014.OCTAVE_FREQUENCY_RATIO
 
 """
-
-
-
-
-"""
-
-The normalized frequency :math:`\\Omega` is obtained by dividing the frequency :math:`f` by the reference frequency :math:`f_m`.
-
-.. math::\\Omega = f / f_m.
-
-"""
 from __future__ import division
 
 import acoustics
