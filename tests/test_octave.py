@@ -1,23 +1,12 @@
 """
 Tests for :class:`Acoustics.Octave.Octave`
 """
-import unittest
 
 from acoustics.octave import Octave
 import numpy as np
 
-class OctaveCase(unittest.TestCase):
+class TestOctave():
     
-    
-    def setUp(self):
-        """
-        Code run before each unit test.
-        """
-    
-    def tearDown(self):
-        """
-        Code run after each test.
-        """
         
     def test_interval(self):
         emin = 1.0
@@ -26,12 +15,13 @@ class OctaveCase(unittest.TestCase):
         
         o = Octave(interval=f)
         
-        self.assertEqual(o.fmin, 10.0**emin)
-        self.assertEqual(o.fmax, 10.0**emax)
-        self.assertEqual(len(o.n), len(o.center))
+        
+        assert(o.fmin == 10.0**emin)
+        assert(o.fmax == 10.0**emax)
+        assert(len(o.n) == len(o.center))
         
         o.unique = True
-        self.assertEqual(len(o.n), len(f))
+        assert( len(o.n) == len(f) )
     
     def test_minmax(self):
         fmin = 250.0
@@ -39,8 +29,6 @@ class OctaveCase(unittest.TestCase):
         
         o = Octave(fmin=fmin, fmax=fmax)
         
-        self.assertEqual(len(o.center), 3) # 250, 500, and 1000 Hz
-        self.assertEqual(len(o.n), 3)
+        assert( len(o.center) == 3) # 250, 500, and 1000 Hz
+        assert( len(o.n) == 3)
         
-if __name__ == '__main__':
-    unittest.main()

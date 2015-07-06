@@ -25,17 +25,9 @@ Nominal center frequencies
 .. autoattribute:: acoustics.standards.iec_61260_1_2014.OCTAVE_FREQUENCY_RATIO
 
 """
+from __future__ import division
 
-
-
-
-"""
-
-The normalized frequency :math:`\\Omega` is obtained by dividing the frequency :math:`f` by the reference frequency :math:`f_m`.
-
-.. math::\\Omega = f / f_m.
-
-"""
+import acoustics
 import numpy as np
 
 NOMINAL_OCTAVE_CENTER_FREQUENCIES = np.array([31.5, 63.0, 125.0, 250.0, 
@@ -83,10 +75,13 @@ def exact_center_frequency(x, fraction=1, ref=REFERENCE_FREQUENCY, G=OCTAVE_FREQ
     
     See equation 2 and 3 of the standard.
     """
-    if fraction%2==0.0:
-        return ref * G**((x+1) / (2.0*fraction))
-    else:
-        return ref * G**(x / fraction)
+    #if fraction%2==0.0:
+        #return ref * G**((x+1) / (2.0*fraction))
+    #else:
+        #return ref * G**(x / fraction)
+    fraction = np.asarray(fraction)
+    uneven = (fraction%2).astype('bool')
+    return ref * G**((x+1) / (2.0*fraction)) * np.logical_not(uneven) + uneven * ref * G**(x / fraction)
 
 
 def lower_frequency(center, fraction=1, G=OCTAVE_FREQUENCY_RATIO):
@@ -143,9 +138,66 @@ def index_of_frequency(frequency, fraction=1, ref=REFERENCE_FREQUENCY, G=OCTAVE_
     return np.round(fraction * np.log(frequency/ref) / np.log(G)).astype('int16')
     
 
-#def nominal_center_frequency(x, fraction=1, G=OCTAVE_FREQUENCY_RATIO):
-    #"""Nominal center frequencies.
-    #"""
+
+
+def _nominal_center_frequency(center, fraction):
+    """Nominal frequency according to standard.
+    
+    :param center: Exact mid-frequency to be rounded.
+    :param fraction: Bandwidth designator or fraction.
+    """
+    def _roundn(x, n):
+        return round(x, -int(np.floor(np.sign(x) * np.log10(abs(x)))) + n)
+    
+    b = fraction
+    x = center
+    
+    # Section E.1: 1/1-octaves
+    if b == 1:
+        n = index_of_frequency(x, b)
+        if -6 <= n < 5: # Correspond to indices when n=0 corresponds to 1000 Hz
+            return acoustics.standards.iec_61672_1_2013.NOMINAL_OCTAVE_CENTER_FREQUENCIES[n+6]
+        elif n >= 5:
+            return 2.0 * _nominal_center_frequency(exact_center_frequency(n-1, b), b) # WARNING: Unclear in standard!
+        else:
+            return 1./2.0 * _nominal_center_frequency(exact_center_frequency(n+1, b), b) # WARNING: Unclear in standard!
+        
+    # Section E.2: 1/2-octaves
+    elif b == 2:
+        return _roundn(x, 2)
+
+    # Section E.1: 1/3-octaves
+    elif b == 3:
+        n = index_of_frequency(x, b)
+        
+        if -20 <= n < 14: # Correspond to indices when n=0 corresponds to 1000 Hz
+            return acoustics.standards.iec_61672_1_2013.NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES[n+20]
+        elif n >= 14:
+            return 10.*_nominal_center_frequency(exact_center_frequency(n-10, b), b) # WARNING: Unclear in standard!
+        else:
+            return 1./10.*_nominal_center_frequency(exact_center_frequency(n+10, b), b) # WARNING: Unclear in standard!
+    
+    # Section E3.3: 1/4 to 1/24-octaves, inclusive
+    elif 4 <= b <= 24:
+        msd = x // 10.0**np.floor(np.log10(x))
+        if msd < 5:
+            return _roundn(x, 2) # E3.2
+        else:
+            return _roundn(x, 1) # E3.3
+   
+    # Section E3.5: > 1/24-octaves
+    elif b > 24:
+        raise NotImplementedError("b > 24 is not implemented")
+    else:
+        raise ValueError("Wrong value for b")
+
+nominal_center_frequency = np.vectorize(_nominal_center_frequency)
+"""Nominal center frequency.
+
+:param center: Exact center frequency.
+:param fraction: Band designator or fraction.
+
+"""
     #pass
     
 
