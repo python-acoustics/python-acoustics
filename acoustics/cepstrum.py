@@ -233,7 +233,7 @@ def minimum_phase(x, n=None):
            EXPRESS BRIEFS, VOL. 53, NO. 10, OCTOBER 2006
     
     """
-    ceps = real_cepstrum(x), n=n)
+    ceps = real_cepstrum(x, n=n)
     odd = n % 2 
     window = np.concatenate(([1.0], 2.0*np.ones((n+odd)/2-1), 
                              np.ones(1-odd), np.zeros((n+odd)/2-1)))
