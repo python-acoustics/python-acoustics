@@ -6,14 +6,14 @@ import numpy as np
 __all__ = ['complex_cepstrum', 'real_cepstrum', 'inverse_complex_cepstrum',
            'minimum_phase']
  
-def complex_cepstrum(x, N=None):
+def complex_cepstrum(x, n=None):
     """Compute the complex cepstrum of a real sequence.
         
     Parameters
     ----------
     x : ndarray
         Real sequence to compute complex cepstrum of.
-    N : {None, int}, optional
+    n : {None, int}, optional
         Length of the Fourier transform.
     
     Returns
@@ -92,8 +92,7 @@ def complex_cepstrum(x, N=None):
         unwrapped -= np.pi * ndelay[...,None] * np.arange(samples) / center
         return unwrapped, ndelay
         
-    N = N if N is not None else x.shape[-1]
-    spectrum = np.fft.fft(x, n=N)
+    spectrum = np.fft.fft(x, n=n)
     unwrapped_phase, ndelay = _unwrap(np.angle(spectrum))
     log_spectrum = np.log(np.abs(spectrum)) + 1j*unwrapped_phase
     ceps = np.fft.ifft(log_spectrum).real
@@ -101,12 +100,12 @@ def complex_cepstrum(x, N=None):
     return ceps, ndelay
 
 
-def real_cepstrum(x, N=None):
+def real_cepstrum(x, n=None):
     """Compute the real cepstrum of a real sequence. 
     
     x : ndarray
         Real sequence to compute real cepstrum of.
-    N : {None, int}, optional
+    n : {None, int}, optional
         Length of the Fourier transform.
     
     Returns
@@ -139,8 +138,7 @@ def real_cepstrum(x, N=None):
            http://en.wikipedia.org/wiki/Cepstrum
     
     """
-    N = N if N is not None else x.shape[-1]
-    spectrum = np.fft.fft(x, n=N)
+    spectrum = np.fft.fft(x, n=n)
     ceps = np.fft.ifft(np.log(np.abs(spectrum))).real
     
     return ceps
@@ -203,12 +201,12 @@ def inverse_complex_cepstrum(ceps, ndelay):
     return x
 
 
-def minimum_phase(x, N=None):
+def minimum_phase(x, n=None):
     """Compute the minimum phase reconstruction of a real sequence.
     
     x : ndarray
         Real sequence to compute the minimum phase reconstruction of.    
-    N : {None, int}, optional
+    n : {None, int}, optional
         Length of the Fourier transform.
     
     Compute the minimum phase reconstruction of a real sequence using the 
@@ -235,11 +233,10 @@ def minimum_phase(x, N=None):
            EXPRESS BRIEFS, VOL. 53, NO. 10, OCTOBER 2006
     
     """
-    N = N if N is not None else x.shape[-1]
-    ceps = real_cepstrum(x, N=N)
-    odd = N % 2 
-    window = np.concatenate(([1.0], 2.0*np.ones((N+odd)/2-1), 
-                             np.ones(1-odd), np.zeros((N+odd)/2-1)))
+    ceps = real_cepstrum(x), n=n)
+    odd = n % 2 
+    window = np.concatenate(([1.0], 2.0*np.ones((n+odd)/2-1), 
+                             np.ones(1-odd), np.zeros((n+odd)/2-1)))
     
     m = np.fft.ifft(np.exp(np.fft.fft(window*ceps))).real
     
