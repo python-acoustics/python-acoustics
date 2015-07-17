@@ -45,6 +45,8 @@ setup(
           'cython',
           'numexpr',
           'pandas',
+          'tabulate',
+          'intervaltree',
           ],
       extras_require={
           'documentation': 'sphinx',
