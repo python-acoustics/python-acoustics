@@ -24,7 +24,6 @@ import acoustics.quantity
 import acoustics.reflection
 import acoustics.room
 import acoustics.signal
-import acoustics.turbulence
 #import acoustics.utils
 import acoustics.weighting
 
