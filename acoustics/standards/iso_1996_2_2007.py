@@ -148,6 +148,7 @@ class Tonality(object):
                  reference_pressure=REFERENCE_PRESSURE,
                  tsc=TONE_SEEK_CRITERION,
                  regression_range_factor=REGRESSION_RANGE_FACTOR,
+                 bins=None,
                 ):
         
         self.signal = signal
@@ -158,14 +159,18 @@ class Tonality(object):
         """Window to be used."""
         self.reference_pressure = reference_pressure
         """Reference sound pressure."""
-        self.tsc = 1.0
+        self.tsc = tsc
         """Tone seeking criterium."""
         self.regression_range_factor = regression_range_factor
         """Regression range factor."""
+        self.bins = bins
+        """Frequency bins to use."""
+        
         self._noise_pauses = list()
         """Private list of noise pauses that were determined or assigned."""
         self._spectrum = None
         """Power spectrum as function of frequency."""
+
 
     @property
     def noise_pauses(self):
@@ -190,12 +195,14 @@ class Tonality(object):
         """Power spectrum of the input signal.
         """
         if self._spectrum is None:
-            f, p = welch(self.signal, fs=self.sample_frequency, nperseg=self.sample_frequency//2, window=self.window)
-            levels = pd.Series(10.0*np.log10(p / (2.0e-5)**2.0), index=f)
-        else:
-            levels = self._spectrum
-        return levels
-        
+            bins = self.bins
+            if bins is None:
+                bins = self.sample_frequency
+            bins //= 1 # Fix because of bug in welch with uneven bins
+            f, p = welch(self.signal, fs=self.sample_frequency, nperseg=bins, window=self.window)
+            self._spectrum = pd.Series(10.0*np.log10(p / (2.0e-5)**2.0), index=f)
+        return self._spectrum
+    
         
     @property
     def frequency_resolution(self):
@@ -230,12 +237,12 @@ class Tonality(object):
         return self
 
 
-    def determine_noise_pauses(self):
+    def determine_noise_pauses(self, end=None):
         """Determine noise pauses. The determined noise pauses are available in :attr:`noise_pause_ranges`.
         
         Noise pauses are search for using :func:`noise_pause_seeker`.
         """
-        self._set_noise_pauses(noise_pause_seeker(np.array(self.spectrum), self.tsc))
+        self._set_noise_pauses(noise_pause_seeker(np.array(self.spectrum[:end]), self.tsc))
         return self
         
 
@@ -328,7 +335,7 @@ class Tonality(object):
             raise ValueError("Need to define/search noise pauses first.")
     
     
-    def plot_results(self, noise_pauses=False, critical_bands=True):
+    def plot_results(self, noise_pauses=False, tones=True, critical_bands=True):
         """Plot overview of results."""
 
         df = self.frequency_resolution
@@ -346,6 +353,10 @@ class Tonality(object):
         if noise_pauses:
             for pause in self.noise_pauses:
                 ax.axvspan(pause.start*df, pause.end*df, color='green', alpha=0.05)
+        
+        if tones:
+            for tone in self.tones:
+                ax.axvline(tone.center)
         
         if critical_bands:
             for band in self.critical_bands:
@@ -376,6 +387,7 @@ class Tonality(object):
         table = [("Critical band", "{:4.1f} to {:4.1f} Hz".format(cb.start, cb.end)),
                  ("Masking noise level $L_{pn}$", "{:4.1f} dB".format(cb.masking_noise_level)),
                  ("Tonal level $L_{pt}$", "{:4.1f} dB".format(cb.total_tone_level)),
+                 ("Dominant tone", "{:4.1f} Hz".format(cb.tone.center)),
                  ("Tonal audibility $L_{ta}$", "{:4.1f} dB".format(cb.tonal_audibility)),
                  ("Adjustment $K_{t}$", "{:4.1f} dB".format(cb.adjustment)),            
             ]
@@ -517,23 +529,42 @@ class CriticalBand(object):
     
 #----------Noise pauses----------------------------  
 
+#def _search_noise_pauses(levels, tsc):
+    #"""Search for start and end indices of noise pauses in a single direction.
+    
+    #:param levels: Spectral levels.    
+    #:param tsc: Tone seeking criterium in decibels.
+    #:returns: Tuple with start and end indices.
+    #"""
+    #starts = list()
+    #ends = list()
+    
+    ## Do not search in two outer samples on each side because of possible out of index.
+    #for i in range(2, len(levels)-2):
+            #if (levels[i] - levels[i-1]) >= tsc and (levels[i-1] - levels[i-2]) < tsc:
+                #starts.append(i)
+            #if (levels[i] - levels[i+1]) >= tsc and (levels[i+1] - levels[i+2]) < tsc:
+                #ends.append(i)
+    #return starts, ends        
+ 
 def _search_noise_pauses(levels, tsc):
-    """Search for start and end indices of noise pauses in a single direction.
-    
-    :param levels: Spectral levels.    
-    :param tsc: Tone seeking criterium in decibels.
-    :returns: Tuple with start and end indices.
-    """
-    starts = list()
-    ends = list()
-    
-    # Do not search in two outer samples on each side because of possible out of index.
+    #starts = list()
+    #ends = list()
+    pauses = list()
+    possible_start = None
     for i in range(2, len(levels)-2):
             if (levels[i] - levels[i-1]) >= tsc and (levels[i-1] - levels[i-2]) < tsc:
-                starts.append(i)
+                possible_start = i
+                #starts.append(i)
             if (levels[i] - levels[i+1]) >= tsc and (levels[i+1] - levels[i+2]) < tsc:
-                ends.append(i)
-    return starts, ends        
+                if possible_start:
+                    #starts.append(possible_start)
+                    pauses.append((possible_start, i))
+                    possible_start = None
+                    #ends.append(i)
+    #return starts, ends
+    return pauses
+    
  
  
 def possible_noise_pauses(levels, tsc):
@@ -551,7 +582,6 @@ def possible_noise_pauses(levels, tsc):
     # Forward and backward sweep
     forward_starts, forward_ends = _search_noise_pauses(levels, tsc)
     backward_ends, backward_starts = _search_noise_pauses(levels[::-1], tsc)
-
     # Only keep those values that were found in both directions.
     starts = sorted(list(set(forward_starts + backward_starts)))
     ends = sorted(list(set(forward_ends + backward_ends)))
@@ -579,7 +609,7 @@ def smallest_non_overlapping_ranges(intervals):
                 intervals.remove(iv) 
     # Return an iterable of list of tuples with each tuple representing an interval.
     return ((interval[0], interval[1]) for interval in intervals)
-
+  
 
 def noise_pause_seeker(levels, tsc):
     """Given the levels of a spectrum and a tone seeking criterium this top level function seeks possible noise pauses.
@@ -592,11 +622,24 @@ def noise_pause_seeker(levels, tsc):
     Then, only those that correspond to the smallest intervals that do not overlap other intervals are kept.
     """    
     # Determine all possible noise starts and stops
-    starts, ends = possible_noise_pauses(levels, tsc)
-    
+    #starts, ends = possible_noise_pauses(levels, tsc)
     # Keep only the noise pauses that don't overlap any other possible noise pauses.
-    possible_pauses = smallest_non_overlapping_ranges(itertools.product(starts, ends))
-
+    #possible_pauses = itertools.product(starts, ends)
+    #possible_pauses = intervals = ((start, end) for start, end in possible_pauses if end > start)
+    #possible_pauses = smallest_non_overlapping_ranges(possible_pauses)
+    #possible_pauses = zip(starts, ends)
+    #possible_pauses = _search_noise_pauses(levels, tsc)
+    
+    #forward_starts, forward_ends = _search_noise_pauses(levels, tsc)
+    #backward_ends, backward_starts = _search_noise_pauses(levels[::-1], tsc)
+    #forward_pauses = ((start, end) for start, end in itertools.product(forward_starts, forward_ends) if end > start)
+    #backward_pauses = ((start, end) for start, end in itertools.product(backward_starts, backward_ends) if end > start)
+    n = len(levels)
+    forward_pauses = _search_noise_pauses(levels, tsc)
+    backward_pauses = _search_noise_pauses(levels[::-1], tsc)
+    backward_pauses = [(n-1-start, n-1-end) for end, start in reversed(backward_pauses)]
+    possible_pauses = sorted(list( set(forward_pauses) & set(backward_pauses) ) )
+    
     yield from possible_pauses
 
 
@@ -644,8 +687,8 @@ def determine_tone_lines(levels, df, start, end):
         if bandwidth_for_tone_criterion < 0.10 * critical_band_bandwidth:
             # All values within 6 decibel are designated as tones.
             tone_indices = (levels_int.iloc[npr][ levels_int.iloc[npr] >= levels_int.iloc[npr].max() - TONE_LINES_CRITERION_DB ]).index.get_values()
-        else:
-            raise ValueError("10% bandwidth criterion is not fullfilled.") # Maybe warning instead...
+        #else:
+            #raise ValueError("10% bandwidth criterion is not fullfilled.") # Maybe warning instead...
 
     return tone_indices
 
