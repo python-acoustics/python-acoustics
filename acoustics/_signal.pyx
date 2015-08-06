@@ -220,7 +220,7 @@ class Signal(numpy.ndarray):
             times = np.linspace(0.0, self.duration, N, endpoint=False)
         else:    
             times = self.times()
-        cepstrum, ndelay = acoustics.cepstrum.complex_cepstrum(self, N=N)
+        cepstrum, ndelay = acoustics.cepstrum.complex_cepstrum(self, n=N)
         return times, cepstrum, ndelay
     
     
@@ -236,7 +236,7 @@ class Signal(numpy.ndarray):
             times = np.linspace(0.0, self.duration, N, endpoint=False)
         else:    
             times = self.times()
-        return times, acoustics.cepstrum.real_cepstrum(self, N=N)
+        return times, acoustics.cepstrum.real_cepstrum(self, n=N)
     
     
     def power_spectrum(self, N=None):
