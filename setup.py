@@ -43,7 +43,6 @@ setup(
           'matplotlib',
           'six >= 1.4.1',
           'cython',
-          'numexpr',
           'pandas',
           ],
       extras_require={
