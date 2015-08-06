@@ -125,6 +125,13 @@ class TestEqualBand:#(unittest.TestCase):
         nbands = len(x)
         b = EqualBand(fstop=fstop, nbands=nbands, bandwidth=bandwidth)
         assert_array_equal(b.center, x)
+    
+    def test_selection(self):
+        
+        eb = EqualBand(fstart=0.0, fstop=10.0, nbands=100)
+        assert type(eb[3] == type(eb))
+        assert type(eb[3:10] == type(eb))
+        
 
 class Test_integrate_bands():
     """

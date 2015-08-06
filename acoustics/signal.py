@@ -305,38 +305,7 @@ def neper_to_decibel(neper):
     """
     return 20.0 / np.log(10.0) * neper
 
-
-class Band(object):
-    """
-    Frequency band object.
-    """
-    
-    def __init__(self, center, lower, upper, bandwidth=None):
-        
-        self.center = center
-        """
-        Center frequency.
-        """
-        self.lower = lower
-        """
-        Lower frequency.
-        """
-        self.upper = upper
-        """
-        Upper frequency.
-        """
-        self.bandwidth = bandwidth if bandwidth is not None else self.upper - self.lower
-        """
-        Bandwidth.
-        """
-    
-    def __str__(self):
-        return str(self.center)
-    
-    def __repr__(self):
-        return "Band({})".format(str(self.center))
-    
-    
+   
 class Frequencies(object):
     """
     Object describing frequency bands.
@@ -367,25 +336,7 @@ class Frequencies(object):
     def __iter__(self):
         for i in range(len(self.center)):
             yield self[i]
-            #yield Band(self.center[i], self.lower[i], self.upper[i], self.bandwidth[i])
-    
-    def __getitem__(self, key):
-        if isinstance(key, slice):
-            return [Band(self.center[i], self.lower[i], self.upper[i], self.bandwidth[i]) for i in range(*key.indices(len(self))) ]
-        elif isinstance(key, np.ndarray):
-            if key.dtype == 'bool':
-                return [Band(self.center[i], self.lower[i], self.upper[i], self.bandwidth[i]) for i, v in enumerate(key) if v ]
-            else:
-                raise NotImplementedError
-        else:    
-            return Band(self.center[key], self.lower[key], self.upper[key], self.bandwidth[key])
-    
-    def __setitem__(self, key, value):
-        self.center[key] = value.center
-        self.lower[key] = value.lower
-        self.upper[key] = value.upper
-        self.bandwidth[key] = value.bandwidth
-    
+            
     def __len__(self):
         return len(self.center)
     
@@ -400,20 +351,6 @@ class Frequencies(object):
         """
         return 2.0 * np.pi * self.center
     
-    @classmethod
-    def from_bands(cls, bands):
-        """Frequencies object from a list of bands.
-        """
-        n = len(bands)
-        obj = cls(nbands=n, fstart=1000.0) # Fake values
-        #center = np.empty(n)
-        #lower = np.empty(n)
-        #upper = np.empty(n)
-        #bandwidth = np.empty(n)
-        for i, band in enumerate(bands):
-            obj[i] = band
-            #center[i] = band.center
-        return obj    
     
 class EqualBand(Frequencies):
     """
@@ -439,10 +376,13 @@ class EqualBand(Frequencies):
                 nbands = 1
 
             u = np.unique(np.diff(center).round(decimals=3))
-            if len(u)==1:
+            n = len(u)
+            if n == 1:
                 bandwidth = u
-            else:
+            elif n > 1:
                 raise ValueError("Given center frequencies are not equally spaced.")
+            else:
+                pass
             fstart = center[0] #- bandwidth/2.0
             fstop = center[-1] #+ bandwidth/2.0
         elif fstart is not None and fstop is not None and nbands:
@@ -462,7 +402,9 @@ class EqualBand(Frequencies):
         
         super(EqualBand, self).__init__(center, lower, upper, bandwidth)
         
-    
+    def __getitem__(self, key):
+        return type(self)(center=self.center[key], bandwidth=self.bandwidth)
+        
     def __repr__(self):
         return "EqualBand({})".format(str(self.center))
         
@@ -515,6 +457,8 @@ class OctaveBand(Frequencies):
         """Nominal center frequencies.
         """
         
+    def __getitem__(self, key):
+        return type(self)(center=self.center[key], fraction=self.fraction, reference=self.reference)        
         
     def __repr__(self):
         return "OctaveBand({})".format(str(self.center))
