@@ -39,11 +39,10 @@ setup(
       zip_safe=False,
       install_requires=[
           'numpy >=1.8',
-          'scipy >= 0.14',
+          'scipy >= 0.16',
           'matplotlib',
           'six >= 1.4.1',
           'cython',
-          'numexpr',
           'pandas',
           'tabulate',
           'intervaltree',
