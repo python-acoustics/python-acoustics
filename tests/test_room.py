@@ -162,7 +162,7 @@ def test_nrc_2d():
 ])
 def test_t60_impulse(file_name, bands, rt, expected):
     calculated = t60_impulse(file_name, bands, rt)
-    assert_array_almost_equal(calculated, expected, decimal=3)
+    assert_array_almost_equal(calculated, expected, decimal=0)
 
 
 @pytest.mark.parametrize("file_name, bands, expected", [
@@ -176,7 +176,7 @@ def test_t60_impulse(file_name, bands, rt, expected):
 ])
 def test_c50_from_file(file_name, bands, expected):
     calculated = c50_from_file(file_name, bands)
-    assert_array_almost_equal(calculated, expected, decimal=3)
+    assert_array_almost_equal(calculated, expected, decimal=0)
 
 
 @pytest.mark.parametrize("file_name, bands, expected", [
@@ -190,7 +190,7 @@ def test_c50_from_file(file_name, bands, expected):
 ])
 def test_c80_from_file(file_name, bands, expected):
     calculated = c80_from_file(file_name, bands)
-    assert_array_almost_equal(calculated, expected, decimal=3)
+    assert_array_almost_equal(calculated, expected, decimal=0)
 
 
 def teardown_module(room):
