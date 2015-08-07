@@ -105,7 +105,7 @@ def bandpass_filter(lowcut, highcut, fs, order=3, output='sos'):
     :param highcut: Upper cut-off frequency
     :param fs: Sample frequency
     :param order: Filter order
-    :param output: Output type. {‘ba’, ‘zpk’, ‘sos’}. Default is 'sos'. See also :func:`scipy.signal.butter`.
+    :param output: Output type. {'ba', 'zpk', 'sos'}. Default is 'sos'. See also :func:`scipy.signal.butter`.
     :returns: Returned value depends on `output`.
     
     A Butterworth filter is used.
