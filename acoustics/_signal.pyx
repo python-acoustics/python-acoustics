@@ -8,6 +8,9 @@ import acoustics
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
 from acoustics.standards.iec_61672_1_2013 import WEIGHTING_SYSTEMS
+from acoustics.standards.iec_61672_1_2013 import (NOMINAL_OCTAVE_CENTER_FREQUENCIES,
+                                                  NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES)
+
 
 class Signal(numpy.ndarray):
     """Container for signals.Signal
@@ -542,20 +545,31 @@ class Signal(numpy.ndarray):
         L_masked = np.ma.masked_where(np.isinf(L), L)
         return _base_plot(t, L_masked, params)
 
-    def octave(self, frequency, fraction=1):
-        """Determine fractional-octave `fraction` at `frequency`.
+    #def octave(self, frequency, fraction=1):
+        #"""Determine fractional-octave `fraction` at `frequency`.
         
-        .. seealso:: :func:`acoustics.signal.fractional_octaves`
+        #.. seealso:: :func:`acoustics.signal.fractional_octaves`
         
-        """
-        return acoustics.signal.fractional_octaves(self, self.fs, frequency, 
-                                                  frequency, fraction, False)[1]
-
-    def octaves(self):
-        """
-        Calculate time-series of octaves.
-        """
-        return acoustics.signal.octaves(self, self.fs)
+        #"""
+        #return acoustics.signal.fractional_octaves(self, self.fs, frequency, 
+                                                  #frequency, fraction, False)[1]   
+    
+    def octaves(self, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order=8, purge=True):
+        """Apply 1/1-octaves bandpass filters."""
+        return type(self)(acoustics.signal.bandpass_octaves(self, self.fs, frequencies, order, purge), self.fs)
+    
+    
+    def third_octaves(self, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, order=8, purge=True):
+        """Apply 1/3-octaves bandpass filters."""
+        return type(self)(acoustics.signal.bandpass_third_octaves(self, self.fs, frequencies, order, purge), self.fs)
+    
+    
+    def fractional_octaves(self, frequencies=None, fraction=1, order=8, purge=True):
+        """Apply 1/N-octaves bandpass filters."""
+        if frequencies is None:
+            frequencies = acoustics.signal.OctaveBand(fstart=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES[0], fstop=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES[-1], fraction=fraction)
+        return type(self)(acoustics.signal.bandpass_third_octaves(self, self.fs, frequencies, fraction, order, purge), self.fs)
+    
     
     def plot_octaves(self, **kwargs):
         """Plot octaves.
@@ -572,15 +586,7 @@ class Signal(numpy.ndarray):
             }
         params.update(kwargs)
         f, o = self.octaves()
-        return _base_plot(f.center, o, params)
-
-    def third_octaves(self):
-        """Calculate time-series of 1/3-octaves.
-        
-        .. seealso:: :func:`acoustics.signal.third_octaves`
-        
-        """
-        return acoustics.signal.third_octaves(self, self.fs)
+        return _base_plot(f.center, o.leq(), params)
     
     def plot_third_octaves(self, **kwargs):
         """Plot 1/3-octaves.
@@ -597,12 +603,7 @@ class Signal(numpy.ndarray):
             }
         params.update(kwargs)
         f, o = self.third_octaves()
-        return _base_plot(f.center, o, params)
-
-    def fractional_octaves(self, fraction):
-        """Fractional octaves.
-        """
-        return acoustics.signal.fractional_octaves(self, self.fs, fraction=fraction)
+        return _base_plot(f.center, o.leq(), params)
     
     def plot_fractional_octaves(self, fraction, **kwargs):
         """Plot fractional octaves.
@@ -617,8 +618,8 @@ class Signal(numpy.ndarray):
             'title'     :   title,
         }
         params.update(kwargs)
-        f, o = self.fractional_octaves(fraction)
-        return _base_plot(f.center, o, params)
+        f, o = self.fractional_octaves(fraction=fraction)
+        return _base_plot(f.center, o.leq(), params)
 
     def plot(self, **kwargs):
         """Plot signal as function of time. By default the entire signal is plotted.
