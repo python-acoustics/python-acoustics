@@ -243,3 +243,26 @@ def test_amplitude_envelope(amplitude, frequency, fs):
     #frequency_determined = np.unique(np.round(out), 0)
     
     #assert( frequency == frequency_determined )  
+
+@pytest.mark.parametrize("channels", [1, 2, 5])
+def test_bandpass_fractional_octaves(channels):
+    fs = 88200
+    duration = 2
+    samples = duration * fs
+    
+    signal = np.random.randn(channels, samples)
+    
+    # We check whether it computes, and whether channels is in right dimension
+    result = bandpass_octaves(signal, fs, order=8, purge=False)
+    assert result.shape[-2]==channels
+    
+    result = bandpass_third_octaves(signal, fs, order=8, purge=False)
+    assert result.shape[-2]==channels
+    
+    # We need to define frequencies explicitly
+    with pytest.raises(TypeError):
+        bandpass_fractional_octaves(signal, fs)
+    
+    frequencies = OctaveBand(fstart=100.0, fstop=2000.0, fraction=12)
+    result = bandpass_fractional_octaves(signal, fs, frequencies, order=8, purge=False)
+    assert result.shape[-2]==channels
