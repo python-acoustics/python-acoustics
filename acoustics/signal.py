@@ -82,7 +82,7 @@ from __future__ import division
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.sparse import spdiags
-from scipy.signal import butter, lfilter, freqz, filtfilt
+from scipy.signal import butter, lfilter, freqz, filtfilt, sosfilt
 
 import acoustics.octave
 #from acoustics.octave import REFERENCE
@@ -98,13 +98,15 @@ try:
 except ImportError:
     from numpy.fft import rfft
 
-def bandpass_filter(lowcut, highcut, fs, order=3):
+def bandpass_filter(lowcut, highcut, fs, order=3, output='sos'):
     """Band-pass filter.
     
     :param lowcut: Lower cut-off frequency
     :param highcut: Upper cut-off frequency
     :param fs: Sample frequency
     :param order: Filter order
+    :param output: Output type. {‘ba’, ‘zpk’, ‘sos’}. Default is 'sos'. See also :func:`scipy.signal.butter`.
+    :returns: Returned value depends on `output`.
     
     A Butterworth filter is used.
     
@@ -114,8 +116,8 @@ def bandpass_filter(lowcut, highcut, fs, order=3):
     nyq = 0.5 * fs
     low = lowcut / nyq
     high = highcut / nyq
-    b, a = butter(order, [low, high], btype='band')
-    return b, a
+    output = butter(order, [low, high], btype='band', output=output)
+    return output
 
 
 def bandpass(signal, lowcut, highcut, fs, order=3):
@@ -130,8 +132,8 @@ def bandpass(signal, lowcut, highcut, fs, order=3):
     .. seealso:: :func:`bandpass_filter` for the filter that is used.
     
     """
-    b, a = bandpass_filter(lowcut, highcut, fs, order)
-    return lfilter(b, a, signal)
+    sos = bandpass_filter(lowcut, highcut, fs, order, output='sos')
+    return sosfilt(sos, signal)
     
     
 def lowpass(signal, cutoff, fs, order=3):
@@ -147,8 +149,8 @@ def lowpass(signal, cutoff, fs, order=3):
     .. seealso:: :func:`scipy.signal.butter`.
     
     """
-    b, a = butter(order, cutoff/(fs/2.0), btype='low')
-    return lfilter(b, a, signal)
+    sos = butter(order, cutoff/(fs/2.0), btype='low', output='sos')
+    return sosfilt(sos, signal)
     
     
 def highpass(signal, cutoff, fs, order=3):
@@ -164,8 +166,8 @@ def highpass(signal, cutoff, fs, order=3):
     .. seealso:: :func:`scipy.signal.butter`.
     
     """
-    b, a = butter(order, cutoff/(fs/2.0), btype='high')
-    return lfilter(b, a, signal)
+    sos = butter(order, cutoff/(fs/2.0), btype='high', output='sos')
+    return sosfilt(sos, signal)
 
 
 def octave_filter(center, fs, fraction, order=3):
@@ -195,8 +197,8 @@ def octavepass(signal, center, fs, fraction, order=3):
     .. seealso:: :func:`octave_filter`
     
     """
-    b, a = octave_filter(center, fs, fraction, order)
-    return lfilter(b, a, signal)
+    sos = octave_filter(center, fs, fraction, order)
+    return sosfilt(sos, signal)
     
 
 def convolve(signal, ltv, mode='full'):
@@ -868,7 +870,7 @@ class Filterbank(object):
         Filters this filterbank consists of.
         """
         fs = self.sample_frequency
-        return ( bandpass_filter(lower, upper, fs, order=self.order) for lower, upper in zip(self.frequencies.lower, self.frequencies.upper) )
+        return ( bandpass_filter(lower, upper, fs, order=self.order, output='ba') for lower, upper in zip(self.frequencies.lower, self.frequencies.upper) )
         
         #order = self.order
         #filters = list()
