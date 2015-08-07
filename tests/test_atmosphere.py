@@ -1,7 +1,9 @@
 import numpy as np
-
 from acoustics.atmosphere import Atmosphere
-from tests.get_data_path import data_path
+
+import sys
+sys.path.append('..')
+from get_data_path import data_path
 
 class TestAtmosphere:
     
