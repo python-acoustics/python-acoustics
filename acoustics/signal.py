@@ -98,7 +98,7 @@ try:
 except ImportError:
     from numpy.fft import rfft
 
-def bandpass_filter(lowcut, highcut, fs, order=3, output='sos'):
+def bandpass_filter(lowcut, highcut, fs, order=8, output='sos'):
     """Band-pass filter.
     
     :param lowcut: Lower cut-off frequency
@@ -116,11 +116,11 @@ def bandpass_filter(lowcut, highcut, fs, order=3, output='sos'):
     nyq = 0.5 * fs
     low = lowcut / nyq
     high = highcut / nyq
-    output = butter(order, [low, high], btype='band', output=output)
+    output = butter(order/2, [low, high], btype='band', output=output)
     return output
 
 
-def bandpass(signal, lowcut, highcut, fs, order=3):
+def bandpass(signal, lowcut, highcut, fs, order=8):
     """Filter signal with band-pass filter.
     
     :param signal: Signal
@@ -136,7 +136,7 @@ def bandpass(signal, lowcut, highcut, fs, order=3):
     return sosfilt(sos, signal)
     
     
-def lowpass(signal, cutoff, fs, order=3):
+def lowpass(signal, cutoff, fs, order=4):
     """Filter signal with low-pass filter.
     
     :param signal: Signal
@@ -153,7 +153,7 @@ def lowpass(signal, cutoff, fs, order=3):
     return sosfilt(sos, signal)
     
     
-def highpass(signal, cutoff, fs, order=3):
+def highpass(signal, cutoff, fs, order=4):
     """Filter signal with low-pass filter.
     
     :param signal: Signal
@@ -170,7 +170,7 @@ def highpass(signal, cutoff, fs, order=3):
     return sosfilt(sos, signal)
 
 
-def octave_filter(center, fs, fraction, order=3):
+def octave_filter(center, fs, fraction, order=8):
     """Fractional-octave band-pass filter.
     
     :param center: Centerfrequency of fractional-octave band.
@@ -185,7 +185,7 @@ def octave_filter(center, fs, fraction, order=3):
     return bandpass_filter(ob.lower[0], ob.upper[0], fs, order)
     
 
-def octavepass(signal, center, fs, fraction, order=3):
+def octavepass(signal, center, fs, fraction, order=8):
     """Filter signal with fractional-octave bandpass filter.
     
     :param signal: Signal
@@ -874,7 +874,7 @@ class Filterbank(object):
     
     """
     
-    def __init__(self, frequencies, sample_frequency=44100, order=3):
+    def __init__(self, frequencies, sample_frequency=44100, order=8):
         
         
         self.frequencies = frequencies
