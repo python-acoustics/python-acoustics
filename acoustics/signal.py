@@ -767,6 +767,52 @@ def octaves(p, fs, density=False,
     return fob, level
 
 
+def bandpass_octaves(x, fs, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order=8, purge=False):
+    """Apply 1/1-octave bandpass filters.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency.
+    :param frequencies: Frequencies.
+    :param order: Filter order.
+    :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    
+    .. seealso:: :func:`octavepass`
+    """
+    return bandpass_fractional_octaves(x, fs, frequencies, fraction=1, order=order, purge=purge)
+
+
+def bandpass_third_octaves(x, fs, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, order=8, purge=False):
+    """Apply 1/3-octave bandpass filters.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency.
+    :param frequencies: Frequencies.
+    :param order: Filter order.
+    :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    
+    .. seealso:: :func:`octavepass`
+    """
+    return bandpass_fractional_octaves(x, fs, frequencies, fraction=3, order=order, purge=purge)
+
+
+def bandpass_fractional_octaves(x, fs, frequencies, fraction=None, order=8, purge=False):
+    """Apply 1/N-octave bandpass filters.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency.
+    :param frequencies: Frequencies. Either instance of :class:`OctaveBand`, or array along with fs.
+    :param order: Filter order.
+    :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    
+    .. seealso:: :func:`octavepass`
+    """
+    if not isinstance(frequencies, Frequencies):
+        frequencies = OctaveBand(center=frequencies, fraction=fraction)
+    if purge:
+        frequencies = frequencies[frequencies.upper < fs/2.0]
+    return np.array([bandpass(x, band.lower, band.upper, fs, order) for band in frequencies]) 
+    
+
 def third_octaves(p, fs, density=False, 
                   frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, 
                   ref=REFERENCE_PRESSURE):
@@ -1067,6 +1113,9 @@ def wvd(signal, fs, analytic=True):
 
 
 __all__ = ['bandpass',
+           'bandpass_fractional_octaves',
+           'bandpass_octaves',
+           'bandpass_third_octaves',
            'lowpass',
            'highpass',
            'octavepass',
