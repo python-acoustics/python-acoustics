@@ -175,20 +175,21 @@ class Tonality(object):
     @property
     def noise_pauses(self):
         """Noise pauses that were determined."""
-        yield from self._noise_pauses
-    
+        for noise_pause in self._noise_pauses:
+            yield noise_pause
     
     @property
     def tones(self):
         """Tones that were determined."""
-        yield from (noise_pause.tone for noise_pause in self.noise_pauses if noise_pause.tone is not None)
-    
-    
+        for noise_pause in self.noise_pauses:
+            if noise_pause.tone is not None:
+                yield noise_pause.tone
+        
     @property
     def critical_bands(self):
         """Critical bands that were determined. A critical band is determined for each tone."""
-        yield from (tone.critical_band for tone in self.tones)
-
+        for tone in self.tones:
+            yield tone.critical_band
 
     @property
     def spectrum(self):
@@ -640,8 +641,8 @@ def noise_pause_seeker(levels, tsc):
     backward_pauses = [(n-1-start, n-1-end) for end, start in reversed(backward_pauses)]
     possible_pauses = sorted(list( set(forward_pauses) & set(backward_pauses) ) )
     
-    yield from possible_pauses
-
+    for pause in possible_pauses:
+        yield pause
 
 #------------------- Tone seeking--------------------
 
