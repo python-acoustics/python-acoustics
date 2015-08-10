@@ -200,7 +200,7 @@ def t60_impulse(file_name, bands, rt='t30'):
     for band in range(bands.size):
         # Filtering signal
         filtered_signal = bandpass(raw_signal, low[band],
-                                                 high[band], fs, order=3)
+                                                 high[band], fs, order=8)
         abs_signal = np.abs(filtered_signal) / np.max(np.abs(filtered_signal))
 
         # Schroeder integration
@@ -247,7 +247,7 @@ def clarity(time, signal, fs, bands=None):
     c = np.zeros(bands.size)
     for band in range(bands.size):
         filtered_signal = bandpass(signal, low[band],high[band],
-                                                 fs, order=3)
+                                                 fs, order=8)
         h2 = filtered_signal**2.0
         t = int((time/1000.0)*fs + 1)
         c[band] = 10.0*np.log10((np.sum(h2[:t])/np.sum(h2[t:])))
