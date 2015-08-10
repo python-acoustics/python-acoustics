@@ -741,7 +741,7 @@ class Signal(numpy.ndarray):
         
         """
         fs, data = wavfile.read(filename)  
-        data = data.astype(np.float32, copy=False)
+        data = data.astype(np.float32, copy=False).T
         data /= np.max(np.abs(data))
         return cls(data, fs=fs)
 
