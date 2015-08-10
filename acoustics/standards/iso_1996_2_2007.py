@@ -13,7 +13,7 @@ from scipy.signal import welch, hanning
 from scipy.stats import linregress
 import matplotlib.pyplot as plt
 from acoustics.decibel import dbsum
-from intervaltree import IntervalTree, Interval
+#from intervaltree import IntervalTree, Interval
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
 import weakref
 from tabulate import tabulate
@@ -369,11 +369,12 @@ class Tonality(object):
 
         # Limit xrange
         if noise_pauses: 
-            _items = self.noise_pauses
+            _items = list(self.noise_pauses)
         elif critical_bands: 
-            _items = self.critical_bands
-        span = IntervalTree(Interval(pause.start, pause.end) for pause in _items).range()
-        ax.set_xlim(span.begin, span.end)
+            _items = list(self.critical_bands)
+        #span = IntervalTree(Interval(pause.start, pause.end) for pause in _items).range()
+        #ax.set_xlim(span.begin, span.end)
+        ax.set_xlim(min(item.start for item in _items), max(item.end for item in _items))
         
         return fig
     
