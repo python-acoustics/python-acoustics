@@ -170,12 +170,10 @@ def test_t60_impulse(file_name, bands, rt, expected):
 
 @pytest.mark.parametrize("file_name, bands, expected", [
     (data_path() + 'living_room_1.wav', octave(63, 8000),
-     np.array([10.265, 17.784, 23.632, 26.590,
-               29.919, 31.172, 27.261, 28.936])),
+     np.array([  8.,  18.,  23.,  26.,  30.,  31.,  27.,  29.])),
     (data_path() + 'living_room_1.wav', third(100, 5000),
-     np.array([9.441,  12.387, 12.741, 14.792, 22.959, 23.219,
-               20.083, 19.844, 28.507, 30.629, 29.672, 27.402,
-               31.957, 30.734, 30.465, 28.483, 29.357, 24.703])),
+     np.array([ 3.,   6.,   7.,  13.,  18.,  23.,  20.,  19.,  28., 
+               30.,  30., 27.,  32.,  31.,  30.,  28.,  29.,  25.])),
 ])
 def test_c50_from_file(file_name, bands, expected):
     calculated = c50_from_file(file_name, bands)
@@ -187,9 +185,8 @@ def test_c50_from_file(file_name, bands, expected):
      np.array([18.542, 23.077, 27.015, 31.743,
                35.469, 36.836, 33.463, 36.062])),
     (data_path() + 'living_room_1.wav', third(100, 5000),
-     np.array([19.272, 17.455, 20.482, 24.806, 27.835, 27.461,
-               22.487, 26.651, 34.583, 34.989, 34.692, 32.827,
-               38.339, 38.393, 34.322, 34.118, 34.850, 31.887])),
+     np.array([17.,  14.,  17.,  24.,  26.,  27.,  22.,  26.,  
+               34.,  35.,  34., 32.,  38.,  38.,  34.,  34.,  35.,  32.])),
 ])
 def test_c80_from_file(file_name, bands, expected):
     calculated = c80_from_file(file_name, bands)
