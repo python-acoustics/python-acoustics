@@ -254,10 +254,10 @@ def test_bandpass_fractional_octaves(channels):
     
     # We check whether it computes, and whether channels is in right dimension
     result = bandpass_octaves(signal, fs, order=8, purge=False)
-    assert result.shape[-2]==channels
+    assert result[1].shape[-2]==channels
     
     result = bandpass_third_octaves(signal, fs, order=8, purge=False)
-    assert result.shape[-2]==channels
+    assert result[1].shape[-2]==channels
     
     # We need to define frequencies explicitly
     with pytest.raises(TypeError):
@@ -265,4 +265,4 @@ def test_bandpass_fractional_octaves(channels):
     
     frequencies = OctaveBand(fstart=100.0, fstop=2000.0, fraction=12)
     result = bandpass_fractional_octaves(signal, fs, frequencies, order=8, purge=False)
-    assert result.shape[-2]==channels
+    assert result[1].shape[-2]==channels

@@ -740,33 +740,6 @@ def integrate_bands(data, a, b):
     return ((lower < center) * (center <= upper) * data[...,None]).sum(axis=-2)
 
 
-
-def octaves(p, fs, density=False, 
-            frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, 
-            ref=REFERENCE_PRESSURE):
-    """Calculate level per 1/1-octave.
-    
-    :param p: Instantaneous pressure :math:`p(t)`.
-    :param fs: Sample frequency.
-    :param density: Power density instead of power.
-    
-    .. note:: Based on power spectrum (FFT)
-    
-    .. seealso:: :attr:`acoustics.bands.OCTAVE_CENTER_FREQUENCIES`
-    
-    .. note:: Exact center frequencies are always calculated.
-    
-    """
-    fob = OctaveBand(center=frequencies, fraction=1)
-    f, p = power_spectrum(p, fs)
-    fnb = EqualBand(f)
-    power = integrate_bands(p, fnb, fob)
-    if density:
-        power /= (fob.bandwidth/fnb.bandwidth)
-    level = 10.0*np.log10(power / ref**2.0)
-    return fob, level
-
-
 def bandpass_octaves(x, fs, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order=8, purge=False):
     """Apply 1/1-octave bandpass filters.
     
@@ -775,6 +748,7 @@ def bandpass_octaves(x, fs, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order
     :param frequencies: Frequencies.
     :param order: Filter order.
     :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     
     .. seealso:: :func:`octavepass`
     """
@@ -789,6 +763,7 @@ def bandpass_third_octaves(x, fs, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUE
     :param frequencies: Frequencies.
     :param order: Filter order.
     :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     
     .. seealso:: :func:`octavepass`
     """
@@ -803,6 +778,7 @@ def bandpass_fractional_octaves(x, fs, frequencies, fraction=None, order=8, purg
     :param frequencies: Frequencies. Either instance of :class:`OctaveBand`, or array along with fs.
     :param order: Filter order.
     :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     
     .. seealso:: :func:`octavepass`
     """
@@ -810,17 +786,18 @@ def bandpass_fractional_octaves(x, fs, frequencies, fraction=None, order=8, purg
         frequencies = OctaveBand(center=frequencies, fraction=fraction)
     if purge:
         frequencies = frequencies[frequencies.upper < fs/2.0]
-    return np.array([bandpass(x, band.lower, band.upper, fs, order) for band in frequencies]) 
+    return frequencies, np.array([bandpass(x, band.lower, band.upper, fs, order) for band in frequencies]) 
     
 
 def third_octaves(p, fs, density=False, 
                   frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, 
                   ref=REFERENCE_PRESSURE):
-    """Calculate level per 1/3-octave.
+    """Calculate level per 1/3-octave in frequency domain using the FFT.
     
-    :param p: Instantaneous pressure :math:`p(t)`.
+    :param x: Instantaneous signal :math:`x(t)`.
     :param fs: Sample frequency.
     :param density: Power density instead of power.
+    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     
     .. note:: Based on power spectrum (FFT)
     
@@ -839,8 +816,42 @@ def third_octaves(p, fs, density=False,
     return fob, level
 
 
+def octaves(p, fs, density=False, 
+            frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, 
+            ref=REFERENCE_PRESSURE):
+    """Calculate level per 1/1-octave in frequency domain using the FFT.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency.
+    :param density: Power density instead of power.
+    :param frequencies: Frequencies.
+    :param ref: Reference value.
+    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
+    
+    .. note:: Based on power spectrum (FFT)
+    
+    .. seealso:: :attr:`acoustics.bands.OCTAVE_CENTER_FREQUENCIES`
+    
+    .. note:: Exact center frequencies are always calculated.
+    
+    """
+    fob = OctaveBand(center=frequencies, fraction=1)
+    f, p = power_spectrum(p, fs)
+    fnb = EqualBand(f)
+    power = integrate_bands(p, fnb, fob)
+    if density:
+        power /= (fob.bandwidth/fnb.bandwidth)
+    level = 10.0*np.log10(power / ref**2.0)
+    return fob, level
+
+
 def fractional_octaves(p, fs, start=5.0, stop=16000.0, fraction=3, density=False):
-    """Calculate level per 1/N-octave where N is `fraction`.
+    """Calculate level per 1/N-octave in frequency domain using the FFT. N is `fraction`.
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency.
+    :param density: Power density instead of power.
+    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     
     .. note:: Based on power spectrum (FFT)
     
@@ -856,13 +867,6 @@ def fractional_octaves(p, fs, start=5.0, stop=16000.0, fraction=3, density=False
         power /= (fob.bandwidth/fnb.bandwidth)
     level = 10.0*np.log10(power)
     return fob, level
-
-#def plot_signal(x, fs, bands):
-    #"""
-    #Plot signal ``x`` with sample frequency ``fs`` and frequency bands as specified in ``bands``.
-
-    
-    #fig = plt.figure():
 
   
 class Filterbank(object):

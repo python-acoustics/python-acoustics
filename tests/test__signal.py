@@ -1,6 +1,7 @@
 import numpy as np
 from acoustics import Signal
 import pytest
+import tempfile
 
 import itertools as it
 
@@ -10,8 +11,22 @@ import itertools as it
     #fs = 5000
 
 
-
-
+class test_wav():
+    """Test writing to and reading from wav file."""
+    
+    duration = 5.0
+    fs = 10025
+    samples = int(fs*duration)
+    channels = 3
+    
+    signal = Signal(np.random.randn(channels, samples), fs)
+    
+    with tempfile.TemporaryFile() as file:
+        signal.to_wav(file)
+        signal = Signal.from_wav(file)
+        assert signal.samples == samples
+        assert signal.fs == fs
+        assert signal.channels == channels
 
 class TestSignal():
 
