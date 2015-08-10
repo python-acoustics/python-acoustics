@@ -775,6 +775,7 @@ def bandpass_octaves(x, fs, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order
     :param frequencies: Frequencies.
     :param order: Filter order.
     :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     
     .. seealso:: :func:`octavepass`
     """
@@ -789,6 +790,7 @@ def bandpass_third_octaves(x, fs, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUE
     :param frequencies: Frequencies.
     :param order: Filter order.
     :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     
     .. seealso:: :func:`octavepass`
     """
@@ -803,6 +805,7 @@ def bandpass_fractional_octaves(x, fs, frequencies, fraction=None, order=8, purg
     :param frequencies: Frequencies. Either instance of :class:`OctaveBand`, or array along with fs.
     :param order: Filter order.
     :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     
     .. seealso:: :func:`octavepass`
     """
@@ -810,7 +813,7 @@ def bandpass_fractional_octaves(x, fs, frequencies, fraction=None, order=8, purg
         frequencies = OctaveBand(center=frequencies, fraction=fraction)
     if purge:
         frequencies = frequencies[frequencies.upper < fs/2.0]
-    return np.array([bandpass(x, band.lower, band.upper, fs, order) for band in frequencies]) 
+    return frequencies, np.array([bandpass(x, band.lower, band.upper, fs, order) for band in frequencies]) 
     
 
 def third_octaves(p, fs, density=False, 
