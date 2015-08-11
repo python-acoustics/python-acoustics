@@ -740,6 +740,21 @@ def integrate_bands(data, a, b):
     return ((lower < center) * (center <= upper) * data[...,None]).sum(axis=-2)
 
 
+def bandpass_frequencies(x, fs, frequencies, order=8, purge=False):
+    """"Apply bandpass filters for frequencies
+    
+    :param x: Instantaneous signal :math:`x(t)`.
+    :param fs: Sample frequency.
+    :param frequencies: Frequencies. Instance of :class:`Frequencies`.
+    :param order: Filter order.
+    :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
+    """
+    if purge:
+        frequencies = frequencies[frequencies.upper < fs/2.0]
+    return frequencies, np.array([bandpass(x, band.lower, band.upper, fs, order) for band in frequencies]) 
+    
+    
 def bandpass_octaves(x, fs, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order=8, purge=False):
     """Apply 1/1-octave bandpass filters.
     
@@ -784,9 +799,8 @@ def bandpass_fractional_octaves(x, fs, frequencies, fraction=None, order=8, purg
     """
     if not isinstance(frequencies, Frequencies):
         frequencies = OctaveBand(center=frequencies, fraction=fraction)
-    if purge:
-        frequencies = frequencies[frequencies.upper < fs/2.0]
-    return frequencies, np.array([bandpass(x, band.lower, band.upper, fs, order) for band in frequencies]) 
+    return bandpass_frequencies(x, fs, frequencies, order=order, purge=purge)
+    
     
 
 def third_octaves(p, fs, density=False, 
@@ -1117,6 +1131,7 @@ def wvd(signal, fs, analytic=True):
 
 
 __all__ = ['bandpass',
+           'bandpass_frequencies',
            'bandpass_fractional_octaves',
            'bandpass_octaves',
            'bandpass_third_octaves',

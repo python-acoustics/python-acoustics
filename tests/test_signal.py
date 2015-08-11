@@ -245,7 +245,7 @@ def test_amplitude_envelope(amplitude, frequency, fs):
     #assert( frequency == frequency_determined )  
 
 @pytest.mark.parametrize("channels", [1, 2, 5])
-def test_bandpass_fractional_octaves(channels):
+def test_bandpass(channels):
     fs = 88200
     duration = 2
     samples = duration * fs
@@ -265,4 +265,8 @@ def test_bandpass_fractional_octaves(channels):
     
     frequencies = OctaveBand(fstart=100.0, fstop=2000.0, fraction=12)
     result = bandpass_fractional_octaves(signal, fs, frequencies, order=8, purge=False)
+    assert result[1].shape[-2]==channels
+    
+    frequencies = EqualBand(center=[100.0, 200.0, 300.0], bandwidth=20.0)
+    result = bandpass_frequencies(signal, fs, frequencies)
     assert result[1].shape[-2]==channels
