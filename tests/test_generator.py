@@ -42,7 +42,7 @@ class Test_noise():
         return parameters[2]
     
     
-    @pytest.fixture(params=[48000*10, 48000*10+1])
+    @pytest.fixture(params=[48000*60, 48000*60+1])
     def samples(self, request):
         return request.param
     
