@@ -202,6 +202,7 @@ class Tonality(object):
             bins //= 1 # Fix because of bug in welch with uneven bins
             f, p = welch(self.signal, fs=self.sample_frequency, nperseg=bins, window=self.window, detrend=False, scaling='density')
             self._spectrum = pd.Series(10.0*np.log10(p / self.reference_pressure**2.0), index=f)
+            print(len(self.signal) / bins)
         return self._spectrum
     
         
@@ -263,14 +264,16 @@ class Tonality(object):
             self.line_classifier.iloc[noise_pause.end-1] = 'neither'
             
             # Determine the indices of the tones in a noise pause
-            tone_indices = determine_tone_lines(levels, self.frequency_resolution, 
-                                                noise_pause.start, noise_pause.end)
+            tone_indices, bandwidth_for_tone_criterion = determine_tone_lines(levels, 
+                                                                              self.frequency_resolution, 
+                                                                              noise_pause.start, 
+                                                                              noise_pause.end)
             # If we have indices, ...
             if np.any(tone_indices):
                 # Then we mark those as tone lines.
                 self.line_classifier.iloc[tone_indices] = 'tone'
                 # And create a tone object.
-                noise_pause.tone = create_tone(levels, tone_indices, weakref.proxy(noise_pause))
+                noise_pause.tone = create_tone(levels, tone_indices, bandwidth_for_tone_criterion, weakref.proxy(noise_pause))
         return self
         
         
@@ -376,7 +379,6 @@ class Tonality(object):
         #span = IntervalTree(Interval(pause.start, pause.end) for pause in _items).range()
         #ax.set_xlim(span.begin, span.end)
         ax.set_xlim(min(item.start for item in _items), max(item.end for item in _items))
-        
         return fig
     
     
@@ -390,8 +392,11 @@ class Tonality(object):
                  ("Masking noise level $L_{pn}$", "{:4.1f} dB".format(cb.masking_noise_level)),
                  ("Tonal level $L_{pt}$", "{:4.1f} dB".format(cb.total_tone_level)),
                  ("Dominant tone", "{:4.1f} Hz".format(cb.tone.center)),
+                 ("3 dB bandwidth of tone", "{:2.1f}% of {:4.1f}".format(cb.tone.bandwidth_3db/cb.bandwidth*100.0, cb.bandwidth)),
                  ("Tonal audibility $L_{ta}$", "{:4.1f} dB".format(cb.tonal_audibility)),
-                 ("Adjustment $K_{t}$", "{:4.1f} dB".format(cb.adjustment)),            
+                 ("Adjustment $K_{t}$", "{:4.1f} dB".format(cb.adjustment)),
+                 ("Frequency resolution", "{:4.1f} Hz".format(self.frequency_resolution)),
+                 ("Effective analysis bandwidth", "{:4.1f} Hz".format(self.effective_analysis_bandwidth)),
             ]
         table += tones
         return tabulate(table)
@@ -416,22 +421,23 @@ class NoisePause(object):
         return tabulate(table, tablefmt="html")
 
 
-def create_tone(levels, tone_lines, noise_pause):
+def create_tone(levels, tone_lines, bandwidth_for_tone_criterion, noise_pause):
     """Create an instance of Tone."""
     
     center = levels.iloc[tone_lines].argmax()
     tone_level = tones_level(levels.iloc[tone_lines])
-    return Tone(center, tone_lines, tone_level, noise_pause)
+    return Tone(center, tone_lines, tone_level, noise_pause, bandwidth_for_tone_criterion)
 
 
 class Tone(object):
     """Tone."""
     
-    def __init__(self, center, tone_lines, tone_level, noise_pause, critical_band=None):
+    def __init__(self, center, tone_lines, tone_level, noise_pause, bandwidth_3db, critical_band=None):
         self.center = center
         self._tone_lines = tone_lines
         self.tone_level = tone_level
         self.noise_pause = noise_pause
+        self.bandwidth_3db = bandwidth_3db
         self.critical_band = critical_band
 
     def __str__(self):
@@ -661,7 +667,7 @@ def determine_tone_lines(levels, df, start, end):
     # Noise pause range object
     npr = slice(start, end+1)
 
-    tone_indices = np.array([])
+
     
     # Levels but with integeres as indices instead of frequencies.
     # Benefit over np.array is that the index is maintained when the object is sliced.
@@ -690,8 +696,12 @@ def determine_tone_lines(levels, df, start, end):
             tone_indices = (levels_int.iloc[npr][ levels_int.iloc[npr] >= levels_int.iloc[npr].max() - TONE_LINES_CRITERION_DB ]).index.get_values()
         #else:
             #raise ValueError("10% bandwidth criterion is not fullfilled.") # Maybe warning instead...
-
-    return tone_indices
+    else:
+        # Return values
+        tone_indices = np.array([])
+        bandwidth_for_tone_criterion = None
+        
+    return tone_indices, bandwidth_for_tone_criterion
 
 
 #class CriticalBand(object):
