@@ -43,7 +43,7 @@ setup(
           'matplotlib',
           'six >= 1.4.1',
           'cython',
-          'pandas',
+          'pandas>=0.15',
           'tabulate',
           ],
       extras_require={

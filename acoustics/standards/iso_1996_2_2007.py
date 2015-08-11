@@ -302,7 +302,10 @@ class Tonality(object):
         
         # Build classifier.
         levels = self.spectrum
-        self.line_classifier = pd.Series(['noise']*len(levels), index=levels.index)
+        
+        categories = ['noise', 'start', 'end', 'neither', 'tone']
+        self.line_classifier = pd.Series(pd.Categorical(['noise']*len(levels), categories=categories), index=levels.index)
+
         # Determine tones. Puts noise pause starts/ends in classier as well as tone lines
         # and lines that are neither tone nor noise.
         self._determine_tones()
