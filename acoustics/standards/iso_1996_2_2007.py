@@ -13,7 +13,6 @@ from scipy.signal import welch, hanning
 from scipy.stats import linregress
 import matplotlib.pyplot as plt
 from acoustics.decibel import dbsum
-#from intervaltree import IntervalTree, Interval
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
 import weakref
 from tabulate import tabulate
@@ -511,8 +510,7 @@ class CriticalBand(object):
                                                                                                          self.bandwidth,
                                                                                                          self.tonal_audibility,
                                                                                                          self.adjustment)
-    
-
+ 
     def __repr__(self):
         return "CriticalBand{}".format(str(self))
 
@@ -537,87 +535,19 @@ class CriticalBand(object):
     
 #----------Noise pauses----------------------------  
 
-#def _search_noise_pauses(levels, tsc):
-    #"""Search for start and end indices of noise pauses in a single direction.
-    
-    #:param levels: Spectral levels.    
-    #:param tsc: Tone seeking criterium in decibels.
-    #:returns: Tuple with start and end indices.
-    #"""
-    #starts = list()
-    #ends = list()
-    
-    ## Do not search in two outer samples on each side because of possible out of index.
-    #for i in range(2, len(levels)-2):
-            #if (levels[i] - levels[i-1]) >= tsc and (levels[i-1] - levels[i-2]) < tsc:
-                #starts.append(i)
-            #if (levels[i] - levels[i+1]) >= tsc and (levels[i+1] - levels[i+2]) < tsc:
-                #ends.append(i)
-    #return starts, ends        
- 
 def _search_noise_pauses(levels, tsc):
-    #starts = list()
-    #ends = list()
     pauses = list()
     possible_start = None
     for i in range(2, len(levels)-2):
             if (levels[i] - levels[i-1]) >= tsc and (levels[i-1] - levels[i-2]) < tsc:
                 possible_start = i
-                #starts.append(i)
             if (levels[i] - levels[i+1]) >= tsc and (levels[i+1] - levels[i+2]) < tsc:
                 if possible_start:
-                    #starts.append(possible_start)
                     pauses.append((possible_start, i))
                     possible_start = None
-                    #ends.append(i)
-    #return starts, ends
     return pauses
     
     
-#def possible_noise_pauses(levels, tsc):
-    #"""Determine start and end indices of possible noise pauses.
-    
-    #:param levels: Spectral levels.    
-    #:param tsc: Tone seeking criterium in decibels.
-    #:returns: Tuple with two vectors representing start and end indices.
-    
-    #A forward and backward sweep are performed. 
-    #Only the start and end indices that were found in both directions are returned.
-    
-    #.. seealso:: :func:`noise_pause_seeker`
-    #"""    
-    ## Forward and backward sweep
-    #forward_starts, forward_ends = _search_noise_pauses(levels, tsc)
-    #backward_ends, backward_starts = _search_noise_pauses(levels[::-1], tsc)
-    ## Only keep those values that were found in both directions.
-    #starts = sorted(list(set(forward_starts + backward_starts)))
-    #ends = sorted(list(set(forward_ends + backward_ends)))
-    
-    #return starts, ends
-
-
-#def smallest_non_overlapping_ranges(intervals):
-    #"""Return the smallest intervals that don't overlap any of the other overlaps.
-    #Note that combinations where the end point <= start point are filtered out.
-    #"""
-    ## Throw out stop<=start values
-    #intervals = ((start, stop) for start, stop in intervals if stop > start)
-    #intervals = [Interval(*interval) for interval in intervals]
-    ## Keep filtering as long as we have overlapped intervals.
-    #while IntervalTree.from_tuples(intervals).find_nested():
-        #for iv in intervals:
-            #it = IntervalTree(intervals)
-            #overlapped = it.search(iv, strict=True)
-            ## The interval obviously overlaps itself, so let's throw it out of the results.
-            #overlapped.remove(iv)
-            ## If we still have overlapping ranges, then this interval 
-            ## is not an inner interval and should be dropped
-            #if overlapped:
-                #intervals.remove(iv) 
-    ## Return an iterable of list of tuples with each tuple representing an interval.
-    #return ((interval[0], interval[1]) for interval in intervals)
-  
-
 def noise_pause_seeker(levels, tsc):
     """Given the levels of a spectrum and a tone seeking criterium this top level function seeks possible noise pauses.
     
@@ -628,19 +558,6 @@ def noise_pause_seeker(levels, tsc):
     Possible start and end indices of noise pauses are determined using :func:`possible_noise_pauses.
     Then, only those that correspond to the smallest intervals that do not overlap other intervals are kept.
     """    
-    # Determine all possible noise starts and stops
-    #starts, ends = possible_noise_pauses(levels, tsc)
-    # Keep only the noise pauses that don't overlap any other possible noise pauses.
-    #possible_pauses = itertools.product(starts, ends)
-    #possible_pauses = intervals = ((start, end) for start, end in possible_pauses if end > start)
-    #possible_pauses = smallest_non_overlapping_ranges(possible_pauses)
-    #possible_pauses = zip(starts, ends)
-    #possible_pauses = _search_noise_pauses(levels, tsc)
-    
-    #forward_starts, forward_ends = _search_noise_pauses(levels, tsc)
-    #backward_ends, backward_starts = _search_noise_pauses(levels[::-1], tsc)
-    #forward_pauses = ((start, end) for start, end in itertools.product(forward_starts, forward_ends) if end > start)
-    #backward_pauses = ((start, end) for start, end in itertools.product(backward_starts, backward_ends) if end > start)
     n = len(levels)
     forward_pauses = _search_noise_pauses(levels, tsc)
     backward_pauses = _search_noise_pauses(levels[::-1], tsc)
@@ -694,86 +611,5 @@ def determine_tone_lines(levels, df, start, end):
         if bandwidth_for_tone_criterion < 0.10 * critical_band_bandwidth:
             # All values within 6 decibel are designated as tones.
             tone_indices = (levels_int.iloc[npr][ levels_int.iloc[npr] >= levels_int.iloc[npr].max() - TONE_LINES_CRITERION_DB ]).index.get_values()
-        #else:
-            #raise ValueError("10% bandwidth criterion is not fullfilled.") # Maybe warning instead...
-    else:
-        # Return values
-        tone_indices = np.array([])
-        bandwidth_for_tone_criterion = None
-        
+            
     return tone_indices, bandwidth_for_tone_criterion
-
-
-#class CriticalBand(object):
-    #"""Critical band that is centered around :class:`Tone`."""
-    
-    #def __init__(self, tone, regression_range_factor):
-        #self._tone = tone
-        #"""Tone which this critical band is around."""
-        
-        #center, start, stop, bandwidth = critical_band(tone.center)
-        
-        #self.center = center
-        #"""Center frequency of critical band."""
-        #self.start = start
-        #"""Lower-edge frequency."""
-        #self.stop = stop
-        #"""Upper edge frequency."""
-        #self.bandwidth = stop - start
-        #"""Bandwidth."""
-        #self.regression_range_factor = regression_range_factor
-        #"""Range factor for regression. By default +/- 0.75"""
-    
-    #@property
-    #def masking_noise_level_regression(self):
-        #"""Regression"""
-        #levels = self._tone._noise_pause._model.spectrum
-        #noise_lines, slope, intercept = masking_noise_lines(self._tone._model.spectrum,
-                                                            #self._lines_classifier,
-                                                            #self.center, 
-                                                            #self.bandwidth, 
-                                                            #self.regression_range_factor)
-        #return slope, intercept
-
-    #@property
-    #def masking_noise_level(self):
-        #"""Masking noise level."""
-        #model = self._model._tone._model
-        #levels = model.spectrum
-
-        #noise_lines, slope, intercept = masking_noise_lines(model.spectrum,
-                                                            #self._lines_classifier,
-                                                            #self.center, 
-                                                            #self.bandwidth, 
-                                                            #self.regression_range_factor)
-        #return masking_noise_level(noise_lines, 
-                                   #model.frequency_resolution, 
-                                   #model.effective_analysis_bandwidth)
-    
-    #@property
-    #def total_tone_level(self):
-        #"""Total level of the tones in this band."""
-        #levels = self._tone._noise_pause._model.spectrum
-        ##level_tone_lines = np.ones_like(levels) * -np.inf
-        
-        ## We create one Series with all values 
-        ##for tone in self._tone._model.tones():
-        ##    level_tone_lines += levels[tone.marking=='tone']
-        
-        ## We select all lines that are marked as tones.
-        #level_tone_lines = levels[self._tone._model._masking=='tone']
-        ## Then we sum over the lines that are within the critical band.
-        #total_level = tones_level(level_tone_lines[self.start:self.stop])
-        ## And correct for the window
-        #total_level -= window_correction(self._tone._noise_pause._model.window)
-        #return total_level
-    
-    #@property
-    #def tonal_audibility(self):
-        #"""Tonal audibility of the tone in this critical band."""
-        #return tonal_audibility(self.total_tone_level, self.masking_noise_level, self.center)
-
-    #@property
-    #def adjustment(self):
-        #"""Adjustment :math:`K_t`."""
-        #return adjustment(self.tonal_audibility)
