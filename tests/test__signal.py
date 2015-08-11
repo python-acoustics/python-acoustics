@@ -4,6 +4,7 @@ import pytest
 import tempfile
 
 import itertools as it
+from acoustics.signal import EqualBand
 
 #def test_operator():
     
@@ -151,17 +152,19 @@ class TestSignal():
         
         assert(type(leq) is np.ndarray)
         
-        
-
-        
+    def test_bandpass(self, signal):
+        f = EqualBand(center=[100.,200.,300.], bandwidth=20.)
+        f, x = signal.bandpass(f)
     
+    def test_bandpass_octaves(self, signal):
+        f, x = signal.octaves()
 
-        
+    def test_bandpass_third_octaves(self, signal):
+        f, x = signal.third_octaves()
     
-
+    def test_bandpass_fractional_octaves(self, signal):
+        f, x = signal.fractional_octaves()
     
-    
-
     
     ## Plot methods with arguments to test.
     #plot_methods = {'plot'                      : None,

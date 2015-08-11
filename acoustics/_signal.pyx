@@ -554,20 +554,39 @@ class Signal(numpy.ndarray):
         #return acoustics.signal.fractional_octaves(self, self.fs, frequency, 
                                                   #frequency, fraction, False)[1]   
     
+    
+    def bandpass(self, frequencies, order=8, purge=True):
+        """Apply bandpass filters for frequencies.
+        
+        .. seealso:: :func:`acoustics.signal.bandpass_frequencies`
+        """
+        frequencies, filtered = acoustics.signal.bandpass_frequencies(self, self.fs, frequencies, order, purge)
+        return frequencies, type(self)(filtered, self.fs)
+    
+    
     def octaves(self, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order=8, purge=True):
-        """Apply 1/1-octaves bandpass filters."""
+        """Apply 1/1-octaves bandpass filters.
+        
+        .. seealso:: :func:`acoustics.signal.bandpass_octaves`
+        """
         frequencies, octaves = acoustics.signal.bandpass_octaves(self, self.fs, frequencies, order, purge)
         return frequencies, type(self)(octaves, self.fs)
     
     
     def third_octaves(self, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, order=8, purge=True):
-        """Apply 1/3-octaves bandpass filters."""
+        """Apply 1/3-octaves bandpass filters.
+        
+        .. seealso:: :func:`acoustics.signal.bandpass_third_octaves`
+        """
         frequencies, octaves = acoustics.signal.bandpass_third_octaves(self, self.fs, frequencies, order, purge)
         return frequencies, type(self)(octaves, self.fs)
     
     
     def fractional_octaves(self, frequencies=None, fraction=1, order=8, purge=True):
-        """Apply 1/N-octaves bandpass filters."""
+        """Apply 1/N-octaves bandpass filters.
+        
+        .. seealso:: :func:`acoustics.signal.bandpass_fractional_octaves`
+        """
         if frequencies is None:
             frequencies = acoustics.signal.OctaveBand(fstart=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES[0], fstop=self.fs/2.0, fraction=fraction)
         frequencies, octaves = acoustics.signal.bandpass_fractional_octaves(self, self.fs, frequencies, fraction, order, purge)
