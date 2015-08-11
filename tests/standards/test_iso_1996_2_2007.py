@@ -22,6 +22,10 @@ def test_tonality():
     tonality.frequency_resolution
     tonality.effective_analysis_bandwidth
 
+    # No values yet, cannot print overview.
+    with pytest.raises(ValueError):
+        print(tonality.overview())
+    tonality.results_as_dataframe()
     
     assert len(list(tonality.noise_pauses)) == 0
     assert len(list(tonality.tones)) == 0
@@ -37,8 +41,10 @@ def test_tonality():
     tonality.critical_band_at(900.0)
     
     tonality.dominant_tone
-    print(tonality.results())
+    print(tonality.overview())
+    tonality.results_as_dataframe()
     tonality.plot_results()
+    
 
 
 #Target = collections.namedtuple('Target', ['tonal_level', 
@@ -78,7 +84,7 @@ def test_tonality():
     #import tempfile
     #import os
     
-    #FOLDER = '/home/freddy/Downloads/delta/THP wave files/'
+    #FOLDER = 'THP wave files/'
     #FILES = {'calibration' : 'cal. 93,8 dB.wav',
              #'example1': 'sam 03 eks 1.wav',
              #'example2': 'sam 03 eks 2.wav',
