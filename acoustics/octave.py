@@ -37,8 +37,8 @@ def exact_center_frequency(frequency=None, fraction=1, n=None, ref=REFERENCE):
     
     """
     if frequency is not None:
-        n = acoustics.standards.iec_61260_1_2014.index_of_frequency(frequency, fraction, ref=ref)
-    return acoustics.standards.iec_61260_1_2014.exact_center_frequency(n, fraction, ref=ref)
+        n = acoustics.standards.iec_61260_1_2014.index_of_frequency(frequency, fraction=fraction, ref=ref)
+    return acoustics.standards.iec_61260_1_2014.exact_center_frequency(n, fraction=fraction, ref=ref)
 
 
 def nominal_center_frequency(frequency=None, fraction=1, n=None):

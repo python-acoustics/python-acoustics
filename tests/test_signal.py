@@ -270,3 +270,23 @@ def test_bandpass(channels):
     frequencies = EqualBand(center=[100.0, 200.0, 300.0], bandwidth=20.0)
     result = bandpass_frequencies(signal, fs, frequencies)
     assert result[1].shape[-2]==channels
+    
+
+@pytest.fixture(params=[1,3,6,12,24])
+def fraction(request):
+    return request.param
+
+@pytest.fixture
+def ob(fraction):
+    return OctaveBand(fstart=10.0, fstop=1000, fraction=fraction)
+    
+class TestOctaveBand:
+    
+    def test_unique(self, ob):
+        """Test whether we don't have duplicate values."""
+        assert len(ob.center) == len(np.unique(ob.center))
+        assert len(ob.lower) == len(np.unique(ob.lower))
+        assert len(ob.upper) == len(np.unique(ob.upper))
+        assert len(ob.nominal) == len(np.unique(ob.nominal))
+        assert len(ob.bandwidth) == len(np.unique(ob.bandwidth))
+        

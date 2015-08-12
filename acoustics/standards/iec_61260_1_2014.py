@@ -75,13 +75,14 @@ def exact_center_frequency(x, fraction=1, ref=REFERENCE_FREQUENCY, G=OCTAVE_FREQ
     
     See equation 2 and 3 of the standard.
     """
-    #if fraction%2==0.0:
-        #return ref * G**((x+1) / (2.0*fraction))
-    #else:
+    #if fraction%2: # Uneven
         #return ref * G**(x / fraction)
+    #else: # Even
+        #return ref * G**((2.*x+1.0) / (2.0*fraction))
     fraction = np.asarray(fraction)
     uneven = (fraction%2).astype('bool')
-    return ref * G**((x+1) / (2.0*fraction)) * np.logical_not(uneven) + uneven * ref * G**(x / fraction)
+    return ref * G**((2.0*x+1.0) / (2.0*fraction)) * np.logical_not(uneven) + uneven * ref * G**(x / fraction)
+
 
 
 def lower_frequency(center, fraction=1, G=OCTAVE_FREQUENCY_RATIO):
@@ -135,9 +136,13 @@ def index_of_frequency(frequency, fraction=1, ref=REFERENCE_FREQUENCY, G=OCTAVE_
     .. note:: This equation is not part of the standard. However, it follows from :func:`exact_center_frequency`.
     
     """
-    return np.round(fraction * np.log(frequency/ref) / np.log(G)).astype('int16')
-    
-
+    #if fraction%2: # Uneven
+        #return np.round(fraction * np.log(frequency/ref) / np.log(G)).astype('int16')
+    #else: # Even
+        #return np.round((2.0*fraction * np.log(frequency/ref) / np.log(G) - 1.0)) / 2.0
+    fraction = np.asarray(fraction)
+    uneven = (fraction%2).astype('bool')
+    return np.round((2.0*fraction * np.log(frequency/ref) / np.log(G) - 1.0)) / 2.0 * np.logical_not(uneven) + uneven * np.round(fraction * np.log(frequency/ref) / np.log(G)).astype('int16')
 
 
 def _nominal_center_frequency(center, fraction):
