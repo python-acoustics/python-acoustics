@@ -93,6 +93,40 @@ class Signal(numpy.ndarray):
         """
         return self.samples / self.fs
     
+    def calibrate_to(self, decibel, inplace=False):
+        """Calibrate signal to value `to`.
+        
+        :param to: Value to calibrate to.
+        :param inplace: Whether to perform inplace or not.
+        """
+        gain = decibel - self.leq()
+        return self.gain(gain, inplace=inplace)
+        
+    def calibrate_with(self, other, decibel, inplace=False):
+        """Calibrate signal with other signal.
+
+        :param other: Other signal/array.
+        :param to: Value to calibrate to.
+        :param inplace: Whether to perform inplace or not.
+        """
+        if not isinstance(other, Signal):
+            other = Signal(other, self.fs)
+        gain = decibel - other.leq()
+        return self.gain(gain, inplace=inplace)
+
+    def gain(self, decibel, inplace=False):
+        """Apply gain of `decibel` decibels.
+        
+        :param decibel: Decibels
+        :param inplace: In place
+        """
+        factor = 10.0**(decibel/20.0)   
+        if inplace:
+            self *= factor
+            return self
+        else:
+            return self * factor
+    
     def pick(self, start=0.0, stop=None):
         """Get signal from start time to stop time.
         """
@@ -720,7 +754,7 @@ class Signal(numpy.ndarray):
         
         #fig.savefig(filename)
     
-    def normalize(self, gap=6, inplace=False):
+    def normalize(self, gap=6.0, inplace=False):
         """Normalize signal.
         
         :param gap: Gap between maximum value and ceiling in decibel.
@@ -730,12 +764,12 @@ class Signal(numpy.ndarray):
         By default a 6 decibel gap is used.
         
         """
-        
+        factor = (self.max() * 10.0**(gap/20.0))
         if inplace:
-            self /= (self.max() * 10.0**(gap/20.0))
+            self /= factor
             return self
         else:
-            return self / (self.max() * 10.0**(gap/20.0))
+            return self / factor
         
     
     def to_wav(self, filename, depth=16):
