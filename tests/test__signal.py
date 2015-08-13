@@ -50,6 +50,17 @@ class TestSignal():
         signal.duration
         
     
+    def test_gain(self, signal):
+        
+        gain = +20.0
+        leq = signal.leq()
+        
+        # All because of multichannel signals
+        assert ( np.abs( signal.gain(gain).leq() - (leq + gain) ) < 0.01 ).all()
+        
+        signal.gain(gain, inplace=True)
+        assert ( np.abs( signal.leq() - (leq+gain) ) < 0.01 ).all()
+    
     def test_pick(self, signal):
         signal.pick(signal.duration*0.1, signal.duration*0.6)
     
