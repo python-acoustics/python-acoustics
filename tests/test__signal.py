@@ -162,10 +162,22 @@ class TestSignal():
         leq = signal.leq()
         
         assert(type(leq) is np.ndarray)
-        
+    
     def test_bandpass(self, signal):
+        x = signal.bandpass(1000.0, 2000.0)
+    
+    def test_highpass(self, signal):
+        x = signal.highpass(1000.0)
+    
+    def test_lowpass(self, signal):
+        x = signal.lowpass(1000.0)
+    
+    def test_octavepass(self, signal):
+        x = signal.octavepass(1000.0, fraction=6)
+
+    def test_bandpass_frequencies(self, signal):
         f = EqualBand(center=[100.,200.,300.], bandwidth=20.)
-        f, x = signal.bandpass(f)
+        f, x = signal.bandpass_frequencies(f)
     
     def test_bandpass_octaves(self, signal):
         f, x = signal.octaves()
