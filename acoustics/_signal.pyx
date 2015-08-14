@@ -587,11 +587,56 @@ class Signal(numpy.ndarray):
         #"""
         #return acoustics.signal.fractional_octaves(self, self.fs, frequency, 
                                                   #frequency, fraction, False)[1]   
+
+    def bandpass(self, lowcut, highcut, order=8):
+        """Filter signal with band-pass filter.
+        
+        :param lowcut: Lower cornerfrequency.
+        :param highcut: Upper cornerfrequency.
+        :param order: Filter order.
+        
+        .. seealso:: :func:`acoustics.signal.bandpass`
+        """
+        return Signal(acoustics.signal.bandpass(self, lowcut, highcut, self.fs, order=order), self.fs)
     
+    def highpass(self, cutoff, order=4):
+        """Filter signal with high-pass filter.
+        
+        :param cutoff: Cornerfrequency.
+        :param order: Filter order.
+        
+        .. seealso:: :func:`acoustics.signal.highpass`
+        """
+        return Signal(acoustics.signal.highpass(self, cutoff, self.fs, order=order), self.fs)
     
-    def bandpass(self, frequencies, order=8, purge=True):
+    def lowpass(self, cutoff, order=4):
+        """Filter signal with low-pass filter.
+        
+        :param cutoff: Cornerfrequency.
+        :param order: Filter order.
+        
+        .. seealso:: :func:`acoustics.signal.lowpass`
+        """
+        return Signal(acoustics.signal.lowpass(self, cutoff, self.fs, order=order), self.fs)
+
+    def octavepass(self, center, fraction, order=8):
+        """Filter signal with fractional-octave band-pass filter.
+        
+        :param center: Center frequency. Any value in the band will suffice.
+        :param fraction: Band designator.
+        
+        .. seealso:: :func:`acoustics.signal.octavepass`
+        """
+        return Signal(acoustics.signal.octavepass(self, center, self.fs, fraction=fraction, order=order), self.fs)
+    
+    def bandpass_frequencies(self, frequencies, order=8, purge=True):
         """Apply bandpass filters for frequencies.
         
+        :param frequencies: Band-pass filter frequencies.
+        :type frequencies: Instance of :class:`acoustics.signal.Frequencies`
+        :param order: Filter order.
+        :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+
         .. seealso:: :func:`acoustics.signal.bandpass_frequencies`
         """
         frequencies, filtered = acoustics.signal.bandpass_frequencies(self, self.fs, frequencies, order, purge)
