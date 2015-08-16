@@ -39,16 +39,21 @@ class TestSignal():
     
     
     def test_samples(self, signal):
-        signal.samples
+        x = signal.samples
     
     
     def test_channels(self, signal):
-        signal.channels
+        x = signal.channels
     
     
     def test_duration(self, signal):
-        signal.duration
+        x = signal.duration
         
+    def test_decimate(self, signal):
+        factor = 4
+        decimated = signal.decimate(factor)
+        assert (signal.fs / factor == decimated.fs)
+    
     
     def test_gain(self, signal):
         
