@@ -1,5 +1,7 @@
 # python-acoustics
 
+[![Build Status](https://travis-ci.org/python-acoustics/python-acoustics.svg?branch=master)](https://travis-ci.org/python-acoustics/python-acoustics)
+
 The `python-acoustics` module is a Python module with useful tools for acousticians.
 
 **Disclaimer**: This module is still heavily in development, and might break what you're working on.
@@ -24,13 +26,17 @@ and running again
 
 `python setup.py develop`
 
+Alernatively, you can download the ZIP archive and install using
+
+`python setup.py install`
+
 ## Examples
 
 Several examples can be found in the `examples` folder.
 
 ## Documentation
 
-Documentation can be found [here](http://python-acoustics.github.io/python-acoustics/).
+Documentation can be found [online](http://python-acoustics.github.io/python-acoustics/).
 
 ## License
 
