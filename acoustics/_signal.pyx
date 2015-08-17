@@ -654,7 +654,7 @@ class Signal(numpy.ndarray):
         
         .. seealso:: :func:`acoustics.signal.bandpass`
         """
-        return Signal(acoustics.signal.bandpass(self, lowcut, highcut, self.fs, order=order), self.fs)
+        return type(self)(acoustics.signal.bandpass(self, lowcut, highcut, self.fs, order=order), self.fs)
     
     def highpass(self, cutoff, order=4):
         """Filter signal with high-pass filter.
@@ -666,7 +666,7 @@ class Signal(numpy.ndarray):
         
         .. seealso:: :func:`acoustics.signal.highpass`
         """
-        return Signal(acoustics.signal.highpass(self, cutoff, self.fs, order=order), self.fs)
+        return type(self)(acoustics.signal.highpass(self, cutoff, self.fs, order=order), self.fs)
     
     def lowpass(self, cutoff, order=4):
         """Filter signal with low-pass filter.
@@ -678,7 +678,7 @@ class Signal(numpy.ndarray):
         
         .. seealso:: :func:`acoustics.signal.lowpass`
         """
-        return Signal(acoustics.signal.lowpass(self, cutoff, self.fs, order=order), self.fs)
+        return type(self)(acoustics.signal.lowpass(self, cutoff, self.fs, order=order), self.fs)
 
     def octavepass(self, center, fraction, order=8):
         """Filter signal with fractional-octave band-pass filter.
@@ -691,7 +691,7 @@ class Signal(numpy.ndarray):
         
         .. seealso:: :func:`acoustics.signal.octavepass`
         """
-        return Signal(acoustics.signal.octavepass(self, center, self.fs, fraction=fraction, order=order), self.fs)
+        return type(self)(acoustics.signal.octavepass(self, center, self.fs, fraction=fraction, order=order), self.fs)
     
     def bandpass_frequencies(self, frequencies, order=8, purge=True):
         """Apply bandpass filters for frequencies.
