@@ -98,6 +98,8 @@ class Signal(numpy.ndarray):
         
         :param to: Value to calibrate to.
         :param inplace: Whether to perform inplace or not.
+        :returns: Calibrated signal.
+        :rtype: :class:`Signal`
         """
         gain = decibel - self.leq()
         return self.gain(gain, inplace=inplace)
@@ -108,6 +110,8 @@ class Signal(numpy.ndarray):
         :param other: Other signal/array.
         :param to: Value to calibrate to.
         :param inplace: Whether to perform inplace or not.
+        :returns: calibrated signal.
+        :rtype: :class:`Signal`
         """
         if not isinstance(other, Signal):
             other = Signal(other, self.fs)
@@ -115,12 +119,14 @@ class Signal(numpy.ndarray):
         return self.gain(gain, inplace=inplace)
 
     def decimate(self, factor, zero_phase=False, ftype='iir', order=None):
-        """Decimate signal.
+        """Decimate signal by integer `factor`. Before downsampling a low-pass filter is applied.
         
         :param factor: Downsampling factor.
         :param zero_phase: Prevent phase shift by filtering with ``filtfilt`` instead of ``lfilter``.
         :param ftype: Filter type.
         :param order: Filter order.
+        :returns: Decimated signal.
+        :rtype: :class:`Signal`        
         
         .. seealso:: :func:`scipy.signal.decimate`.
         
@@ -133,6 +139,8 @@ class Signal(numpy.ndarray):
         
         :param decibel: Decibels
         :param inplace: In place
+        :returns: Amplified signal.
+        :rtype: :class:`Signal`
         """
         factor = 10.0**(decibel/20.0)   
         if inplace:
@@ -143,6 +151,14 @@ class Signal(numpy.ndarray):
     
     def pick(self, start=0.0, stop=None):
         """Get signal from start time to stop time.
+        
+        :param start: Start time.
+        :type start: float
+        :param stop: End time.
+        :type stop: float
+        :returns: Selected part of the signal.
+        :rtype: :class:`Signal`
+        
         """
         if start is not None:
             start = np.floor(start*self.fs)
@@ -153,14 +169,17 @@ class Signal(numpy.ndarray):
     def times(self):
         """Time vector.
         
-        Creates a vector with a timestamp for every sample.
+        :returns: A vector with a timestamp for each sample.
+        :rtype: :class:`np.ndarray`
         
         """
         return np.arange(0, self.samples) / self.fs
 
     def energy(self):
-        """
-        Signal energy.
+        """Signal energy.
+        
+        :returns: Total energy per channel.
+        :rtype: :class:`np.ndarray`
         
         .. math:: E = \\sum_{n=0}^{N-1} |x_n|^2
         
@@ -193,7 +212,12 @@ class Signal(numpy.ndarray):
 
 
     def weigh(self, weighting='A'):
-        """Apply frequency-weighting. Options are 'A', 'C' and 'Z'.
+        """Apply frequency-weighting. By default 'A'-weighting is applied.
+        
+        :param weighting: Frequency-weighting filter to apply. Valid options are 'A', 'C' and 'Z'.
+        :returns: A-weighted signal.
+        :rtype: :class:`Signal`.
+        
         """
         num, den = WEIGHTING_SYSTEMS[weighting]()
         b, a = bilinear(num, den, self.fs)
@@ -221,6 +245,9 @@ class Signal(numpy.ndarray):
     def amplitude_envelope(self):
         """Amplitude envelope.
         
+        :returns: Amplitude envelope of signal.
+        :rtype: :class:`Signal`
+        
         .. seealso:: :func:`acoustics.signal.amplitude_envelope`
         
         """
@@ -229,6 +256,9 @@ class Signal(numpy.ndarray):
     def instantaneous_frequency(self):
         """Instantaneous frequency.
         
+        :returns: Instantaneous frequency of signal.
+        :rtype: :class:`Signal`
+        
         .. seealso:: :func:`acoustics.signal.instantaneous_frequency`
         
         """
@@ -236,6 +266,9 @@ class Signal(numpy.ndarray):
 
     def instantaneous_phase(self):
         """Instantaneous phase.
+        
+        :returns: Instantaneous phase of signal.
+        :rtype: :class:`Signal`
         
         .. seealso:: :func:`acoustics.signal.instantaneous_phase`
     
@@ -246,6 +279,9 @@ class Signal(numpy.ndarray):
     def detrend(self, **kwargs):
         """Detrend signal.
         
+        :returns: Detrended version of signal.
+        :rtype: :class:`Signal`
+        
         .. seealso:: :func:`scipy.signal.detrend`
         
         """
@@ -253,6 +289,9 @@ class Signal(numpy.ndarray):
     
     def unwrap(self):
         """Unwrap signal in case the signal represents wrapped phase.
+        
+        :returns: Unwrapped signal.
+        :rtype: :class:`Signal`
         
         .. seealso:: :func:`np.unwrap`
         
@@ -263,6 +302,7 @@ class Signal(numpy.ndarray):
         """Complex cepstrum.
         
         :param N: Amount of bins.
+        :returns: Quefrency, complex cepstrum and delay in amount of samples.
         
         .. seealso:: :func:`acoustics.cepstrum.complex_cepstrum`
         
@@ -279,6 +319,7 @@ class Signal(numpy.ndarray):
         """Real cepstrum.
         
         :param N: Amount of bins.
+        :returns: Quefrency and real cepstrum.
         
         .. seealso:: :func:`acoustics.cepstrum.real_cepstrum`
         
@@ -608,6 +649,8 @@ class Signal(numpy.ndarray):
         :param lowcut: Lower cornerfrequency.
         :param highcut: Upper cornerfrequency.
         :param order: Filter order.
+        :returns: Band-pass filtered signal.
+        :rtype: :class:`Signal`.
         
         .. seealso:: :func:`acoustics.signal.bandpass`
         """
@@ -618,6 +661,8 @@ class Signal(numpy.ndarray):
         
         :param cutoff: Cornerfrequency.
         :param order: Filter order.
+        :returns: High-pass filtered signal.
+        :rtype: :class:`Signal`.
         
         .. seealso:: :func:`acoustics.signal.highpass`
         """
@@ -628,6 +673,8 @@ class Signal(numpy.ndarray):
         
         :param cutoff: Cornerfrequency.
         :param order: Filter order.
+        :returns: Low-pass filtered signal.
+        :rtype: :class:`Signal`.
         
         .. seealso:: :func:`acoustics.signal.lowpass`
         """
@@ -638,6 +685,9 @@ class Signal(numpy.ndarray):
         
         :param center: Center frequency. Any value in the band will suffice.
         :param fraction: Band designator.
+        :param order: Filter order.
+        :returns: Band-pass filtered signal.
+        :rtype: :class:`Signal`.
         
         .. seealso:: :func:`acoustics.signal.octavepass`
         """
@@ -650,7 +700,8 @@ class Signal(numpy.ndarray):
         :type frequencies: Instance of :class:`acoustics.signal.Frequencies`
         :param order: Filter order.
         :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
-
+        :returns: Frequencies and band-pass filtered signal.
+        
         .. seealso:: :func:`acoustics.signal.bandpass_frequencies`
         """
         frequencies, filtered = acoustics.signal.bandpass_frequencies(self, self.fs, frequencies, order, purge)
@@ -659,6 +710,12 @@ class Signal(numpy.ndarray):
     
     def octaves(self, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order=8, purge=True):
         """Apply 1/1-octaves bandpass filters.
+        
+        :param frequencies: Band-pass filter frequencies.
+        :type frequencies: :class:`np.ndarray` with (approximate) center-frequencies or an instance of :class:`acoustics.signal.Frequencies`
+        :param order: Filter order.
+        :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+        :returns: Frequencies and band-pass filtered signal.
         
         .. seealso:: :func:`acoustics.signal.bandpass_octaves`
         """
@@ -669,6 +726,12 @@ class Signal(numpy.ndarray):
     def third_octaves(self, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, order=8, purge=True):
         """Apply 1/3-octaves bandpass filters.
         
+        :param frequencies: Band-pass filter frequencies.
+        :type frequencies: :class:`np.ndarray` with (approximate) center-frequencies or an instance of :class:`acoustics.signal.Frequencies`
+        :param order: Filter order.
+        :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+        :returns: Frequencies and band-pass filtered signal.
+        
         .. seealso:: :func:`acoustics.signal.bandpass_third_octaves`
         """
         frequencies, octaves = acoustics.signal.bandpass_third_octaves(self, self.fs, frequencies, order, purge)
@@ -677,6 +740,13 @@ class Signal(numpy.ndarray):
     
     def fractional_octaves(self, frequencies=None, fraction=1, order=8, purge=True):
         """Apply 1/N-octaves bandpass filters.
+        
+        :param frequencies: Band-pass filter frequencies.
+        :type frequencies: Instance of :class:`acoustics.signal.Frequencies`
+        :param fraction: Default band-designator of fractional-octaves.
+        :param order: Filter order.
+        :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+        :returns: Frequencies and band-pass filtered signal.
         
         .. seealso:: :func:`acoustics.signal.bandpass_fractional_octaves`
         """
