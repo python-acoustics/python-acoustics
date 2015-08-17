@@ -6,9 +6,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Imaging &mdash; acoustics 0.0 documentation</title>
+    <title>&lt;no title&gt; &mdash; acoustics 0.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -23,164 +23,56 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
-    <link rel="up" title="Reference" href="reference.html" />
-    <link rel="next" title="Octave" href="octave.html" />
-    <link rel="prev" title="Doppler" href="doppler.html" /> 
+    <link rel="up" title="API Reference" href="reference.html" />
+    <link rel="next" title="&lt;no title&gt;" href="octave.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="doppler.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="octave.html" title="Octave"
+          <a href="octave.html" title="&lt;no title&gt;"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="doppler.html" title="Doppler"
+          <a href="doppler.html" title="&lt;no title&gt;"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
-  <span class="target" id="module-acoustics.imaging"></span><div class="section" id="imaging">
-<h1>Imaging<a class="headerlink" href="#imaging" title="Permalink to this headline">¶</a></h1>
-<p>Plotting functions using <a class="reference external" href="http://matplotlib.org/">matplotlib</a> library.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">You need to have <a class="reference external" href="http://matplotlib.org/">matplotlib</a> installed in order to use this module.</p>
-</div>
-<dl class="class">
-<dt id="acoustics.imaging.OctaveBandScale">
-<em class="property">class </em><tt class="descclassname">acoustics.imaging.</tt><tt class="descname">OctaveBandScale</tt><big>(</big><em>axis</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/acoustics/imaging.html#OctaveBandScale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.OctaveBandScale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="http://matplotlib.sourceforge.net/devel/add_new_projection.html#matplotlib.scale.ScaleBase" title="(in Matplotlib v1.3.1)"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.scale.ScaleBase</span></tt></a></p>
-<p>Octave band scale.</p>
-<dl class="method">
-<dt id="acoustics.imaging.OctaveBandScale.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>axis</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/acoustics/imaging.html#OctaveBandScale.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.OctaveBandScale.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="data">
-<dt id="acoustics.imaging.TICKS_OCTAVE">
-<tt class="descclassname">acoustics.imaging.</tt><tt class="descname">TICKS_OCTAVE</tt><em class="property"> = [u'16', u'31.5', u'63', u'125', u'250', u'500', u'1000', u'2000', u'4000', u'8000', u'16000']</em><a class="headerlink" href="#acoustics.imaging.TICKS_OCTAVE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Octave center frequencies as strings.</p>
-</dd></dl>
-
-<dl class="data">
-<dt id="acoustics.imaging.TICKS_OCTAVE_KHZ">
-<tt class="descclassname">acoustics.imaging.</tt><tt class="descname">TICKS_OCTAVE_KHZ</tt><em class="property"> = [u'16', u'31.5', u'63', u'125', u'250', u'500', u'1k', u'2k', u'4k', u'8k', u'16k']</em><a class="headerlink" href="#acoustics.imaging.TICKS_OCTAVE_KHZ" title="Permalink to this definition">¶</a></dt>
-<dd><p>Octave center frequencies as strings. Uses kHz notation.</p>
-</dd></dl>
-
-<dl class="data">
-<dt id="acoustics.imaging.TICKS_THIRD_OCTAVE">
-<tt class="descclassname">acoustics.imaging.</tt><tt class="descname">TICKS_THIRD_OCTAVE</tt><em class="property"> = [u'12.5', u'16', u'20', u'25', u'31.5', u'40', u'50', u'63', u'80', u'100', u'125', u'160', u'200', u'250', u'315', u'400', u'500', u'630', u'800', u'1000', u'1250', u'1600', u'2000', u'2500', u'3150', u'4000', u'5000', u'6300', u'8000', u'10000', u'12500', u'16000', u'20000']</em><a class="headerlink" href="#acoustics.imaging.TICKS_THIRD_OCTAVE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Third-octave center frequencies as strings.</p>
-</dd></dl>
-
-<dl class="data">
-<dt id="acoustics.imaging.TICKS_THIRD_OCTAVE_KHZ">
-<tt class="descclassname">acoustics.imaging.</tt><tt class="descname">TICKS_THIRD_OCTAVE_KHZ</tt><em class="property"> = [u'12.5', u'16', u'20', u'25', u'31.5', u'40', u'50', u'63', u'80', u'100', u'125', u'160', u'200', u'250', u'315', u'400', u'500', u'630', u'800', u'1000', u'1250', u'1600', u'2000', u'2500', u'3150', u'4000', u'5000', u'6300', u'8000', u'10000', u'12500', u'16000', u'20000']</em><a class="headerlink" href="#acoustics.imaging.TICKS_THIRD_OCTAVE_KHZ" title="Permalink to this definition">¶</a></dt>
-<dd><p>Third-octave center frequencies as strings. Uses kHz notation.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="acoustics.imaging.ThirdBandScale">
-<em class="property">class </em><tt class="descclassname">acoustics.imaging.</tt><tt class="descname">ThirdBandScale</tt><big>(</big><em>axis</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/acoustics/imaging.html#ThirdBandScale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.ThirdBandScale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="http://matplotlib.sourceforge.net/devel/add_new_projection.html#matplotlib.scale.ScaleBase" title="(in Matplotlib v1.3.1)"><tt class="xref py py-class docutils literal"><span class="pre">matplotlib.scale.ScaleBase</span></tt></a></p>
-<p>Third-octave band scale.</p>
-<dl class="method">
-<dt id="acoustics.imaging.ThirdBandScale.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>axis</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/acoustics/imaging.html#ThirdBandScale.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.ThirdBandScale.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="acoustics.imaging.plot_bands">
-<tt class="descclassname">acoustics.imaging.</tt><tt class="descname">plot_bands</tt><big>(</big><em>data</em>, <em>bands</em>, <em>axes</em>, <em>band_type</em>, <em>k_ticks=False</em>, <em>xlabel=None</em>, <em>ylabel=None</em>, <em>title=None</em>, <em>separator=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/acoustics/imaging.html#plot_bands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.plot_bands" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot bands from <cite>data</cite> levels and <cite>bands</cite>.
-Only use if you want to plot from arbitrary octave or third octave data.</p>
-<p>data: levels in an 1-D NumPy array.</p>
-<p>axes: <cite>matplotlib.axes</cite> object.</p>
-<p>band_type: <cite>&#8216;octave&#8217;</cite> or <cite>&#8216;third&#8217;</cite> are accepted values.</p>
-<p>axes: a <cite>matplotlib.axes</cite> object (<cite>None</cite> by default, optional).</p>
-<p>kHz: if <cite>True</cite> it shows &#8220;1k&#8221; or &#8220;2.5k&#8221; instead of &#8220;1000&#8221; or &#8220;2500&#8221; as
-tick labels (<cite>False</cite> by default, optional).</p>
-<p>xlabel: a <cite>str</cite> containing label for x axis (optional).</p>
-<p>ylabel: a <cite>str</cite> containing label for y axis (optional).</p>
-<p>title: a <cite>str</cite> containing title (optional).</p>
-<p>separator: a <cite>str</cite> defining the decimal separator. By default takes &#8216;.&#8217;
-or &#8216;,&#8217; values according to system settings (when separator is None).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="acoustics.imaging.plot_octave">
-<tt class="descclassname">acoustics.imaging.</tt><tt class="descname">plot_octave</tt><big>(</big><em>data</em>, <em>octaves</em>, <em>axes=None</em>, <em>kHz=False</em>, <em>xlabel=None</em>, <em>ylabel=None</em>, <em>title=None</em>, <em>separator=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/acoustics/imaging.html#plot_octave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.plot_octave" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot octave bands from <cite>data</cite> levels and <cite>octaves</cite> bands.</p>
-<p>data: levels in an 1-D NumPy array.</p>
-<p>octaves: octaves in an 1-D NumPy array. Note that you can use
-<tt class="xref py py-func docutils literal"><span class="pre">trompe.utils.bands.octave()</span></tt> for this or manually enter all bands.</p>
-<p>axes: a <cite>matplotlib.axes</cite> object (optional).</p>
-<p>kHz: if <cite>True</cite> it shows &#8220;1k&#8221; or &#8220;2k&#8221; instead of &#8220;1000&#8221; or &#8220;2000&#8221; as
-tick labels (<cite>False</cite> by default, optional).</p>
-<p>xlabel: a <cite>str</cite> containing label for x axis (optional).</p>
-<p>ylabel: a <cite>str</cite> containing label for y axis (optional).</p>
-<p>title: a <cite>str</cite> containing title (optional).</p>
-<p>separator: a <cite>str</cite> defining the decimal separator. By default takes &#8216;.&#8217;
-or &#8216;,&#8217; values according to system settings (when separator is None).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="acoustics.imaging.plot_third">
-<tt class="descclassname">acoustics.imaging.</tt><tt class="descname">plot_third</tt><big>(</big><em>data</em>, <em>thirds</em>, <em>axes=None</em>, <em>kHz=False</em>, <em>xlabel=None</em>, <em>ylabel=None</em>, <em>title=None</em>, <em>separator=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/acoustics/imaging.html#plot_third"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.plot_third" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot third octave bands from <cite>data</cite> levels and <cite>thirds</cite> bands.</p>
-<p>data: levels in an 1-D NumPy array.</p>
-<p>thirds: thirds in an 1-D NumPy array. Note that you can use
-<tt class="xref py py-func docutils literal"><span class="pre">trompe.utils.bands.thirds()</span></tt> for this or manually enter all bands.</p>
-<p>axes: a <cite>matplotlib.axes</cite> object (<cite>None</cite> by default, optional).</p>
-<p>kHz: if <cite>True</cite> it shows &#8220;1k&#8221; or &#8220;2.5k&#8221; instead of &#8220;1000&#8221; or &#8220;2500&#8221; as
-tick labels (<cite>False</cite> by default, optional).</p>
-<p>xlabel: a <cite>str</cite> containing label for x axis (optional).</p>
-<p>ylabel: a <cite>str</cite> containing label for y axis (optional).</p>
-<p>title: a <cite>str</cite> containing title (optional).</p>
-<p>separator: a <cite>str</cite> defining the decimal separator. By default takes &#8216;.&#8217;
-or &#8216;,&#8217; values according to system settings (when separator is None).</p>
-</dd></dl>
-
-</div>
-
+  
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="doppler.html"
-                        title="previous chapter">Doppler</a></p>
+                        title="previous chapter">&lt;no title&gt;</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="octave.html"
-                        title="next chapter">Octave</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/imaging.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/imaging.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -197,28 +89,25 @@ or &#8216;,&#8217; values according to system settings (when separator is None).
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="octave.html" title="Octave"
+          <a href="octave.html" title="&lt;no title&gt;"
              >next</a> |</li>
         <li class="right" >
-          <a href="doppler.html" title="Doppler"
+          <a href="doppler.html" title="&lt;no title&gt;"
              >previous</a> |</li>
-        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="reference.html" >Reference</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>

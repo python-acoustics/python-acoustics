@@ -6,9 +6,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Atmosphere &mdash; acoustics 0.0 documentation</title>
+    <title>&lt;no title&gt; &mdash; acoustics 0.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -23,369 +23,56 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
-    <link rel="up" title="Reference" href="reference.html" />
-    <link rel="next" title="Bands" href="bands.html" />
-    <link rel="prev" title="Reference" href="reference.html" /> 
+    <link rel="up" title="API Reference" href="reference.html" />
+    <link rel="next" title="&lt;no title&gt;" href="bands.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="ambisonics.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="bands.html" title="Bands"
+          <a href="bands.html" title="&lt;no title&gt;"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="reference.html" title="Reference"
+          <a href="ambisonics.html" title="&lt;no title&gt;"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="reference.html" accesskey="U">Reference</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
-  <span class="target" id="module-acoustics.atmosphere"></span><div class="section" id="atmosphere">
-<h1>Atmosphere<a class="headerlink" href="#atmosphere" title="Permalink to this headline">¶</a></h1>
-<p>The atmosphere module contains functions and classes related to atmospheric acoustics.</p>
-<dl class="class">
-<dt id="acoustics.atmosphere.Atmosphere">
-<em class="property">class </em><tt class="descclassname">acoustics.atmosphere.</tt><tt class="descname">Atmosphere</tt><big>(</big><em>temperature=293.15</em>, <em>pressure=101.325</em>, <em>relative_humidity=0.0</em><big>)</big><a class="reference internal" href="_modules/acoustics/atmosphere.html#Atmosphere"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.Atmosphere" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Class describing atmospheric conditions.</p>
-<dl class="attribute">
-<dt id="acoustics.atmosphere.Atmosphere.REF_PRESSURE">
-<tt class="descname">REF_PRESSURE</tt><em class="property"> = 101.325</em><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.REF_PRESSURE" title="Permalink to this definition">¶</a></dt>
-<dd><p>International Standard Atmosphere in kilopascal</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="acoustics.atmosphere.Atmosphere.REF_TEMP">
-<tt class="descname">REF_TEMP</tt><em class="property"> = 293.15</em><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.REF_TEMP" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reference temperature</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="acoustics.atmosphere.Atmosphere.TRIPLE_TEMP">
-<tt class="descname">TRIPLE_TEMP</tt><em class="property"> = 273.16</em><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.TRIPLE_TEMP" title="Permalink to this definition">¶</a></dt>
-<dd><p>Triple point isotherm temperature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="acoustics.atmosphere.Atmosphere.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>temperature=293.15</em>, <em>pressure=101.325</em>, <em>relative_humidity=0.0</em><big>)</big><a class="reference internal" href="_modules/acoustics/atmosphere.html#Atmosphere.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>temperature</strong> &#8211; Temperature</li>
-<li><strong>pressure</strong> &#8211; Pressure</li>
-<li><strong>relative_humidity</strong> &#8211; Relative humidity</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="acoustics.atmosphere.Atmosphere.attenuation_coefficient">
-<tt class="descname">attenuation_coefficient</tt><big>(</big><em>frequency</em><big>)</big><a class="reference internal" href="_modules/acoustics/atmosphere.html#Atmosphere.attenuation_coefficient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.attenuation_coefficient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attenuation coefficient <img class="math" src="_images/math/ad59b6e24a4a00ac621801f8d7513d68be654ab5.png" alt="\alpha"/> describing atmospheric absorption in dB/m as function of <tt class="docutils literal"><span class="pre">frequency</span></tt>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frequency</strong> &#8211; Frequencies to be considered.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="acoustics.atmosphere.Atmosphere.ir_attenuation_coefficient">
-<tt class="descname">ir_attenuation_coefficient</tt><big>(</big><em>d</em>, <em>fs=44100</em>, <em>N=2048</em>, <em>sign=1</em><big>)</big><a class="reference internal" href="_modules/acoustics/atmosphere.html#Atmosphere.ir_attenuation_coefficient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.ir_attenuation_coefficient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the impulse response due to air absorption.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fs</strong> &#8211; Sample frequency</li>
-<li><strong>d</strong> &#8211; Distance</li>
-<li><strong>N</strong> &#8211; Blocks</li>
-<li><strong>sign</strong> &#8211; Multiply (+1) or divide (-1) by transfer function. Multiplication is used for applying the absorption while -1 is used for undoing the absorption.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="acoustics.atmosphere.Atmosphere.molar_concentration_water_vapour">
-<tt class="descname">molar_concentration_water_vapour</tt><a class="reference internal" href="_modules/acoustics/atmosphere.html#Atmosphere.molar_concentration_water_vapour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.molar_concentration_water_vapour" title="Permalink to this definition">¶</a></dt>
-<dd><p>Molar concentration of water vapour <img class="math" src="_images/math/cbb80ad77aa7a5e227d5a46bc44d235284106cfc.png" alt="h"/> calculated using <a class="reference internal" href="#acoustics.atmosphere.molar_concentration_water_vapour" title="acoustics.atmosphere.molar_concentration_water_vapour"><tt class="xref py py-func docutils literal"><span class="pre">molar_concentration_water_vapour()</span></tt></a>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="acoustics.atmosphere.Atmosphere.plot_attenuation_coefficient">
-<tt class="descname">plot_attenuation_coefficient</tt><big>(</big><em>frequency</em>, <em>filename=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/atmosphere.html#Atmosphere.plot_attenuation_coefficient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.plot_attenuation_coefficient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot the attenuation coefficient <img class="math" src="_images/math/ad59b6e24a4a00ac621801f8d7513d68be654ab5.png" alt="\alpha"/> as function of frequency and write the figure to <tt class="docutils literal"><span class="pre">filename</span></tt>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> &#8211; Filename</li>
-<li><strong>frequency</strong> &#8211; Frequencies</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The attenuation coefficient is plotted in dB/km!</p>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="acoustics.atmosphere.Atmosphere.plot_ir_attenuation_coefficient">
-<tt class="descname">plot_ir_attenuation_coefficient</tt><big>(</big><em>fs</em>, <em>N</em>, <em>d</em>, <em>filename=None</em><big>)</big><a class="reference internal" href="_modules/acoustics/atmosphere.html#Atmosphere.plot_ir_attenuation_coefficient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.plot_ir_attenuation_coefficient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot the impulse response of the attenuation due to atmospheric absorption.
-The impulse response is calculated using <a class="reference internal" href="#acoustics.atmosphere.Atmosphere.ir_attenuation_coefficient" title="acoustics.atmosphere.Atmosphere.ir_attenuation_coefficient"><tt class="xref py py-meth docutils literal"><span class="pre">ir_attenuation_coefficient()</span></tt></a>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> &#8211; Filename</li>
-<li><strong>fs</strong> &#8211; Sample frequency</li>
-<li><strong>N</strong> &#8211; Blocks</li>
-<li><strong>d</strong> &#8211; Distance</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="acoustics.atmosphere.Atmosphere.pressure">
-<tt class="descname">pressure</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.pressure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ambient pressure <img class="math" src="_images/math/df8d496d0a2ce5522634892349339f0b8e4a5787.png" alt="p_a"/>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="acoustics.atmosphere.Atmosphere.relative_humidity">
-<tt class="descname">relative_humidity</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.relative_humidity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Relative humidity</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="acoustics.atmosphere.Atmosphere.relaxation_frequency_nitrogen">
-<tt class="descname">relaxation_frequency_nitrogen</tt><a class="reference internal" href="_modules/acoustics/atmosphere.html#Atmosphere.relaxation_frequency_nitrogen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.relaxation_frequency_nitrogen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resonance frequency of nitrogen <img class="math" src="_images/math/c696f9ff8c44ff200c3f1752a9c8815f79982c3b.png" alt="f_{r,N}"/> calculated using <a class="reference internal" href="#acoustics.atmosphere.relaxation_frequency_nitrogen" title="acoustics.atmosphere.relaxation_frequency_nitrogen"><tt class="xref py py-func docutils literal"><span class="pre">relaxation_frequency_nitrogen()</span></tt></a>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="acoustics.atmosphere.Atmosphere.relaxation_frequency_oxygen">
-<tt class="descname">relaxation_frequency_oxygen</tt><a class="reference internal" href="_modules/acoustics/atmosphere.html#Atmosphere.relaxation_frequency_oxygen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.relaxation_frequency_oxygen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resonance frequency of oxygen <img class="math" src="_images/math/846fae2cf0b739edc6a64c6a50a441fd0d3e485d.png" alt="f_{r,O}"/> calculated using <a class="reference internal" href="#acoustics.atmosphere.relaxation_frequency_oxygen" title="acoustics.atmosphere.relaxation_frequency_oxygen"><tt class="xref py py-func docutils literal"><span class="pre">relaxation_frequency_oxygen()</span></tt></a>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="acoustics.atmosphere.Atmosphere.saturation_pressure">
-<tt class="descname">saturation_pressure</tt><a class="reference internal" href="_modules/acoustics/atmosphere.html#Atmosphere.saturation_pressure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.saturation_pressure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saturation pressure <img class="math" src="_images/math/a7205b1dd7d64b1ed51b859f6900c7065d801ed8.png" alt="p_{sat}"/> calculated using <a class="reference internal" href="#acoustics.atmosphere.saturation_pressure" title="acoustics.atmosphere.saturation_pressure"><tt class="xref py py-func docutils literal"><span class="pre">saturation_pressure()</span></tt></a>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="acoustics.atmosphere.Atmosphere.soundspeed">
-<tt class="descname">soundspeed</tt><a class="reference internal" href="_modules/acoustics/atmosphere.html#Atmosphere.soundspeed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.soundspeed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Speed of sound <img class="math" src="_images/math/65868d23a5bfe5b3b2d819386b19c14fa36af134.png" alt="c"/> calculated using <a class="reference internal" href="#acoustics.atmosphere.soundspeed" title="acoustics.atmosphere.soundspeed"><tt class="xref py py-func docutils literal"><span class="pre">soundspeed()</span></tt></a>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="acoustics.atmosphere.Atmosphere.temperature">
-<tt class="descname">temperature</tt><em class="property"> = None</em><a class="headerlink" href="#acoustics.atmosphere.Atmosphere.temperature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ambient temperature <img class="math" src="_images/math/6d42c88506b8da39a2a23653aecbfb7c29728063.png" alt="T"/>.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="data">
-<dt id="acoustics.atmosphere.SOUNDSPEED">
-<tt class="descclassname">acoustics.atmosphere.</tt><tt class="descname">SOUNDSPEED</tt><em class="property"> = 343.2</em><a class="headerlink" href="#acoustics.atmosphere.SOUNDSPEED" title="Permalink to this definition">¶</a></dt>
-<dd><p>Speed of sound.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="acoustics.atmosphere.attenuation_coefficient">
-<tt class="descclassname">acoustics.atmosphere.</tt><tt class="descname">attenuation_coefficient</tt><big>(</big><em>pressure</em>, <em>reference_pressure</em>, <em>temperature</em>, <em>reference_temperature</em>, <em>relaxation_frequency_nitrogen</em>, <em>relaxation_frequency_oxygen</em>, <em>frequency</em><big>)</big><a class="reference internal" href="_modules/acoustics/atmosphere.html#attenuation_coefficient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.attenuation_coefficient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attenuation coefficient <img class="math" src="_images/math/ad59b6e24a4a00ac621801f8d7513d68be654ab5.png" alt="\alpha"/> describing atmospheric absorption in dB/m for the specified <tt class="docutils literal"><span class="pre">frequency</span></tt>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>temperature</strong> &#8211; Ambient temperature <img class="math" src="_images/math/6d42c88506b8da39a2a23653aecbfb7c29728063.png" alt="T"/></li>
-<li><strong>pressure</strong> &#8211; Ambient pressure <img class="math" src="_images/math/6d42c88506b8da39a2a23653aecbfb7c29728063.png" alt="T"/></li>
-<li><strong>frequency</strong> &#8211; Frequencies to calculate <img class="math" src="_images/math/ad59b6e24a4a00ac621801f8d7513d68be654ab5.png" alt="\alpha"/> for.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>According to ISO9613-1:1993.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="acoustics.atmosphere.molar_concentration_water_vapour">
-<tt class="descclassname">acoustics.atmosphere.</tt><tt class="descname">molar_concentration_water_vapour</tt><big>(</big><em>relative_humidity</em>, <em>saturation_pressure</em>, <em>pressure</em><big>)</big><a class="reference internal" href="_modules/acoustics/atmosphere.html#molar_concentration_water_vapour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.molar_concentration_water_vapour" title="Permalink to this definition">¶</a></dt>
-<dd><p>Molar concentration of water vapour <img class="math" src="_images/math/cbb80ad77aa7a5e227d5a46bc44d235284106cfc.png" alt="h"/>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>relative_humidity</strong> &#8211; Relative humidity <img class="math" src="_images/math/403cca5655d3f096a8735b74a4d605789a817184.png" alt="h_r"/></li>
-<li><strong>saturation_pressure</strong> &#8211; Saturation pressure <img class="math" src="_images/math/a7205b1dd7d64b1ed51b859f6900c7065d801ed8.png" alt="p_{sat}"/></li>
-<li><strong>pressure</strong> &#8211; Ambient pressure <img class="math" src="_images/math/3eca8557203e86160952e1c0f735f7417f3285b1.png" alt="p"/></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>According to ISO9613-1:1993.</p>
-<div class="math">
-<p><img src="_images/math/ad68b169fae4458c0c556c217b0c761b1bba5e2e.png" alt="h = h_r  \frac{p_{sat}}{p_a}"/></p>
-</div></dd></dl>
-
-<dl class="function">
-<dt id="acoustics.atmosphere.relaxation_frequency_nitrogen">
-<tt class="descclassname">acoustics.atmosphere.</tt><tt class="descname">relaxation_frequency_nitrogen</tt><big>(</big><em>pressure</em>, <em>ref_pressure</em>, <em>temperature</em>, <em>ref_temperature</em>, <em>h</em><big>)</big><a class="reference internal" href="_modules/acoustics/atmosphere.html#relaxation_frequency_nitrogen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.relaxation_frequency_nitrogen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Relaxation frequency of nitrogen <img class="math" src="_images/math/c696f9ff8c44ff200c3f1752a9c8815f79982c3b.png" alt="f_{r,N}"/>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pressure</strong> &#8211; Ambient pressure <img class="math" src="_images/math/df8d496d0a2ce5522634892349339f0b8e4a5787.png" alt="p_a"/></li>
-<li><strong>ref_pressure</strong> &#8211; Reference pressure <img class="math" src="_images/math/2f9a780f75fdea5d2d9ac4b56c87a8ee37391504.png" alt="p_{ref}"/></li>
-<li><strong>temperature</strong> &#8211; Ambient temperature <img class="math" src="_images/math/6d42c88506b8da39a2a23653aecbfb7c29728063.png" alt="T"/></li>
-<li><strong>ref_temperature</strong> &#8211; Reference temperature <img class="math" src="_images/math/890564849c8b6fcd1f9b72a8382a12a48d8ad428.png" alt="T_{ref}"/></li>
-<li><strong>h</strong> &#8211; Molar concentration of water vapour <img class="math" src="_images/math/cbb80ad77aa7a5e227d5a46bc44d235284106cfc.png" alt="h"/></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>According to ISO9613-1:1993.</p>
-<div class="math">
-<p><img src="_images/math/31360cb6efde7f945e4270f6188d337752e91058.png" alt="f_{r,N} = \frac{p_a}{p_r} \left( \frac{T}{T_0} \right)^{-1/2} \cdot \left( 9 + 280 h \exp{\left\{ -4.170 \left[ \left(\frac{T}{T_0} \right)^{-1/3} -1 \right] \right\} } \right)"/></p>
-</div></dd></dl>
-
-<dl class="function">
-<dt id="acoustics.atmosphere.relaxation_frequency_oxygen">
-<tt class="descclassname">acoustics.atmosphere.</tt><tt class="descname">relaxation_frequency_oxygen</tt><big>(</big><em>pressure</em>, <em>ref_pressure</em>, <em>h</em><big>)</big><a class="reference internal" href="_modules/acoustics/atmosphere.html#relaxation_frequency_oxygen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.relaxation_frequency_oxygen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Relaxation frequency of oxygen <img class="math" src="_images/math/846fae2cf0b739edc6a64c6a50a441fd0d3e485d.png" alt="f_{r,O}"/>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pressure</strong> &#8211; Ambient pressure <img class="math" src="_images/math/df8d496d0a2ce5522634892349339f0b8e4a5787.png" alt="p_a"/></li>
-<li><strong>ref_pressure</strong> &#8211; Reference pressure <img class="math" src="_images/math/e0d61c0b62577049799b7417cefe4d46598eb0df.png" alt="p_r"/></li>
-<li><strong>h</strong> &#8211; Molar concentration of water vapour <img class="math" src="_images/math/cbb80ad77aa7a5e227d5a46bc44d235284106cfc.png" alt="h"/></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>According to ISO9613-1:1993.</p>
-<div class="math">
-<p><img src="_images/math/cb1c6d5957710aad4c901f10b7974748d88d696c.png" alt="f_{r,O} = \frac{p_a}{p_r} \left( 24 + 4.04 \cdot 10^4 h \frac{0.02 + h}{0.391 + h}  \right)"/></p>
-</div></dd></dl>
-
-<dl class="function">
-<dt id="acoustics.atmosphere.saturation_pressure">
-<tt class="descclassname">acoustics.atmosphere.</tt><tt class="descname">saturation_pressure</tt><big>(</big><em>ref_pressure</em>, <em>triple_temp</em>, <em>temp</em><big>)</big><a class="reference internal" href="_modules/acoustics/atmosphere.html#saturation_pressure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.saturation_pressure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saturation vapour pressure <img class="math" src="_images/math/a7205b1dd7d64b1ed51b859f6900c7065d801ed8.png" alt="p_{sat}"/>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ref_pressure</strong> &#8211; Reference pressure <img class="math" src="_images/math/e0d61c0b62577049799b7417cefe4d46598eb0df.png" alt="p_r"/></li>
-<li><strong>triple_temp</strong> &#8211; Triple point temperature water <img class="math" src="_images/math/e09cadce0f74b0f89d4abf3bf0fe3bf02ad8e1c6.png" alt="T_{01}"/></li>
-<li><strong>temp</strong> &#8211; Ambient temperature <img class="math" src="_images/math/6d42c88506b8da39a2a23653aecbfb7c29728063.png" alt="T"/></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>According to ISO9613-1:1993.</p>
-<div class="math">
-<p><img src="_images/math/ae803b67269605afbd96bde7df3bcd978ee94292.png" alt="p_{sat} = 10^C \cdot p_r"/></p>
-</div><p>with exponent <img class="math" src="_images/math/2bcc65482aa8e15cd4c9e9f2542451fb4e971a91.png" alt="C"/> given by</p>
-<div class="math">
-<p><img src="_images/math/14c54d84bfe73e61b97698dabb6f51c3b442a9a6.png" alt="C = -6.8346 \cdot \left( \frac{T_{01}}{T} \right)^{1.261}  + 4.6151"/></p>
-</div></dd></dl>
-
-<dl class="function">
-<dt id="acoustics.atmosphere.soundspeed">
-<tt class="descclassname">acoustics.atmosphere.</tt><tt class="descname">soundspeed</tt><big>(</big><em>ref_temp</em>, <em>temp</em><big>)</big><a class="reference internal" href="_modules/acoustics/atmosphere.html#soundspeed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.atmosphere.soundspeed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Speed of sound <img class="math" src="_images/math/65868d23a5bfe5b3b2d819386b19c14fa36af134.png" alt="c"/>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ref_temp</strong> &#8211; Reference temperature <img class="math" src="_images/math/6d42c88506b8da39a2a23653aecbfb7c29728063.png" alt="T"/></li>
-<li><strong>temp</strong> &#8211; Ambient temperature <img class="math" src="_images/math/19065cca1578b64f0167444335e4c0e48376634d.png" alt="T_0"/></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>According to ISO9613-1:1993.</p>
-<div class="math">
-<p><img src="_images/math/14082d5855b26742f8503c15ed1d0abdfa5c446f.png" alt="c = 343.2 \left( \frac{T}{T_0} \right)"/></p>
-</div></dd></dl>
-
-</div>
-
+  
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="reference.html"
-                        title="previous chapter">Reference</a></p>
+  <p class="topless"><a href="ambisonics.html"
+                        title="previous chapter">&lt;no title&gt;</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="bands.html"
-                        title="next chapter">Bands</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/atmosphere.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/atmosphere.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -402,28 +89,25 @@ The impulse response is calculated using <a class="reference internal" href="#ac
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="bands.html" title="Bands"
+          <a href="bands.html" title="&lt;no title&gt;"
              >next</a> |</li>
         <li class="right" >
-          <a href="reference.html" title="Reference"
+          <a href="ambisonics.html" title="&lt;no title&gt;"
              >previous</a> |</li>
-        <li><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li><a href="reference.html" >Reference</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>

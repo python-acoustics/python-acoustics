@@ -1,7 +1,0 @@
-<map id="inheritance751d2db886" name="inheritance751d2db886">
-<area shape="rect" id="node1" href="#acoustics.signal.Band" title="Frequency band object." alt="" coords="27,107,187,133"/>
-<area shape="rect" id="node2" href="#acoustics.signal.EqualBand" title="Equal bandwidth spectrum. Generally used for narrowband data." alt="" coords="261,31,456,57"/>
-<area shape="rect" id="node3" href="#acoustics.signal.Frequencies" title="Object describing frequency bands." alt="" coords="5,56,208,83"/>
-<area shape="rect" id="node6" href="#acoustics.signal.OctaveBand" title="Fractional&#45;octave band spectrum." alt="" coords="256,81,461,108"/>
-<area shape="rect" id="node5" href="#acoustics.signal.Filterbank" title="Fractional&#45;Octave filter bank." alt="" coords="13,5,200,32"/>
-</map>

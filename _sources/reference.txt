@@ -1,21 +1,24 @@
 .. _reference:
 
-Reference
-#########
+API Reference
+#############
 
 This section contains a description of all classes and functions.
 
-.. inheritance-diagram:: acoustics
 .. automodule:: acoustics
-    :show-inheritance:
     
+
+Modules
+-------
     
 .. toctree::
    :maxdepth: 1
-
+   
+   ambisonics
    atmosphere
    bands
    building
+   ceptrum
    criterion
    generator
    descriptors
@@ -30,9 +33,23 @@ This section contains a description of all classes and functions.
    turbulence
    utils
    weighting
-   standards
    quantity
+      
+Standards
+---------
 
+The ``acoustics.standards`` module consists of modules where all code and 
+values are according to the respective standard.
+   
+.. toctree::
+   :maxdepth: 1
+   
+   standards
+
+Signal class
+------------
+
+.. autoclass:: acoustics.Signal
     
 
 
