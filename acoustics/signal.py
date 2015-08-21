@@ -120,7 +120,7 @@ def bandpass_filter(lowcut, highcut, fs, order=8, output='sos'):
     return output
 
 
-def bandpass(signal, lowcut, highcut, fs, order=8):
+def bandpass(signal, lowcut, highcut, fs, order=8, zero_phase=False):
     """Filter signal with band-pass filter.
     
     :param signal: Signal
@@ -128,64 +128,81 @@ def bandpass(signal, lowcut, highcut, fs, order=8):
     :param highcut: Upper cut-off frequency
     :param fs: Sample frequency
     :param order: Filter order
+    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)
+    
+    A Butterworth filter is used. Filtering is done with second-order sections.
     
     .. seealso:: :func:`bandpass_filter` for the filter that is used.
     
     """
     sos = bandpass_filter(lowcut, highcut, fs, order, output='sos')
-    return sosfilt(sos, signal)
+    if zero_phase:
+        return _sosfiltfilt(sos, signal)
+    else:
+        return sosfilt(sos, signal)
     
     
-def lowpass(signal, cutoff, fs, order=4):
+def lowpass(signal, cutoff, fs, order=4, zero_phase=False):
     """Filter signal with low-pass filter.
     
     :param signal: Signal
     :param fs: Sample frequency
     :param cutoff: Cut-off frequency
     :param order: Filter order
+    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)
     
-    A Butterworth filter is used.
+    A Butterworth filter is used. Filtering is done with second-order sections.
     
     .. seealso:: :func:`scipy.signal.butter`.
     
     """
     sos = butter(order, cutoff/(fs/2.0), btype='low', output='sos')
-    return sosfilt(sos, signal)
+    if zero_phase:
+        return _sosfiltfilt(sos, signal)
+    else:
+        return sosfilt(sos, signal)
     
     
-def highpass(signal, cutoff, fs, order=4):
+def highpass(signal, cutoff, fs, order=4, zero_phase=False):
     """Filter signal with low-pass filter.
     
     :param signal: Signal
     :param fs: Sample frequency
     :param cutoff: Cut-off frequency
     :param order: Filter order
+    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)
     
-    A Butterworth filter is used.
+    A Butterworth filter is used. Filtering is done with second-order sections.
     
     .. seealso:: :func:`scipy.signal.butter`.
     
     """
     sos = butter(order, cutoff/(fs/2.0), btype='high', output='sos')
-    return sosfilt(sos, signal)
+    if zero_phase:
+        return _sosfiltfilt(sos, signal)
+    else:
+        return sosfilt(sos, signal)
 
 
-def octave_filter(center, fs, fraction, order=8):
+def octave_filter(center, fs, fraction, order=8, output='sos'):
     """Fractional-octave band-pass filter.
     
     :param center: Centerfrequency of fractional-octave band.
     :param fs: Sample frequency
     :param fraction: Fraction of fractional-octave band.
     :param order: Filter order
+    :param output: Output type. {'ba', 'zpk', 'sos'}. Default is 'sos'. See also :func:`scipy.signal.butter`.
     
+    A Butterworth filter is used.
+
     .. seealso:: :func:`bandpass_filter`
     
     """
     ob = OctaveBand(center=center, fraction=fraction)
-    return bandpass_filter(ob.lower[0], ob.upper[0], fs, order)
+    return bandpass_filter(ob.lower[0], ob.upper[0], fs, order, output=output)
     
 
-def octavepass(signal, center, fs, fraction, order=8):
+def octavepass(signal, center, fs, fraction, order=8, zero_phase=True):
     """Filter signal with fractional-octave bandpass filter.
     
     :param signal: Signal
@@ -193,12 +210,18 @@ def octavepass(signal, center, fs, fraction, order=8):
     :param fs: Sample frequency
     :param fraction: Fraction of fractional-octave band.
     :param order: Filter order
+    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)
+    
+    A Butterworth filter is used. Filtering is done with second-order sections.
     
     .. seealso:: :func:`octave_filter`
     
     """
     sos = octave_filter(center, fs, fraction, order)
-    return sosfilt(sos, signal)
+    if zero_phase:
+        return _sosfiltfilt(sos, signal)
+    else:
+        return sosfilt(sos, signal)
     
 
 def convolve(signal, ltv, mode='full'):
@@ -740,7 +763,7 @@ def integrate_bands(data, a, b):
     return ((lower < center) * (center <= upper) * data[...,None]).sum(axis=-2)
 
 
-def bandpass_frequencies(x, fs, frequencies, order=8, purge=False):
+def bandpass_frequencies(x, fs, frequencies, order=8, purge=False, zero_phase=False):
     """"Apply bandpass filters for frequencies
     
     :param x: Instantaneous signal :math:`x(t)`.
@@ -748,14 +771,15 @@ def bandpass_frequencies(x, fs, frequencies, order=8, purge=False):
     :param frequencies: Frequencies. Instance of :class:`Frequencies`.
     :param order: Filter order.
     :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)
     :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     """
     if purge:
         frequencies = frequencies[frequencies.upper < fs/2.0]
-    return frequencies, np.array([bandpass(x, band.lower, band.upper, fs, order) for band in frequencies]) 
+    return frequencies, np.array([bandpass(x, band.lower, band.upper, fs, order, zero_phase=zero_phase) for band in frequencies]) 
     
     
-def bandpass_octaves(x, fs, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order=8, purge=False):
+def bandpass_octaves(x, fs, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order=8, purge=False, zero_phase=False):
     """Apply 1/1-octave bandpass filters.
     
     :param x: Instantaneous signal :math:`x(t)`.
@@ -763,14 +787,15 @@ def bandpass_octaves(x, fs, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order
     :param frequencies: Frequencies.
     :param order: Filter order.
     :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)
     :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     
     .. seealso:: :func:`octavepass`
     """
-    return bandpass_fractional_octaves(x, fs, frequencies, fraction=1, order=order, purge=purge)
+    return bandpass_fractional_octaves(x, fs, frequencies, fraction=1, order=order, purge=purge, zero_phase=zero_phase)
 
 
-def bandpass_third_octaves(x, fs, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, order=8, purge=False):
+def bandpass_third_octaves(x, fs, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, order=8, purge=False, zero_phase=False):
     """Apply 1/3-octave bandpass filters.
     
     :param x: Instantaneous signal :math:`x(t)`.
@@ -778,14 +803,15 @@ def bandpass_third_octaves(x, fs, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUE
     :param frequencies: Frequencies.
     :param order: Filter order.
     :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)
     :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     
     .. seealso:: :func:`octavepass`
     """
-    return bandpass_fractional_octaves(x, fs, frequencies, fraction=3, order=order, purge=purge)
+    return bandpass_fractional_octaves(x, fs, frequencies, fraction=3, order=order, purge=purge, zero_phase=zero_phase)
 
 
-def bandpass_fractional_octaves(x, fs, frequencies, fraction=None, order=8, purge=False):
+def bandpass_fractional_octaves(x, fs, frequencies, fraction=None, order=8, purge=False, zero_phase=False):
     """Apply 1/N-octave bandpass filters.
     
     :param x: Instantaneous signal :math:`x(t)`.
@@ -793,13 +819,14 @@ def bandpass_fractional_octaves(x, fs, frequencies, fraction=None, order=8, purg
     :param frequencies: Frequencies. Either instance of :class:`OctaveBand`, or array along with fs.
     :param order: Filter order.
     :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)
     :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     
     .. seealso:: :func:`octavepass`
     """
     if not isinstance(frequencies, Frequencies):
         frequencies = OctaveBand(center=frequencies, fraction=fraction)
-    return bandpass_frequencies(x, fs, frequencies, order=order, purge=purge)
+    return bandpass_frequencies(x, fs, frequencies, order=order, purge=purge, zero_phase=zero_phase)
     
     
 
@@ -1064,6 +1091,8 @@ def zero_crossings(data):
 def amplitude_envelope(signal, fs):
     """Instantaneous amplitude of tone.
     
+    The instantaneous amplitude is the magnitude of the analytic signal.
+    
     .. seealso:: :func:`scipy.signal.hilbert`
     
     """
@@ -1071,6 +1100,9 @@ def amplitude_envelope(signal, fs):
 
 def instantaneous_phase(signal, fs):
     """Instantaneous phase of tone.
+    
+    The instantaneous phase is the angle of the analytic signal. 
+    This function returns a wrapped angle. 
     
     .. seealso:: :func:`scipy.signal.hilbert`
     
@@ -1080,10 +1112,12 @@ def instantaneous_phase(signal, fs):
 def instantaneous_frequency(signal, fs):
     """Determine instantaneous frequency of tone.
     
+    The instantaneous frequency can be obtained by differentiating the unwrapped instantaneous phase.
+    
     .. seealso:: :func:`instantaneous_phase`
     
     """
-    return np.diff( instantaneous_phase(signal, fs)) / (2.0*np.pi) * fs
+    return np.diff( np.unwrap(instantaneous_phase(signal, fs))) / (2.0*np.pi) * fs
     
 
 
@@ -1128,6 +1162,64 @@ def wvd(signal, fs, analytic=True):
 
     f = np.fft.fftfreq(N, 1./fs)
     return f, W.T
+
+
+def _sosfiltfilt(sos, x, axis=-1, padtype='odd', padlen=None, method='pad', irlen=None):
+    """Filtfilt version using Second Order sections. Code is taken from scipy.signal.filtfilt and adapted to make it work with SOS.
+    Note that broadcasting does not work.
+    """
+    from scipy.signal import sosfilt_zi
+    from scipy.signal._arraytools import odd_ext, axis_slice, axis_reverse
+    x = np.asarray(x)
+    
+    if padlen is None:
+        edge = 0
+    else:
+        edge = padlen
+
+    # x's 'axis' dimension must be bigger than edge.
+    if x.shape[axis] <= edge:
+        raise ValueError("The length of the input vector x must be at least "
+                         "padlen, which is %d." % edge)
+
+    if padtype is not None and edge > 0:
+        # Make an extension of length `edge` at each
+        # end of the input array.
+        if padtype == 'even':
+            ext = even_ext(x, edge, axis=axis)
+        elif padtype == 'odd':
+            ext = odd_ext(x, edge, axis=axis)
+        else:
+            ext = const_ext(x, edge, axis=axis)
+    else:
+        ext = x
+
+    # Get the steady state of the filter's step response.
+    zi = sosfilt_zi(sos)
+
+    # Reshape zi and create x0 so that zi*x0 broadcasts
+    # to the correct value for the 'zi' keyword argument
+    # to lfilter.
+    #zi_shape = [1] * x.ndim
+    #zi_shape[axis] = zi.size
+    #zi = np.reshape(zi, zi_shape)
+    x0 = axis_slice(ext, stop=1, axis=axis)
+    # Forward filter.
+    (y, zf) = sosfilt(sos, ext, axis=axis, zi=zi * x0)
+
+    # Backward filter.
+    # Create y0 so zi*y0 broadcasts appropriately.
+    y0 = axis_slice(y, start=-1, axis=axis)
+    (y, zf) = sosfilt(sos, axis_reverse(y, axis=axis), axis=axis, zi=zi * y0)
+
+    # Reverse y.
+    y = axis_reverse(y, axis=axis)
+
+    if edge > 0:
+        # Slice the actual signal from the extended signal.
+        y = axis_slice(y, start=edge, stop=-edge, axis=axis)
+
+    return y
 
 
 __all__ = ['bandpass',

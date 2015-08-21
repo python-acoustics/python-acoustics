@@ -643,102 +643,110 @@ class Signal(numpy.ndarray):
         #return acoustics.signal.fractional_octaves(self, self.fs, frequency, 
                                                   #frequency, fraction, False)[1]   
 
-    def bandpass(self, lowcut, highcut, order=8):
+    def bandpass(self, lowcut, highcut, order=8, zero_phase=False):
         """Filter signal with band-pass filter.
         
         :param lowcut: Lower cornerfrequency.
         :param highcut: Upper cornerfrequency.
         :param order: Filter order.
+        :param zero_phase: Prevent phase error by filtering in both directions (filtfilt).
+
         :returns: Band-pass filtered signal.
         :rtype: :class:`Signal`.
         
         .. seealso:: :func:`acoustics.signal.bandpass`
         """
-        return type(self)(acoustics.signal.bandpass(self, lowcut, highcut, self.fs, order=order), self.fs)
+        return type(self)(acoustics.signal.bandpass(self, lowcut, highcut, self.fs, order=order, zero_phase=zero_phase), self.fs)
     
-    def highpass(self, cutoff, order=4):
+    def highpass(self, cutoff, order=4, zero_phase=False):
         """Filter signal with high-pass filter.
         
         :param cutoff: Cornerfrequency.
         :param order: Filter order.
+        :param zero_phase: Prevent phase error by filtering in both directions (filtfilt).
         :returns: High-pass filtered signal.
         :rtype: :class:`Signal`.
         
         .. seealso:: :func:`acoustics.signal.highpass`
         """
-        return type(self)(acoustics.signal.highpass(self, cutoff, self.fs, order=order), self.fs)
+        return type(self)(acoustics.signal.highpass(self, cutoff, self.fs, order=order, zero_phase=zero_phase), self.fs)
     
-    def lowpass(self, cutoff, order=4):
+    def lowpass(self, cutoff, order=4, zero_phase=False):
         """Filter signal with low-pass filter.
         
         :param cutoff: Cornerfrequency.
         :param order: Filter order.
+        :param zero_phase: Prevent phase error by filtering in both directions (filtfilt).
         :returns: Low-pass filtered signal.
         :rtype: :class:`Signal`.
         
         .. seealso:: :func:`acoustics.signal.lowpass`
         """
-        return type(self)(acoustics.signal.lowpass(self, cutoff, self.fs, order=order), self.fs)
+        return type(self)(acoustics.signal.lowpass(self, cutoff, self.fs, order=order, zero_phase=zero_phase), self.fs)
 
-    def octavepass(self, center, fraction, order=8):
+    def octavepass(self, center, fraction, order=8, zero_phase=False):
         """Filter signal with fractional-octave band-pass filter.
         
         :param center: Center frequency. Any value in the band will suffice.
         :param fraction: Band designator.
         :param order: Filter order.
+        :param zero_phase: Prevent phase error by filtering in both directions (filtfilt).
         :returns: Band-pass filtered signal.
         :rtype: :class:`Signal`.
         
         .. seealso:: :func:`acoustics.signal.octavepass`
         """
-        return type(self)(acoustics.signal.octavepass(self, center, self.fs, fraction=fraction, order=order), self.fs)
+        return type(self)(acoustics.signal.octavepass(self, center, self.fs, fraction=fraction, order=order, zero_phase=zero_phase), self.fs)
     
-    def bandpass_frequencies(self, frequencies, order=8, purge=True):
+    def bandpass_frequencies(self, frequencies, order=8, purge=True, zero_phase=False):
         """Apply bandpass filters for frequencies.
         
         :param frequencies: Band-pass filter frequencies.
         :type frequencies: Instance of :class:`acoustics.signal.Frequencies`
         :param order: Filter order.
         :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+        :param zero_phase: Prevent phase error by filtering in both directions (filtfilt).
         :returns: Frequencies and band-pass filtered signal.
         
         .. seealso:: :func:`acoustics.signal.bandpass_frequencies`
         """
-        frequencies, filtered = acoustics.signal.bandpass_frequencies(self, self.fs, frequencies, order, purge)
+        frequencies, filtered = acoustics.signal.bandpass_frequencies(self, self.fs, frequencies, order, purge, zero_phase=zero_phase)
         return frequencies, type(self)(filtered, self.fs)
     
     
-    def octaves(self, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order=8, purge=True):
+    def octaves(self, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order=8, purge=True, zero_phase=False):
         """Apply 1/1-octaves bandpass filters.
         
         :param frequencies: Band-pass filter frequencies.
         :type frequencies: :class:`np.ndarray` with (approximate) center-frequencies or an instance of :class:`acoustics.signal.Frequencies`
         :param order: Filter order.
         :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+        :param zero_phase: Prevent phase error by filtering in both directions (filtfilt).
         :returns: Frequencies and band-pass filtered signal.
         
         .. seealso:: :func:`acoustics.signal.bandpass_octaves`
         """
-        frequencies, octaves = acoustics.signal.bandpass_octaves(self, self.fs, frequencies, order, purge)
+        frequencies, octaves = acoustics.signal.bandpass_octaves(self, self.fs, frequencies, order, purge, zero_phase=zero_phase)
         return frequencies, type(self)(octaves, self.fs)
     
     
-    def third_octaves(self, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, order=8, purge=True):
+    def third_octaves(self, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, order=8, purge=True, zero_phase=False):
         """Apply 1/3-octaves bandpass filters.
         
         :param frequencies: Band-pass filter frequencies.
         :type frequencies: :class:`np.ndarray` with (approximate) center-frequencies or an instance of :class:`acoustics.signal.Frequencies`
         :param order: Filter order.
         :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+        :param zero_phase: Prevent phase error by filtering in both directions (filtfilt).
         :returns: Frequencies and band-pass filtered signal.
         
         .. seealso:: :func:`acoustics.signal.bandpass_third_octaves`
         """
-        frequencies, octaves = acoustics.signal.bandpass_third_octaves(self, self.fs, frequencies, order, purge)
+        frequencies, octaves = acoustics.signal.bandpass_third_octaves(self, self.fs, frequencies, order, purge, zero_phase=zero_phase)
         return frequencies, type(self)(octaves, self.fs)
     
     
-    def fractional_octaves(self, frequencies=None, fraction=1, order=8, purge=True):
+    def fractional_octaves(self, frequencies=None, fraction=1, order=8, purge=True, zero_phase=False):
         """Apply 1/N-octaves bandpass filters.
         
         :param frequencies: Band-pass filter frequencies.
@@ -746,13 +754,14 @@ class Signal(numpy.ndarray):
         :param fraction: Default band-designator of fractional-octaves.
         :param order: Filter order.
         :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.
+        :param zero_phase: Prevent phase error by filtering in both directions (filtfilt).
         :returns: Frequencies and band-pass filtered signal.
         
         .. seealso:: :func:`acoustics.signal.bandpass_fractional_octaves`
         """
         if frequencies is None:
             frequencies = acoustics.signal.OctaveBand(fstart=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES[0], fstop=self.fs/2.0, fraction=fraction)
-        frequencies, octaves = acoustics.signal.bandpass_fractional_octaves(self, self.fs, frequencies, fraction, order, purge)
+        frequencies, octaves = acoustics.signal.bandpass_fractional_octaves(self, self.fs, frequencies, fraction, order, purge, zero_phase=zero_phase)
         return frequencies, type(self)(octaves, self.fs)
     
     
