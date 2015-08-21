@@ -1091,6 +1091,8 @@ def zero_crossings(data):
 def amplitude_envelope(signal, fs):
     """Instantaneous amplitude of tone.
     
+    The instantaneous amplitude is the magnitude of the analytic signal.
+    
     .. seealso:: :func:`scipy.signal.hilbert`
     
     """
@@ -1098,6 +1100,9 @@ def amplitude_envelope(signal, fs):
 
 def instantaneous_phase(signal, fs):
     """Instantaneous phase of tone.
+    
+    The instantaneous phase is the angle of the analytic signal. 
+    This function returns a wrapped angle. 
     
     .. seealso:: :func:`scipy.signal.hilbert`
     
@@ -1107,10 +1112,12 @@ def instantaneous_phase(signal, fs):
 def instantaneous_frequency(signal, fs):
     """Determine instantaneous frequency of tone.
     
+    The instantaneous frequency can be obtained by differentiating the unwrapped instantaneous phase.
+    
     .. seealso:: :func:`instantaneous_phase`
     
     """
-    return np.diff( instantaneous_phase(signal, fs)) / (2.0*np.pi) * fs
+    return np.diff( np.unwrap(instantaneous_phase(signal, fs))) / (2.0*np.pi) * fs
     
 
 
