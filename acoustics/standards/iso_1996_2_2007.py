@@ -237,12 +237,10 @@ class Tonality(object):
         else:
             raise ValueError()
     
-    
     def _set_noise_pauses(self, noise_pauses):
         """Manually set noise pauses. Expects iterable of tuples."""
         self._noise_pauses = [NoisePause(start, end) for start, end in noise_pauses]
         return self
-
 
     def determine_noise_pauses(self, end=None):
         """Determine noise pauses. The determined noise pauses are available in :attr:`noise_pause_ranges`.
@@ -252,6 +250,29 @@ class Tonality(object):
         self._set_noise_pauses(noise_pause_seeker(np.array(self.spectrum[:end]), self.tsc))
         return self
         
+    def _construct_line_classifier(self):
+        """Set values of line classifier."""
+        
+        # Build classifier.
+        levels = self.spectrum
+        
+        categories = ['noise', 'start', 'end', 'neither', 'tone']
+        self.line_classifier = pd.Series(pd.Categorical(['noise']*len(levels), categories=categories), index=levels.index)
+        
+        # Add noise pauses
+        for noise_pause in self.noise_pauses:
+            # Mark noise pause start and end.
+            self.line_classifier.iloc[noise_pause.start] = 'start'
+            self.line_classifier.iloc[noise_pause.end] = 'end'
+            # Mark all other lines within noise pause as neither tone nor noise.
+            self.line_classifier.iloc[noise_pause.start+1] = 'neither'
+            self.line_classifier.iloc[noise_pause.end-1] = 'neither'
+        
+        # Add tone lines
+        for tone in self.tones:
+            self.line_classifier.iloc[tone._tone_lines] = 'tone'
+            
+        return self
 
     def _determine_tones(self):
         """Analyse the noise pauses for tones. The determined tones are available via :attr:`tones`.
@@ -260,14 +281,7 @@ class Tonality(object):
         levels = self.spectrum
         
         # First we need to check for the tones.
-        for noise_pause in self.noise_pauses:
-            # Mark noise pause start and end.
-            self.line_classifier.iloc[noise_pause.start] = 'start'
-            self.line_classifier.iloc[noise_pause.end] = 'end'
-            # Mark all other lines within noise pause as neither tone nor noise.
-            self.line_classifier.iloc[noise_pause.start+1] = 'neither'
-            self.line_classifier.iloc[noise_pause.end-1] = 'neither'
-            
+        for noise_pause in self.noise_pauses:            
             # Determine the indices of the tones in a noise pause
             tone_indices, bandwidth_for_tone_criterion = determine_tone_lines(levels, 
                                                                               self.frequency_resolution, 
@@ -278,13 +292,10 @@ class Tonality(object):
                                                                               )
             # If we have indices, ...
             if np.any(tone_indices):
-                # Then we mark those as tone lines.
-                self.line_classifier.iloc[tone_indices] = 'tone'
-                # And create a tone object.
+                # ...then we create a tone object.
                 noise_pause.tone = create_tone(levels, tone_indices, bandwidth_for_tone_criterion, weakref.proxy(noise_pause))
         return self
-        
-        
+
     def _determine_critical_bands(self):
         """Put a critical band around each of the determined tones."""
         
@@ -300,15 +311,12 @@ class Tonality(object):
         Per frequency line results are available via :attr:`line_classifier`.
         """
         
-        # Build classifier.
-        levels = self.spectrum
-        
-        categories = ['noise', 'start', 'end', 'neither', 'tone']
-        self.line_classifier = pd.Series(pd.Categorical(['noise']*len(levels), categories=categories), index=levels.index)
 
         # Determine tones. Puts noise pause starts/ends in classier as well as tone lines
         # and lines that are neither tone nor noise.
         self._determine_tones()
+        # Construct line classifier
+        self._construct_line_classifier()
         # Determine critical bands.
         self._determine_critical_bands()
         return self
