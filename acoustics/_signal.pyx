@@ -142,13 +142,12 @@ class Signal(numpy.ndarray):
         :returns: Amplified signal.
         :rtype: :class:`Signal`
         """
-        decibel = np.atleast_1d(decibel)
         factor = 10.0**(decibel/20.0)   
         if inplace:
-            self *= factor[..., None]
+            self *= factor
             return self
         else:
-            return self * factor[..., None]
+            return self * factor
     
     def pick(self, start=0.0, stop=None):
         """Get signal from start time to stop time.

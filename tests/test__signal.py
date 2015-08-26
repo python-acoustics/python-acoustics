@@ -32,7 +32,7 @@ class test_wav():
 class TestSignal():
 
 
-    # (channels, samples, fs)
+        
     @pytest.fixture(params=[(1, 88200, 22050), (3, 88200, 22050), (3, 88200, 44100)])
     def signal(self, request):
         return Signal(np.random.randn(request.param[0], request.param[1]), request.param[2])
@@ -57,48 +57,14 @@ class TestSignal():
     
     def test_gain(self, signal):
         
-        _gain = +20.0
+        gain = +20.0
         leq = signal.leq()
         
-        # Single gain
-        gain = _gain
-        
         # All because of multichannel signals
         assert ( np.abs( signal.gain(gain).leq() - (leq + gain) ) < 0.01 ).all()
         
-        signal2 = signal.copy()
-        signal2.gain(gain, inplace=True)
-        assert ( np.abs( signal2.leq() - (leq+gain) ) < 0.01 ).all()
-    
-        # Gain per channel
-        gain = np.ones(signal.channels) * _gain
-        
-        # All because of multichannel signals
-        assert ( np.abs( signal.gain(gain).leq() - (leq + gain) ) < 0.01 ).all()
-        
-        signal2 = signal.copy()
-        signal2.gain(gain, inplace=True)
-        assert ( np.abs( signal2.leq() - (leq+gain) ) < 0.01 ).all()
-        
-        ## Gain per sample
-        #gain = np.ones(signal.samples) * _gain
-        
-        ## All because of multichannel signals
-        #assert ( np.abs( signal.gain(gain).leq() - (leq + gain) ) < 0.01 ).all()
-        
-        #signal2 = signal.copy()
-        #signal2.gain(gain, inplace=True)
-        #assert ( np.abs( signal2.leq() - (leq+gain) ) < 0.01 ).all()
-        
-        ## Gain per channel, per sample
-        #gain = np.ones(signal.shape) * _gain
-        
-        ## All because of multichannel signals
-        #assert ( np.abs( signal.gain(gain).leq() - (leq + gain) ) < 0.01 ).all()
-        
-        #signal2 = signal.copy()
-        #signal2.gain(gain, inplace=True)
-        #assert ( np.abs( signal2.leq() - (leq+gain) ) < 0.01 ).all()
+        signal.gain(gain, inplace=True)
+        assert ( np.abs( signal.leq() - (leq+gain) ) < 0.01 ).all()
     
     def test_pick(self, signal):
         signal.pick(signal.duration*0.1, signal.duration*0.6)
