@@ -64,4 +64,30 @@ def dbsub(a, b):
     return 10.0*np.log10(10.0**(a/10.0)-10.0**(b/10.0))
 
 
-__all__ = ['dbsum', 'dbmean', 'dbadd', 'dbsub']
+def dbmul(levels, f, axis=None):
+    """Energetically add `levels` `f` times.
+    
+    :param levels: Sequence of levels.
+    :param f: Multiplication factor `f`.
+    :param axis: Axis over which to perform the operation.
+    
+    .. math:: L_{sum} = 10 \\log_{10}{\\sum_{i=0}^n{10^{L/10} \cdot f}}
+    """
+    levels = np.asanyarray(levels)
+    return 10.0 * np.log10((10.0**(levels/10.0) * f).sum(axis=axis))
+
+
+def dbdiv(levels, f, axis=None):
+    """Energetically divide `levels` `f` times.
+    
+    :param levels: Sequence of levels.
+    :param f: Divider `f`.
+    :param axis: Axis over which to perform the operation.
+    
+    .. math:: L_{sum} = 10 \\log_{10}{\\sum_{i=0}^n{10^{L/10} / f}}
+    
+    """
+    levels = np.asanyarray(levels)
+    return 10.0 * np.log10((10.0**(levels/10.0) / f).sum(axis=axis))
+
+__all__ = ['dbsum', 'dbmean', 'dbadd', 'dbsub', 'dbmul', 'dbdiv']
