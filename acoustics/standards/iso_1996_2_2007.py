@@ -265,8 +265,7 @@ class Tonality(object):
             self.line_classifier.iloc[noise_pause.start] = 'start'
             self.line_classifier.iloc[noise_pause.end] = 'end'
             # Mark all other lines within noise pause as neither tone nor noise.
-            self.line_classifier.iloc[noise_pause.start+1] = 'neither'
-            self.line_classifier.iloc[noise_pause.end-1] = 'neither'
+            self.line_classifier.iloc[noise_pause.start+1:noise_pause.end] = 'neither' # Half-open interval
         
         # Add tone lines
         for tone in self.tones:
@@ -451,6 +450,10 @@ class NoisePause(object):
     
     def __repr__(self):
         return "NoisePause{}".format(str(self))
+
+    def __iter__(self):
+        yield self.start
+        yield self.stop
 
     def _repr_html_(self):
         table = [("Start", self.start),
