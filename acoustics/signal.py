@@ -142,6 +142,20 @@ def bandpass(signal, lowcut, highcut, fs, order=8, zero_phase=False):
         return sosfilt(sos, signal)
     
     
+def bandstop(signal, lowcut, highcut, fs, order=8, zero_phase=False):
+    """Filter signal with band-stop filter.
+    
+    :param signal: Signal
+    :param lowcut: Lower cut-off frequency
+    :param highcut: Upper cut-off frequency
+    :param fs: Sample frequency
+    :param order: Filter order
+    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)
+    
+    """
+    return lowpass(signal, lowcut, fs, order=(order//2), zero_phase=zero_phase) + highpass(signal, highcut, fs, order=(order//2), zero_phase=zero_phase)
+     
+    
 def lowpass(signal, cutoff, fs, order=4, zero_phase=False):
     """Filter signal with low-pass filter.
     

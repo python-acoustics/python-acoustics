@@ -658,6 +658,21 @@ class Signal(numpy.ndarray):
         """
         return type(self)(acoustics.signal.bandpass(self, lowcut, highcut, self.fs, order=order, zero_phase=zero_phase), self.fs)
     
+    def bandstop(self, lowcut, highcut, order=8, zero_phase=False):
+        """Filter signal with band-stop filter.
+        
+        :param lowcut: Lower cornerfrequency.
+        :param highcut: Upper cornerfrequency.
+        :param order: Filter order.
+        :param zero_phase: Prevent phase error by filtering in both directions (filtfilt).
+
+        :returns: Band-pass filtered signal.
+        :rtype: :class:`Signal`.
+        
+        .. seealso:: :func:`acoustics.signal.bandstop`
+        """
+        return type(self)(acoustics.signal.bandstop(self, lowcut, highcut, self.fs, order=order, zero_phase=zero_phase), self.fs)
+        
     def highpass(self, cutoff, order=4, zero_phase=False):
         """Filter signal with high-pass filter.
         

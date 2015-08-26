@@ -171,6 +171,9 @@ class TestSignal():
     def test_bandpass(self, signal):
         x = signal.bandpass(1000.0, 2000.0)
     
+    def test_bandstop(self, signal):
+        x = signal.bandstop(1000.0, 2000.0)
+    
     def test_highpass(self, signal):
         x = signal.highpass(1000.0)
     
