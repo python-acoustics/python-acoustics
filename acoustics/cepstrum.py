@@ -26,7 +26,7 @@ def complex_cepstrum(x, n=None):
     
     The complex cepstrum is given by
     
-    .. math:: c[n] = F^{-1}\\left{\\log_{10}{\\left(F{x[n}\\right)}\\right}
+    .. math:: c[n] = F^{-1}\\left{\\log_{10}{\\left(F{x[n]}\\right)}\\right}
     
     where :math:`x_[n]` is the input signal and :math:`F` and :math:`F_{-1} 
     are respectively the forward and backward Fourier transform.
@@ -115,7 +115,7 @@ def real_cepstrum(x, n=None):
     
     The real cepstrum is given by
     
-    .. math:: c[n] = F^{-1}\\left{\\log_{10}{\\left|F{x[n}\\right|}\\right}
+    .. math:: c[n] = F^{-1}\\left{\\log_{10}{\\left|F{x[n]}\\right|}\\right}
     
     where :math:`x_[n]` is the input signal and :math:`F` and :math:`F_{-1} 
     are respectively the forward and backward Fourier transform. Note that 

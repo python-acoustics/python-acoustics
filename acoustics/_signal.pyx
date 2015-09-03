@@ -13,9 +13,8 @@ from acoustics.standards.iec_61672_1_2013 import (NOMINAL_OCTAVE_CENTER_FREQUENC
 
 
 class Signal(numpy.ndarray):
-    """Container for signals.Signal
-    
-    `Signal` is a container for acoustics signals.
+    """A signal consisting of samples (array) and a sample frequency (float).
+
     """
     #fs = 0.0
     
@@ -89,7 +88,7 @@ class Signal(numpy.ndarray):
     
     @property
     def duration(self):
-        """Duration of signal.
+        """Duration of signal in seconds.
         """
         return self.samples / self.fs
     
@@ -108,7 +107,7 @@ class Signal(numpy.ndarray):
         """Calibrate signal with other signal.
 
         :param other: Other signal/array.
-        :param to: Value to calibrate to.
+        :param decibel: Signal level of `other`.
         :param inplace: Whether to perform inplace or not.
         :returns: calibrated signal.
         :rtype: :class:`Signal`
