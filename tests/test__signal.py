@@ -41,7 +41,34 @@ class TestSignal():
     def test_samples(self, signal):
         x = signal.samples
     
+    def test_calibrate_to_scalar(self, signal):
+        # Scalar decibel
+        signal.calibrate_to(100.0)
+        signal.copy().calibrate_to(100.0, inplace=True)
+        
+    def test_calibrate_to_channels(self, signal):
+        # Value per channel. Note that [...,None] is required!
+        signal.calibrate_to((np.ones(signal.channels)*100.0)[...,None])
+        signal.copy().calibrate_to((np.ones(signal.channels)*100.0)[...,None], inplace=True)
+        
+    def test_calibrate_to_samples(self, signal):
+        # Value per samples
+        signal.calibrate_to(np.ones(signal.samples))
+        signal.copy().calibrate_to(np.ones(signal.samples), inplace=True)
     
+    def test_calibrate_to_samples_channels(self, signal):
+        # Value per sample per channel
+        signal.calibrate_to(np.ones(signal.shape))
+        signal.copy().calibrate_to(np.ones(signal.shape), inplace=True)
+    
+    def test_calibrate_with(self, signal):
+        calibration_signal_level = 50.0
+        decibel = 94.0
+        calibration_signal = Signal(np.random.randn(signal.samples), signal.fs).calibrate_to(calibration_signal_level)
+        
+        out = signal.calibrate_with(calibration_signal, decibel)
+        assert ( (out.leq() - signal.leq()).mean() - (decibel - calibration_signal_level) ) < 0.01 
+        
     def test_channels(self, signal):
         x = signal.channels
     
