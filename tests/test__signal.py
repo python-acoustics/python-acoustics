@@ -32,7 +32,7 @@ class test_wav():
 class TestSignal():
 
 
-        
+    # (channels, samples, sample rate)
     @pytest.fixture(params=[(1, 88200, 22050), (3, 88200, 22050), (3, 88200, 44100)])
     def signal(self, request):
         return Signal(np.random.randn(request.param[0], request.param[1]), request.param[2])
@@ -41,11 +41,37 @@ class TestSignal():
     def test_samples(self, signal):
         x = signal.samples
     
+    def test_calibrate_to_scalar(self, signal):
+        # Scalar decibel
+        signal.calibrate_to(100.0)
+        signal.copy().calibrate_to(100.0, inplace=True)
+        
+    def test_calibrate_to_channels(self, signal):
+        # Value per channel. Note that [...,None] is required!
+        signal.calibrate_to((np.ones(signal.channels)*100.0)[...,None])
+        signal.copy().calibrate_to((np.ones(signal.channels)*100.0)[...,None], inplace=True)
+        
+    def test_calibrate_to_samples(self, signal):
+        # Value per samples
+        signal.calibrate_to(np.ones(signal.samples))
+        signal.copy().calibrate_to(np.ones(signal.samples), inplace=True)
     
+    def test_calibrate_to_samples_channels(self, signal):
+        # Value per sample per channel
+        signal.calibrate_to(np.ones(signal.shape))
+        signal.copy().calibrate_to(np.ones(signal.shape), inplace=True)
+    
+    def test_calibrate_with(self, signal):
+        calibration_signal_level = 50.0
+        decibel = 94.0
+        calibration_signal = Signal(np.random.randn(signal.samples), signal.fs).calibrate_to(calibration_signal_level)
+        
+        out = signal.calibrate_with(calibration_signal, decibel)
+        assert ( (out.leq() - signal.leq()).mean() - (decibel - calibration_signal_level) ) < 0.01 
+        
     def test_channels(self, signal):
         x = signal.channels
-    
-    
+
     def test_duration(self, signal):
         x = signal.duration
         
@@ -53,43 +79,37 @@ class TestSignal():
         factor = 4
         decimated = signal.decimate(factor)
         assert (signal.fs / factor == decimated.fs)
-    
-    
-    def test_gain(self, signal):
-        
+
+    def test_gain_scalar(self, signal):
         gain = +20.0
-        leq = signal.leq()
+        # `.all()` because of multichannel signals
+        assert ( np.abs( signal.gain(gain).leq() - (signal.leq() + gain) ) < 0.01 ).all()
+        assert ( np.abs( signal.copy().gain(gain, inplace=True).leq() - (signal.leq()+gain) ) < 0.01 ).all()
         
-        # All because of multichannel signals
-        assert ( np.abs( signal.gain(gain).leq() - (leq + gain) ) < 0.01 ).all()
-        
-        signal.gain(gain, inplace=True)
-        assert ( np.abs( signal.leq() - (leq+gain) ) < 0.01 ).all()
-    
     def test_pick(self, signal):
-        signal.pick(signal.duration*0.1, signal.duration*0.6)
+        x = signal.pick(signal.duration*0.1, signal.duration*0.6)
     
     
     def test_times(self, signal):
-        signal.times()
+        times = signal.times()
     
     
     def test_energy(self, signal):
-        signal.energy()
+        energy = signal.energy()
     
     
     def test_power(self, signal):
-        signal.power()
+        power = signal.power()
     
     
     def test_ms(self, signal):
-        signal.ms()
+        ms = signal.ms()
         
         
     def test_rms(self, signal):
-        signal.rms()
+        rms = signal.rms()
         
-    
+        
     def test_correlate(self, signal):
         signal = signal[..., 0:100]
         if signal.channels > 1: # Multichannel is not supported
@@ -99,31 +119,31 @@ class TestSignal():
             assert((signal.correlate()==signal.correlate(signal)).all())
     
     def test_amplitude_envelope(self, signal):
-        signal.amplitude_envelope()
+        x = signal.amplitude_envelope()
     
     
     def test_instantaneous_frequency(self, signal):
-        signal.instantaneous_frequency()
+        x = signal.instantaneous_frequency()
     
     
     def test_instantaneous_phase(self, signal):
-        signal.instantaneous_phase()
+        x = signal.instantaneous_phase()
     
     
     def test_detrend(self, signal):
-        signal.detrend()
+        x = signal.detrend()
     
     
     def test_unwrap(self, signal):
-        signal.unwrap()
+        x = signal.unwrap()
     
     
     def test_complex_cepstrum(self, signal):
-        signal.complex_cepstrum()
+        t, c, d = signal.complex_cepstrum()
         
     
     def test_real_cepstrum(self, signal):
-        signal.real_cepstrum()
+        t, c = signal.real_cepstrum()
         
     
     def test_power_spectrum(self, signal):

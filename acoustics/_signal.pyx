@@ -93,14 +93,17 @@ class Signal(numpy.ndarray):
         return self.samples / self.fs
     
     def calibrate_to(self, decibel, inplace=False):
-        """Calibrate signal to value `to`.
+        """Calibrate signal to value `decibel`.
         
-        :param to: Value to calibrate to.
+        :param decibel: Value to calibrate to.
         :param inplace: Whether to perform inplace or not.
         :returns: Calibrated signal.
         :rtype: :class:`Signal`
+        
+        Values of `decibel` are broadcasted. To set a value per channel, use `decibel[...,None]`.
         """
-        gain = decibel - self.leq()
+        decibel = decibel * np.ones(self.shape)
+        gain = decibel - self.leq()[...,None]
         return self.gain(gain, inplace=inplace)
         
     def calibrate_with(self, other, decibel, inplace=False):
