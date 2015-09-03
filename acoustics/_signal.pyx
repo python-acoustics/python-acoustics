@@ -3,7 +3,7 @@ cimport numpy
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
-from scipy.signal import detrend, correlate, lfilter, bilinear, decimate
+from scipy.signal import detrend, correlate, lfilter, bilinear, decimate, spectrogram, filtfilt
 import acoustics
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
@@ -13,9 +13,8 @@ from acoustics.standards.iec_61672_1_2013 import (NOMINAL_OCTAVE_CENTER_FREQUENC
 
 
 class Signal(numpy.ndarray):
-    """Container for signals.Signal
-    
-    `Signal` is a container for acoustics signals.
+    """A signal consisting of samples (array) and a sample frequency (float).
+
     """
     #fs = 0.0
     
@@ -89,7 +88,7 @@ class Signal(numpy.ndarray):
     
     @property
     def duration(self):
-        """Duration of signal.
+        """Duration of signal in seconds.
         """
         return self.samples / self.fs
     
@@ -108,7 +107,7 @@ class Signal(numpy.ndarray):
         """Calibrate signal with other signal.
 
         :param other: Other signal/array.
-        :param to: Value to calibrate to.
+        :param decibel: Signal level of `other`.
         :param inplace: Whether to perform inplace or not.
         :returns: calibrated signal.
         :rtype: :class:`Signal`
@@ -211,17 +210,23 @@ class Signal(numpy.ndarray):
         #return np.sqrt(self.power())
 
 
-    def weigh(self, weighting='A'):
+    def weigh(self, weighting='A', zero_phase=False):
         """Apply frequency-weighting. By default 'A'-weighting is applied.
         
         :param weighting: Frequency-weighting filter to apply. Valid options are 'A', 'C' and 'Z'.
         :returns: A-weighted signal.
         :rtype: :class:`Signal`.
         
+        By default the weighting filter is applied using :func:`scipy.signal.lfilter` causing a frequency-dependent delay.
+        In case a delay is undesired, the filter can applied using :func:`scipy.signal.filtfilt` by settings `zero_phase=True`.
+        
         """
         num, den = WEIGHTING_SYSTEMS[weighting]()
         b, a = bilinear(num, den, self.fs)
-        return type(self)(lfilter(b, a, self), self.fs)
+        if zero_phase:
+            type(self)(filtfilt(b, a, self), self.fs)
+        else:
+            return type(self)(lfilter(b, a, self), self.fs)
 
     
     def correlate(self, other=None, mode='full'):

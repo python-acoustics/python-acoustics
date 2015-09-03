@@ -1,4 +1,10 @@
 hg+https://bitbucket.org/Surgo/blockdiag
 sphinxcontrib-blockdiag==1.1.1
 sphinxcontrib-bibtex==0.2.6
+numpy>=1.8
+scipy>=0.16
+matplotlib
 six>=1.4.1
+cython
+pandas
+tabulate
