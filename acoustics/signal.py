@@ -975,7 +975,7 @@ class Filterbank(object):
         Filters this filterbank consists of.
         """
         fs = self.sample_frequency
-        return ( bandpass_filter(lower, upper, fs, order=self.order, output='ba') for lower, upper in zip(self.frequencies.lower, self.frequencies.upper) )
+        return ( bandpass_filter(lower, upper, fs, order=self.order, output='sos') for lower, upper in zip(self.frequencies.lower, self.frequencies.upper) )
         
         #order = self.order
         #filters = list()
@@ -988,7 +988,7 @@ class Filterbank(object):
         
         .. note:: This function uses :func:`scipy.signal.lfilter`.
         """
-        return ( lfilter(b, a, signal) for b, a in self.filters )
+        return ( sosfilt(sos, signal) for sos in self.filters )
 
     def filtfilt(self, signal):
         """
@@ -997,7 +997,7 @@ class Filterbank(object):
         
         .. note:: This function uses :func:`scipy.signal.filtfilt` and therefore has a zero-phase response.
         """
-        return ( filtfilt(b, a, signal) for b, a in self.filters )
+        return ( _sosfiltfilt(sos, signal) for sos in self.filters )
             
     def power(self, signal):
         """
