@@ -3,7 +3,7 @@ cimport numpy
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
-from scipy.signal import detrend, correlate, lfilter, bilinear, decimate
+from scipy.signal import detrend, correlate, lfilter, bilinear, decimate, spectrogram, filtfilt
 import acoustics
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
@@ -211,17 +211,23 @@ class Signal(numpy.ndarray):
         #return np.sqrt(self.power())
 
 
-    def weigh(self, weighting='A'):
+    def weigh(self, weighting='A', zero_phase=False):
         """Apply frequency-weighting. By default 'A'-weighting is applied.
         
         :param weighting: Frequency-weighting filter to apply. Valid options are 'A', 'C' and 'Z'.
         :returns: A-weighted signal.
         :rtype: :class:`Signal`.
         
+        By default the weighting filter is applied using :func:`scipy.signal.lfilter` causing a frequency-dependent delay.
+        In case a delay is undesired, the filter can applied using :func:`scipy.signal.filtfilt` by settings `zero_phase=True`.
+        
         """
         num, den = WEIGHTING_SYSTEMS[weighting]()
         b, a = bilinear(num, den, self.fs)
-        return type(self)(lfilter(b, a, self), self.fs)
+        if zero_phase:
+            type(self)(filtfilt(b, a, self), self.fs)
+        else:
+            return type(self)(lfilter(b, a, self), self.fs)
 
     
     def correlate(self, other=None, mode='full'):

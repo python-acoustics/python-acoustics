@@ -196,6 +196,11 @@ class TestSignal():
     def test_bandpass_fractional_octaves(self, signal):
         f, x = signal.fractional_octaves()
     
+    def test_weigh(self, signal):
+        s = signal.weigh()
+        s = signal.weigh('C')
+        s = signal.weigh('A', zero_phase=True)
+        
     
     ## Plot methods with arguments to test.
     #plot_methods = {'plot'                      : None,
