@@ -46,6 +46,19 @@ def equivalent_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESS
     return 10.0 * np.log10( (pressure**2.0).mean(axis=axis) / reference_pressure**2.0)
 
 
+def max_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE, axis=-1):
+    """
+    Maximum time-averaged sound pressure level :math:`L_{F,max}` in dB.
+
+    :param pressure: Instantaneous sound pressure :math:`p`.
+    :param reference_pressure: Reference value :math:`p_0`.
+    :param axis: Axis.
+
+    .. math:: \mathrm{max}{(L_{p})}
+
+    """
+    return sound_pressure_level(pressure, reference_pressure=reference_pressure).max(axis=axis)
+
 def peak_sound_pressure(pressure, axis=-1):
     """
     Peak sound pressure :math:`p_{peak}` is the greatest absolute sound pressure during a certain time interval.
