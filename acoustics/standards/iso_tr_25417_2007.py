@@ -70,7 +70,9 @@ def peak_sound_pressure(pressure, axis=-1):
 
     """
     return np.abs(pressure).max(axis=axis)
-def peak_sound_pressure_level(peak_sound_pressure, reference_pressure=REFERENCE_PRESSURE):
+
+
+def peak_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE, axis=-1):
     """
     Peak sound pressure level :math:`L_{p,peak}` in dB.
 
@@ -81,7 +83,7 @@ def peak_sound_pressure_level(peak_sound_pressure, reference_pressure=REFERENCE_
     .. math:: L_{p,peak} = 10.0 \\log \\frac{p_{peak}^2.0}{p_0^2}
 
     """
-    return 10.0 * np.log10 (peak_sound_pressure**2.0 / reference_pressure**2.0)
+    return 10.0 * np.log10 (peak_sound_pressure(pressure, axis=axis)**2.0 / reference_pressure**2.0)
 
 
 REFERENCE_SOUND_EXPOSURE = 4.0e-12
@@ -100,7 +102,8 @@ def sound_exposure(pressure, axis=-1):
 
     """
     return (pressure**2.0).sum(axis=axis)
-def sound_exposure_level(sound_exposure, reference_sound_exposure=REFERENCE_SOUND_EXPOSURE):
+
+def sound_exposure_level(pressure, reference_sound_exposure=REFERENCE_SOUND_EXPOSURE, axis=-1):
     """
     Sound exposure level :math:`L_{E,T}` in dB.
 
@@ -111,7 +114,7 @@ def sound_exposure_level(sound_exposure, reference_sound_exposure=REFERENCE_SOUN
     .. math:: L_{E,T} = 10 \\log_{10}{ \\frac{E_T}{E_0}  }
 
     """
-    return 10.0 * np.log10(sound_exposure/reference_sound_exposure)
+    return 10.0 * np.log10(sound_exposure(pressure, axis=axis)/reference_sound_exposure)
 
 
 REFERENCE_POWER = 1.0e-12
