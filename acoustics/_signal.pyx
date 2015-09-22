@@ -371,40 +371,75 @@ class Signal(numpy.ndarray):
         return acoustics.signal.phase_spectrum(self, self.fs, N=N)
     
     
-    def peak(self):
+    def peak(self, axis=-1):
         """Peak sound pressure.
+        
+        :param axis: Axis.
         
         .. seealso:: :func:`acoustic.standards.iso_tr_25417_2007.peak_sound_pressure`
         
         """
-        return acoustics.standards.iso_tr_25417_2007.peak_sound_pressure(self)
+        return acoustics.standards.iso_tr_25417_2007.peak_sound_pressure(self, axis=axis)
     
     
-    def peak_level(self):
+    def peak_level(self, axis=-1):
         """Peak sound pressure level.
+        
+        :param axis: Axis.
         
         .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.peak_sound_pressure_level`
         
         """
-        return acoustics.standards.iso_tr_25417_2007.peak_sound_pressure_level(self.peak())
-            
+        return acoustics.standards.iso_tr_25417_2007.peak_sound_pressure_level(self, axis=axis)
     
-    def sound_exposure(self):
+    
+    def min(self, axis=-1):
+        """Return the minimum along a given axis.
+    
+        Refer to `numpy.amin` for full documentation.
+        """
+        return numpy.ndarray.min(self, axis=axis)
+    
+    
+    def max(self, axis=-1):
+        """Return the minimum along a given axis.
+    
+        Refer to `numpy.amax` for full documentation.
+        """
+        return numpy.ndarray.max(self, axis=axis)
+    
+    
+    def max_level(self, axis=-1):
+        """Maximum sound pressure level.
+        
+        :param axis: Axis.
+        
+        .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.max_sound_pressure_level`
+        
+        """
+        return acoustics.standards.iso_tr_25417_2007.max_sound_pressure_level(self, axis=axis)
+    
+    
+    def sound_exposure(self, axis=-1):
         """Sound exposure.
+        
+        :param axis: Axis.
         
         .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.sound_exposure`
         
         """
-        return acoustics.standards.iso_tr_25417_2007.sound_exposure(self)
+        return acoustics.standards.iso_tr_25417_2007.sound_exposure(self, axis=axis)
     
     
-    def sound_exposure_level(self):
+    def sound_exposure_level(self, axis=-1):
         """Sound exposure level.
+        
+        :param axis: Axis.
         
         .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.sound_exposure_level`
         
         """
-        return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self.sound_exposure())
+        return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self, axis=axis)
 
     
     def plot_complex_cepstrum(self, N=None, **kwargs):
