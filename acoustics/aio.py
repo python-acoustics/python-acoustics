@@ -4,10 +4,7 @@ import csv
 import io
 import re
 
-try:
-    import pandas as pd
-except ImportError:
-    raise Exception("Pandas is required to use this module.")
+import pandas as pd
 
 
 def read_csv_cirrus(filename):
@@ -90,7 +87,8 @@ def read_csv_cirrus(filename):
         # have been cleaned from unwanted noise
         data["time"] = pd.to_datetime(data.time)
         delta = data.time.diff().fillna(0)
-        int_time = int(delta.mode()) * 1e-9  # Mode and change from ns to s
+        # Mode and change from ns to s
+        int_time = int(delta.mode().astype(int) * 1e-9)
         if round(int_time, 2) == 0.06:  # Fix for 1/16 s
             int_time = 0.0625
         data.integration_time = int_time
