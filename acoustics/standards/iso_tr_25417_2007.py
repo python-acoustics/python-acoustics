@@ -2,9 +2,9 @@
 ISO/TR 25417 2007
 =================
 
-ISO/TR 25417:2007 specifies definitions of acoustical quantities and terms used 
-in noise measurement documents prepared by ISO Technical Committee TC 43, 
-Acoustics, Subcommittee SC 1, Noise, together with their symbols and units, with 
+ISO/TR 25417:2007 specifies definitions of acoustical quantities and terms used
+in noise measurement documents prepared by ISO Technical Committee TC 43,
+Acoustics, Subcommittee SC 1, Noise, together with their symbols and units, with
 the principal aim of harmonizing the terminology used [ISO25417]_.
 
 .. [ISO24517] http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=42915
@@ -28,6 +28,7 @@ def sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE):
 
     .. math:: L_p = 10 \\log_{10}{ \\left( \\frac{p^2}{p_0^2} \\right)}
 
+    See section 2.2.
     """
     return 10.0 * np.log10( pressure**2.0 / reference_pressure**2.0 )
 
@@ -42,6 +43,7 @@ def equivalent_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESS
 
     .. math:: L_{p,T} = L_{p,eqT} = 10.0 \\log_{10}{ \\left( \\frac{\\frac{1}{T} \\int_{t_1}^{t_2} p^2 (t) \\mathrm{d} t  }{p_0^2} \\right)}
 
+    See section 2.3.
     """
     return 10.0 * np.log10( (pressure**2.0).mean(axis=axis) / reference_pressure**2.0)
 
@@ -86,35 +88,37 @@ def peak_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE, a
     return 10.0 * np.log10 (peak_sound_pressure(pressure, axis=axis)**2.0 / reference_pressure**2.0)
 
 
-REFERENCE_SOUND_EXPOSURE = 4.0e-12
+REFERENCE_SOUND_EXPOSURE = 4.0e-10
 """
 Reference value of the sound exposure :math:`E_0` is :math:`4 \cdot 10^{-12} \\mathrm{Pa}^2\\mathrm{s}`.
 """
 
-def sound_exposure(pressure, axis=-1):
+def sound_exposure(pressure, fs, axis=-1):
     """
     Sound exposure :math:`E_{T}`.
 
     :param pressure: Instantaneous sound pressure :math:`p`.
+    :param fs: Sample frequency :math:`f_s`.
     :param axis: Axis.
 
     .. math:: E_T = \\int_{t_1}^{t_2} p^2 (t) \\mathrm{d}t
 
     """
-    return (pressure**2.0).sum(axis=axis)
+    return (pressure**2.0/fs).sum(axis=axis)
 
-def sound_exposure_level(pressure, reference_sound_exposure=REFERENCE_SOUND_EXPOSURE, axis=-1):
+def sound_exposure_level(pressure, fs, reference_sound_exposure=REFERENCE_SOUND_EXPOSURE, axis=-1):
     """
     Sound exposure level :math:`L_{E,T}` in dB.
 
     :param pressure: Instantaneous sound pressure :math:`p`.
+    :param fs: Sample frequency :math:`f_s`.
     :param sound_exposure: Sound exposure :math:`E_{T}`.
     :param reference_sound_exposure: Reference value :math:`E_{0}`
 
     .. math:: L_{E,T} = 10 \\log_{10}{ \\frac{E_T}{E_0}  }
 
     """
-    return 10.0 * np.log10(sound_exposure(pressure, axis=axis)/reference_sound_exposure)
+    return 10.0 * np.log10(sound_exposure(pressure, fs, axis=axis)/reference_sound_exposure)
 
 
 REFERENCE_POWER = 1.0e-12
@@ -225,7 +229,7 @@ def normal_time_averaged_sound_intensity_level(normal_time_averaged_sound_intens
     Normal time-averaged sound intensity level :math:`L_{In,T}` in dB.
 
     :param normal_time_averaged_sound_intensity: Normal time-averaged sound intensity :math:`I{n,T}`.
-    :param reference_intensity: Reference sound intensity :math:`I_0`.   
+    :param reference_intensity: Reference sound intensity :math:`I_0`.
 
     .. math:: I_{n,T} = 10 \\log_{10} { \\frac{|I_{n,T}|}{I_0}}
 
