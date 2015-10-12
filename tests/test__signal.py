@@ -155,20 +155,21 @@ class TestSignal():
     
     
     def test_peak(self, signal):
-        signal.peak()
-    
+        value = signal.peak()
+        assert len(value) == signal.channels
     
     def test_peak_level(self, signal):
-        signal.peak_level()
+        value = signal.peak_level()
+        assert len(value) == signal.channels
     
     
     def test_sound_exposure(self, signal):
-        signal.sound_exposure()
-      
+        value = signal.sound_exposure()
+        assert len(value) == signal.channels
       
     def test_sound_exposure_level(self, signal):
-        signal.sound_exposure_level()
-        
+        value = signal.sound_exposure_level()
+        assert len(value) == signal.channels
         
     def test_octaves(self, signal):
         
