@@ -428,18 +428,19 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.sound_exposure`
         
         """
-        return acoustics.standards.iso_tr_25417_2007.sound_exposure(self, axis=axis)
-    
-    
+        return acoustics.standards.iso_tr_25417_2007.sound_exposure(self, self.fs, axis=axis)
+
+
     def sound_exposure_level(self, axis=-1):
         """Sound exposure level.
-        
+
         :param axis: Axis.
-        
+
         .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.sound_exposure_level`
-        
+
         """
-        return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self, axis=axis)
+        return acoustics.standards.iso_tr_25417_2007.sound_exposure_level(self, self.fs, axis=axis)
+
 
     
     def plot_complex_cepstrum(self, N=None, **kwargs):
