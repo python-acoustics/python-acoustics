@@ -1235,6 +1235,68 @@ def _sosfiltfilt(sos, x, axis=-1, padtype='odd', padlen=None, method='pad', irle
 
     return y
 
+from scipy.signal import lti, cheby1, firwin
+
+def decimate(x, q, n=None, ftype='iir', axis=-1, zero_phase=False):
+    """
+    Downsample the signal by using a filter.
+
+    By default, an order 8 Chebyshev type I filter is used.  A 30 point FIR
+    filter with hamming window is used if `ftype` is 'fir'.
+
+    Parameters
+    ----------
+    x : ndarray
+        The signal to be downsampled, as an N-dimensional array.
+    q : int
+        The downsampling factor.
+    n : int, optional
+        The order of the filter (1 less than the length for 'fir').
+    ftype : str {'iir', 'fir'}, optional
+        The type of the lowpass filter.
+    axis : int, optional
+        The axis along which to decimate.
+    zero_phase : bool
+        Prevent phase shift by filtering with ``filtfilt`` instead of ``lfilter``.
+    Returns
+    -------
+    y : ndarray
+        The down-sampled signal.
+
+    See also
+    --------
+    resample
+
+    Notes
+    -----
+    The ``zero_phase`` keyword was added in 0.17.0.
+    The possibility to use instances of ``lti`` as ``ftype`` was added in 0.17.0.
+
+    """
+
+    if not isinstance(q, int):
+        raise TypeError("q must be an integer")
+
+    if ftype == 'fir':
+        if n is None:
+            n = 30
+        system = lti(firwin(n + 1, 1. / q, window='hamming'), 1.)
+
+    elif ftype == 'iir':
+        if n is None:
+            n = 8
+        system = lti(*cheby1(n, 0.05, 0.8 / q))
+    else:
+        system = ftype
+
+    if zero_phase:
+        y = filtfilt(system.num, system.den, x, axis=axis)
+    else:
+        y = lfilter(system.num, system.den, x, axis=axis)
+
+    sl = [slice(None)] * y.ndim
+    sl[axis] = slice(None, None, q)
+    return y[sl]
 
 __all__ = ['bandpass',
            'bandpass_frequencies',
@@ -1274,4 +1336,5 @@ __all__ = ['bandpass',
            'instantaneous_phase',
            'instantaneous_frequency',
            'wvd',
+           'decimate',
            ]
