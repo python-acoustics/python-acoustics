@@ -80,6 +80,12 @@ class TestSignal():
         decimated = signal.decimate(factor)
         assert (signal.fs / factor == decimated.fs)
 
+    def test_upsample(self, signal):
+
+        factor = 2
+        assert (signal.upsample(factor).fs / signal.fs) == factor
+
+
     def test_gain_scalar(self, signal):
         gain = +20.0
         # `.all()` because of multichannel signals

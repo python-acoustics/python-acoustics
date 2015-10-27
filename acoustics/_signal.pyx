@@ -3,7 +3,7 @@ cimport numpy
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
-from scipy.signal import detrend, correlate, lfilter, bilinear, decimate, spectrogram, filtfilt
+from scipy.signal import detrend, correlate, lfilter, bilinear, spectrogram, filtfilt, resample
 import acoustics
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
@@ -132,9 +132,31 @@ class Signal(numpy.ndarray):
 
         .. seealso:: :func:`scipy.signal.decimate`.
 
-        .. note:: Zero phase is not implemented yet.
         """
-        return Signal(decimate(x=self, q=factor, n=order, ftype=ftype), self.fs/factor)
+        return Signal(acoustics.signal.decimate(x=self, q=factor, n=order, ftype=ftype, zero_phase=zero_phase), self.fs/factor)
+
+    def resample(self, nsamples, times=None, axis=-1, window=None):
+        """Resample signal.
+
+        :param samples:: New amount of samples.
+        :param times: Times corresponding to samples.
+        :param axis: Axis.
+        :param window: Window.
+
+        .. seealso:: :func:`scipy.signal.resample`
+
+        """
+        return Signal(resample(self, nsamples, times, axis, window), nsamples/self.samples*self.fs)
+
+    def upsample(self, factor, axis=-1):
+        """Upsample signal with integer factor.
+
+        :param factor: Upsample factor.
+        :param axis: AXis.
+
+        """
+        return self.resample(int(self.samples*factor), axis=-1)
+
 
     def gain(self, decibel, inplace=False):
         """Apply gain of `decibel` decibels.
