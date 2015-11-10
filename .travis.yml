@@ -11,20 +11,12 @@ env:
   global:
     - NUMPY_VERSION=1.10
     - SCIPY_VERSION=0.16
-    #- INSTALL_OPTIONAL=true
-
-#matrix:
-  #include:
-    #- python: 2.7
-      #env: NUMPY_VERSION=1.8
-    #- python: 3.4
-      #env: NUMPY_VERSION=1.8
 
 before_install:
   - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
   - chmod +x miniconda.sh
-  - ./miniconda.sh -b
-  - export PATH=/home/travis/miniconda/bin:$PATH
+  - ./miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
   - conda update --yes conda
 
   # Fix for headless TravisCI
@@ -34,9 +26,6 @@ before_install:
 install:
   - conda create --yes -n testenv python=$TRAVIS_PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib six pytest pip cython pandas
   - source activate testenv
-
-  # Optional dependencies
-  #- if $INSTALL_OPTIONAL; then conda install --yes pandas=0.14; fi
 
 script:
   - python setup.py test
