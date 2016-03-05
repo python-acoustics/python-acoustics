@@ -110,7 +110,10 @@ class Atmosphere(object):
                                             self.reference_temperature, 
                                             self.reference_pressure, 
                                             self.triple_temperature)
-    
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__ and self.__class__ == other.__class__
+
     @property
     def soundspeed(self):
         """
