@@ -674,9 +674,9 @@ class Signal(numpy.ndarray):
 
         """
         if method=='average':
-            return np.asarray(acoustics.standards.iec_61672_1_2013.time_averaged_sound_level(self, self.fs, time))
+            return acoustics.standards.iec_61672_1_2013.time_averaged_sound_level(self.values, self.fs, time)
         elif method=='weighting':
-            return np.asarray(acoustics.standards.iec_61672_1_2013.time_weighted_sound_level(self, self.fs, time))
+            return acoustics.standards.iec_61672_1_2013.time_weighted_sound_level(self.values, self.fs, time)
         else:
             raise ValueError("Invalid method")
 
@@ -686,7 +686,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level`
 
         """
-        return np.asarray(acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level(self))
+        return acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level(self.values)
 
     def plot_levels(self, **kwargs):
         """Plot sound pressure level as function of time.
