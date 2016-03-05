@@ -201,7 +201,6 @@ class Atmosphere(object):
         ax0.set_xlabel(r'$f$ in Hz')
         ax0.set_ylabel(r'$\alpha$ in dB/km')
         ax0.legend()
-        ax0.grid()
         
         return fig
 
