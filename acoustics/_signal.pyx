@@ -92,6 +92,11 @@ class Signal(numpy.ndarray):
         """
         return self.samples / self.fs
 
+    @property
+    def values(self):
+        """Return the values of this signal as an instance of :class:`np.ndarray`."""
+        return np.array(self)
+
     def calibrate_to(self, decibel, inplace=False):
         """Calibrate signal to value `decibel`.
 
