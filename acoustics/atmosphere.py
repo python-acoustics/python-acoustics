@@ -40,6 +40,7 @@ from __future__ import division, print_function
 import numpy as np
 import matplotlib.pyplot as plt
 
+import acoustics
 from acoustics.standards.iso_9613_1_1993 import *
                                                 
 
@@ -165,7 +166,20 @@ class Atmosphere(object):
         """
         return attenuation_coefficient(self.pressure, self.temperature, self.reference_pressure, self.reference_temperature, self.relaxation_frequency_nitrogen, self.relaxation_frequency_oxygen, frequency)
             
-            
+
+    def impulse_response(self, distance, fs, ntaps=None, sign=-1):
+        """Impulse response of sound travelling through `atmosphere` for a given `distance` sampled at `fs`.
+
+        :param atmosphere: Atmosphere.
+        :param distance: Distance between source and receiver.
+        :param fs: Sample frequency
+        :param ntaps: Amount of taps.
+        :param sign: Sign.
+
+        .. seealso:: :func:`impulse_response`
+        """
+        return impulse_response(self, distance, fs, ntaps, sign)
+
     def plot_attenuation_coefficient(self, frequency):
         """
         Plot the attenuation coefficient :math:`\\alpha` as function of frequency and write the figure to ``filename``.
@@ -187,12 +201,41 @@ class Atmosphere(object):
         ax0.grid()
         
         return fig
-    
+
+
+def impulse_response(atmosphere, distance, fs, ntaps=None, sign=-1):
+    """Impulse response of sound travelling through `atmosphere` for a given `distance` sampled at `fs`.
+
+    :param atmosphere: Atmosphere.
+    :param distance: Distance between source and receiver.
+    :param fs: Sample frequency
+    :param ntaps: Amount of taps.
+    :param sign: Sign.
+
+    The attenuation is calculated for a set of positive frequencies. Because the attenuation is the same for the negative frequencies, we have Hermitian symmetry.
+    The attenuation is entirely real-valued. We like to have a constant group delay and therefore we need a linear-phase filter.
+    This function creates a zero-phase filter, which is the special case of a linear-phase filter with zero phase slope.
+    The type of filter is non-causal.
+    The impulse response of the filter is made causal by rotating it by M/2 samples and discarding the imaginary parts.
+    A real, even impulse response corresponds to a real, even frequency response.
+    """
+    # Frequencies vector with positive frequencies only.
+    frequencies = np.fft.rfftfreq(ntaps, 1./fs)
+    # Single-sided spectrum. Negative frequencies have the same values.
+    tf = 10.0**( float(sign) * distance * atmosphere.attenuation_coefficient(frequencies) / 20.0  )
+    # Impulse response. We design a zero-phase filter (linear-phase with zero slope).
+    # We need to shift the IR to make it even. Taking the real part should not be necessary, see above.
+    #ir = np.fft.ifftshift(np.fft.irfft(tf, n=ntaps)).real
+    ir = acoustics.signal.impulse_response_real_even(tf, ntaps=ntaps)
+    return ir
+
+
 __all__ = ['Atmosphere', 'SOUNDSPEED', 'REFERENCE_TEMPERATURE', 
            'REFERENCE_TEMPERATURE', 'TRIPLE_TEMPERATURE',
            'soundspeed', 'saturation_pressure', 
            'molar_concentration_water_vapour', 
            'relaxation_frequency_oxygen', 
            'relaxation_frequency_nitrogen', 
-           'attenuation_coefficient'
+           'attenuation_coefficient',
+           'impulse_response',
            ]
