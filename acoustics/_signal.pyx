@@ -135,7 +135,8 @@ class Signal(numpy.ndarray):
         :returns: Decimated signal.
         :rtype: :class:`Signal`
 
-        .. seealso:: :func:`scipy.signal.decimate`.
+        .. seealso:: :func:`scipy.signal.decimate`
+        .. seealso:: :meth:`resample`
 
         """
         return Signal(acoustics.signal.decimate(x=self, q=factor, n=order, ftype=ftype, zero_phase=zero_phase), self.fs/factor)
@@ -149,6 +150,9 @@ class Signal(numpy.ndarray):
         :param window: Window.
 
         .. seealso:: :func:`scipy.signal.resample`
+        .. seealso:: :meth:`decimate`
+
+        You might want to low-pass filter this signal before resampling.
 
         """
         return Signal(resample(self, nsamples, times, axis, window), nsamples/self.samples*self.fs)
@@ -157,8 +161,9 @@ class Signal(numpy.ndarray):
         """Upsample signal with integer factor.
 
         :param factor: Upsample factor.
-        :param axis: AXis.
+        :param axis: Axis.
 
+        .. seealso:: :meth:`resample`
         """
         return self.resample(int(self.samples*factor), axis=-1)
 
