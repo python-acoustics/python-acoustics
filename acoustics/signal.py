@@ -1298,6 +1298,21 @@ def decimate(x, q, n=None, ftype='iir', axis=-1, zero_phase=False):
     sl[axis] = slice(None, None, q)
     return y[sl]
 
+
+def impulse_response_real_even(tf, ntaps):
+    """The impulse response of a real and even frequency response is also real and even.
+
+    :param tf: Real and even frequency response. Only positive frequencies.
+    :param ntaps: Amount of taps.
+    :returns: A real and even (double-sided) impulse response with length `ntaps`.
+
+    A symmetric impulse response is needed. The center of symmetry determines the delay of the filter and thereby whether the filter is causal (delay>0, linear-phase) or non-causal (delay=0, linear-phase, zero-phase).
+
+    https://ccrma.stanford.edu/~jos/filters/Zero_Phase_Filters_Even_Impulse.html
+    """
+    ir = np.fft.ifftshift(np.fft.irfft(tf, n=ntaps)).real
+    return ir
+
 __all__ = ['bandpass',
            'bandpass_frequencies',
            'bandpass_fractional_octaves',
