@@ -92,6 +92,11 @@ class Signal(numpy.ndarray):
         """
         return self.samples / self.fs
 
+    @property
+    def values(self):
+        """Return the values of this signal as an instance of :class:`np.ndarray`."""
+        return np.array(self)
+
     def calibrate_to(self, decibel, inplace=False):
         """Calibrate signal to value `decibel`.
 
@@ -130,7 +135,8 @@ class Signal(numpy.ndarray):
         :returns: Decimated signal.
         :rtype: :class:`Signal`
 
-        .. seealso:: :func:`scipy.signal.decimate`.
+        .. seealso:: :func:`scipy.signal.decimate`
+        .. seealso:: :meth:`resample`
 
         """
         return Signal(acoustics.signal.decimate(x=self, q=factor, n=order, ftype=ftype, zero_phase=zero_phase), self.fs/factor)
@@ -144,6 +150,9 @@ class Signal(numpy.ndarray):
         :param window: Window.
 
         .. seealso:: :func:`scipy.signal.resample`
+        .. seealso:: :meth:`decimate`
+
+        You might want to low-pass filter this signal before resampling.
 
         """
         return Signal(resample(self, nsamples, times, axis, window), nsamples/self.samples*self.fs)
@@ -152,8 +161,9 @@ class Signal(numpy.ndarray):
         """Upsample signal with integer factor.
 
         :param factor: Upsample factor.
-        :param axis: AXis.
+        :param axis: Axis.
 
+        .. seealso:: :meth:`resample`
         """
         return self.resample(int(self.samples*factor), axis=-1)
 
@@ -664,9 +674,9 @@ class Signal(numpy.ndarray):
 
         """
         if method=='average':
-            return np.asarray(acoustics.standards.iec_61672_1_2013.time_averaged_sound_level(self, self.fs, time))
+            return acoustics.standards.iec_61672_1_2013.time_averaged_sound_level(self.values, self.fs, time)
         elif method=='weighting':
-            return np.asarray(acoustics.standards.iec_61672_1_2013.time_weighted_sound_level(self, self.fs, time))
+            return acoustics.standards.iec_61672_1_2013.time_weighted_sound_level(self.values, self.fs, time)
         else:
             raise ValueError("Invalid method")
 
@@ -676,7 +686,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level`
 
         """
-        return np.asarray(acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level(self))
+        return acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level(self.values)
 
     def plot_levels(self, **kwargs):
         """Plot sound pressure level as function of time.
