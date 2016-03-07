@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>acoustics.cepstrum &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for acoustics.cepstrum</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Cepstrum.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;complex_cepstrum&#39;</span><span class="p">,</span> <span class="s1">&#39;real_cepstrum&#39;</span><span class="p">,</span> <span class="s1">&#39;inverse_complex_cepstrum&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;minimum_phase&#39;</span><span class="p">]</span>
+ 
+<div class="viewcode-block" id="complex_cepstrum"><a class="viewcode-back" href="../../cepstrum.html#acoustics.cepstrum.complex_cepstrum">[docs]</a><span class="k">def</span> <span class="nf">complex_cepstrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the complex cepstrum of a real sequence.</span>
+<span class="sd">        </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : ndarray</span>
+<span class="sd">        Real sequence to compute complex cepstrum of.</span>
+<span class="sd">    n : {None, int}, optional</span>
+<span class="sd">        Length of the Fourier transform.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ceps : ndarray</span>
+<span class="sd">        The complex cepstrum of the real data sequence `x` computed using the </span>
+<span class="sd">        Fourier transform.</span>
+<span class="sd">    ndelay : int</span>
+<span class="sd">        The amount of samples of circular delay added to `x`.</span>
+<span class="sd">    </span>
+<span class="sd">    The complex cepstrum is given by</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: c[n] = F^{-1}\\left{\\log_{10}{\\left(F{x[n]}\\right)}\\right}</span>
+<span class="sd">    </span>
+<span class="sd">    where :math:`x_[n]` is the input signal and :math:`F` and :math:`F_{-1} </span>
+<span class="sd">    are respectively the forward and backward Fourier transform.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    real_cepstrum: Compute the real cepstrum.</span>
+<span class="sd">    inverse_complex_cepstrum: Compute the inverse complex cepstrum of a real sequence.</span>
+
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    In the following example we use the cepstrum to determine the fundamental </span>
+<span class="sd">    frequency of a set of harmonics. There is a distinct peak at the quefrency </span>
+<span class="sd">    corresponding to the fundamental frequency. To be more precise, the peak </span>
+<span class="sd">    corresponds to the spacing between the harmonics.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">    &gt;&gt;&gt; from scipy.signal import complex_cepstrum</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; duration = 5.0</span>
+<span class="sd">    &gt;&gt;&gt; fs = 8000.0</span>
+<span class="sd">    &gt;&gt;&gt; samples = int(fs*duration)</span>
+<span class="sd">    &gt;&gt;&gt; t = np.arange(samples) / fs</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fundamental = 100.0</span>
+<span class="sd">    &gt;&gt;&gt; harmonics = np.arange(1, 30) * fundamental</span>
+<span class="sd">    &gt;&gt;&gt; signal = np.sin(2.0*np.pi*harmonics[:,None]*t).sum(axis=0)</span>
+<span class="sd">    &gt;&gt;&gt; ceps, _ = complex_cepstrum(signal)</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; fig = plt.figure()</span>
+<span class="sd">    &gt;&gt;&gt; ax0 = fig.add_subplot(211)</span>
+<span class="sd">    &gt;&gt;&gt; ax0.plot(t, signal)</span>
+<span class="sd">    &gt;&gt;&gt; ax0.set_xlabel(&#39;time in seconds&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; ax0.set_xlim(0.0, 0.05)</span>
+<span class="sd">    &gt;&gt;&gt; ax1 = fig.add_subplot(212)</span>
+<span class="sd">    &gt;&gt;&gt; ax1.plot(t, ceps)</span>
+<span class="sd">    &gt;&gt;&gt; ax1.set_xlabel(&#39;quefrency in seconds&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; ax1.set_xlim(0.005, 0.015)</span>
+<span class="sd">    &gt;&gt;&gt; ax1.set_ylim(-5., +10.)</span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Wikipedia, &quot;Cepstrum&quot;.</span>
+<span class="sd">           http://en.wikipedia.org/wiki/Cepstrum</span>
+<span class="sd">    .. [2] M.P. Norton and D.G. Karczub, D.G., </span>
+<span class="sd">           &quot;Fundamentals of Noise and Vibration Analysis for Engineers&quot;, 2003.</span>
+<span class="sd">    .. [3] B. P. Bogert, M. J. R. Healy, and J. W. Tukey: </span>
+<span class="sd">           &quot;The Quefrency Alanysis of Time Series for Echoes: Cepstrum, Pseudo </span>
+<span class="sd">           Autocovariance, Cross-Cepstrum and Saphe Cracking&quot;. </span>
+<span class="sd">           Proceedings of the Symposium on Time Series Analysis</span>
+<span class="sd">           Chapter 15, 209-243. New York: Wiley, 1963.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_unwrap</span><span class="p">(</span><span class="n">phase</span><span class="p">):</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">phase</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">unwrapped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="n">samples</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span>
+        <span class="k">if</span> <span class="n">samples</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> 
+            <span class="n">center</span> <span class="o">=</span> <span class="mi">0</span>  
+        <span class="n">ndelay</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">unwrapped</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="n">center</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+        <span class="n">unwrapped</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">ndelay</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="bp">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">/</span> <span class="n">center</span>
+        <span class="k">return</span> <span class="n">unwrapped</span><span class="p">,</span> <span class="n">ndelay</span>
+        
+    <span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">unwrapped_phase</span><span class="p">,</span> <span class="n">ndelay</span> <span class="o">=</span> <span class="n">_unwrap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">spectrum</span><span class="p">))</span>
+    <span class="n">log_spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">spectrum</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1j</span><span class="o">*</span><span class="n">unwrapped_phase</span>
+    <span class="n">ceps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">log_spectrum</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+    
+    <span class="k">return</span> <span class="n">ceps</span><span class="p">,</span> <span class="n">ndelay</span></div>
+
+
+<div class="viewcode-block" id="real_cepstrum"><a class="viewcode-back" href="../../cepstrum.html#acoustics.cepstrum.real_cepstrum">[docs]</a><span class="k">def</span> <span class="nf">real_cepstrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the real cepstrum of a real sequence. </span>
+<span class="sd">    </span>
+<span class="sd">    x : ndarray</span>
+<span class="sd">        Real sequence to compute real cepstrum of.</span>
+<span class="sd">    n : {None, int}, optional</span>
+<span class="sd">        Length of the Fourier transform.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ceps: ndarray</span>
+<span class="sd">        The real cepstrum.</span>
+<span class="sd">    </span>
+<span class="sd">    The real cepstrum is given by</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: c[n] = F^{-1}\\left{\\log_{10}{\\left|F{x[n]}\\right|}\\right}</span>
+<span class="sd">    </span>
+<span class="sd">    where :math:`x_[n]` is the input signal and :math:`F` and :math:`F_{-1} </span>
+<span class="sd">    are respectively the forward and backward Fourier transform. Note that </span>
+<span class="sd">    contrary to the complex cepstrum the magnitude is taken of the spectrum.</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    complex_cepstrum: Compute the complex cepstrum of a real sequence.</span>
+<span class="sd">    inverse_complex_cepstrum: Compute the inverse complex cepstrum of a real sequence.</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from scipy.signal import real_cepstrum</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Wikipedia, &quot;Cepstrum&quot;.</span>
+<span class="sd">           http://en.wikipedia.org/wiki/Cepstrum</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">ceps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">spectrum</span><span class="p">)))</span><span class="o">.</span><span class="n">real</span>
+    
+    <span class="k">return</span> <span class="n">ceps</span></div>
+
+
+<div class="viewcode-block" id="inverse_complex_cepstrum"><a class="viewcode-back" href="../../cepstrum.html#acoustics.cepstrum.inverse_complex_cepstrum">[docs]</a><span class="k">def</span> <span class="nf">inverse_complex_cepstrum</span><span class="p">(</span><span class="n">ceps</span><span class="p">,</span> <span class="n">ndelay</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the inverse complex cepstrum of a real sequence.</span>
+<span class="sd">    </span>
+<span class="sd">    ceps : ndarray</span>
+<span class="sd">        Real sequence to compute inverse complex cepstrum of.</span>
+<span class="sd">    ndelay: int</span>
+<span class="sd">        The amount of samples of circular delay added to `x`.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x : ndarray</span>
+<span class="sd">        The inverse complex cepstrum of the real sequence `ceps`.</span>
+<span class="sd">    </span>
+<span class="sd">    The inverse complex cepstrum is given by</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: x[n] = F^{-1}\\left{\\exp(F(c[n]))\\right}</span>
+<span class="sd">    </span>
+<span class="sd">    where :math:`c_[n]` is the input signal and :math:`F` and :math:`F_{-1} </span>
+<span class="sd">    are respectively the forward and backward Fourier transform.</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    complex_cepstrum: Compute the complex cepstrum of a real sequence.</span>
+<span class="sd">    real_cepstrum: Compute the real cepstrum of a real sequence.</span>
+<span class="sd">      </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Taking the complex cepstrum and then the inverse complex cepstrum results </span>
+<span class="sd">    in the original sequence.</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from scipy.signal import inverse_complex_cepstrum</span>
+<span class="sd">    &gt;&gt;&gt; x = np.arange(10)</span>
+<span class="sd">    &gt;&gt;&gt; ceps, ndelay = complex_cepstrum(x)</span>
+<span class="sd">    &gt;&gt;&gt; y = inverse_complex_cepstrum(ceps, ndelay)</span>
+<span class="sd">    &gt;&gt;&gt; print(x)</span>
+<span class="sd">    &gt;&gt;&gt; print(y)</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Wikipedia, &quot;Cepstrum&quot;.</span>
+<span class="sd">           http://en.wikipedia.org/wiki/Cepstrum</span>
+<span class="sd">      </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_wrap</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="n">ndelay</span><span class="p">):</span>
+        <span class="n">ndelay</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ndelay</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">phase</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="n">samples</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span>
+        <span class="n">wrapped</span> <span class="o">=</span> <span class="n">phase</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">ndelay</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="bp">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">/</span> <span class="n">center</span>
+        <span class="k">return</span> <span class="n">wrapped</span>
+    
+    <span class="n">log_spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">ceps</span><span class="p">)</span>
+    <span class="n">spectrum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_spectrum</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="mi">1j</span> <span class="o">*</span> <span class="n">_wrap</span><span class="p">(</span><span class="n">log_spectrum</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">ndelay</span><span class="p">))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">spectrum</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+    <span class="k">return</span> <span class="n">x</span></div>
+
+
+<div class="viewcode-block" id="minimum_phase"><a class="viewcode-back" href="../../cepstrum.html#acoustics.cepstrum.minimum_phase">[docs]</a><span class="k">def</span> <span class="nf">minimum_phase</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the minimum phase reconstruction of a real sequence.</span>
+<span class="sd">    </span>
+<span class="sd">    x : ndarray</span>
+<span class="sd">        Real sequence to compute the minimum phase reconstruction of.    </span>
+<span class="sd">    n : {None, int}, optional</span>
+<span class="sd">        Length of the Fourier transform.</span>
+<span class="sd">    </span>
+<span class="sd">    Compute the minimum phase reconstruction of a real sequence using the </span>
+<span class="sd">    real cepstrum.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    m : ndarray</span>
+<span class="sd">        The minimum phase reconstruction of the real sequence `x`.</span>
+<span class="sd">    </span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    real_cepstrum: Compute the real cepstrum.</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from scipy.signal import minimum_phase</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Soo-Chang Pei, Huei-Shan Lin. Minimum-Phase FIR Filter Design Using </span>
+<span class="sd">           Real Cepstrum. IEEE TRANSACTIONS ON CIRCUITS AND SYSTEMS-II: </span>
+<span class="sd">           EXPRESS BRIEFS, VOL. 53, NO. 10, OCTOBER 2006</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ceps</span> <span class="o">=</span> <span class="n">real_cepstrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">odd</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> 
+    <span class="n">window</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="mf">1.0</span><span class="p">],</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n</span><span class="o">+</span><span class="n">odd</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> 
+                             <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">odd</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="o">+</span><span class="n">odd</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+    
+    <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">window</span><span class="o">*</span><span class="n">ceps</span><span class="p">)))</span><span class="o">.</span><span class="n">real</span>
+    
+    <span class="k">return</span> <span class="n">m</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+  </body>
+</html>

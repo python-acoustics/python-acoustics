@@ -1,0 +1,452 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>acoustics.standards.iec_61672_1_2013 &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for acoustics.standards.iec_61672_1_2013</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">IEC 61672-1:2013</span>
+<span class="sd">================</span>
+
+<span class="sd">IEC 61672-1:2013 gives electroacoustical performance specifications for three </span>
+<span class="sd">kinds of sound measuring instruments [IEC61672]_:</span>
+
+<span class="sd">- time-weighting sound level meters that measure exponential-time-weighted, frequency-weighted sound levels;</span>
+<span class="sd">- integrating-averaging sound level meters that measure time-averaged, frequency-weighted sound levels; and</span>
+<span class="sd">- integrating sound level meters that measure frequency-weighted sound exposure levels. </span>
+
+<span class="sd">.. [IEC61672] http://webstore.iec.ch/webstore/webstore.nsf/artnum/048669!opendocument</span>
+
+<span class="sd">Weighting functions</span>
+<span class="sd">*******************</span>
+
+<span class="sd">.. autofunction:: weighting_function_a</span>
+<span class="sd">.. autofunction:: weighting_function_c</span>
+<span class="sd">.. autofunction:: weighting_function_z</span>
+
+
+<span class="sd">Weighting systems</span>
+<span class="sd">*****************</span>
+
+<span class="sd">.. autofunction:: weighting_system_a</span>
+<span class="sd">.. autofunction:: weighting_system_c</span>
+<span class="sd">.. autofunction:: weighting_system_z</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">zpk2tf</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">lfilter</span><span class="p">,</span> <span class="n">bilinear</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">floor</span>
+<span class="kn">from</span> <span class="nn">.iso_tr_25417_2007</span> <span class="kn">import</span> <span class="n">REFERENCE_PRESSURE</span>
+
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pkgutil</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="n">WEIGHTING_DATA</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">pkgutil</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="s1">&#39;acoustics&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;iec_61672_1_2013.csv&#39;</span><span class="p">))),</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;DataFrame with indices, nominal frequencies and weighting values.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">WEIGHTING_DATA</span><span class="o">.</span><span class="n">nominal</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Nominal 1/3-octave frequencies. See table 3.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">NOMINAL_OCTAVE_CENTER_FREQUENCIES</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">WEIGHTING_DATA</span><span class="o">.</span><span class="n">nominal</span><span class="p">)[</span><span class="mi">2</span><span class="p">::</span><span class="mi">3</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;Nominal 1/1-octave frequencies. Based on table 3.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">REFERENCE_FREQUENCY</span> <span class="o">=</span> <span class="mf">1000.0</span>
+<span class="sd">&quot;&quot;&quot;Reference frequency. See table 3.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">EXACT_THIRD_OCTAVE_CENTER_FREQUENCIES</span> <span class="o">=</span> <span class="n">REFERENCE_FREQUENCY</span> <span class="o">*</span> <span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="mf">0.01</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">44</span><span class="p">)</span><span class="o">-</span><span class="mi">30</span><span class="p">))</span>
+<span class="sd">&quot;&quot;&quot;Exact third-octave center frequencies. See table 3.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">WEIGHTING_A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">WEIGHTING_DATA</span><span class="o">.</span><span class="n">A</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Frequency weighting A. See table 3.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">WEIGHTING_C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">WEIGHTING_DATA</span><span class="o">.</span><span class="n">C</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Frequency weighting C. See table 3.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">WEIGHTING_Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">WEIGHTING_DATA</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Frequency weighting Z. See table 3.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">WEIGHTING_VALUES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">WEIGHTING_A</span><span class="p">,</span>
+                    <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">WEIGHTING_C</span><span class="p">,</span>
+                    <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="n">WEIGHTING_Z</span>
+                    <span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Dictionary with weighting values &#39;A&#39;, &#39;C&#39; and &#39;Z&#39; weighting.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="n">FAST</span> <span class="o">=</span> <span class="mf">0.125</span>
+<span class="sd">&quot;&quot;&quot;FAST time-constant.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">SLOW</span> <span class="o">=</span> <span class="mf">1.000</span>
+<span class="sd">&quot;&quot;&quot;SLOW time-constant.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="time_averaged_sound_level"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.time_averaged_sound_level">[docs]</a><span class="k">def</span> <span class="nf">time_averaged_sound_level</span><span class="p">(</span><span class="n">pressure</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="n">averaging_time</span><span class="p">,</span> <span class="n">reference_pressure</span><span class="o">=</span><span class="n">REFERENCE_PRESSURE</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Time-averaged sound pressure level.</span>
+<span class="sd">    </span>
+<span class="sd">    :param pressure: Dynamic pressure.</span>
+<span class="sd">    :param sample_frequency: Sample frequency.</span>
+<span class="sd">    :param averaging_time: Averaging time.</span>
+<span class="sd">    :param reference_pressure: Reference pressure.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span> <span class="n">average</span><span class="p">(</span><span class="n">pressure</span><span class="o">**</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="n">averaging_time</span><span class="p">)</span> <span class="o">/</span> <span class="n">reference_pressure</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">levels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">averaging_time</span>
+    <span class="k">return</span> <span class="n">times</span><span class="p">,</span> <span class="n">levels</span></div>
+
+
+<div class="viewcode-block" id="average"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.average">[docs]</a><span class="k">def</span> <span class="nf">average</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="n">averaging_time</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Average the sound pressure squared.</span>
+<span class="sd">    </span>
+<span class="sd">    :param data: Energetic quantity, e.g. :math:`p^2`.</span>
+<span class="sd">    :param sample_frequency: Sample frequency.</span>
+<span class="sd">    :param averaging_time: Averaging time.</span>
+<span class="sd">    :returns: </span>
+<span class="sd">    </span>
+<span class="sd">    Time weighting is applied by applying a low-pass filter with one real pole at :math:`-1/\\tau`.</span>
+<span class="sd">    </span>
+<span class="sd">    .. note:: Because :math:`f_s \\cdot t_i` is generally not an integer, samples are discarded. This results in a drift of samples for longer signals (e.g. 60 minutes at 44.1 kHz).</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">averaging_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">averaging_time</span><span class="p">)</span>
+    <span class="n">sample_frequency</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sample_frequency</span><span class="p">)</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">averaging_time</span> <span class="o">*</span> <span class="n">sample_frequency</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="n">samples</span><span class="o">//</span><span class="n">n</span><span class="p">)]</span> <span class="c1"># Drop the tail of the signal.</span>
+    <span class="n">newshape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">newshape</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">])</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">newshape</span><span class="p">)</span>
+    <span class="c1">#data = data.reshape((-1, n))</span>
+    <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="time_weighted_sound_level"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.time_weighted_sound_level">[docs]</a><span class="k">def</span> <span class="nf">time_weighted_sound_level</span><span class="p">(</span><span class="n">pressure</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="n">integration_time</span><span class="p">,</span> <span class="n">reference_pressure</span><span class="o">=</span><span class="n">REFERENCE_PRESSURE</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Time-weighted sound pressure level.</span>
+<span class="sd">    </span>
+<span class="sd">    :param pressure: Dynamic pressure.</span>
+<span class="sd">    :param sample_frequency: Sample frequency.</span>
+<span class="sd">    :param integration_time: Integration time.</span>
+<span class="sd">    :param reference_pressure: Reference pressure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span> <span class="n">integrate</span><span class="p">(</span><span class="n">pressure</span><span class="o">**</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="n">integration_time</span><span class="p">)</span> <span class="o">/</span> <span class="n">reference_pressure</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">levels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">integration_time</span>
+    <span class="k">return</span> <span class="n">times</span><span class="p">,</span> <span class="n">levels</span></div>
+
+<div class="viewcode-block" id="integrate"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.integrate">[docs]</a><span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="n">integration_time</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Integrate the sound pressure squared using exponential integration.</span>
+<span class="sd">    </span>
+<span class="sd">    :param data: Energetic quantity, e.g. :math:`p^2`.</span>
+<span class="sd">    :param sample_frequency: Sample frequency.</span>
+<span class="sd">    :param integration_time: Integration time.</span>
+<span class="sd">    :returns: </span>
+<span class="sd">    </span>
+<span class="sd">    Time weighting is applied by applying a low-pass filter with one real pole at :math:`-1/\\tau`.</span>
+<span class="sd">    </span>
+<span class="sd">    .. note:: Because :math:`f_s \\cdot t_i` is generally not an integer, samples are discarded. This results in a drift of samples for longer signals (e.g. 60 minutes at 44.1 kHz).</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">integration_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">integration_time</span><span class="p">)</span>
+    <span class="n">sample_frequency</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sample_frequency</span><span class="p">)</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">b</span><span class="p">,</span> <span class="n">a</span>  <span class="o">=</span> <span class="n">zpk2tf</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">integration_time</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
+    <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">bilinear</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">sample_frequency</span><span class="p">)</span>
+    <span class="c1">#b, a = bilinear([1.0], [1.0, integration_time], fs=sample_frequency) # Bilinear: Analog to Digital filter.</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">integration_time</span> <span class="o">*</span> <span class="n">sample_frequency</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="n">samples</span><span class="o">//</span><span class="n">n</span><span class="p">)]</span>
+    <span class="n">newshape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">newshape</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">])</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">newshape</span><span class="p">)</span>
+    <span class="c1">#data = data.reshape((-1, n)) # Divide in chunks over which to perform the integration.</span>
+    <span class="k">return</span> <span class="n">lfilter</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">data</span><span class="p">)[</span><span class="o">...</span><span class="p">,</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">integration_time</span> <span class="c1"># Perform the integration. Select the final value of the integration.</span></div>
+
+<div class="viewcode-block" id="fast"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.fast">[docs]</a><span class="k">def</span> <span class="nf">fast</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply fast (F) time-weighting.</span>
+<span class="sd">    </span>
+<span class="sd">    :param data: Energetic quantity, e.g. :math:`p^2`.</span>
+<span class="sd">    :param fs: Sample frequency.</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso:: :func:`integrate`</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">integrate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">FAST</span><span class="p">)</span></div>
+    <span class="c1">#return time_weighted_sound_level(data, fs, FAST)</span>
+
+<div class="viewcode-block" id="slow"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.slow">[docs]</a><span class="k">def</span> <span class="nf">slow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply slow (S) time-weighting.</span>
+<span class="sd">    </span>
+<span class="sd">    :param data: Energetic quantity, e.g. :math:`p^2`.</span>
+<span class="sd">    :param fs: Sample frequency.</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso:: :func:`integrate`</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">integrate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">SLOW</span><span class="p">)</span></div>
+    <span class="c1">#return time_weighted_sound_level(data, fs, SLOW)</span>
+
+<div class="viewcode-block" id="fast_level"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.fast_level">[docs]</a><span class="k">def</span> <span class="nf">fast_level</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Time-weighted (FAST) sound pressure level.</span>
+<span class="sd">    </span>
+<span class="sd">    :param data: Dynamic pressure.</span>
+<span class="sd">    :param fs: Sample frequency.</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso:: :func:`time_weighted_sound_level`</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">time_weighted_sound_level</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">FAST</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="slow_level"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.slow_level">[docs]</a><span class="k">def</span> <span class="nf">slow_level</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Time-weighted (SLOW) sound pressure level.</span>
+
+<span class="sd">    :param data: Dynamic pressure.</span>
+<span class="sd">    :param fs: Sample frequency.</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso:: :func:`time_weighted_sound_level`</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">time_weighted_sound_level</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">SLOW</span><span class="p">)</span></div>
+
+
+<span class="c1">#---- Annex E - Analytical expressions for frequency-weightings C, A, and Z.-#</span>
+
+<span class="n">_POLE_FREQUENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mf">20.60</span><span class="p">,</span>
+                     <span class="mi">2</span><span class="p">:</span> <span class="mf">107.7</span><span class="p">,</span>
+                     <span class="mi">3</span><span class="p">:</span> <span class="mf">737.9</span><span class="p">,</span>
+                     <span class="mi">4</span><span class="p">:</span> <span class="mf">12194.0</span><span class="p">,</span>
+                     <span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Approximate values for pole frequencies f_1, f_2, f_3 and f_4.</span>
+
+<span class="sd">See section E.4.1 of the standard.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">_NORMALIZATION_CONSTANTS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.000</span><span class="p">,</span>
+                            <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.062</span><span class="p">,</span>
+                            <span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Normalization constants :math:`C_{1000}` and :math:`A_{1000}`.</span>
+
+<span class="sd">See section E.4.2 of the standard.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="weighting_function_a"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.weighting_function_a">[docs]</a><span class="k">def</span> <span class="nf">weighting_function_a</span><span class="p">(</span><span class="n">frequencies</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A-weighting function in decibel.</span>
+<span class="sd">    </span>
+<span class="sd">    :param frequencies: Vector of frequencies at which to evaluate the weighting.</span>
+<span class="sd">    :returns: Vector with scaling factors.</span>
+<span class="sd">    </span>
+<span class="sd">    The weighting curve is</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: 20 \\log_{10}{\\frac{(f_4^2 * f^4)}{(f^2 + f_1^2) \sqrt{(f^2 + f_2^2)(f^2 + f_3^2)}(f^2 + f_4^2)}} - A_{1000}</span>
+<span class="sd">    </span>
+<span class="sd">    with :math:`A_{1000} = -2` dB.</span>
+<span class="sd">    </span>
+<span class="sd">    See equation E.6 of the standard.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">frequencies</span><span class="p">)</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">_NORMALIZATION_CONSTANTS</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span>
+    <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">,</span> <span class="n">f4</span> <span class="o">=</span> <span class="n">_POLE_FREQUENCIES</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="n">weighting</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span> <span class="p">(</span><span class="n">f4</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">f</span><span class="o">**</span><span class="mf">4.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span> <span class="p">(</span><span class="n">f</span><span class="o">**</span><span class="mf">2.0</span><span class="o">+</span><span class="n">f1</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">f</span><span class="o">**</span><span class="mf">2.0</span><span class="o">+</span><span class="n">f2</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">f</span><span class="o">**</span><span class="mf">2.0</span><span class="o">+</span><span class="n">f3</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">f</span><span class="o">**</span><span class="mf">2.0</span><span class="o">+</span><span class="n">f4</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span> <span class="p">))</span> <span class="o">-</span> <span class="n">offset</span>
+    <span class="k">return</span> <span class="n">weighting</span></div>
+
+
+<div class="viewcode-block" id="weighting_function_c"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.weighting_function_c">[docs]</a><span class="k">def</span> <span class="nf">weighting_function_c</span><span class="p">(</span><span class="n">frequencies</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;C-weighting function in decibel.</span>
+<span class="sd">    </span>
+<span class="sd">    :param frequencies: Vector of frequencies at which to evaluate the weighting.</span>
+<span class="sd">    :returns: Vector with scaling factors.</span>
+<span class="sd">    </span>
+<span class="sd">    The weighting curve is</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: 20 \\log_{10}{\\frac{(f_4^2 f^2)}{(f^2+f_1^2)(f^2+f_4^2)}} - C_{1000}</span>
+<span class="sd">    </span>
+<span class="sd">    with :math:`C_{1000} = -0.062` dB</span>
+<span class="sd">    </span>
+<span class="sd">    See equation E.1 of the standard.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">frequencies</span><span class="p">)</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">_NORMALIZATION_CONSTANTS</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span>
+    <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">,</span> <span class="n">f4</span> <span class="o">=</span> <span class="n">_POLE_FREQUENCIES</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="n">weighting</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span> <span class="p">(</span><span class="n">f4</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">f</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span>  <span class="o">/</span> <span class="p">(</span> <span class="p">(</span><span class="n">f</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">+</span> <span class="n">f1</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">f</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">+</span> <span class="n">f4</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span> <span class="p">))</span> <span class="o">-</span> <span class="n">offset</span>
+    <span class="k">return</span> <span class="n">weighting</span></div>
+    
+    
+<div class="viewcode-block" id="weighting_function_z"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.weighting_function_z">[docs]</a><span class="k">def</span> <span class="nf">weighting_function_z</span><span class="p">(</span><span class="n">frequencies</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Z-weighting function in decibel.</span>
+<span class="sd">    </span>
+<span class="sd">    :param frequencies: Vector of frequencies at which to evaluate the weighting.</span>
+<span class="sd">    :returns: Vector with scaling factors.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">frequencies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">frequencies</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">frequencies</span><span class="p">)</span></div>
+    
+    
+<span class="n">WEIGHTING_FUNCTIONS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">weighting_function_a</span><span class="p">,</span>
+                       <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">weighting_function_c</span><span class="p">,</span>
+                       <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="n">weighting_function_z</span><span class="p">,</span>
+                       <span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Dictionary with available weighting functions &#39;A&#39;, &#39;C&#39; and &#39;Z&#39;.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="weighting_system_a"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.weighting_system_a">[docs]</a><span class="k">def</span> <span class="nf">weighting_system_a</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;A-weighting filter represented as polynomial transfer function.</span>
+<span class="sd">    </span>
+<span class="sd">    :returns: Tuple of `num` and `den`.</span>
+<span class="sd">    </span>
+<span class="sd">    See equation E.6 of the standard.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">_POLE_FREQUENCIES</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">f2</span> <span class="o">=</span> <span class="n">_POLE_FREQUENCIES</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">f3</span> <span class="o">=</span> <span class="n">_POLE_FREQUENCIES</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">f4</span> <span class="o">=</span> <span class="n">_POLE_FREQUENCIES</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">_NORMALIZATION_CONSTANTS</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span>
+    <span class="n">numerator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f4</span><span class="p">)</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">offset</span><span class="o">/</span><span class="mf">20.0</span><span class="p">)),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+    <span class="n">part1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f4</span><span class="p">,</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f4</span><span class="p">)</span><span class="o">**</span><span class="mf">2.0</span><span class="p">]</span>
+    <span class="n">part2</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f1</span><span class="p">,</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f1</span><span class="p">)</span><span class="o">**</span><span class="mf">2.0</span><span class="p">]</span>
+    <span class="n">part3</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f3</span><span class="p">]</span>
+    <span class="n">part4</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f2</span><span class="p">]</span>
+    <span class="n">denomenator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">part1</span><span class="p">,</span> <span class="n">part2</span><span class="p">),</span> <span class="n">part3</span><span class="p">),</span> <span class="n">part4</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">numerator</span><span class="p">,</span> <span class="n">denomenator</span></div>
+    
+    
+<div class="viewcode-block" id="weighting_system_c"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.weighting_system_c">[docs]</a><span class="k">def</span> <span class="nf">weighting_system_c</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;C-weighting filter represented as polynomial transfer function.</span>
+<span class="sd">    </span>
+<span class="sd">    :returns: Tuple of `num` and `den`.</span>
+<span class="sd">    </span>
+<span class="sd">    See equation E.1 of the standard.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">_POLE_FREQUENCIES</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">f4</span> <span class="o">=</span> <span class="n">_POLE_FREQUENCIES</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">_NORMALIZATION_CONSTANTS</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span>
+    <span class="n">numerator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f4</span><span class="p">)</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">offset</span><span class="o">/</span><span class="mf">20.0</span><span class="p">)),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+    <span class="n">part1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f4</span><span class="p">,</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f4</span><span class="p">)</span><span class="o">**</span><span class="mf">2.0</span><span class="p">]</span>
+    <span class="n">part2</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f1</span><span class="p">,</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f1</span><span class="p">)</span><span class="o">**</span><span class="mf">2.0</span><span class="p">]</span>
+    <span class="n">denomenator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">part1</span><span class="p">,</span> <span class="n">part2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">numerator</span><span class="p">,</span> <span class="n">denomenator</span></div>
+    
+    
+<div class="viewcode-block" id="weighting_system_z"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iec_61672_1_2013.weighting_system_z">[docs]</a><span class="k">def</span> <span class="nf">weighting_system_z</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Z-weighting filter represented as polynomial transfer function.</span>
+<span class="sd">    </span>
+<span class="sd">    :returns: Tuple of `num` and `den`.</span>
+<span class="sd">    </span>
+<span class="sd">    Z-weighting is 0.0 dB for all frequencies and therefore corresponds to a </span>
+<span class="sd">    multiplication of 1.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">numerator</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">denomenator</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">numerator</span><span class="p">,</span> <span class="n">denomenator</span></div>
+
+
+<span class="n">WEIGHTING_SYSTEMS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">weighting_system_a</span><span class="p">,</span>
+                     <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">weighting_system_c</span><span class="p">,</span>
+                     <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="n">weighting_system_z</span><span class="p">,</span>
+                     <span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Weighting systems.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+  </body>
+</html>

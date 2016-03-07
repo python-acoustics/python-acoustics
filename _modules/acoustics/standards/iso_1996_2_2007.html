@@ -1,0 +1,745 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>acoustics.standards.iso_1996_2_2007 &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for acoustics.standards.iso_1996_2_2007</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">ISO 1996-2:2007</span>
+
+<span class="sd">ISO 1996-2:2007 describes how sound pressure levels can be determined by direct measurement, </span>
+<span class="sd">by extrapolation of measurement results by means of calculation, or exclusively by calculation, </span>
+<span class="sd">intended as a basis for assessing environmental noise. </span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">welch</span><span class="p">,</span> <span class="n">hanning</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">linregress</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">acoustics.decibel</span> <span class="kn">import</span> <span class="n">dbsum</span>
+<span class="kn">from</span> <span class="nn">acoustics.standards.iso_tr_25417_2007</span> <span class="kn">import</span> <span class="n">REFERENCE_PRESSURE</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+
+
+<span class="n">TONE_WITHIN_PAUSE_CRITERION_DB</span> <span class="o">=</span> <span class="mf">6.0</span>
+<span class="sd">&quot;&quot;&quot;A tone may exist when the level of any line in the noise pause is 6 dB or more about....&quot;&quot;&quot;</span>
+
+<span class="n">TONE_BANDWIDTH_CRITERION_DB</span> <span class="o">=</span> <span class="mf">3.0</span>
+<span class="sd">&quot;&quot;&quot;Bandwidth of the detected peak.&quot;&quot;&quot;</span>
+
+<span class="n">TONE_LINES_CRITERION_DB</span> <span class="o">=</span> <span class="mf">6.0</span>
+<span class="sd">&quot;&quot;&quot;All lines with levels within 6 dB of the maximum level are classified as tones.&quot;&quot;&quot;</span>
+
+<span class="n">TONE_SEEK_CRITERION</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="sd">&quot;&quot;&quot;Tone seek criterion.&quot;&quot;&quot;</span>
+
+<span class="n">REGRESSION_RANGE_FACTOR</span> <span class="o">=</span> <span class="mf">0.75</span>
+<span class="sd">&quot;&quot;&quot;Range of regression is usually +/- 0.75 critical bandwidth.&quot;&quot;&quot;</span>
+
+<span class="n">_WINDOW_CORRECTION</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;hanning&#39;</span> <span class="p">:</span> <span class="o">-</span><span class="mf">1.8</span><span class="p">,</span>
+                      <span class="p">}</span>
+
+<div class="viewcode-block" id="window_correction"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.window_correction">[docs]</a><span class="k">def</span> <span class="nf">window_correction</span><span class="p">(</span><span class="n">window</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Correction to be applied to :math:`L_{pt}` due to use of window.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_WINDOW_CORRECTION</span><span class="p">[</span><span class="n">window</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Window correction is not available for specified window.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="critical_band"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.critical_band">[docs]</a><span class="k">def</span> <span class="nf">critical_band</span><span class="p">(</span><span class="n">frequency</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bandwidth of critical band of frequency.</span>
+<span class="sd">    </span>
+<span class="sd">    :param frequency: Center frequency of tone.</span>
+<span class="sd">    :returns: (bandwidth, center, lower, upper) of band.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">center</span><span class="p">[</span><span class="n">frequency</span><span class="o">&lt;</span><span class="mf">50.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">50.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="mf">50.0</span> <span class="k">if</span> <span class="n">frequency</span> <span class="o">&lt;</span> <span class="mi">50</span> <span class="k">else</span> <span class="n">frequency</span>
+
+    <span class="n">bandwidth</span> <span class="o">=</span> <span class="p">(</span><span class="n">center</span><span class="o">&gt;</span><span class="mf">500.0</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">center</span><span class="o">*</span><span class="mf">0.20</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">center</span><span class="o">&lt;=</span><span class="mf">500.0</span><span class="p">)</span><span class="o">*</span><span class="mf">100.0</span>
+    
+    <span class="n">upper</span> <span class="o">=</span> <span class="n">center</span> <span class="o">+</span> <span class="n">bandwidth</span><span class="o">/</span><span class="mf">2.0</span>
+    <span class="n">lower</span> <span class="o">=</span> <span class="n">center</span> <span class="o">-</span> <span class="n">bandwidth</span><span class="o">/</span><span class="mf">2.0</span>
+    
+    <span class="k">return</span> <span class="n">center</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">bandwidth</span></div>
+
+
+<div class="viewcode-block" id="tones_level"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.tones_level">[docs]</a><span class="k">def</span> <span class="nf">tones_level</span><span class="p">(</span><span class="n">tone_levels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Total sound pressure level of the tones in a critical band given the level of each of the tones.</span>
+<span class="sd">    </span>
+<span class="sd">    .. math L_{pt} = 10 \log_{10}{\sum 10^{L_{pti}/10}}</span>
+<span class="sd">    </span>
+<span class="sd">    See equation C.1 in section C.2.3.1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">dbsum</span><span class="p">(</span><span class="n">tone_levels</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="masking_noise_level"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.masking_noise_level">[docs]</a><span class="k">def</span> <span class="nf">masking_noise_level</span><span class="p">(</span><span class="n">noise_lines</span><span class="p">,</span> <span class="n">frequency_resolution</span><span class="p">,</span> <span class="n">effective_analysis_bandwidth</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Masking noise level :math:`L_{pn}`</span>
+<span class="sd">    </span>
+<span class="sd">    :param noise_lines: Masking noise lines. See :func:`masking_noise_lines`.</span>
+<span class="sd">    :param frequency_resolution: Frequency resolution :math:`\Delta f`.</span>
+<span class="sd">    :param effective_analysis_bandwidth: Effective analysis bandwidth :math:`B`.</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: L_{pn} = 10 \log_{10}{\sum 10^{L_n/10}} + 10 \log_{10}{\frac{\Delta f}{B}}</span>
+<span class="sd">    </span>
+<span class="sd">    See equation C.11 in section C.4.4.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">dbsum</span><span class="p">(</span><span class="n">noise_lines</span><span class="p">)</span> <span class="o">+</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">frequency_resolution</span><span class="o">/</span><span class="n">effective_analysis_bandwidth</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="masking_noise_lines"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.masking_noise_lines">[docs]</a><span class="k">def</span> <span class="nf">masking_noise_lines</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">line_classifier</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">,</span> <span class="n">regression_range_factor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine masking noise level lines using regression line. Returns array of :math:`L_n`.</span>
+<span class="sd">    </span>
+<span class="sd">    :param levels: Levels as function of frequency.</span>
+<span class="sd">    :type levels: :class:`pd.Series`.</span>
+<span class="sd">    :param lines_classifier: Categorical indicating what each line is.</span>
+<span class="sd">    :param center: Center frequency. </span>
+<span class="sd">    :param bandwidth: bandwidth of critical band.</span>
+<span class="sd">    :param regression_range_factor: Range factor.</span>
+<span class="sd">    :returns: (Array with masking noise lines, slope, intercept).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">slicer</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">center</span><span class="o">-</span><span class="n">bandwidth</span><span class="o">*</span><span class="n">regression_range_factor</span><span class="p">,</span> <span class="n">center</span><span class="o">+</span><span class="n">bandwidth</span><span class="o">*</span><span class="n">regression_range_factor</span><span class="p">)</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">levels</span><span class="p">[</span><span class="n">slicer</span><span class="p">]</span>
+    <span class="n">frequencies</span> <span class="o">=</span> <span class="n">levels</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">regression_levels</span> <span class="o">=</span> <span class="n">levels</span><span class="p">[</span><span class="n">line_classifier</span><span class="o">==</span><span class="s1">&#39;noise&#39;</span><span class="p">]</span>
+    <span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span> <span class="o">=</span> <span class="n">linregress</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">regression_levels</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">regression_levels</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">levels_from_regression</span> <span class="o">=</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">frequencies</span> <span class="o">+</span> <span class="n">intercept</span>
+    <span class="k">return</span> <span class="n">levels_from_regression</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span></div>
+
+
+<div class="viewcode-block" id="tonal_audibility"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.tonal_audibility">[docs]</a><span class="k">def</span> <span class="nf">tonal_audibility</span><span class="p">(</span><span class="n">tones_level</span><span class="p">,</span> <span class="n">masking_noise_level</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tonal audibility.</span>
+<span class="sd">    </span>
+<span class="sd">    :param tones_level: Total sound pressure level of the tones in the critical band :math:`L_{pt}.</span>
+<span class="sd">    :param masking_noise_level: Total sound pressure level of the masking noise in the critical band :math:`L_{pn}.</span>
+<span class="sd">    :param center: Center frequency of the critical band :math:`f_c`.</span>
+<span class="sd">    :returns: Tonal audibility :math:`\Delta L_{ta}`</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: \Delta L_{ta} = L_{pt} - L_{pn} + 2 + \log_{10}{1 + \left(\frac{f_c}{502}\right)^{2.5}}</span>
+<span class="sd">    </span>
+<span class="sd">    See equation C.3. in section C.2.4.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">tones_level</span> <span class="o">-</span> <span class="n">masking_noise_level</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0</span><span class="o">+</span><span class="p">(</span><span class="n">center</span><span class="o">/</span><span class="mf">502.0</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">2.5</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="tonal_adjustment"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.tonal_adjustment">[docs]</a><span class="k">def</span> <span class="nf">tonal_adjustment</span><span class="p">(</span><span class="n">tonal_audibility</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Adjustment :math:`K`. </span>
+<span class="sd">    </span>
+<span class="sd">    :param tonal_audibility: Tonal audibility :math:`L_{ta}`.</span>
+<span class="sd">    </span>
+<span class="sd">    See equations C.4, C.5 and C.6 in section C.2.4.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">tonal_audibility</span> <span class="o">&gt;</span> <span class="mf">10.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">6.0</span>
+    <span class="k">elif</span> <span class="n">tonal_audibility</span> <span class="o">&lt;</span> <span class="mf">4.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tonal_audibility</span> <span class="o">-</span> <span class="mf">4.0</span></div>
+    
+
+<div class="viewcode-block" id="Tonality"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.Tonality">[docs]</a><span class="k">class</span> <span class="nc">Tonality</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Perform assessment of audibility of tones in noise.</span>
+<span class="sd">    </span>
+<span class="sd">    Objective method for assessing the audibility of tones in noise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="Tonality.__init__"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.Tonality.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s1">&#39;hanning&#39;</span><span class="p">,</span> 
+                 <span class="n">reference_pressure</span><span class="o">=</span><span class="n">REFERENCE_PRESSURE</span><span class="p">,</span>
+                 <span class="n">tsc</span><span class="o">=</span><span class="n">TONE_SEEK_CRITERION</span><span class="p">,</span>
+                 <span class="n">regression_range_factor</span><span class="o">=</span><span class="n">REGRESSION_RANGE_FACTOR</span><span class="p">,</span>
+                 <span class="n">bins</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">force_tone_without_pause</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                 <span class="n">force_bandwidth_criterion</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                <span class="p">):</span></div>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal</span>
+        <span class="sd">&quot;&quot;&quot;Samples in time-domain.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_frequency</span> <span class="o">=</span> <span class="n">sample_frequency</span>
+        <span class="sd">&quot;&quot;&quot;Sample frequency.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">window</span>
+        <span class="sd">&quot;&quot;&quot;Window to be used.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_pressure</span> <span class="o">=</span> <span class="n">reference_pressure</span>
+        <span class="sd">&quot;&quot;&quot;Reference sound pressure.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tsc</span> <span class="o">=</span> <span class="n">tsc</span>
+        <span class="sd">&quot;&quot;&quot;Tone seeking criterium.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regression_range_factor</span> <span class="o">=</span> <span class="n">regression_range_factor</span>
+        <span class="sd">&quot;&quot;&quot;Regression range factor.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bins</span> <span class="o">=</span> <span class="n">bins</span>
+        <span class="sd">&quot;&quot;&quot;Amount of frequency bins to use. See attribute `nperseg` of :func:`scipy.signal.welch`.&quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_noise_pauses</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Private list of noise pauses that were determined or assigned.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spectrum</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="sd">&quot;&quot;&quot;Power spectrum as function of frequency.&quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">force_tone_without_pause</span> <span class="o">=</span> <span class="n">force_tone_without_pause</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">force_bandwidth_criterion</span> <span class="o">=</span> <span class="n">force_bandwidth_criterion</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">noise_pauses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Noise pauses that were determined.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">noise_pause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noise_pauses</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">noise_pause</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">tones</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tones that were determined.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">noise_pause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_pauses</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">noise_pause</span><span class="o">.</span><span class="n">tone</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">noise_pause</span><span class="o">.</span><span class="n">tone</span>
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">critical_bands</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Critical bands that were determined. A critical band is determined for each tone.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">tone</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tones</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">tone</span><span class="o">.</span><span class="n">critical_band</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">spectrum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Power spectrum of the input signal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spectrum</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bins</span>
+            <span class="k">if</span> <span class="n">bins</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">bins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_frequency</span>
+            <span class="n">bins</span> <span class="o">//=</span> <span class="mi">1</span> <span class="c1"># Fix because of bug in welch with uneven bins</span>
+            <span class="n">f</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">welch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_frequency</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="n">detrend</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">scaling</span><span class="o">=</span><span class="s1">&#39;spectrum&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_spectrum</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_pressure</span><span class="o">**</span><span class="mf">2.0</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spectrum</span> 
+    
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">frequency_resolution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Frequency resolution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="o">.</span><span class="n">index</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">df</span>
+        <span class="c1">#return 1.0 / self.sample_frequency</span>
+    
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">effective_analysis_bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Effective analysis bandwidth.</span>
+<span class="sd">        </span>
+<span class="sd">        In the case of the Hanning window</span>
+<span class="sd">        </span>
+<span class="sd">        .. math:: B_{eff} = 1.5 \Delta f</span>
+<span class="sd">        </span>
+<span class="sd">        with \Delta f the :attr:`frequency_resolution`.</span>
+<span class="sd">        </span>
+<span class="sd">        C.2.2: Note 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">==</span> <span class="s1">&#39;hanning&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">1.5</span> <span class="o">*</span>  <span class="bp">self</span><span class="o">.</span><span class="n">frequency_resolution</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">_set_noise_pauses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">noise_pauses</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Manually set noise pauses. Expects iterable of tuples.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_noise_pauses</span> <span class="o">=</span> <span class="p">[</span><span class="n">NoisePause</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">noise_pauses</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="Tonality.determine_noise_pauses"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.Tonality.determine_noise_pauses">[docs]</a>    <span class="k">def</span> <span class="nf">determine_noise_pauses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Determine noise pauses. The determined noise pauses are available in :attr:`noise_pause_ranges`.</span>
+<span class="sd">        </span>
+<span class="sd">        Noise pauses are search for using :func:`noise_pause_seeker`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_noise_pauses</span><span class="p">(</span><span class="n">noise_pause_seeker</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">[:</span><span class="n">end</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">tsc</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+        
+    <span class="k">def</span> <span class="nf">_construct_line_classifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set values of line classifier.&quot;&quot;&quot;</span>
+        
+        <span class="c1"># Build classifier.</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span>
+        
+        <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;noise&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;neither&#39;</span><span class="p">,</span> <span class="s1">&#39;tone&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_classifier</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">([</span><span class="s1">&#39;noise&#39;</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">),</span> <span class="n">categories</span><span class="o">=</span><span class="n">categories</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">levels</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        
+        <span class="c1"># Add noise pauses</span>
+        <span class="k">for</span> <span class="n">noise_pause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_pauses</span><span class="p">:</span>
+            <span class="c1"># Mark noise pause start and end.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">line_classifier</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">noise_pause</span><span class="o">.</span><span class="n">start</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;start&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">line_classifier</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">noise_pause</span><span class="o">.</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;end&#39;</span>
+            <span class="c1"># Mark all other lines within noise pause as neither tone nor noise.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">line_classifier</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">noise_pause</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">noise_pause</span><span class="o">.</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;neither&#39;</span> <span class="c1"># Half-open interval</span>
+        
+        <span class="c1"># Add tone lines</span>
+        <span class="k">for</span> <span class="n">tone</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tones</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">line_classifier</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">tone</span><span class="o">.</span><span class="n">_tone_lines</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;tone&#39;</span>
+            
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_determine_tones</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Analyse the noise pauses for tones. The determined tones are available via :attr:`tones`.</span>
+<span class="sd">        Per frequency line results are available via :attr:`line_classifier`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span>
+        
+        <span class="c1"># First we need to check for the tones.</span>
+        <span class="k">for</span> <span class="n">noise_pause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_pauses</span><span class="p">:</span>            
+            <span class="c1"># Determine the indices of the tones in a noise pause</span>
+            <span class="n">tone_indices</span><span class="p">,</span> <span class="n">bandwidth_for_tone_criterion</span> <span class="o">=</span> <span class="n">determine_tone_lines</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> 
+                                                                              <span class="bp">self</span><span class="o">.</span><span class="n">frequency_resolution</span><span class="p">,</span> 
+                                                                              <span class="n">noise_pause</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> 
+                                                                              <span class="n">noise_pause</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+                                                                              <span class="bp">self</span><span class="o">.</span><span class="n">force_tone_without_pause</span><span class="p">,</span>
+                                                                              <span class="bp">self</span><span class="o">.</span><span class="n">force_bandwidth_criterion</span><span class="p">,</span>
+                                                                              <span class="p">)</span>
+            <span class="c1"># If we have indices, ...</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">tone_indices</span><span class="p">):</span>
+                <span class="c1"># ...then we create a tone object.</span>
+                <span class="n">noise_pause</span><span class="o">.</span><span class="n">tone</span> <span class="o">=</span> <span class="n">create_tone</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">tone_indices</span><span class="p">,</span> <span class="n">bandwidth_for_tone_criterion</span><span class="p">,</span> <span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="n">noise_pause</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_determine_critical_bands</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Put a critical band around each of the determined tones.&quot;&quot;&quot;</span>
+        
+        <span class="k">for</span> <span class="n">tone</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tones</span><span class="p">:</span>
+            <span class="n">critical_band</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">critical_band_at</span><span class="p">(</span><span class="n">tone</span><span class="o">.</span><span class="n">center</span><span class="p">)</span>
+            <span class="n">tone</span><span class="o">.</span><span class="n">critical_band</span> <span class="o">=</span> <span class="n">critical_band</span>
+            <span class="n">critical_band</span><span class="o">.</span><span class="n">tone</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="n">tone</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+    
+<div class="viewcode-block" id="Tonality.analyse"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.Tonality.analyse">[docs]</a>    <span class="k">def</span> <span class="nf">analyse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Analyse the noise pauses for tones and put critical bands around each of these tones. </span>
+<span class="sd">        The tones are available via :attr:`tones` and the critical bands via :attr:`critical_bands`.</span>
+<span class="sd">        Per frequency line results are available via :attr:`line_classifier`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+
+        <span class="c1"># Determine tones. Puts noise pause starts/ends in classier as well as tone lines</span>
+        <span class="c1"># and lines that are neither tone nor noise.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_determine_tones</span><span class="p">()</span>
+        <span class="c1"># Construct line classifier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_construct_line_classifier</span><span class="p">()</span>
+        <span class="c1"># Determine critical bands.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_determine_critical_bands</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="Tonality.critical_band_at"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.Tonality.critical_band_at">[docs]</a>    <span class="k">def</span> <span class="nf">critical_band_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frequency</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Put at a critical band at `frequency`.</span>
+<span class="sd">        In order to use this function :attr:`line_classifier` needs to be available, </span>
+<span class="sd">        which means :meth:`analyse` needs to be used first.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">create_critical_band</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_classifier</span><span class="p">,</span> <span class="n">frequency</span><span class="p">,</span> 
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">frequency_resolution</span><span class="p">,</span> 
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">effective_analysis_bandwidth</span><span class="p">,</span> 
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">regression_range_factor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Tonality.plot_spectrum"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.Tonality.plot_spectrum">[docs]</a>    <span class="k">def</span> <span class="nf">plot_spectrum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot power spectrum.&quot;&quot;&quot;</span>
+        <span class="n">spectrum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">spectrum</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">spectrum</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;f in Hz&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;L in dB&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fig</span></div>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dominant_tone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Most dominant_tone tone.</span>
+<span class="sd">        </span>
+<span class="sd">        The most dominant_tone tone is the tone with the highest tonal audibility :math:`L_{ta}`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tones</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">critical_band</span><span class="o">.</span><span class="n">tonal_audibility</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="c1">#elif self.tones:</span>
+            <span class="c1">#raise RuntimeError(&quot;Tones were determined but critical bands were not...?&quot;)</span>
+        <span class="c1">#elif self.noise_pauses:</span>
+            <span class="c1">#raise ValueError(&quot;Need to run analysis first.&quot;)</span>
+        <span class="c1">#else:</span>
+            <span class="c1">#raise ValueError(&quot;Need to define/search noise pauses first.&quot;)</span>
+    
+    
+<div class="viewcode-block" id="Tonality.plot_results"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.Tonality.plot_results">[docs]</a>    <span class="k">def</span> <span class="nf">plot_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">noise_pauses</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">tones</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">critical_bands</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot overview of results.&quot;&quot;&quot;</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequency_resolution</span>
+        <span class="c1">#fig = self.plot_spectrum()</span>
+        <span class="c1">#ax = fig.axes[0]</span>
+
+        <span class="n">levels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span>
+        
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">levels</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">levels</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$f$ in Hz&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$L$ in dB&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">noise_pauses</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">pause</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_pauses</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">pause</span><span class="o">.</span><span class="n">start</span><span class="o">*</span><span class="n">df</span><span class="p">,</span> <span class="n">pause</span><span class="o">.</span><span class="n">end</span><span class="o">*</span><span class="n">df</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">tones</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">tone</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tones</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">tone</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">critical_bands</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">band</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">critical_bands</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">band</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">band</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+
+        <span class="n">band</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dominant_tone</span><span class="o">.</span><span class="n">critical_band</span>
+            <span class="c1">#ax.avxspan(band.start, band.end, color=&#39;blue&#39;)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">band</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">band</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+        <span class="c1"># Limit xrange</span>
+        <span class="k">if</span> <span class="n">noise_pauses</span><span class="p">:</span> 
+            <span class="n">_items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">noise_pauses</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">critical_bands</span><span class="p">:</span> 
+            <span class="n">_items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">critical_bands</span><span class="p">)</span>
+        <span class="c1">#span = IntervalTree(Interval(pause.start, pause.end) for pause in _items).range()</span>
+        <span class="c1">#ax.set_xlim(span.begin, span.end)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">_items</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">end</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">_items</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">fig</span></div>
+    
+    
+<div class="viewcode-block" id="Tonality.overview"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.Tonality.overview">[docs]</a>    <span class="k">def</span> <span class="nf">overview</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print overview of results.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dominant_tone</span><span class="o">.</span><span class="n">critical_band</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot show overview (yet). No tones have been determined.&quot;</span><span class="p">)</span>
+        
+        <span class="n">tones</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Tone&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} Hz: {:4.1f} dB&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tone</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="n">tone</span><span class="o">.</span><span class="n">tone_level</span><span class="p">))</span> <span class="k">for</span> <span class="n">tone</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tones</span><span class="p">]</span>
+        
+        <span class="n">table</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Critical band&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} to {:4.1f} Hz&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">end</span><span class="p">)),</span>
+                 <span class="p">(</span><span class="s2">&quot;Masking noise level $L_{pn}$&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} dB&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">masking_noise_level</span><span class="p">)),</span>
+                 <span class="p">(</span><span class="s2">&quot;Tonal level $L_{pt}$&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} dB&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">total_tone_level</span><span class="p">)),</span>
+                 <span class="p">(</span><span class="s2">&quot;Dominant tone&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} Hz&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">tone</span><span class="o">.</span><span class="n">center</span><span class="p">)),</span>
+                 <span class="p">(</span><span class="s2">&quot;3 dB bandwidth of tone&quot;</span><span class="p">,</span> <span class="s2">&quot;{:2.1f}</span><span class="si">% o</span><span class="s2">f {:4.1f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">tone</span><span class="o">.</span><span class="n">bandwidth_3db</span><span class="o">/</span><span class="n">cb</span><span class="o">.</span><span class="n">bandwidth</span><span class="o">*</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">)),</span>
+                 <span class="p">(</span><span class="s2">&quot;Tonal audibility $L_{ta}$&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} dB&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">tonal_audibility</span><span class="p">)),</span>
+                 <span class="p">(</span><span class="s2">&quot;Adjustment $K_{t}$&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} dB&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">adjustment</span><span class="p">)),</span>
+                 <span class="p">(</span><span class="s2">&quot;Frequency resolution&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} Hz&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frequency_resolution</span><span class="p">)),</span>
+                 <span class="p">(</span><span class="s2">&quot;Effective analysis bandwidth&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} Hz&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">effective_analysis_bandwidth</span><span class="p">)),</span>
+            <span class="p">]</span>
+        <span class="n">table</span> <span class="o">+=</span> <span class="n">tones</span>
+        <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="n">table</span><span class="p">)</span></div>
+              
+<div class="viewcode-block" id="Tonality.results_as_dataframe"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.Tonality.results_as_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">results_as_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return results in dataframe.&quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">((</span><span class="n">tone</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="n">tone</span><span class="o">.</span><span class="n">tone_level</span><span class="p">,</span> <span class="n">tone</span><span class="o">.</span><span class="n">bandwidth_3db</span><span class="p">,</span> <span class="n">tone</span><span class="o">.</span><span class="n">critical_band</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> 
+                 <span class="n">tone</span><span class="o">.</span><span class="n">critical_band</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">tone</span><span class="o">.</span><span class="n">critical_band</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">,</span> 
+                 <span class="n">tone</span><span class="o">.</span><span class="n">critical_band</span><span class="o">.</span><span class="n">regression_slope</span><span class="p">,</span> <span class="n">tone</span><span class="o">.</span><span class="n">critical_band</span><span class="o">.</span><span class="n">regression_intercept</span><span class="p">,</span> 
+                 <span class="n">tone</span><span class="o">.</span><span class="n">critical_band</span><span class="o">.</span><span class="n">masking_noise_level</span><span class="p">,</span> <span class="n">tone</span><span class="o">.</span><span class="n">critical_band</span><span class="o">.</span><span class="n">total_tone_level</span><span class="p">,</span> 
+                 <span class="n">tone</span><span class="o">.</span><span class="n">critical_band</span><span class="o">.</span><span class="n">tonal_audibility</span><span class="p">,</span> <span class="n">tone</span><span class="o">.</span><span class="n">critical_band</span><span class="o">.</span><span class="n">adjustment</span><span class="p">)</span> <span class="k">for</span> <span class="n">tone</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tones</span><span class="p">)</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;tone_level&#39;</span><span class="p">,</span> <span class="s1">&#39;bandwidth_3db&#39;</span><span class="p">,</span> <span class="s1">&#39;critical_band_start&#39;</span><span class="p">,</span> <span class="s1">&#39;critical_band_end&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;critical_band_bandwidth&#39;</span><span class="p">,</span> <span class="s1">&#39;regression_slope&#39;</span><span class="p">,</span> <span class="s1">&#39;regression_intercept&#39;</span><span class="p">,</span> <span class="s1">&#39;masking_noise_level&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;total_tone_level&#39;</span><span class="p">,</span> <span class="s1">&#39;tonal_audibility&#39;</span><span class="p">,</span> <span class="s1">&#39;adjustment&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span></div></div>
+        
+        
+ 
+<span class="k">class</span> <span class="nc">NoisePause</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">tone</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tone</span> <span class="o">=</span> <span class="n">tone</span>
+        
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;(start={},end={})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;NoisePause{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span>
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop</span>
+
+    <span class="k">def</span> <span class="nf">_repr_html_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Start&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">),</span>
+                 <span class="p">(</span><span class="s2">&quot;End&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;html&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="create_tone"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.create_tone">[docs]</a><span class="k">def</span> <span class="nf">create_tone</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">tone_lines</span><span class="p">,</span> <span class="n">bandwidth_for_tone_criterion</span><span class="p">,</span> <span class="n">noise_pause</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create an instance of Tone.&quot;&quot;&quot;</span>
+    
+    <span class="n">center</span> <span class="o">=</span> <span class="n">levels</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">tone_lines</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+    <span class="n">tone_level</span> <span class="o">=</span> <span class="n">tones_level</span><span class="p">(</span><span class="n">levels</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">tone_lines</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">Tone</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">tone_lines</span><span class="p">,</span> <span class="n">tone_level</span><span class="p">,</span> <span class="n">noise_pause</span><span class="p">,</span> <span class="n">bandwidth_for_tone_criterion</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Tone"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.Tone">[docs]</a><span class="k">class</span> <span class="nc">Tone</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tone.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="Tone.__init__"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.Tone.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">tone_lines</span><span class="p">,</span> <span class="n">tone_level</span><span class="p">,</span> <span class="n">noise_pause</span><span class="p">,</span> <span class="n">bandwidth_3db</span><span class="p">,</span> <span class="n">critical_band</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">center</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tone_lines</span> <span class="o">=</span> <span class="n">tone_lines</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tone_level</span> <span class="o">=</span> <span class="n">tone_level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_pause</span> <span class="o">=</span> <span class="n">noise_pause</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth_3db</span> <span class="o">=</span> <span class="n">bandwidth_3db</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">critical_band</span> <span class="o">=</span> <span class="n">critical_band</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;(center={:4.1f}, levels={:4.1f})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tone_level</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Tone{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_repr_html_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Center frequency&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} Hz&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">)),</span>
+                 <span class="p">(</span><span class="s2">&quot;Tone level&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} dB&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tone_level</span><span class="p">))]</span>
+        <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;html&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_critical_band"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.create_critical_band">[docs]</a><span class="k">def</span> <span class="nf">create_critical_band</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">line_classifier</span><span class="p">,</span> <span class="n">frequency</span><span class="p">,</span> <span class="n">frequency_resolution</span><span class="p">,</span>
+                         <span class="n">effective_analysis_bandwidth</span><span class="p">,</span> <span class="n">regression_range_factor</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">tone</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create an instance of CriticalBand.&quot;&quot;&quot;</span>
+    
+    <span class="n">center</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">bandwidth</span> <span class="o">=</span> <span class="n">critical_band</span><span class="p">(</span><span class="n">frequency</span><span class="p">)</span>
+    
+    <span class="c1"># Masking noise lines</span>
+    <span class="n">noise_lines</span><span class="p">,</span> <span class="n">regression_slope</span><span class="p">,</span> <span class="n">regression_intercept</span> <span class="o">=</span> <span class="n">masking_noise_lines</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">line_classifier</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">,</span> <span class="n">regression_range_factor</span><span class="p">)</span>
+    <span class="c1"># Masking noise level   </span>
+    <span class="n">noise_level</span> <span class="o">=</span> <span class="n">masking_noise_level</span><span class="p">(</span><span class="n">noise_lines</span><span class="p">,</span> <span class="n">frequency_resolution</span><span class="p">,</span> <span class="n">effective_analysis_bandwidth</span><span class="p">)</span>
+    <span class="c1"># Total tone level</span>
+    <span class="n">tone_lines</span> <span class="o">=</span> <span class="n">levels</span><span class="p">[</span><span class="n">line_classifier</span><span class="o">==</span><span class="s1">&#39;tone&#39;</span><span class="p">][</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+    <span class="n">tone_level</span> <span class="o">=</span> <span class="n">tones_level</span><span class="p">(</span><span class="n">tone_lines</span><span class="p">)</span> <span class="o">-</span> <span class="n">window_correction</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+    <span class="c1"># Tonal audibility</span>
+    <span class="n">audibility</span> <span class="o">=</span> <span class="n">tonal_audibility</span><span class="p">(</span><span class="n">tone_level</span><span class="p">,</span> <span class="n">noise_level</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span>
+    <span class="c1"># Adjustment Kt</span>
+    <span class="n">adjustment</span> <span class="o">=</span> <span class="n">tonal_adjustment</span><span class="p">(</span><span class="n">audibility</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">CriticalBand</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">,</span> 
+                        <span class="n">regression_range_factor</span><span class="p">,</span> <span class="n">regression_slope</span><span class="p">,</span> <span class="n">regression_intercept</span><span class="p">,</span>
+                        <span class="n">noise_level</span><span class="p">,</span> <span class="n">tone_level</span><span class="p">,</span> <span class="n">audibility</span><span class="p">,</span> <span class="n">adjustment</span><span class="p">,</span> <span class="n">tone</span><span class="p">)</span></div>
+
+
+<span class="k">class</span> <span class="nc">CriticalBand</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">,</span> 
+                 <span class="n">regression_range_factor</span><span class="p">,</span> <span class="n">regression_slope</span><span class="p">,</span> <span class="n">regression_intercept</span><span class="p">,</span> 
+                 <span class="n">noise_level</span><span class="p">,</span> <span class="n">tone_level</span><span class="p">,</span> <span class="n">audibility</span><span class="p">,</span>
+                 <span class="n">adjustment</span><span class="p">,</span> <span class="n">tone</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                 
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">center</span>
+        <span class="sd">&quot;&quot;&quot;Center frequency of the critical band.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="sd">&quot;&quot;&quot;Lower band-edge frequency of the critical band.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="sd">&quot;&quot;&quot;Upper band-edge frequency of the critical band.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span> <span class="o">=</span> <span class="n">bandwidth</span>
+        <span class="sd">&quot;&quot;&quot;Bandwidth of the critical band.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regression_range_factor</span> <span class="o">=</span> <span class="n">regression_range_factor</span>
+        <span class="sd">&quot;&quot;&quot;Range of regression factor. See also :attr:`REGRESSION_RANGE_FACTOR`.&quot;&quot;&quot;</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">regression_slope</span> <span class="o">=</span> <span class="n">regression_slope</span>
+        <span class="sd">&quot;&quot;&quot;Linear regression slope.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regression_intercept</span> <span class="o">=</span> <span class="n">regression_intercept</span>
+        <span class="sd">&quot;&quot;&quot;Linear regression intercept.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">masking_noise_level</span> <span class="o">=</span> <span class="n">noise_level</span>
+        <span class="sd">&quot;&quot;&quot;Masking noise level :math:`L_{pn}`.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_tone_level</span> <span class="o">=</span> <span class="n">tone_level</span>
+        <span class="sd">&quot;&quot;&quot;Total tone level :math:`L_{pt}`.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tonal_audibility</span> <span class="o">=</span> <span class="n">audibility</span>
+        <span class="sd">&quot;&quot;&quot;Tonal audibility :math:`L_{ta}`.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adjustment</span> <span class="o">=</span> <span class="n">adjustment</span>
+        <span class="sd">&quot;&quot;&quot;Adjustment :math:`K_{t}`.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tone</span> <span class="o">=</span> <span class="n">tone</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;(center={:4.1f}, bandwidth={:4.1f}, tonal_audibility={:4.1f}, adjustment={:4.1f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">,</span>
+                                                                                                         <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">,</span>
+                                                                                                         <span class="bp">self</span><span class="o">.</span><span class="n">tonal_audibility</span><span class="p">,</span>
+                                                                                                         <span class="bp">self</span><span class="o">.</span><span class="n">adjustment</span><span class="p">)</span>
+ 
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;CriticalBand{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_repr_html_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="n">table</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;Center frequency&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} Hz&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">&quot;Start frequency&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} Hz&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">&quot;End frequency&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} Hz&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">&quot;Bandwidth&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} Hz&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">&quot;Regression factor&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regression_range_factor</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">&quot;Regression slope&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regression_slope</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">&quot;Regression intercept&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regression_intercept</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">&quot;Masking noise level&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} dB&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masking_noise_level</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">&quot;Total tone level&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} dB&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_tone_level</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">&quot;Tonal audibility $L_{ta}$&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} dB&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tonal_audibility</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">&quot;Adjustment $K_{t}$&quot;</span><span class="p">,</span> <span class="s2">&quot;{:4.1f} dB&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adjustment</span><span class="p">)),</span>
+            <span class="p">]</span>
+        
+        <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;html&#39;</span><span class="p">)</span>
+
+    
+<span class="c1">#----------Noise pauses----------------------------  </span>
+
+<span class="k">def</span> <span class="nf">_search_noise_pauses</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">tsc</span><span class="p">):</span>
+    <span class="n">pauses</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">possible_start</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">levels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">levels</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">tsc</span> <span class="ow">and</span> <span class="p">(</span><span class="n">levels</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">levels</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tsc</span><span class="p">:</span>
+                <span class="n">possible_start</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">levels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">levels</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">tsc</span> <span class="ow">and</span> <span class="p">(</span><span class="n">levels</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">levels</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tsc</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">possible_start</span><span class="p">:</span>
+                    <span class="n">pauses</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">possible_start</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+                    <span class="n">possible_start</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">return</span> <span class="n">pauses</span>
+    
+    
+<div class="viewcode-block" id="noise_pause_seeker"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.noise_pause_seeker">[docs]</a><span class="k">def</span> <span class="nf">noise_pause_seeker</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">tsc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given the levels of a spectrum and a tone seeking criterium this top level function seeks possible noise pauses.</span>
+<span class="sd">    </span>
+<span class="sd">    :param levels: Spectral levels.</span>
+<span class="sd">    :param df: Frequency resolution.</span>
+<span class="sd">    :param tsc: Tone seeking criterium.</span>
+<span class="sd">    </span>
+<span class="sd">    Possible start and end indices of noise pauses are determined using :func:`possible_noise_pauses.</span>
+<span class="sd">    Then, only those that correspond to the smallest intervals that do not overlap other intervals are kept.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
+    <span class="n">forward_pauses</span> <span class="o">=</span> <span class="n">_search_noise_pauses</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">tsc</span><span class="p">)</span>
+    <span class="n">backward_pauses</span> <span class="o">=</span> <span class="n">_search_noise_pauses</span><span class="p">(</span><span class="n">levels</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">tsc</span><span class="p">)</span>
+    <span class="n">backward_pauses</span> <span class="o">=</span> <span class="p">[(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">start</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">end</span><span class="p">)</span> <span class="k">for</span> <span class="n">end</span><span class="p">,</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">backward_pauses</span><span class="p">)]</span>
+    <span class="n">possible_pauses</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span> <span class="nb">set</span><span class="p">(</span><span class="n">forward_pauses</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">backward_pauses</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">possible_pauses</span></div>
+
+<span class="c1">#------------------- Tone seeking--------------------</span>
+
+<div class="viewcode-block" id="determine_tone_lines"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_1996_2_2007.determine_tone_lines">[docs]</a><span class="k">def</span> <span class="nf">determine_tone_lines</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">force_tone_without_pause</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">force_bandwidth_criterion</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine tone lines in noise pause.</span>
+<span class="sd">      </span>
+<span class="sd">    :param levels: Series with levels as function of frequency.</span>
+<span class="sd">    :param df: Frequency resolution.</span>
+<span class="sd">    :param start: Index of noise pause start.</span>
+<span class="sd">    :param end: Index of noise pause end.</span>
+<span class="sd">    </span>
+<span class="sd">    :returns: Array with indices of tone lines in noise pause.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Noise pause range object</span>
+    <span class="n">npr</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Return values</span>
+    <span class="n">tone_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+    <span class="n">bandwidth_for_tone_criterion</span> <span class="o">=</span> <span class="bp">None</span>
+    
+    <span class="c1"># Levels but with integeres as indices instead of frequencies.</span>
+    <span class="c1"># Benefit over np.array is that the index is maintained when the object is sliced.</span>
+    <span class="n">levels_int</span> <span class="o">=</span> <span class="n">levels</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="c1"># If any of the lines is six 6 dB above. See section C.4.3.</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">((</span><span class="n">levels</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">npr</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">TONE_WITHIN_PAUSE_CRITERION_DB</span> <span class="o">+</span> <span class="n">levels</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">start</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span> 
+              <span class="p">(</span><span class="n">levels</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">npr</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">TONE_WITHIN_PAUSE_CRITERION_DB</span> <span class="o">+</span> <span class="n">levels</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">end</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span> <span class="ow">or</span> <span class="n">force_tone_without_pause</span><span class="p">:</span>
+
+        <span class="c1"># Indices of values that are within -3 dB point.</span>
+        <span class="n">indices_3db</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">levels</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">npr</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">levels</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">npr</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">TONE_BANDWIDTH_CRITERION_DB</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># -3 dB bandwidth</span>
+        <span class="n">bandwidth_for_tone_criterion</span> <span class="o">=</span> <span class="p">(</span><span class="n">indices_3db</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">-</span><span class="n">indices_3db</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">*</span> <span class="n">df</span>
+        <span class="c1"># Frequency of tone.</span>
+        <span class="n">tone_center_frequency</span> <span class="o">=</span> <span class="n">levels</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">npr</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+        <span class="n">tone_center_index</span> <span class="o">=</span> <span class="n">levels</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">npr</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+        <span class="c1"># Critical band</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">critical_band_bandwidth</span> <span class="o">=</span> <span class="n">critical_band</span><span class="p">(</span><span class="n">tone_center_frequency</span><span class="p">)</span>
+        
+        <span class="c1"># Fullfill bandwidth criterion? See section C.4.3</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">bandwidth_for_tone_criterion</span> <span class="o">&lt;</span> <span class="mf">0.10</span> <span class="o">*</span> <span class="n">critical_band_bandwidth</span><span class="p">)</span> <span class="ow">or</span> <span class="n">force_bandwidth_criterion</span><span class="p">:</span>
+            <span class="c1"># All values within 6 decibel are designated as tones.</span>
+            <span class="n">tone_indices</span> <span class="o">=</span> <span class="p">(</span><span class="n">levels_int</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">npr</span><span class="p">][</span> <span class="n">levels_int</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">npr</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">levels_int</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">npr</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">TONE_LINES_CRITERION_DB</span> <span class="p">])</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_values</span><span class="p">()</span>
+            
+    <span class="k">return</span> <span class="n">tone_indices</span><span class="p">,</span> <span class="n">bandwidth_for_tone_criterion</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+  </body>
+</html>

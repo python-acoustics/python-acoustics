@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>&lt;no title&gt; &mdash; acoustics 0.0 documentation</title>
+    <title>Reflection &mdash; acoustics 0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,8 +26,8 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
     <link rel="up" title="API Reference" href="reference.html" />
-    <link rel="next" title="&lt;no title&gt;" href="room.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="power.html" /> 
+    <link rel="next" title="Room" href="room.html" />
+    <link rel="prev" title="Power" href="power.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -37,10 +37,13 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="room.html" title="&lt;no title&gt;"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="room.html" title="Room"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="power.html" title="&lt;no title&gt;"
+          <a href="power.html" title="Power"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &raquo;</li> 
@@ -52,7 +55,279 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  
+  <span class="target" id="module-acoustics.reflection"></span><div class="section" id="reflection">
+<h1>Reflection<a class="headerlink" href="#reflection" title="Permalink to this headline">¶</a></h1>
+<p>The reflection module contains functions for calculating reflection factors and impedances.</p>
+<dl class="class">
+<dt id="acoustics.reflection.Boundary">
+<em class="property">class </em><code class="descclassname">acoustics.reflection.</code><code class="descname">Boundary</code><span class="sig-paren">(</span><em>frequency</em>, <em>flow_resistivity</em>, <em>density=1.296</em>, <em>soundspeed=343.0</em>, <em>porosity_decrease=120.0</em>, <em>specific_heat_ratio=1.4</em>, <em>angle=None</em>, <em>distance=None</em>, <em>impedance_model='db'</em>, <em>reflection_model='plane'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/reflection.html#Boundary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.reflection.Boundary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>An object describing a boundary.</p>
+<dl class="method">
+<dt id="acoustics.reflection.Boundary.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>frequency</em>, <em>flow_resistivity</em>, <em>density=1.296</em>, <em>soundspeed=343.0</em>, <em>porosity_decrease=120.0</em>, <em>specific_heat_ratio=1.4</em>, <em>angle=None</em>, <em>distance=None</em>, <em>impedance_model='db'</em>, <em>reflection_model='plane'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/reflection.html#Boundary.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.reflection.Boundary.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.angle">
+<code class="descname">angle</code><em class="property"> = None</em><a class="headerlink" href="#acoustics.reflection.Boundary.angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Angle of incidence <span class="math">\(\theta\)</span>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.density">
+<code class="descname">density</code><em class="property"> = None</em><a class="headerlink" href="#acoustics.reflection.Boundary.density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Density of air <span class="math">\(\rho\)</span>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This value is only required for when calculating the impedance according to Attenborough&#8217;s model. See <a class="reference internal" href="#acoustics.reflection.impedance_attenborough" title="acoustics.reflection.impedance_attenborough"><code class="xref py py-func docutils literal"><span class="pre">impedance_attenborough()</span></code></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.distance">
+<code class="descname">distance</code><em class="property"> = None</em><a class="headerlink" href="#acoustics.reflection.Boundary.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path length of the reflected ray <span class="math">\(r\)</span>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This value is only required for when calculating the spherical wave reflection factor. See <a class="reference internal" href="#acoustics.reflection.reflection_factor_spherical_wave" title="acoustics.reflection.reflection_factor_spherical_wave"><code class="xref py py-func docutils literal"><span class="pre">reflection_factor_spherical_wave()</span></code></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.flow_resistivity">
+<code class="descname">flow_resistivity</code><em class="property"> = None</em><a class="headerlink" href="#acoustics.reflection.Boundary.flow_resistivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flow resistivity <span class="math">\(\sigma\)</span>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.frequency">
+<code class="descname">frequency</code><em class="property"> = None</em><a class="headerlink" href="#acoustics.reflection.Boundary.frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frequency. Single value or vector for a frequency range.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.impedance">
+<code class="descname">impedance</code><a class="headerlink" href="#acoustics.reflection.Boundary.impedance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Impedance according to chosen impedance model defined using <a class="reference internal" href="#acoustics.reflection.Boundary.impedance_model" title="acoustics.reflection.Boundary.impedance_model"><code class="xref py py-meth docutils literal"><span class="pre">impedance_model()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.impedance_model">
+<code class="descname">impedance_model</code><em class="property"> = None</em><a class="headerlink" href="#acoustics.reflection.Boundary.impedance_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Impedance model.</p>
+<p>Possibilities are <code class="docutils literal"><span class="pre">'db'</span></code> and <code class="docutils literal"><span class="pre">'att'</span></code> for respectively <a class="reference internal" href="#acoustics.reflection.impedance_delany_and_bazley" title="acoustics.reflection.impedance_delany_and_bazley"><code class="xref py py-func docutils literal"><span class="pre">impedance_delany_and_bazley()</span></code></a> and <a class="reference internal" href="#acoustics.reflection.impedance_attenborough" title="acoustics.reflection.impedance_attenborough"><code class="xref py py-func docutils literal"><span class="pre">impedance_attenborough()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.reflection.Boundary.plot_impedance">
+<code class="descname">plot_impedance</code><span class="sig-paren">(</span><em>filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/reflection.html#Boundary.plot_impedance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.reflection.Boundary.plot_impedance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot magnitude and phase of the impedance as function of frequency.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.reflection.Boundary.plot_reflection_factor">
+<code class="descname">plot_reflection_factor</code><span class="sig-paren">(</span><em>filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/reflection.html#Boundary.plot_reflection_factor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.reflection.Boundary.plot_reflection_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot reflection factor.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.porosity_decrease">
+<code class="descname">porosity_decrease</code><em class="property"> = None</em><a class="headerlink" href="#acoustics.reflection.Boundary.porosity_decrease" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rate of exponential decrease of porosity with depth <span class="math">\(\alpha\)</span>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This value is only required for when calculating the impedance according to Attenborough&#8217;s model. See <a class="reference internal" href="#acoustics.reflection.impedance_attenborough" title="acoustics.reflection.impedance_attenborough"><code class="xref py py-func docutils literal"><span class="pre">impedance_attenborough()</span></code></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.reflection_factor">
+<code class="descname">reflection_factor</code><a class="headerlink" href="#acoustics.reflection.Boundary.reflection_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reflection factor according to chosen reflection factor model defined using <a class="reference internal" href="#acoustics.reflection.Boundary.reflection_model" title="acoustics.reflection.Boundary.reflection_model"><code class="xref py py-meth docutils literal"><span class="pre">reflection_model()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.reflection_model">
+<code class="descname">reflection_model</code><em class="property"> = None</em><a class="headerlink" href="#acoustics.reflection.Boundary.reflection_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reflection factor model.</p>
+<p>Possibilities are <code class="docutils literal"><span class="pre">'plane'</span></code> and <code class="docutils literal"><span class="pre">'spherical'`</span></code> for respectively <a class="reference internal" href="#acoustics.reflection.reflection_factor_plane_wave" title="acoustics.reflection.reflection_factor_plane_wave"><code class="xref py py-func docutils literal"><span class="pre">reflection_factor_plane_wave()</span></code></a> and <a class="reference internal" href="#acoustics.reflection.reflection_factor_spherical_wave" title="acoustics.reflection.reflection_factor_spherical_wave"><code class="xref py py-func docutils literal"><span class="pre">reflection_factor_spherical_wave()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.soundspeed">
+<code class="descname">soundspeed</code><em class="property"> = None</em><a class="headerlink" href="#acoustics.reflection.Boundary.soundspeed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Speed of sound in air <span class="math">\(c\)</span>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This value is required when calculating the impedance according to Attenborough&#8217;s model or when calculating the spherical wave reflection factor. See respectively <a class="reference internal" href="#acoustics.reflection.impedance_attenborough" title="acoustics.reflection.impedance_attenborough"><code class="xref py py-func docutils literal"><span class="pre">impedance_attenborough()</span></code></a> and <a class="reference internal" href="#acoustics.reflection.reflection_factor_spherical_wave" title="acoustics.reflection.reflection_factor_spherical_wave"><code class="xref py py-func docutils literal"><span class="pre">reflection_factor_spherical_wave()</span></code></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.specific_heat_ratio">
+<code class="descname">specific_heat_ratio</code><em class="property"> = None</em><a class="headerlink" href="#acoustics.reflection.Boundary.specific_heat_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ratio of specific heats <span class="math">\(\gamma\)</span> for air.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This value is only required for when calculating the impedance according to Attenborough&#8217;s model. See <a class="reference internal" href="#acoustics.reflection.impedance_attenborough" title="acoustics.reflection.impedance_attenborough"><code class="xref py py-func docutils literal"><span class="pre">impedance_attenborough()</span></code></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.reflection.Boundary.wavenumber">
+<code class="descname">wavenumber</code><a class="headerlink" href="#acoustics.reflection.Boundary.wavenumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wavenumber <span class="math">\(k\)</span>.</p>
+<div class="math">
+\[k = \frac{2 \pi f}{c}\]</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.reflection.DENSITY">
+<code class="descclassname">acoustics.reflection.</code><code class="descname">DENSITY</code><em class="property"> = 1.296</em><a class="headerlink" href="#acoustics.reflection.DENSITY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Density of air <span class="math">\(\rho\)</span>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.reflection.POROSITY_DECREASE">
+<code class="descclassname">acoustics.reflection.</code><code class="descname">POROSITY_DECREASE</code><em class="property"> = 120.0</em><a class="headerlink" href="#acoustics.reflection.POROSITY_DECREASE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rate of exponential decrease of porosity with depth <span class="math">\(\alpha\)</span>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.reflection.SOUNDSPEED">
+<code class="descclassname">acoustics.reflection.</code><code class="descname">SOUNDSPEED</code><em class="property"> = 343.0</em><a class="headerlink" href="#acoustics.reflection.SOUNDSPEED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Speed of sound in air <span class="math">\(c\)</span>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.reflection.SPECIFIC_HEAT_RATIO">
+<code class="descclassname">acoustics.reflection.</code><code class="descname">SPECIFIC_HEAT_RATIO</code><em class="property"> = 1.4</em><a class="headerlink" href="#acoustics.reflection.SPECIFIC_HEAT_RATIO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specific heat ratio of air <span class="math">\(\gamma\)</span>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.reflection.impedance_attenborough">
+<code class="descclassname">acoustics.reflection.</code><code class="descname">impedance_attenborough</code><span class="sig-paren">(</span><em>frequency</em>, <em>flow_resistivity</em>, <em>density=1.296</em>, <em>soundspeed=343.0</em>, <em>porosity_decrease=120.0</em>, <em>specific_heat_ratio=1.4</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/reflection.html#impedance_attenborough"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.reflection.impedance_attenborough" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalised specific acoustics impedance according to the two-parameter model by Attenborough.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frequency</strong> &#8211; Frequency <span class="math">\(f\)</span>.</li>
+<li><strong>flow_resistivity</strong> &#8211; Flow resistivity <span class="math">\(\sigma\)</span>.</li>
+<li><strong>soundspeed</strong> &#8211; Speed of sound in air <span class="math">\(c\)</span>.</li>
+<li><strong>density</strong> &#8211; Density of air <span class="math">\(\rho\)</span>.</li>
+<li><strong>porosity_decrease</strong> &#8211; Rate of exponential decrease of porosity with depth <span class="math">\(\alpha\)</span>.</li>
+<li><strong>specific_heat_ratio</strong> &#8211; Ratio of specific heats <span class="math">\(\gamma\)</span> for air.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The impedance <span class="math">\(Z\)</span> is given by</p>
+<div class="math">
+\[Z = \frac{\left( 1-j\right) \sqrt{\sigma/f}}{\sqrt{\pi \gamma_0 \rho_0}} - \frac{jc\alpha}{8 \pi \gamma_0 f}\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.reflection.impedance_delany_and_bazley">
+<code class="descclassname">acoustics.reflection.</code><code class="descname">impedance_delany_and_bazley</code><span class="sig-paren">(</span><em>frequency</em>, <em>flow_resistivity</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/reflection.html#impedance_delany_and_bazley"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.reflection.impedance_delany_and_bazley" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalised specific acoustic impedance according to the empirical one-parameter model by Delany and Bazley.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frequency</strong> &#8211; Frequency <span class="math">\(f\)</span>.</li>
+<li><strong>flow_resistivity</strong> &#8211; Flow resistivity <span class="math">\(\sigma\)</span>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The impedance <span class="math">\(Z\)</span> is given by</p>
+<div class="math">
+\[Z = 1 + 9.08 \left( \frac{1000f}{\sigma}\right)^{-0.75} - 11.9 j \left( \frac{1000f}{\sigma}\right)^{-0.73}\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.reflection.numerical_distance">
+<code class="descclassname">acoustics.reflection.</code><code class="descname">numerical_distance</code><span class="sig-paren">(</span><em>impedance</em>, <em>angle</em>, <em>distance</em>, <em>wavenumber</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/reflection.html#numerical_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.reflection.numerical_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numerical distance <span class="math">\(w\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>impedance</strong> &#8211; Normalized impedance <span class="math">\(Z\)</span>.</li>
+<li><strong>angle</strong> &#8211; Angle of incidence <span class="math">\(\theta\)</span>.</li>
+<li><strong>distance</strong> &#8211; Path length of the reflected ray <span class="math">\(r\)</span>.</li>
+<li><strong>wavenumber</strong> &#8211; Wavenumber <span class="math">\(k\)</span>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The numerical distance <span class="math">\(w\)</span> is given by</p>
+<div class="math">
+\[w = \sqrt{-j k r  \left( 1 + \frac{1}{Z} \cos{\theta} - \sqrt{1 - \left( \frac{1}{Z} \right)^2} \sin{\theta} \right) }\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.reflection.reflection_factor_plane_wave">
+<code class="descclassname">acoustics.reflection.</code><code class="descname">reflection_factor_plane_wave</code><span class="sig-paren">(</span><em>impedance</em>, <em>angle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/reflection.html#reflection_factor_plane_wave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.reflection.reflection_factor_plane_wave" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plane wave reflection factor <span class="math">\(R\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>impedance</strong> &#8211; Normalized impedance <span class="math">\(Z\)</span>.</li>
+<li><strong>angle</strong> &#8211; Angle of incidence <span class="math">\(\theta\)</span>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The plane wave reflection factor <span class="math">\(R\)</span> is given by</p>
+<div class="math">
+\[R = \frac{Z\cos{\theta}-1}{Z\cos{\theta}+1}\]</div>
+<p>where <span class="math">\(Z\)</span> is the normalized impedance and <span class="math">\(\theta\)</span> the angle of incidence.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.reflection.reflection_factor_spherical_wave">
+<code class="descclassname">acoustics.reflection.</code><code class="descname">reflection_factor_spherical_wave</code><span class="sig-paren">(</span><em>impedance</em>, <em>angle</em>, <em>distance</em>, <em>wavenumber</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/reflection.html#reflection_factor_spherical_wave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.reflection.reflection_factor_spherical_wave" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spherical wave reflection factor <span class="math">\(Q\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>impedance</strong> &#8211; Normalized impedance <span class="math">\(Z\)</span>.</li>
+<li><strong>angle</strong> &#8211; Angle of incidence <span class="math">\(\theta\)</span>.</li>
+<li><strong>distance</strong> &#8211; Path length of the reflected ray <span class="math">\(r\)</span>.</li>
+<li><strong>wavenumber</strong> &#8211; Wavenumber <span class="math">\(k\)</span>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The spherical wave relfection factor <span class="math">\(Q\)</span> is given by</p>
+<div class="math">
+\[Q = R \left(1 - R \right) F\]</div>
+<p>where <span class="math">\(R\)</span> is the plane wave reflection factor as calculated in <a class="reference internal" href="#acoustics.reflection.reflection_factor_plane_wave" title="acoustics.reflection.reflection_factor_plane_wave"><code class="xref py py-func docutils literal"><span class="pre">reflection_factor_plane_wave()</span></code></a> and <span class="math">\(F\)</span> is given by</p>
+<div class="math">
+\[F = 1 - j \sqrt{ \pi} w e^{-w^2} \mathrm{erfc} \left( j w \right) \]</div>
+<p>where <span class="math">\(w\)</span> is the numerical distance as calculated in <a class="reference internal" href="#acoustics.reflection.numerical_distance" title="acoustics.reflection.numerical_distance"><code class="xref py py-func docutils literal"><span class="pre">numerical_distance()</span></code></a>.</p>
+</dd></dl>
+
+</div>
+
 
           </div>
         </div>
@@ -61,10 +336,10 @@
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="power.html"
-                        title="previous chapter">&lt;no title&gt;</a></p>
+                        title="previous chapter">Power</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="room.html"
-                        title="next chapter">&lt;no title&gt;</a></p>
+                        title="next chapter">Room</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -96,10 +371,13 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="room.html" title="&lt;no title&gt;"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="room.html" title="Room"
              >next</a> |</li>
         <li class="right" >
-          <a href="power.html" title="&lt;no title&gt;"
+          <a href="power.html" title="Power"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &raquo;</li> 
@@ -107,7 +385,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

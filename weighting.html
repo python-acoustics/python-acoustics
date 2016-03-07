@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>&lt;no title&gt; &mdash; acoustics 0.0 documentation</title>
+    <title>Weighting &mdash; acoustics 0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,8 +26,8 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
     <link rel="up" title="API Reference" href="reference.html" />
-    <link rel="next" title="&lt;no title&gt;" href="quantity.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="utils.html" /> 
+    <link rel="next" title="Quantities and units" href="quantity.html" />
+    <link rel="prev" title="Utils" href="utils.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -37,10 +37,13 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="quantity.html" title="&lt;no title&gt;"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantity.html" title="Quantities and units"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="utils.html" title="&lt;no title&gt;"
+          <a href="utils.html" title="Utils"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &raquo;</li> 
@@ -52,7 +55,93 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  
+  <span class="target" id="module-acoustics.weighting"></span><div class="section" id="weighting">
+<h1>Weighting<a class="headerlink" href="#weighting" title="Permalink to this headline">¶</a></h1>
+<p>Weightings according to IEC 61672-1:2003.</p>
+<dl class="data">
+<dt id="acoustics.weighting.THIRD_OCTAVE_A_WEIGHTING">
+<code class="descclassname">acoustics.weighting.</code><code class="descname">THIRD_OCTAVE_A_WEIGHTING</code><em class="property"> = array([-63.4, -56.7, -50.5, -44.7, -39.4, -34.6, -30.2, -26.2, -22.5,        -19.1, -16.1, -13.4, -10.9,  -8.6,  -6.6,  -4.8,  -3.2,  -1.9,         -0.8,   0. ,   0.6,   1. ,   1.2,   1.3,   1.2,   1. ,   0.5,         -0.1,  -1.1,  -2.5,  -4.3,  -6.6,  -9.3])</em><a class="headerlink" href="#acoustics.weighting.THIRD_OCTAVE_A_WEIGHTING" title="Permalink to this definition">¶</a></dt>
+<dd><p>A-weighting filter for preferred 1/3-octave band center frequencies, as specified in <code class="xref py py-attr docutils literal"><span class="pre">acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES</span></code>.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="acoustics.weighting.THIRD_OCTAVE_C_WEIGHTING">
+<code class="descclassname">acoustics.weighting.</code><code class="descname">THIRD_OCTAVE_C_WEIGHTING</code><em class="property"> = array([-11.2,  -8.5,  -6.2,  -4.4,  -3. ,  -2. ,  -1.3,  -0.8,  -0.5,         -0.3,  -0.2,  -0.1,   0. ,   0. ,   0. ,   0. ,   0. ,   0. ,          0. ,   0. ,   0. ,  -0.1,  -0.2,  -0.3,  -0.5,  -0.8,  -1.3,         -2. ,  -3. ,  -4.4,  -6.2,  -8.5, -11.2])</em><a class="headerlink" href="#acoustics.weighting.THIRD_OCTAVE_C_WEIGHTING" title="Permalink to this definition">¶</a></dt>
+<dd><p>C-weighting filter for preferred 1/3-octave band center frequencies, as specified in <code class="xref py py-attr docutils literal"><span class="pre">acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES</span></code>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.weighting.a_weighting">
+<code class="descclassname">acoustics.weighting.</code><code class="descname">a_weighting</code><span class="sig-paren">(</span><em>first</em>, <em>last</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/weighting.html#a_weighting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.weighting.a_weighting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select frequency weightings between <code class="docutils literal"><span class="pre">first</span></code> and <code class="docutils literal"><span class="pre">last</span></code>
+centerfrequencies from A-weighting.
+Possible values for these frequencies are third-octave frequencies
+between 12.5 Hz and 20,000 Hz (including them).</p>
+<dl class="docutils">
+<dt>first <span class="classifier-delimiter">:</span> <span class="classifier">scalar</span></dt>
+<dd>First third-octave centerfrequency.</dd>
+<dt>last <span class="classifier-delimiter">:</span> <span class="classifier">scalar</span></dt>
+<dd>Last third-octave centerfrequency.</dd>
+</dl>
+<p>NumPy array with A-weighting between <code class="docutils literal"><span class="pre">first</span></code> and <code class="docutils literal"><span class="pre">last</span></code>
+centerfrequencies.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.weighting.c_weighting">
+<code class="descclassname">acoustics.weighting.</code><code class="descname">c_weighting</code><span class="sig-paren">(</span><em>first</em>, <em>last</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/weighting.html#c_weighting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.weighting.c_weighting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select frequency weightings between <code class="docutils literal"><span class="pre">first</span></code> and <code class="docutils literal"><span class="pre">last</span></code>
+centerfrequencies from C-weighting.
+Possible values for these frequencies are third-octave frequencies
+between 12.5 Hz and 20,000 Hz (including them).</p>
+<dl class="docutils">
+<dt>first <span class="classifier-delimiter">:</span> <span class="classifier">scalar</span></dt>
+<dd>First third-octave centerfrequency.</dd>
+<dt>last <span class="classifier-delimiter">:</span> <span class="classifier">scalar</span></dt>
+<dd>Last third-octave centerfrequency.</dd>
+</dl>
+<p>NumPy array with A-weighting between <code class="docutils literal"><span class="pre">first</span></code> and <code class="docutils literal"><span class="pre">last</span></code>
+centerfrequencies.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.weighting.z2a">
+<code class="descclassname">acoustics.weighting.</code><code class="descname">z2a</code><span class="sig-paren">(</span><em>levels</em>, <em>first</em>, <em>last</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/weighting.html#z2a"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.weighting.z2a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply A-weighting to Z-weighted signal.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.weighting.a2z">
+<code class="descclassname">acoustics.weighting.</code><code class="descname">a2z</code><span class="sig-paren">(</span><em>levels</em>, <em>first</em>, <em>last</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/weighting.html#a2z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.weighting.a2z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove A-weighting from A-weighted signal.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.weighting.z2c">
+<code class="descclassname">acoustics.weighting.</code><code class="descname">z2c</code><span class="sig-paren">(</span><em>levels</em>, <em>first</em>, <em>last</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/weighting.html#z2c"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.weighting.z2c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply C-weighting to Z-weighted signal.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.weighting.c2z">
+<code class="descclassname">acoustics.weighting.</code><code class="descname">c2z</code><span class="sig-paren">(</span><em>levels</em>, <em>first</em>, <em>last</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/weighting.html#c2z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.weighting.c2z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove C-weighting from C-weighted signal.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.weighting.a2c">
+<code class="descclassname">acoustics.weighting.</code><code class="descname">a2c</code><span class="sig-paren">(</span><em>levels</em>, <em>first</em>, <em>last</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/weighting.html#a2c"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.weighting.a2c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Go from A-weighted to C-weighted.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.weighting.c2a">
+<code class="descclassname">acoustics.weighting.</code><code class="descname">c2a</code><span class="sig-paren">(</span><em>levels</em>, <em>first</em>, <em>last</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/weighting.html#c2a"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.weighting.c2a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Go from C-weighted to A-weighted.</p>
+</dd></dl>
+
+</div>
+
 
           </div>
         </div>
@@ -61,10 +150,10 @@
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="utils.html"
-                        title="previous chapter">&lt;no title&gt;</a></p>
+                        title="previous chapter">Utils</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="quantity.html"
-                        title="next chapter">&lt;no title&gt;</a></p>
+                        title="next chapter">Quantities and units</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -96,10 +185,13 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="quantity.html" title="&lt;no title&gt;"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantity.html" title="Quantities and units"
              >next</a> |</li>
         <li class="right" >
-          <a href="utils.html" title="&lt;no title&gt;"
+          <a href="utils.html" title="Utils"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &raquo;</li> 
@@ -107,7 +199,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

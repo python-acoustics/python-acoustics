@@ -1,0 +1,375 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>acoustics.room &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for acoustics.room</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Room</span>
+<span class="sd">====</span>
+
+<span class="sd">The room acoustics module contains several functions to calculate the reverberation time in spaces.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <span class="n">wavfile</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+
+<span class="kn">from</span> <span class="nn">acoustics.utils</span> <span class="kn">import</span> <span class="n">_is_1d</span>
+<span class="kn">from</span> <span class="nn">acoustics.signal</span> <span class="kn">import</span> <span class="n">bandpass</span>
+<span class="kn">from</span> <span class="nn">acoustics.bands</span> <span class="kn">import</span> <span class="p">(</span><span class="n">_check_band_type</span><span class="p">,</span> <span class="n">octave_low</span><span class="p">,</span> <span class="n">octave_high</span><span class="p">,</span>
+                                  <span class="n">third_low</span><span class="p">,</span> <span class="n">third_high</span><span class="p">)</span>
+
+
+<span class="n">SOUNDSPEED</span> <span class="o">=</span> <span class="mf">343.0</span>
+
+<div class="viewcode-block" id="mean_alpha"><a class="viewcode-back" href="../../room.html#acoustics.room.mean_alpha">[docs]</a><span class="k">def</span> <span class="nf">mean_alpha</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">surfaces</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate mean of absorption coefficients.</span>
+<span class="sd">    </span>
+<span class="sd">    :param alphas: Absorption coefficients :math:`\\alpha`.</span>
+<span class="sd">    :param surfaces: Surfaces :math:`S`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">surfaces</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="nrc"><a class="viewcode-back" href="../../room.html#acoustics.room.nrc">[docs]</a><span class="k">def</span> <span class="nf">nrc</span><span class="p">(</span><span class="n">alphas</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate Noise Reduction Coefficient (NRC) from four absorption</span>
+<span class="sd">    coefficient values (250, 500, 1000 and 2000 Hz).</span>
+<span class="sd">    </span>
+<span class="sd">    :param alphas: Absorption coefficients :math:`\\alpha`.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">alpha_axis</span> <span class="o">=</span> <span class="n">alphas</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">alpha_axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="t60_sabine"><a class="viewcode-back" href="../../room.html#acoustics.room.t60_sabine">[docs]</a><span class="k">def</span> <span class="nf">t60_sabine</span><span class="p">(</span><span class="n">surfaces</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">SOUNDSPEED</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reverberation time according to Sabine.</span>
+<span class="sd">    </span>
+<span class="sd">    :param surfaces: Surface of the room :math:`S`. </span>
+<span class="sd">        NumPy array that contains different surfaces.</span>
+<span class="sd">    :type surfaces: :class:`np.ndarray`</span>
+<span class="sd">    :param alpha: Absorption coefficient of the room :math:`\\alpha`.</span>
+<span class="sd">        Contains absorption coefficients of ``surfaces``.</span>
+<span class="sd">        It could be one value or some values in different bands (1D and 2D</span>
+<span class="sd">        array, respectively).</span>
+<span class="sd">    :type alpha: :class:`np.ndarray`</span>
+<span class="sd">    :param volume: Volume of the room :math:`V`.</span>
+<span class="sd">    :type volume: :class:`float`</span>
+<span class="sd">    :param c: Speed of sound :math:`c`.</span>
+<span class="sd">    :type c: :class:`float`</span>
+<span class="sd">    :returns: Reverberation time :math:`T_{60}`</span>
+<span class="sd">    </span>
+<span class="sd">    Sabine&#39;s formula for the reverberation time is:</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: T_{60} = \\frac{24 \\ln(10)}{c} \\frac{V}{S\\alpha}</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mean_alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">surfaces</span><span class="p">)</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">surfaces</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">S</span> <span class="o">*</span> <span class="n">mean_alpha</span>
+    <span class="n">t60</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="mf">6.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">volume</span> <span class="o">/</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="n">A</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t60</span></div>
+
+
+<div class="viewcode-block" id="t60_eyring"><a class="viewcode-back" href="../../room.html#acoustics.room.t60_eyring">[docs]</a><span class="k">def</span> <span class="nf">t60_eyring</span><span class="p">(</span><span class="n">surfaces</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">SOUNDSPEED</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reverberation time according to Eyring.</span>
+<span class="sd">    </span>
+<span class="sd">    :param surfaces: Surfaces :math:`S`.</span>
+<span class="sd">    :param alpha: Mean absorption coefficient :math:`\\alpha` or by frequency bands</span>
+<span class="sd">    :param volume: Volume of the room :math:`V`.</span>
+<span class="sd">    :param c: Speed of sound :math:`c`.</span>
+<span class="sd">    :returns: Reverberation time :math:`T_{60}`</span>
+<span class="sd">    </span>
+<span class="sd">    Eyring&#39;s formula for the reverberation time is:</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: T_{60} = \\frac{24 \\ln{10} V}{c \\left( 4 mV - S \\ln{\\left( 1 - \\alpha \\right)} \\right)}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mean_alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">surfaces</span><span class="p">)</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">surfaces</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="o">-</span><span class="n">S</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">mean_alpha</span><span class="p">)</span>
+    <span class="n">t60</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="mf">6.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">volume</span> <span class="o">/</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="n">A</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t60</span></div>
+
+
+<div class="viewcode-block" id="t60_millington"><a class="viewcode-back" href="../../room.html#acoustics.room.t60_millington">[docs]</a><span class="k">def</span> <span class="nf">t60_millington</span><span class="p">(</span><span class="n">surfaces</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">SOUNDSPEED</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reverberation time according to Millington.</span>
+<span class="sd">    </span>
+<span class="sd">    :param surfaces: Surfaces :math:`S`.</span>
+<span class="sd">    :param alpha: Mean absorption coefficient :math:`\\alpha` or by frequency bands</span>
+<span class="sd">    :param volume: Volume of the room :math:`V`.</span>
+<span class="sd">    :param c: Speed of sound :math:`c`.</span>
+<span class="sd">    :returns: Reverberation time :math:`T_{60}`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mean_alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">surfaces</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">surfaces</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">mean_alpha</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">t60</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="mf">6.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">volume</span> <span class="o">/</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="n">A</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t60</span></div>
+
+
+<div class="viewcode-block" id="t60_fitzroy"><a class="viewcode-back" href="../../room.html#acoustics.room.t60_fitzroy">[docs]</a><span class="k">def</span> <span class="nf">t60_fitzroy</span><span class="p">(</span><span class="n">surfaces</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">SOUNDSPEED</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reverberation time according to Fitzroy.</span>
+<span class="sd">    </span>
+<span class="sd">    :param surfaces: Surfaces :math:`S`.</span>
+<span class="sd">    :param alpha: Mean absorption coefficient :math:`\\alpha` or by frequency bands</span>
+<span class="sd">    :param volume: Volume of the room :math:`V`.</span>
+<span class="sd">    :param c: Speed of sound :math:`c`.</span>
+<span class="sd">    :returns: Reverberation time :math:`T_{60}`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Sx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">surfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">Sy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">surfaces</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+    <span class="n">Sz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">surfaces</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
+    <span class="n">St</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">surfaces</span><span class="p">)</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">_is_1d</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">a_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">alpha</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="n">surfaces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">a_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">alpha</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="n">surfaces</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">a_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">alpha</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="n">surfaces</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">Sx</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">a_x</span><span class="p">)</span> <span class="o">+</span> <span class="n">Sy</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">a_y</span><span class="p">)</span> <span class="o">+</span> <span class="n">Sz</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">a_z</span><span class="p">))</span>
+    <span class="n">t60</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="mf">6.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">volume</span> <span class="o">*</span> <span class="n">factor</span> <span class="o">/</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="n">St</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t60</span></div>
+
+
+<div class="viewcode-block" id="t60_arau"><a class="viewcode-back" href="../../room.html#acoustics.room.t60_arau">[docs]</a><span class="k">def</span> <span class="nf">t60_arau</span><span class="p">(</span><span class="n">Sx</span><span class="p">,</span> <span class="n">Sy</span><span class="p">,</span> <span class="n">Sz</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">SOUNDSPEED</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reverberation time according to Arau. [#arau]_</span>
+
+<span class="sd">    :param Sx: Total surface perpendicular to x-axis (yz-plane) :math:`S_{x}`.</span>
+<span class="sd">    :param Sy: Total surface perpendicular to y-axis (xz-plane) :math:`S_{y}`.</span>
+<span class="sd">    :param Sz: Total surface perpendicular to z-axis (xy-plane) :math:`S_{z}`.</span>
+<span class="sd">    :param alpha: Absorption coefficients :math:`\\mathbf{\\alpha} = \\left[ \\alpha_x, \\alpha_y, \\alpha_z \\right]`</span>
+<span class="sd">    :param volume: Volume of the room :math:`V`.</span>
+<span class="sd">    :param c: Speed of sound :math:`c`.</span>
+<span class="sd">    :returns: Reverberation time :math:`T_{60}`</span>
+<span class="sd">    </span>
+<span class="sd">    .. [#arau] For more details, please see</span>
+<span class="sd">       http://www.arauacustica.com/files/publicaciones/pdf_esp_7.pdf</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">a_x</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">a_y</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">a_z</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">St</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Sx</span><span class="p">,</span> <span class="n">Sy</span><span class="p">,</span> <span class="n">Sz</span><span class="p">]))</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">St</span> <span class="o">*</span> <span class="n">a_x</span><span class="o">**</span><span class="p">(</span><span class="n">Sx</span><span class="o">/</span><span class="n">St</span><span class="p">)</span> <span class="o">*</span> <span class="n">a_y</span><span class="o">**</span><span class="p">(</span><span class="n">Sy</span><span class="o">/</span><span class="n">St</span><span class="p">)</span> <span class="o">*</span> <span class="n">a_z</span><span class="o">**</span><span class="p">(</span><span class="n">Sz</span><span class="o">/</span><span class="n">St</span><span class="p">)</span>
+    <span class="n">t60</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="mf">6.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">volume</span> <span class="o">/</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="n">A</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t60</span></div>
+
+
+<div class="viewcode-block" id="t60_impulse"><a class="viewcode-back" href="../../room.html#acoustics.room.t60_impulse">[docs]</a><span class="k">def</span> <span class="nf">t60_impulse</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">bands</span><span class="p">,</span> <span class="n">rt</span><span class="o">=</span><span class="s1">&#39;t30&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reverberation time from a WAV impulse response.</span>
+
+<span class="sd">    :param file_name: name of the WAV file containing the impulse response.</span>
+<span class="sd">    :param bands: Octave or third bands as NumPy array.</span>
+<span class="sd">    :param rt: Reverberation time estimator. It accepts `&#39;t30&#39;`, `&#39;t20&#39;`, `&#39;t10&#39;` and `&#39;edt&#39;`.</span>
+<span class="sd">    :returns: Reverberation time :math:`T_{60}`</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fs</span><span class="p">,</span> <span class="n">raw_signal</span> <span class="o">=</span> <span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+    <span class="n">band_type</span> <span class="o">=</span> <span class="n">_check_band_type</span><span class="p">(</span><span class="n">bands</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">band_type</span> <span class="ow">is</span> <span class="s1">&#39;octave&#39;</span><span class="p">:</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">octave_low</span><span class="p">(</span><span class="n">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bands</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">octave_high</span><span class="p">(</span><span class="n">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bands</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">band_type</span> <span class="ow">is</span> <span class="s1">&#39;third&#39;</span><span class="p">:</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">third_low</span><span class="p">(</span><span class="n">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bands</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">third_high</span><span class="p">(</span><span class="n">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bands</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">rt</span> <span class="o">=</span> <span class="n">rt</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">rt</span> <span class="o">==</span> <span class="s1">&#39;t30&#39;</span><span class="p">:</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="o">-</span><span class="mf">5.0</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="o">-</span><span class="mf">35.0</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="mf">2.0</span>
+    <span class="k">elif</span> <span class="n">rt</span> <span class="o">==</span> <span class="s1">&#39;t20&#39;</span><span class="p">:</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="o">-</span><span class="mf">5.0</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="o">-</span><span class="mf">25.0</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="mf">3.0</span>
+    <span class="k">elif</span> <span class="n">rt</span> <span class="o">==</span> <span class="s1">&#39;t10&#39;</span><span class="p">:</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="o">-</span><span class="mf">5.0</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="o">-</span><span class="mf">15.0</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="mf">6.0</span>
+    <span class="k">elif</span> <span class="n">rt</span> <span class="o">==</span> <span class="s1">&#39;edt&#39;</span><span class="p">:</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.0</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="mf">6.0</span>
+
+    <span class="n">t60</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bands</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">band</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bands</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="c1"># Filtering signal</span>
+        <span class="n">filtered_signal</span> <span class="o">=</span> <span class="n">bandpass</span><span class="p">(</span><span class="n">raw_signal</span><span class="p">,</span> <span class="n">low</span><span class="p">[</span><span class="n">band</span><span class="p">],</span>
+                                                 <span class="n">high</span><span class="p">[</span><span class="n">band</span><span class="p">],</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+        <span class="n">abs_signal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">filtered_signal</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">filtered_signal</span><span class="p">))</span>
+
+        <span class="c1"># Schroeder integration</span>
+        <span class="n">sch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">abs_signal</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">sch_db</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">sch</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">sch</span><span class="p">))</span>
+        
+        <span class="c1"># Linear regression</span>
+        <span class="n">sch_init</span> <span class="o">=</span> <span class="n">sch_db</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sch_db</span> <span class="o">-</span> <span class="n">init</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()]</span>
+        <span class="n">sch_end</span> <span class="o">=</span> <span class="n">sch_db</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sch_db</span> <span class="o">-</span> <span class="n">end</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()]</span>
+        <span class="n">init_sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sch_db</span> <span class="o">==</span> <span class="n">sch_init</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">end_sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sch_db</span> <span class="o">==</span> <span class="n">sch_end</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">init_sample</span><span class="p">,</span> <span class="n">end_sample</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">fs</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">sch_db</span><span class="p">[</span><span class="n">init_sample</span><span class="p">:</span> <span class="n">end_sample</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">linregress</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="c1"># Reverberation time (T30, T20, T10 or EDT)</span>
+        <span class="n">db_regress_init</span> <span class="o">=</span> <span class="p">(</span><span class="n">init</span> <span class="o">-</span> <span class="n">intercept</span><span class="p">)</span> <span class="o">/</span> <span class="n">slope</span>
+        <span class="n">db_regress_end</span> <span class="o">=</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">intercept</span><span class="p">)</span> <span class="o">/</span> <span class="n">slope</span>
+        <span class="n">t60</span><span class="p">[</span><span class="n">band</span><span class="p">]</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">db_regress_end</span> <span class="o">-</span> <span class="n">db_regress_init</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t60</span></div>
+
+
+<div class="viewcode-block" id="clarity"><a class="viewcode-back" href="../../room.html#acoustics.room.clarity">[docs]</a><span class="k">def</span> <span class="nf">clarity</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">bands</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clarity :math:`C_i` determined from an impulse response.</span>
+<span class="sd">    </span>
+<span class="sd">    :param time: Time in miliseconds (e.g.: 50, 80).</span>
+<span class="sd">    :param signal: Impulse response.</span>
+<span class="sd">    :type signal: :class:`np.ndarray`</span>
+<span class="sd">    :param fs: Sample frequency.</span>
+<span class="sd">    :param bands: Bands of calculation (optional). Only support standard octave and third-octave bands.</span>
+<span class="sd">    :type bands: :class:`np.ndarray`</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">band_type</span> <span class="o">=</span> <span class="n">_check_band_type</span><span class="p">(</span><span class="n">bands</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">band_type</span> <span class="ow">is</span> <span class="s1">&#39;octave&#39;</span><span class="p">:</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">octave_low</span><span class="p">(</span><span class="n">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bands</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">octave_high</span><span class="p">(</span><span class="n">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bands</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">band_type</span> <span class="ow">is</span> <span class="s1">&#39;third&#39;</span><span class="p">:</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">third_low</span><span class="p">(</span><span class="n">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bands</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">third_high</span><span class="p">(</span><span class="n">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bands</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bands</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">band</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bands</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">filtered_signal</span> <span class="o">=</span> <span class="n">bandpass</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">low</span><span class="p">[</span><span class="n">band</span><span class="p">],</span><span class="n">high</span><span class="p">[</span><span class="n">band</span><span class="p">],</span>
+                                                 <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+        <span class="n">h2</span> <span class="o">=</span> <span class="n">filtered_signal</span><span class="o">**</span><span class="mf">2.0</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">time</span><span class="o">/</span><span class="mf">1000.0</span><span class="p">)</span><span class="o">*</span><span class="n">fs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">c</span><span class="p">[</span><span class="n">band</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">h2</span><span class="p">[:</span><span class="n">t</span><span class="p">])</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">h2</span><span class="p">[</span><span class="n">t</span><span class="p">:])))</span>
+    <span class="k">return</span> <span class="n">c</span></div>
+
+
+<div class="viewcode-block" id="c50_from_file"><a class="viewcode-back" href="../../room.html#acoustics.room.c50_from_file">[docs]</a><span class="k">def</span> <span class="nf">c50_from_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">bands</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clarity for 50 miliseconds :math:`C_{50}` from a file.</span>
+<span class="sd">    </span>
+<span class="sd">    :param file_name: File name (only WAV is supported).</span>
+<span class="sd">    :type file_name: :class:`str`</span>
+<span class="sd">    :param bands: Bands of calculation (optional). Only support standard octave and third-octave bands.</span>
+<span class="sd">    :type bands: :class:`np.ndarray`</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fs</span><span class="p">,</span> <span class="n">signal</span> <span class="o">=</span> <span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">clarity</span><span class="p">(</span><span class="mf">50.0</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">bands</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="c80_from_file"><a class="viewcode-back" href="../../room.html#acoustics.room.c80_from_file">[docs]</a><span class="k">def</span> <span class="nf">c80_from_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">bands</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clarity for 80 miliseconds :math:`C_{80}` from a file.</span>
+<span class="sd">    </span>
+<span class="sd">    :param file_name: File name (only WAV is supported).</span>
+<span class="sd">    :type file_name: :class:`str`</span>
+<span class="sd">    :param bands: Bands of calculation (optional). Only support standard octave and third-octave bands.</span>
+<span class="sd">    :type bands: :class:`np.ndarray`</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fs</span><span class="p">,</span> <span class="n">signal</span> <span class="o">=</span> <span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">clarity</span><span class="p">(</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">bands</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+  </body>
+</html>

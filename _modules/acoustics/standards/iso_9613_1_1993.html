@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>acoustics.standards.iso_9613_1_1993 &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for acoustics.standards.iso_9613_1_1993</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">ISO 9613-1:1993</span>
+<span class="sd">===============</span>
+
+<span class="sd">ISO 9613-1:1993 specifies an analytical method of calculating the attenuation of sound </span>
+<span class="sd">as a result of atmospheric absorption for a variety of meteorological conditions.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+
+<span class="n">SOUNDSPEED</span> <span class="o">=</span> <span class="mf">343.2</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Speed of sound.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="n">REFERENCE_TEMPERATURE</span> <span class="o">=</span> <span class="mf">293.15</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Reference temperature.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">REFERENCE_PRESSURE</span> <span class="o">=</span> <span class="mf">101.325</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">International Standard Atmosphere in kilopascal.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">TRIPLE_TEMPERATURE</span> <span class="o">=</span> <span class="mf">273.16</span>
+<span class="sd">&quot;&quot;&quot;.</span>
+<span class="sd">Triple point isotherm temperature.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="soundspeed"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_9613_1_1993.soundspeed">[docs]</a><span class="k">def</span> <span class="nf">soundspeed</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="n">reference_temperature</span><span class="o">=</span><span class="n">REFERENCE_TEMPERATURE</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Speed of sound :math:`c`.</span>
+<span class="sd">    </span>
+<span class="sd">    :param temperature: Ambient temperature :math:`T_0`</span>
+<span class="sd">    :param reference_temperature: Reference temperature :math:`T`</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    The speed of sound is calculated using</span>
+<span class="sd">    </span>
+<span class="sd">    ..  math:: c = 343.2 \\left( \\frac{T}{T_0} \\right)</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mf">343.2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">temperature</span> <span class="o">/</span> <span class="n">reference_temperature</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="saturation_pressure"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_9613_1_1993.saturation_pressure">[docs]</a><span class="k">def</span> <span class="nf">saturation_pressure</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="n">reference_pressure</span><span class="o">=</span><span class="n">REFERENCE_PRESSURE</span><span class="p">,</span> <span class="n">triple_temperature</span><span class="o">=</span><span class="n">TRIPLE_TEMPERATURE</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saturation vapour pressure :math:`p_{sat}`.</span>
+<span class="sd">    </span>
+<span class="sd">    :param temperature: Ambient temperature :math:`T`</span>
+<span class="sd">    :param reference_pressure: Reference pressure :math:`p_r`</span>
+<span class="sd">    :param triple_temperature: Triple point temperature water :math:`T_{01}`</span>
+<span class="sd">    </span>
+<span class="sd">    The saturation vapour pressure is calculated using</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: p_{sat} = 10^C \cdot p_r</span>
+<span class="sd">    </span>
+<span class="sd">    with exponent :math:`C` given by</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: C = -6.8346 \cdot \\left( \\frac{T_{01}}{T} \\right)^{1.261}  + 4.6151</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">reference_pressure</span> <span class="o">*</span> <span class="mf">10.0</span><span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">6.8346</span> <span class="o">*</span><span class="p">(</span><span class="n">triple_temperature</span><span class="o">/</span><span class="n">temperature</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">1.261</span><span class="p">)</span> <span class="o">+</span> <span class="mf">4.6151</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="molar_concentration_water_vapour"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_9613_1_1993.molar_concentration_water_vapour">[docs]</a><span class="k">def</span> <span class="nf">molar_concentration_water_vapour</span><span class="p">(</span><span class="n">relative_humidity</span><span class="p">,</span> <span class="n">saturation_pressure</span><span class="p">,</span> <span class="n">pressure</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Molar concentration of water vapour :math:`h`.</span>
+<span class="sd">    </span>
+<span class="sd">    :param relative_humidity: Relative humidity :math:`h_r`</span>
+<span class="sd">    :param saturation_pressure: Saturation pressure :math:`p_{sat}`</span>
+<span class="sd">    :param pressure: Ambient pressure :math:`p`</span>
+<span class="sd">   </span>
+<span class="sd">    The molar concentration of water vapour is calculated using</span>
+<span class="sd">   </span>
+<span class="sd">    .. math:: h = h_r  \\frac{p_{sat}}{p_a}</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">relative_humidity</span> <span class="o">*</span> <span class="n">saturation_pressure</span> <span class="o">/</span> <span class="n">pressure</span></div>
+
+<div class="viewcode-block" id="relaxation_frequency_oxygen"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_9613_1_1993.relaxation_frequency_oxygen">[docs]</a><span class="k">def</span> <span class="nf">relaxation_frequency_oxygen</span><span class="p">(</span><span class="n">pressure</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">reference_pressure</span><span class="o">=</span><span class="n">REFERENCE_PRESSURE</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Relaxation frequency of oxygen :math:`f_{r,O}`.</span>
+<span class="sd">    </span>
+<span class="sd">    :param pressure: Ambient pressure :math:`p_a`</span>
+<span class="sd">    :param reference_pressure: Reference pressure :math:`p_r`</span>
+<span class="sd">    :param h: Molar concentration of water vapour :math:`h`</span>
+<span class="sd">    </span>
+<span class="sd">    The relaxation frequency of oxygen is calculated using</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: f_{r,O} = \\frac{p_a}{p_r} \\left( 24 + 4.04 \cdot 10^4 h \\frac{0.02 + h}{0.391 + h}  \\right)</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">pressure</span> <span class="o">/</span> <span class="n">reference_pressure</span> <span class="o">*</span> <span class="p">(</span> <span class="mf">24.0</span> <span class="o">+</span> <span class="mf">4.04</span> <span class="o">*</span> <span class="mf">10.0</span><span class="o">**</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.02</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.391</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="relaxation_frequency_nitrogen"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_9613_1_1993.relaxation_frequency_nitrogen">[docs]</a><span class="k">def</span> <span class="nf">relaxation_frequency_nitrogen</span><span class="p">(</span><span class="n">pressure</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">reference_pressure</span><span class="o">=</span><span class="n">REFERENCE_PRESSURE</span><span class="p">,</span> <span class="n">reference_temperature</span><span class="o">=</span><span class="n">REFERENCE_TEMPERATURE</span><span class="p">):</span>        
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Relaxation frequency of nitrogen :math:`f_{r,N}`.</span>
+<span class="sd">    </span>
+<span class="sd">    :param pressure: Ambient pressure :math:`p_a`</span>
+<span class="sd">    :param temperature: Ambient temperature :math:`T`</span>
+<span class="sd">    :param h: Molar concentration of water vapour :math:`h`</span>
+<span class="sd">    :param reference_pressure: Reference pressure :math:`p_{ref}`</span>
+<span class="sd">    :param reference_temperature: Reference temperature :math:`T_{ref}`</span>
+<span class="sd">    </span>
+<span class="sd">    The relaxation frequency of nitrogen is calculated using</span>
+<span class="sd">    </span>
+<span class="sd">    .. math:: f_{r,N} = \\frac{p_a}{p_r} \\left( \\frac{T}{T_0} \\right)^{-1/2} \cdot \\left( 9 + 280 h \exp{\\left\{ -4.170 \\left[ \\left(\\frac{T}{T_0} \\right)^{-1/3} -1 \\right] \\right\} } \\right)</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">pressure</span> <span class="o">/</span> <span class="n">reference_pressure</span> <span class="o">*</span> <span class="p">(</span><span class="n">temperature</span><span class="o">/</span><span class="n">reference_temperature</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">9.0</span> <span class="o">+</span> <span class="mf">280.0</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.170</span> <span class="o">*</span> <span class="p">((</span><span class="n">temperature</span><span class="o">/</span><span class="n">reference_temperature</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="attenuation_coefficient"><a class="viewcode-back" href="../../../standards.html#acoustics.standards.iso_9613_1_1993.attenuation_coefficient">[docs]</a><span class="k">def</span> <span class="nf">attenuation_coefficient</span><span class="p">(</span><span class="n">pressure</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">reference_pressure</span><span class="p">,</span> <span class="n">reference_temperature</span><span class="p">,</span> <span class="n">relaxation_frequency_nitrogen</span><span class="p">,</span> <span class="n">relaxation_frequency_oxygen</span><span class="p">,</span> <span class="n">frequency</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attenuation coefficient :math:`\\alpha` describing atmospheric absorption in dB/m for the specified ``frequency``.</span>
+<span class="sd">    </span>
+<span class="sd">    :param pressure: Ambient pressure :math:`T`</span>
+<span class="sd">    :param temperature: Ambient temperature :math:`T`</span>
+<span class="sd">    :param reference_pressure: Reference pressure :math:`p_{ref}`</span>
+<span class="sd">    :param reference_temperature: Reference temperature :math:`T_{ref}`</span>
+<span class="sd">    :param relaxation_frequency_nitrogen: Relaxation frequency of nitrogen :math:`f_{r,N}`.</span>
+<span class="sd">    :param relaxation_frequency_oxygen: Relaxation frequency of oxygen :math:`f_{r,O}`.</span>
+<span class="sd">    :param frequency: Frequencies to calculate :math:`\\alpha` for.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mf">8.686</span> <span class="o">*</span> <span class="n">frequency</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span> <span class="p">(</span> <span class="mf">1.84</span> <span class="o">*</span> <span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">11.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">reference_pressure</span><span class="o">/</span><span class="n">pressure</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">temperature</span><span class="o">/</span><span class="n">reference_temperature</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">0.5</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">temperature</span><span class="o">/</span><span class="n">reference_temperature</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span> <span class="mf">0.01275</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2239.1</span> <span class="o">/</span> <span class="n">temperature</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">relaxation_frequency_oxygen</span> <span class="o">+</span> <span class="p">(</span><span class="n">frequency</span><span class="o">**</span><span class="mf">2.0</span><span class="o">/</span><span class="n">relaxation_frequency_oxygen</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1068</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">3352.0</span><span class="o">/</span><span class="n">temperature</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">relaxation_frequency_nitrogen</span> <span class="o">+</span> <span class="p">(</span><span class="n">frequency</span><span class="o">**</span><span class="mf">2.0</span><span class="o">/</span><span class="n">relaxation_frequency_nitrogen</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+  </body>
+</html>

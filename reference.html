@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
-    <link rel="next" title="&lt;no title&gt;" href="ambisonics.html" />
+    <link rel="next" title="Ambisonics" href="ambisonics.html" />
     <link rel="prev" title="Welcome to the documentation of the acoustics module!" href="index.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="ambisonics.html" title="&lt;no title&gt;"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ambisonics.html" title="Ambisonics"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Welcome to the documentation of the acoustics module!"
@@ -53,11 +56,32 @@
   <div class="section" id="api-reference">
 <span id="reference"></span><h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
 <p>This section contains a description of all classes and functions.</p>
+<span class="target" id="module-acoustics"></span><div class="section" id="acoustics">
+<h2>Acoustics<a class="headerlink" href="#acoustics" title="Permalink to this headline">¶</a></h2>
+<p>The acoustics module.</p>
+</div>
 <div class="section" id="modules">
 <h2>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="ambisonics.html">Ambisonics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="atmosphere.html">Atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bands.html">Bands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Building</a></li>
 <li class="toctree-l1"><a class="reference internal" href="criterion.html">Criterion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generator.html">Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="descriptors.html">Descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="directivity.html">Directivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doppler.html">Doppler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imaging.html">Imaging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="octave.html">Octave</a></li>
+<li class="toctree-l1"><a class="reference internal" href="power.html">Power</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reflection.html">Reflection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="room.html">Room</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">Signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weighting.html">Weighting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantity.html">Quantities and units</a></li>
 </ul>
 </div>
 </div>
@@ -66,12 +90,1116 @@
 <p>The <code class="docutils literal"><span class="pre">acoustics.standards</span></code> module consists of modules where all code and
 values are according to the respective standard.</p>
 <div class="toctree-wrapper compound">
-<ul class="simple">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="standards.html">Standards</a></li>
 </ul>
 </div>
 </div>
 <div class="section" id="signal-class">
 <h2>Signal class<a class="headerlink" href="#signal-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="acoustics.Signal">
+<em class="property">class </em><code class="descclassname">acoustics.</code><code class="descname">Signal</code><a class="headerlink" href="#acoustics.Signal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.10)"><code class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></code></a></p>
+<p>A signal consisting of samples (array) and a sample frequency (float).</p>
+<dl class="method">
+<dt id="acoustics.Signal.amplitude_envelope">
+<code class="descname">amplitude_envelope</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.amplitude_envelope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amplitude envelope.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Amplitude envelope of signal.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.amplitude_envelope" title="acoustics.signal.amplitude_envelope"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.amplitude_envelope()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.angle_spectrum">
+<code class="descname">angle_spectrum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.angle_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Phase angle spectrum. Wrapped.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; amount of bins.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.angle_spectrum" title="acoustics.signal.angle_spectrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.angle_spectrum()</span></code></a>, <a class="reference internal" href="signal.html#acoustics.signal.phase_spectrum" title="acoustics.signal.phase_spectrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.phase_spectrum()</span></code></a> and <a class="reference internal" href="#acoustics.Signal.phase_spectrum" title="acoustics.Signal.phase_spectrum"><code class="xref py py-meth docutils literal"><span class="pre">phase_spectrum()</span></code></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.bandpass">
+<code class="descname">bandpass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.bandpass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter signal with band-pass filter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lowcut</strong> &#8211; Lower cornerfrequency.</li>
+<li><strong>highcut</strong> &#8211; Upper cornerfrequency.</li>
+<li><strong>order</strong> &#8211; Filter order.</li>
+<li><strong>zero_phase</strong> &#8211; Prevent phase error by filtering in both directions (filtfilt).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Band-pass filtered signal.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.bandpass" title="acoustics.signal.bandpass"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.bandpass()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.bandpass_frequencies">
+<code class="descname">bandpass_frequencies</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.bandpass_frequencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply bandpass filters for frequencies.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>frequencies</strong> (Instance of <a class="reference internal" href="signal.html#acoustics.signal.Frequencies" title="acoustics.signal.Frequencies"><code class="xref py py-class docutils literal"><span class="pre">acoustics.signal.Frequencies</span></code></a>) &#8211; Band-pass filter frequencies.</li>
+<li><strong>order</strong> &#8211; Filter order.</li>
+<li><strong>purge</strong> &#8211; Discard bands of which the upper corner frequency is above the Nyquist frequency.</li>
+<li><strong>zero_phase</strong> &#8211; Prevent phase error by filtering in both directions (filtfilt).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Frequencies and band-pass filtered signal.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.bandpass_frequencies()</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.bandstop">
+<code class="descname">bandstop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.bandstop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter signal with band-stop filter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lowcut</strong> &#8211; Lower cornerfrequency.</li>
+<li><strong>highcut</strong> &#8211; Upper cornerfrequency.</li>
+<li><strong>order</strong> &#8211; Filter order.</li>
+<li><strong>zero_phase</strong> &#8211; Prevent phase error by filtering in both directions (filtfilt).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Band-pass filtered signal.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.bandstop()</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.calibrate_to">
+<code class="descname">calibrate_to</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.calibrate_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calibrate signal to value <cite>decibel</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>decibel</strong> &#8211; Value to calibrate to.</li>
+<li><strong>inplace</strong> &#8211; Whether to perform inplace or not.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Calibrated signal.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Values of <cite>decibel</cite> are broadcasted. To set a value per channel, use <cite>decibel[...,None]</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.calibrate_with">
+<code class="descname">calibrate_with</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.calibrate_with" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calibrate signal with other signal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>other</strong> &#8211; Other signal/array.</li>
+<li><strong>decibel</strong> &#8211; Signal level of <cite>other</cite>.</li>
+<li><strong>inplace</strong> &#8211; Whether to perform inplace or not.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">calibrated signal.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.Signal.channels">
+<code class="descname">channels</code><a class="headerlink" href="#acoustics.Signal.channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amount of channels.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.complex_cepstrum">
+<code class="descname">complex_cepstrum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.complex_cepstrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Complex cepstrum.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of bins.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Quefrency, complex cepstrum and delay in amount of samples.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="cepstrum.html#acoustics.cepstrum.complex_cepstrum" title="acoustics.cepstrum.complex_cepstrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.cepstrum.complex_cepstrum()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.correlate">
+<code class="descname">correlate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.correlate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Correlate signal with <cite>other</cite> signal. In case <cite>other==None</cite> this
+method returns the autocorrelation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>other</strong> &#8211; Other signal.</li>
+<li><strong>mode</strong> &#8211; Mode.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-func docutils literal"><span class="pre">np.correlate()</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.decimate">
+<code class="descname">decimate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.decimate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decimate signal by integer <cite>factor</cite>. Before downsampling a low-pass filter is applied.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>factor</strong> &#8211; Downsampling factor.</li>
+<li><strong>zero_phase</strong> &#8211; Prevent phase shift by filtering with <code class="docutils literal"><span class="pre">filtfilt</span></code> instead of <code class="docutils literal"><span class="pre">lfilter</span></code>.</li>
+<li><strong>ftype</strong> &#8211; Filter type.</li>
+<li><strong>order</strong> &#8211; Filter order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Decimated signal.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.decimate.html#scipy.signal.decimate" title="(in SciPy v0.17.0)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.decimate()</span></code></a></p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#acoustics.Signal.resample" title="acoustics.Signal.resample"><code class="xref py py-meth docutils literal"><span class="pre">resample()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.detrend">
+<code class="descname">detrend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.detrend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detrend signal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Detrended version of signal.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.detrend.html#scipy.signal.detrend" title="(in SciPy v0.17.0)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.detrend()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.Signal.duration">
+<code class="descname">duration</code><a class="headerlink" href="#acoustics.Signal.duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duration of signal in seconds.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.energy">
+<code class="descname">energy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Signal energy.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Total energy per channel.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></code></td>
+</tr>
+</tbody>
+</table>
+<div class="math">
+\[E = \sum_{n=0}^{N-1} |x_n|^2\]</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.fractional_octaves">
+<code class="descname">fractional_octaves</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.fractional_octaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply 1/N-octaves bandpass filters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>frequencies</strong> (Instance of <a class="reference internal" href="signal.html#acoustics.signal.Frequencies" title="acoustics.signal.Frequencies"><code class="xref py py-class docutils literal"><span class="pre">acoustics.signal.Frequencies</span></code></a>) &#8211; Band-pass filter frequencies.</li>
+<li><strong>fraction</strong> &#8211; Default band-designator of fractional-octaves.</li>
+<li><strong>order</strong> &#8211; Filter order.</li>
+<li><strong>purge</strong> &#8211; Discard bands of which the upper corner frequency is above the Nyquist frequency.</li>
+<li><strong>zero_phase</strong> &#8211; Prevent phase error by filtering in both directions (filtfilt).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Frequencies and band-pass filtered signal.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.bandpass_fractional_octaves()</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="acoustics.Signal.from_wav">
+<em class="property">classmethod </em><code class="descname">from_wav</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.from_wav" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance of <cite>Signal</cite> from a WAV file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> &#8211; Filename</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.gain">
+<code class="descname">gain</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.gain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply gain of <cite>decibel</cite> decibels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>decibel</strong> &#8211; Decibels</li>
+<li><strong>inplace</strong> &#8211; In place</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Amplified signal.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.highpass">
+<code class="descname">highpass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.highpass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter signal with high-pass filter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cutoff</strong> &#8211; Cornerfrequency.</li>
+<li><strong>order</strong> &#8211; Filter order.</li>
+<li><strong>zero_phase</strong> &#8211; Prevent phase error by filtering in both directions (filtfilt).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">High-pass filtered signal.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.highpass" title="acoustics.signal.highpass"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.highpass()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.instantaneous_frequency">
+<code class="descname">instantaneous_frequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.instantaneous_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantaneous frequency.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Instantaneous frequency of signal.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.instantaneous_frequency" title="acoustics.signal.instantaneous_frequency"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.instantaneous_frequency()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.instantaneous_phase">
+<code class="descname">instantaneous_phase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.instantaneous_phase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantaneous phase.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Instantaneous phase of signal.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.instantaneous_phase" title="acoustics.signal.instantaneous_phase"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.instantaneous_phase()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.leq">
+<code class="descname">leq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.leq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equivalent level. Single-value number.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="standards.html#acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level" title="acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level"><code class="xref py py-func docutils literal"><span class="pre">acoustics.standards.iso_tr_25417_2007.equivalent_sound_pressure_level()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.levels">
+<code class="descname">levels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.levels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate sound pressure level as function of time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>time</strong> &#8211; Averaging time or integration time constant. Default value is 0.125 corresponding to FAST.</li>
+<li><strong>method</strong> &#8211; Use time <cite>average</cite> or time <cite>weighting</cite>. Default option is <cite>average</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">sound pressure level as function of time.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="standards.html#acoustics.standards.iec_61672_1_2013.time_averaged_sound_level" title="acoustics.standards.iec_61672_1_2013.time_averaged_sound_level"><code class="xref py py-func docutils literal"><span class="pre">acoustics.standards.iec_61672_1_2013.time_averaged_sound_level()</span></code></a></p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="standards.html#acoustics.standards.iec_61672_1_2013.time_weighted_sound_level" title="acoustics.standards.iec_61672_1_2013.time_weighted_sound_level"><code class="xref py py-func docutils literal"><span class="pre">acoustics.standards.iec_61672_1_2013.time_weighted_sound_level()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.lowpass">
+<code class="descname">lowpass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.lowpass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter signal with low-pass filter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cutoff</strong> &#8211; Cornerfrequency.</li>
+<li><strong>order</strong> &#8211; Filter order.</li>
+<li><strong>zero_phase</strong> &#8211; Prevent phase error by filtering in both directions (filtfilt).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Low-pass filtered signal.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.lowpass" title="acoustics.signal.lowpass"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.lowpass()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.max">
+<code class="descname">max</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the minimum along a given axis.</p>
+<p>Refer to <cite>numpy.amax</cite> for full documentation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.max_level">
+<code class="descname">max_level</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.max_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum sound pressure level.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>axis</strong> &#8211; Axis.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="standards.html#acoustics.standards.iso_tr_25417_2007.max_sound_pressure_level" title="acoustics.standards.iso_tr_25417_2007.max_sound_pressure_level"><code class="xref py py-func docutils literal"><span class="pre">acoustics.standards.iso_tr_25417_2007.max_sound_pressure_level()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.min">
+<code class="descname">min</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the minimum along a given axis.</p>
+<p>Refer to <cite>numpy.amin</cite> for full documentation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.ms">
+<code class="descname">ms</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.ms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean value squared of signal.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><cite>acoustics.signal.ms</cite></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.normalize">
+<code class="descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize signal.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>gap</strong> &#8211; Gap between maximum value and ceiling in decibel.</li>
+<li><strong>inplace</strong> &#8211; Normalize signal in place.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The parameter <cite>gap</cite> can be understood as using <cite>gap</cite> decibels fewer for the dynamic range.
+By default a 6 decibel gap is used.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.octavepass">
+<code class="descname">octavepass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.octavepass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter signal with fractional-octave band-pass filter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>center</strong> &#8211; Center frequency. Any value in the band will suffice.</li>
+<li><strong>fraction</strong> &#8211; Band designator.</li>
+<li><strong>order</strong> &#8211; Filter order.</li>
+<li><strong>zero_phase</strong> &#8211; Prevent phase error by filtering in both directions (filtfilt).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Band-pass filtered signal.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.octavepass" title="acoustics.signal.octavepass"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.octavepass()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.octaves">
+<code class="descname">octaves</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.octaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply 1/1-octaves bandpass filters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>frequencies</strong> (<code class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></code> with (approximate) center-frequencies or an instance of <a class="reference internal" href="signal.html#acoustics.signal.Frequencies" title="acoustics.signal.Frequencies"><code class="xref py py-class docutils literal"><span class="pre">acoustics.signal.Frequencies</span></code></a>) &#8211; Band-pass filter frequencies.</li>
+<li><strong>order</strong> &#8211; Filter order.</li>
+<li><strong>purge</strong> &#8211; Discard bands of which the upper corner frequency is above the Nyquist frequency.</li>
+<li><strong>zero_phase</strong> &#8211; Prevent phase error by filtering in both directions (filtfilt).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Frequencies and band-pass filtered signal.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.bandpass_octaves()</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.peak">
+<code class="descname">peak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.peak" title="Permalink to this definition">¶</a></dt>
+<dd><p>Peak sound pressure.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>axis</strong> &#8211; Axis.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-func docutils literal"><span class="pre">acoustic.standards.iso_tr_25417_2007.peak_sound_pressure()</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.peak_level">
+<code class="descname">peak_level</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.peak_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Peak sound pressure level.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>axis</strong> &#8211; Axis.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="standards.html#acoustics.standards.iso_tr_25417_2007.peak_sound_pressure_level" title="acoustics.standards.iso_tr_25417_2007.peak_sound_pressure_level"><code class="xref py py-func docutils literal"><span class="pre">acoustics.standards.iso_tr_25417_2007.peak_sound_pressure_level()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.phase_spectrum">
+<code class="descname">phase_spectrum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.phase_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Phase spectrum. Unwrapped.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of bins.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.phase_spectrum" title="acoustics.signal.phase_spectrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.phase_spectrum()</span></code></a>, <a class="reference internal" href="signal.html#acoustics.signal.angle_spectrum" title="acoustics.signal.angle_spectrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.angle_spectrum()</span></code></a> and <a class="reference internal" href="#acoustics.Signal.angle_spectrum" title="acoustics.Signal.angle_spectrum"><code class="xref py py-meth docutils literal"><span class="pre">angle_spectrum()</span></code></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.pick">
+<code class="descname">pick</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.pick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get signal from start time to stop time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> (<em>float</em>) &#8211; Start time.</li>
+<li><strong>stop</strong> (<em>float</em>) &#8211; End time.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Selected part of the signal.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot signal as function of time. By default the entire signal is plotted.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; Name of file.</li>
+<li><strong>start</strong> (<em>Start time in seconds from start of signal.</em>) &#8211; First sample index.</li>
+<li><strong>stop</strong> (<em>Stop time in seconds. from stop of signal.</em>) &#8211; Last sample index.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.plot_angle_spectrum">
+<code class="descname">plot_angle_spectrum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.plot_angle_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot phase angle spectrum of signal. Wrapped.</p>
+<p>Valid kwargs:</p>
+<ul class="simple">
+<li>xscale</li>
+<li>yscale</li>
+<li>xlim</li>
+<li>ylim</li>
+<li>reference: Reference power</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.plot_complex_cepstrum">
+<code class="descname">plot_complex_cepstrum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.plot_complex_cepstrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot complex cepstrum of signal.</p>
+<p>Valid kwargs:</p>
+<ul class="simple">
+<li>xscale</li>
+<li>yscale</li>
+<li>xlim</li>
+<li>ylim</li>
+<li>frequency: Boolean indicating whether the x-axis should show time in seconds or quefrency</li>
+<li>xlabel_frequency: Label in case frequency is shown.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.plot_fractional_octaves">
+<code class="descname">plot_fractional_octaves</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.plot_fractional_octaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot fractional octaves.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.plot_levels">
+<code class="descname">plot_levels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.plot_levels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot sound pressure level as function of time.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#acoustics.Signal.levels" title="acoustics.Signal.levels"><code class="xref py py-meth docutils literal"><span class="pre">levels()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.plot_octaves">
+<code class="descname">plot_octaves</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.plot_octaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot octaves.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#acoustics.Signal.octaves" title="acoustics.Signal.octaves"><code class="xref py py-meth docutils literal"><span class="pre">octaves()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.plot_phase_spectrum">
+<code class="descname">plot_phase_spectrum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.plot_phase_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot phase spectrum of signal. Unwrapped.</p>
+<p>Valid kwargs:</p>
+<ul class="simple">
+<li>xscale</li>
+<li>yscale</li>
+<li>xlim</li>
+<li>ylim</li>
+<li>reference: Reference power</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.plot_power_spectrum">
+<code class="descname">plot_power_spectrum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.plot_power_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot spectrum of signal.</p>
+<p>Valid kwargs:</p>
+<ul class="simple">
+<li>xscale</li>
+<li>yscale</li>
+<li>xlim</li>
+<li>ylim</li>
+<li>reference: Reference power</li>
+</ul>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#acoustics.Signal.power_spectrum" title="acoustics.Signal.power_spectrum"><code class="xref py py-meth docutils literal"><span class="pre">power_spectrum()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.plot_real_cepstrum">
+<code class="descname">plot_real_cepstrum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.plot_real_cepstrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot real cepstrum of signal.</p>
+<p>Valid kwargs:</p>
+<ul class="simple">
+<li>xscale</li>
+<li>yscale</li>
+<li>xlim</li>
+<li>ylim</li>
+<li>frequency: Boolean indicating whether the x-axis should show time in seconds or quefrency</li>
+<li>xlabel_frequency: Label in case frequency is shown.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.plot_third_octaves">
+<code class="descname">plot_third_octaves</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.plot_third_octaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot 1/3-octaves.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#acoustics.Signal.third_octaves" title="acoustics.Signal.third_octaves"><code class="xref py py-meth docutils literal"><span class="pre">third_octaves()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.power">
+<code class="descname">power</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Signal power.</p>
+<div class="math">
+\[P = \frac{1}{N} \sum_{n=0}^{N-1} |x_n|^2\]</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.power_spectrum">
+<code class="descname">power_spectrum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.power_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power spectrum.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of bins.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="signal.html#acoustics.signal.power_spectrum" title="acoustics.signal.power_spectrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.power_spectrum()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.real_cepstrum">
+<code class="descname">real_cepstrum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.real_cepstrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Real cepstrum.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>N</strong> &#8211; Amount of bins.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Quefrency and real cepstrum.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="cepstrum.html#acoustics.cepstrum.real_cepstrum" title="acoustics.cepstrum.real_cepstrum"><code class="xref py py-func docutils literal"><span class="pre">acoustics.cepstrum.real_cepstrum()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.resample">
+<code class="descname">resample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.resample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resample signal.</p>
+<p>:param samples:: New amount of samples.
+:param times: Times corresponding to samples.
+:param axis: Axis.
+:param window: Window.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.resample.html#scipy.signal.resample" title="(in SciPy v0.17.0)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.resample()</span></code></a></p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#acoustics.Signal.decimate" title="acoustics.Signal.decimate"><code class="xref py py-meth docutils literal"><span class="pre">decimate()</span></code></a></p>
+</div>
+<p>You might want to low-pass filter this signal before resampling.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.rms">
+<code class="descname">rms</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.rms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Root mean squared of signal.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><cite>acoustics.signal.rms</cite></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.Signal.samples">
+<code class="descname">samples</code><a class="headerlink" href="#acoustics.Signal.samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amount of samples in signal.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.sound_exposure">
+<code class="descname">sound_exposure</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.sound_exposure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sound exposure.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>axis</strong> &#8211; Axis.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="standards.html#acoustics.standards.iso_tr_25417_2007.sound_exposure" title="acoustics.standards.iso_tr_25417_2007.sound_exposure"><code class="xref py py-func docutils literal"><span class="pre">acoustics.standards.iso_tr_25417_2007.sound_exposure()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.sound_exposure_level">
+<code class="descname">sound_exposure_level</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.sound_exposure_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sound exposure level.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>axis</strong> &#8211; Axis.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="standards.html#acoustics.standards.iso_tr_25417_2007.sound_exposure_level" title="acoustics.standards.iso_tr_25417_2007.sound_exposure_level"><code class="xref py py-func docutils literal"><span class="pre">acoustics.standards.iso_tr_25417_2007.sound_exposure_level()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.spectrogram">
+<code class="descname">spectrogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.spectrogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot spectrogram of the signal.</p>
+<p>Valid kwargs:</p>
+<ul class="simple">
+<li>xlim</li>
+<li>ylim</li>
+<li>clim</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method only works for a single channel.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.third_octaves">
+<code class="descname">third_octaves</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.third_octaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply 1/3-octaves bandpass filters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>frequencies</strong> (<code class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></code> with (approximate) center-frequencies or an instance of <a class="reference internal" href="signal.html#acoustics.signal.Frequencies" title="acoustics.signal.Frequencies"><code class="xref py py-class docutils literal"><span class="pre">acoustics.signal.Frequencies</span></code></a>) &#8211; Band-pass filter frequencies.</li>
+<li><strong>order</strong> &#8211; Filter order.</li>
+<li><strong>purge</strong> &#8211; Discard bands of which the upper corner frequency is above the Nyquist frequency.</li>
+<li><strong>zero_phase</strong> &#8211; Prevent phase error by filtering in both directions (filtfilt).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Frequencies and band-pass filtered signal.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-func docutils literal"><span class="pre">acoustics.signal.bandpass_third_octaves()</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.times">
+<code class="descname">times</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.times" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time vector.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A vector with a timestamp for each sample.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.to_wav">
+<code class="descname">to_wav</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.to_wav" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save signal as WAV file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> &#8211; Name of file to save to.</li>
+<li><strong>depth</strong> &#8211; If given, convert to integer with specified depth. Else, try to store using the original data type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>By default, this function saves a normalized 16-bit version of the signal with at least 6 dB range till clipping occurs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.unwrap">
+<code class="descname">unwrap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.unwrap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unwrap signal in case the signal represents wrapped phase.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Unwrapped signal.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-func docutils literal"><span class="pre">np.unwrap()</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.upsample">
+<code class="descname">upsample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.upsample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upsample signal with integer factor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>factor</strong> &#8211; Upsample factor.</li>
+<li><strong>axis</strong> &#8211; Axis.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#acoustics.Signal.resample" title="acoustics.Signal.resample"><code class="xref py py-meth docutils literal"><span class="pre">resample()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="acoustics.Signal.values">
+<code class="descname">values</code><a class="headerlink" href="#acoustics.Signal.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the values of this signal as an instance of <code class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.Signal.weigh">
+<code class="descname">weigh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#acoustics.Signal.weigh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply frequency-weighting. By default &#8216;A&#8217;-weighting is applied.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>weighting</strong> &#8211; Frequency-weighting filter to apply. Valid options are &#8216;A&#8217;, &#8216;C&#8217; and &#8216;Z&#8217;.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A-weighted signal.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#acoustics.Signal" title="acoustics.Signal"><code class="xref py py-class docutils literal"><span class="pre">Signal</span></code></a>.</td>
+</tr>
+</tbody>
+</table>
+<p>By default the weighting filter is applied using <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.lfilter.html#scipy.signal.lfilter" title="(in SciPy v0.17.0)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.lfilter()</span></code></a> causing a frequency-dependent delay.
+In case a delay is undesired, the filter can applied using <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v0.17.0)"><code class="xref py py-func docutils literal"><span class="pre">scipy.signal.filtfilt()</span></code></a> by settings <cite>zero_phase=True</cite>.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
@@ -84,6 +1212,7 @@ values are according to the respective standard.</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">API Reference</a><ul>
+<li><a class="reference internal" href="#acoustics">Acoustics</a></li>
 <li><a class="reference internal" href="#modules">Modules</a></li>
 <li><a class="reference internal" href="#standards">Standards</a></li>
 <li><a class="reference internal" href="#signal-class">Signal class</a></li>
@@ -96,7 +1225,7 @@ values are according to the respective standard.</p>
                         title="previous chapter">Welcome to the documentation of the acoustics module!</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="ambisonics.html"
-                        title="next chapter">&lt;no title&gt;</a></p>
+                        title="next chapter">Ambisonics</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -128,7 +1257,10 @@ values are according to the respective standard.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="ambisonics.html" title="&lt;no title&gt;"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ambisonics.html" title="Ambisonics"
              >next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Welcome to the documentation of the acoustics module!"
@@ -138,7 +1270,7 @@ values are according to the respective standard.</p>
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

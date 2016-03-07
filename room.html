@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>&lt;no title&gt; &mdash; acoustics 0.0 documentation</title>
+    <title>Room &mdash; acoustics 0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,8 +26,8 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
     <link rel="up" title="API Reference" href="reference.html" />
-    <link rel="next" title="&lt;no title&gt;" href="signal.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="reflection.html" /> 
+    <link rel="next" title="Signal" href="signal.html" />
+    <link rel="prev" title="Reflection" href="reflection.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -37,10 +37,13 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="signal.html" title="&lt;no title&gt;"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="signal.html" title="Signal"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="reflection.html" title="&lt;no title&gt;"
+          <a href="reflection.html" title="Reflection"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &raquo;</li> 
@@ -52,7 +55,256 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  
+  <span class="target" id="module-acoustics.room"></span><div class="section" id="room">
+<h1>Room<a class="headerlink" href="#room" title="Permalink to this headline">¶</a></h1>
+<p>The room acoustics module contains several functions to calculate the reverberation time in spaces.</p>
+<dl class="function">
+<dt id="acoustics.room.c50_from_file">
+<code class="descclassname">acoustics.room.</code><code class="descname">c50_from_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>bands=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/room.html#c50_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.c50_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clarity for 50 miliseconds <span class="math">\(C_{50}\)</span> from a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> (<code class="xref py py-class docutils literal"><span class="pre">str</span></code>) &#8211; File name (only WAV is supported).</li>
+<li><strong>bands</strong> (<code class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></code>) &#8211; Bands of calculation (optional). Only support standard octave and third-octave bands.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.room.c80_from_file">
+<code class="descclassname">acoustics.room.</code><code class="descname">c80_from_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>bands=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/room.html#c80_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.c80_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clarity for 80 miliseconds <span class="math">\(C_{80}\)</span> from a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> (<code class="xref py py-class docutils literal"><span class="pre">str</span></code>) &#8211; File name (only WAV is supported).</li>
+<li><strong>bands</strong> (<code class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></code>) &#8211; Bands of calculation (optional). Only support standard octave and third-octave bands.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.room.clarity">
+<code class="descclassname">acoustics.room.</code><code class="descname">clarity</code><span class="sig-paren">(</span><em>time</em>, <em>signal</em>, <em>fs</em>, <em>bands=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/room.html#clarity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.clarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clarity <span class="math">\(C_i\)</span> determined from an impulse response.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time</strong> &#8211; Time in miliseconds (e.g.: 50, 80).</li>
+<li><strong>signal</strong> (<code class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></code>) &#8211; Impulse response.</li>
+<li><strong>fs</strong> &#8211; Sample frequency.</li>
+<li><strong>bands</strong> (<code class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></code>) &#8211; Bands of calculation (optional). Only support standard octave and third-octave bands.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.room.mean_alpha">
+<code class="descclassname">acoustics.room.</code><code class="descname">mean_alpha</code><span class="sig-paren">(</span><em>alphas</em>, <em>surfaces</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/room.html#mean_alpha"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.mean_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate mean of absorption coefficients.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>alphas</strong> &#8211; Absorption coefficients <span class="math">\(\alpha\)</span>.</li>
+<li><strong>surfaces</strong> &#8211; Surfaces <span class="math">\(S\)</span>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.room.nrc">
+<code class="descclassname">acoustics.room.</code><code class="descname">nrc</code><span class="sig-paren">(</span><em>alphas</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/room.html#nrc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.nrc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate Noise Reduction Coefficient (NRC) from four absorption
+coefficient values (250, 500, 1000 and 2000 Hz).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>alphas</strong> &#8211; Absorption coefficients <span class="math">\(\alpha\)</span>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.room.t60_arau">
+<code class="descclassname">acoustics.room.</code><code class="descname">t60_arau</code><span class="sig-paren">(</span><em>Sx</em>, <em>Sy</em>, <em>Sz</em>, <em>alpha</em>, <em>volume</em>, <em>c=343.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/room.html#t60_arau"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.t60_arau" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverberation time according to Arau. <a class="footnote-reference" href="#arau" id="id1">[1]</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Sx</strong> &#8211; Total surface perpendicular to x-axis (yz-plane) <span class="math">\(S_{x}\)</span>.</li>
+<li><strong>Sy</strong> &#8211; Total surface perpendicular to y-axis (xz-plane) <span class="math">\(S_{y}\)</span>.</li>
+<li><strong>Sz</strong> &#8211; Total surface perpendicular to z-axis (xy-plane) <span class="math">\(S_{z}\)</span>.</li>
+<li><strong>alpha</strong> &#8211; Absorption coefficients <span class="math">\(\mathbf{\alpha} = \left[ \alpha_x, \alpha_y, \alpha_z \right]\)</span></li>
+<li><strong>volume</strong> &#8211; Volume of the room <span class="math">\(V\)</span>.</li>
+<li><strong>c</strong> &#8211; Speed of sound <span class="math">\(c\)</span>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reverberation time <span class="math">\(T_{60}\)</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="arau" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>For more details, please see
+<a class="reference external" href="http://www.arauacustica.com/files/publicaciones/pdf_esp_7.pdf">http://www.arauacustica.com/files/publicaciones/pdf_esp_7.pdf</a></td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.room.t60_eyring">
+<code class="descclassname">acoustics.room.</code><code class="descname">t60_eyring</code><span class="sig-paren">(</span><em>surfaces</em>, <em>alpha</em>, <em>volume</em>, <em>c=343.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/room.html#t60_eyring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.t60_eyring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverberation time according to Eyring.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>surfaces</strong> &#8211; Surfaces <span class="math">\(S\)</span>.</li>
+<li><strong>alpha</strong> &#8211; Mean absorption coefficient <span class="math">\(\alpha\)</span> or by frequency bands</li>
+<li><strong>volume</strong> &#8211; Volume of the room <span class="math">\(V\)</span>.</li>
+<li><strong>c</strong> &#8211; Speed of sound <span class="math">\(c\)</span>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reverberation time <span class="math">\(T_{60}\)</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Eyring&#8217;s formula for the reverberation time is:</p>
+<div class="math">
+\[T_{60} = \frac{24 \ln{10} V}{c \left( 4 mV - S \ln{\left( 1 - \alpha \right)} \right)}\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.room.t60_fitzroy">
+<code class="descclassname">acoustics.room.</code><code class="descname">t60_fitzroy</code><span class="sig-paren">(</span><em>surfaces</em>, <em>alpha</em>, <em>volume</em>, <em>c=343.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/room.html#t60_fitzroy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.t60_fitzroy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverberation time according to Fitzroy.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>surfaces</strong> &#8211; Surfaces <span class="math">\(S\)</span>.</li>
+<li><strong>alpha</strong> &#8211; Mean absorption coefficient <span class="math">\(\alpha\)</span> or by frequency bands</li>
+<li><strong>volume</strong> &#8211; Volume of the room <span class="math">\(V\)</span>.</li>
+<li><strong>c</strong> &#8211; Speed of sound <span class="math">\(c\)</span>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reverberation time <span class="math">\(T_{60}\)</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.room.t60_impulse">
+<code class="descclassname">acoustics.room.</code><code class="descname">t60_impulse</code><span class="sig-paren">(</span><em>file_name</em>, <em>bands</em>, <em>rt='t30'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/room.html#t60_impulse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.t60_impulse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverberation time from a WAV impulse response.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_name</strong> &#8211; name of the WAV file containing the impulse response.</li>
+<li><strong>bands</strong> &#8211; Octave or third bands as NumPy array.</li>
+<li><strong>rt</strong> &#8211; Reverberation time estimator. It accepts <cite>&#8216;t30&#8217;</cite>, <cite>&#8216;t20&#8217;</cite>, <cite>&#8216;t10&#8217;</cite> and <cite>&#8216;edt&#8217;</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reverberation time <span class="math">\(T_{60}\)</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.room.t60_millington">
+<code class="descclassname">acoustics.room.</code><code class="descname">t60_millington</code><span class="sig-paren">(</span><em>surfaces</em>, <em>alpha</em>, <em>volume</em>, <em>c=343.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/room.html#t60_millington"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.t60_millington" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverberation time according to Millington.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>surfaces</strong> &#8211; Surfaces <span class="math">\(S\)</span>.</li>
+<li><strong>alpha</strong> &#8211; Mean absorption coefficient <span class="math">\(\alpha\)</span> or by frequency bands</li>
+<li><strong>volume</strong> &#8211; Volume of the room <span class="math">\(V\)</span>.</li>
+<li><strong>c</strong> &#8211; Speed of sound <span class="math">\(c\)</span>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reverberation time <span class="math">\(T_{60}\)</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.room.t60_sabine">
+<code class="descclassname">acoustics.room.</code><code class="descname">t60_sabine</code><span class="sig-paren">(</span><em>surfaces</em>, <em>alpha</em>, <em>volume</em>, <em>c=343.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/room.html#t60_sabine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.room.t60_sabine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverberation time according to Sabine.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>surfaces</strong> (<code class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></code>) &#8211; Surface of the room <span class="math">\(S\)</span>. 
+NumPy array that contains different surfaces.</li>
+<li><strong>alpha</strong> (<code class="xref py py-class docutils literal"><span class="pre">np.ndarray</span></code>) &#8211; Absorption coefficient of the room <span class="math">\(\alpha\)</span>.
+Contains absorption coefficients of <code class="docutils literal"><span class="pre">surfaces</span></code>.
+It could be one value or some values in different bands (1D and 2D
+array, respectively).</li>
+<li><strong>volume</strong> (<code class="xref py py-class docutils literal"><span class="pre">float</span></code>) &#8211; Volume of the room <span class="math">\(V\)</span>.</li>
+<li><strong>c</strong> (<code class="xref py py-class docutils literal"><span class="pre">float</span></code>) &#8211; Speed of sound <span class="math">\(c\)</span>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reverberation time <span class="math">\(T_{60}\)</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Sabine&#8217;s formula for the reverberation time is:</p>
+<div class="math">
+\[T_{60} = \frac{24 \ln(10)}{c} \frac{V}{S\alpha}\]</div>
+</dd></dl>
+
+</div>
+
 
           </div>
         </div>
@@ -61,10 +313,10 @@
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="reflection.html"
-                        title="previous chapter">&lt;no title&gt;</a></p>
+                        title="previous chapter">Reflection</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="signal.html"
-                        title="next chapter">&lt;no title&gt;</a></p>
+                        title="next chapter">Signal</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -96,10 +348,13 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="signal.html" title="&lt;no title&gt;"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="signal.html" title="Signal"
              >next</a> |</li>
         <li class="right" >
-          <a href="reflection.html" title="&lt;no title&gt;"
+          <a href="reflection.html" title="Reflection"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &raquo;</li> 
@@ -107,7 +362,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

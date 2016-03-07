@@ -33,6 +33,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -42,7 +45,196 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  
+  <span class="target" id="module-acoustics.cepstrum"></span><p>Cepstrum.</p>
+<dl class="function">
+<dt id="acoustics.cepstrum.complex_cepstrum">
+<code class="descclassname">acoustics.cepstrum.</code><code class="descname">complex_cepstrum</code><span class="sig-paren">(</span><em>x</em>, <em>n=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/cepstrum.html#complex_cepstrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.cepstrum.complex_cepstrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the complex cepstrum of a real sequence.</p>
+<dl class="docutils">
+<dt>x <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Real sequence to compute complex cepstrum of.</dd>
+<dt>n <span class="classifier-delimiter">:</span> <span class="classifier">{None, int}, optional</span></dt>
+<dd>Length of the Fourier transform.</dd>
+</dl>
+<dl class="docutils">
+<dt>ceps <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>The complex cepstrum of the real data sequence <cite>x</cite> computed using the 
+Fourier transform.</dd>
+<dt>ndelay <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>The amount of samples of circular delay added to <cite>x</cite>.</dd>
+</dl>
+<p>The complex cepstrum is given by</p>
+<div class="math">
+\[c[n] = F^{-1}\left{\log_{10}{\left(F{x[n]}\right)}\right}\]</div>
+<p>where <span class="math">\(x_[n]\)</span> is the input signal and <span class="math">\(F\)</span> and :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>F_{-1} 
+are respectively the forward and backward Fourier transform.</p>
+<p>real_cepstrum: Compute the real cepstrum.
+inverse_complex_cepstrum: Compute the inverse complex cepstrum of a real sequence.</p>
+<p>In the following example we use the cepstrum to determine the fundamental 
+frequency of a set of harmonics. There is a distinct peak at the quefrency 
+corresponding to the fundamental frequency. To be more precise, the peak 
+corresponds to the spacing between the harmonics.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">complex_cepstrum</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">duration</span> <span class="o">=</span> <span class="mf">5.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fs</span> <span class="o">=</span> <span class="mf">8000.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fs</span><span class="o">*</span><span class="n">duration</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">/</span> <span class="n">fs</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fundamental</span> <span class="o">=</span> <span class="mf">100.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">harmonics</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span> <span class="o">*</span> <span class="n">fundamental</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">harmonics</span><span class="p">[:,</span><span class="bp">None</span><span class="p">]</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ceps</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">complex_cepstrum</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax0</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax0</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;time in seconds&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax0</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">ceps</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;quefrency in seconds&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.015</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="o">+</span><span class="mf">10.</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>Wikipedia, &#8220;Cepstrum&#8221;.
+<a class="reference external" href="http://en.wikipedia.org/wiki/Cepstrum">http://en.wikipedia.org/wiki/Cepstrum</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td>M.P. Norton and D.G. Karczub, D.G., 
+&#8220;Fundamentals of Noise and Vibration Analysis for Engineers&#8221;, 2003.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td>B. P. Bogert, M. J. R. Healy, and J. W. Tukey: 
+&#8220;The Quefrency Alanysis of Time Series for Echoes: Cepstrum, Pseudo 
+Autocovariance, Cross-Cepstrum and Saphe Cracking&#8221;. 
+Proceedings of the Symposium on Time Series Analysis
+Chapter 15, 209-243. New York: Wiley, 1963.</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.cepstrum.real_cepstrum">
+<code class="descclassname">acoustics.cepstrum.</code><code class="descname">real_cepstrum</code><span class="sig-paren">(</span><em>x</em>, <em>n=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/cepstrum.html#real_cepstrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.cepstrum.real_cepstrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the real cepstrum of a real sequence.</p>
+<dl class="docutils">
+<dt>x <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Real sequence to compute real cepstrum of.</dd>
+<dt>n <span class="classifier-delimiter">:</span> <span class="classifier">{None, int}, optional</span></dt>
+<dd>Length of the Fourier transform.</dd>
+</dl>
+<dl class="docutils">
+<dt>ceps: ndarray</dt>
+<dd>The real cepstrum.</dd>
+</dl>
+<p>The real cepstrum is given by</p>
+<div class="math">
+\[c[n] = F^{-1}\left{\log_{10}{\left|F{x[n]}\right|}\right}\]</div>
+<p>where <span class="math">\(x_[n]\)</span> is the input signal and <span class="math">\(F\)</span> and :math:<a href="#id6"><span class="problematic" id="id7">`</span></a>F_{-1} 
+are respectively the forward and backward Fourier transform. Note that 
+contrary to the complex cepstrum the magnitude is taken of the spectrum.</p>
+<p>complex_cepstrum: Compute the complex cepstrum of a real sequence.
+inverse_complex_cepstrum: Compute the inverse complex cepstrum of a real sequence.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">real_cepstrum</span>
+</pre></div>
+</div>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>Wikipedia, &#8220;Cepstrum&#8221;.
+<a class="reference external" href="http://en.wikipedia.org/wiki/Cepstrum">http://en.wikipedia.org/wiki/Cepstrum</a></td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.cepstrum.inverse_complex_cepstrum">
+<code class="descclassname">acoustics.cepstrum.</code><code class="descname">inverse_complex_cepstrum</code><span class="sig-paren">(</span><em>ceps</em>, <em>ndelay</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/cepstrum.html#inverse_complex_cepstrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.cepstrum.inverse_complex_cepstrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the inverse complex cepstrum of a real sequence.</p>
+<dl class="docutils">
+<dt>ceps <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Real sequence to compute inverse complex cepstrum of.</dd>
+<dt>ndelay: int</dt>
+<dd>The amount of samples of circular delay added to <cite>x</cite>.</dd>
+</dl>
+<dl class="docutils">
+<dt>x <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>The inverse complex cepstrum of the real sequence <cite>ceps</cite>.</dd>
+</dl>
+<p>The inverse complex cepstrum is given by</p>
+<div class="math">
+\[x[n] = F^{-1}\left{\exp(F(c[n]))\right}\]</div>
+<p>where <span class="math">\(c_[n]\)</span> is the input signal and <span class="math">\(F\)</span> and :math:<a href="#id9"><span class="problematic" id="id10">`</span></a>F_{-1} 
+are respectively the forward and backward Fourier transform.</p>
+<p>complex_cepstrum: Compute the complex cepstrum of a real sequence.
+real_cepstrum: Compute the real cepstrum of a real sequence.</p>
+<p>Taking the complex cepstrum and then the inverse complex cepstrum results 
+in the original sequence.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">inverse_complex_cepstrum</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ceps</span><span class="p">,</span> <span class="n">ndelay</span> <span class="o">=</span> <span class="n">complex_cepstrum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">inverse_complex_cepstrum</span><span class="p">(</span><span class="n">ceps</span><span class="p">,</span> <span class="n">ndelay</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils footnote" frame="void" id="id11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>Wikipedia, &#8220;Cepstrum&#8221;.
+<a class="reference external" href="http://en.wikipedia.org/wiki/Cepstrum">http://en.wikipedia.org/wiki/Cepstrum</a></td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.cepstrum.minimum_phase">
+<code class="descclassname">acoustics.cepstrum.</code><code class="descname">minimum_phase</code><span class="sig-paren">(</span><em>x</em>, <em>n=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/cepstrum.html#minimum_phase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.cepstrum.minimum_phase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the minimum phase reconstruction of a real sequence.</p>
+<dl class="docutils">
+<dt>x <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Real sequence to compute the minimum phase reconstruction of.</dd>
+<dt>n <span class="classifier-delimiter">:</span> <span class="classifier">{None, int}, optional</span></dt>
+<dd>Length of the Fourier transform.</dd>
+</dl>
+<p>Compute the minimum phase reconstruction of a real sequence using the 
+real cepstrum.</p>
+<dl class="docutils">
+<dt>m <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>The minimum phase reconstruction of the real sequence <cite>x</cite>.</dd>
+</dl>
+<p>real_cepstrum: Compute the real cepstrum.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">minimum_phase</span>
+</pre></div>
+</div>
+<table class="docutils footnote" frame="void" id="id12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td>Soo-Chang Pei, Huei-Shan Lin. Minimum-Phase FIR Filter Design Using 
+Real Cepstrum. IEEE TRANSACTIONS ON CIRCUITS AND SYSTEMS-II: 
+EXPRESS BRIEFS, VOL. 53, NO. 10, OCTOBER 2006</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+
 
           </div>
         </div>
@@ -79,12 +271,15 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

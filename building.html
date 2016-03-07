@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>&lt;no title&gt; &mdash; acoustics 0.0 documentation</title>
+    <title>Building &mdash; acoustics 0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -27,7 +27,7 @@
     <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
     <link rel="up" title="API Reference" href="reference.html" />
     <link rel="next" title="Criterion" href="criterion.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="bands.html" /> 
+    <link rel="prev" title="Bands" href="bands.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -37,10 +37,13 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="criterion.html" title="Criterion"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="bands.html" title="&lt;no title&gt;"
+          <a href="bands.html" title="Bands"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &raquo;</li> 
@@ -52,7 +55,123 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  
+  <span class="target" id="module-acoustics.building"></span><div class="section" id="building">
+<h1>Building<a class="headerlink" href="#building" title="Permalink to this headline">¶</a></h1>
+<p>The building module contains functions related to building acoustics.</p>
+<dl class="function">
+<dt id="acoustics.building.rw_curve">
+<code class="descclassname">acoustics.building.</code><code class="descname">rw_curve</code><span class="sig-paren">(</span><em>tl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/building.html#rw_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.rw_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the curve of <span class="math">\(Rw\)</span> from a NumPy array <cite>tl</cite> with third
+octave data between 100 Hz and 3.15 kHz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tl</strong> &#8211; Transmission Loss</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.building.rw">
+<code class="descclassname">acoustics.building.</code><code class="descname">rw</code><span class="sig-paren">(</span><em>tl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/building.html#rw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.rw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate <span class="math">\(R_W\)</span> from a NumPy array <cite>tl</cite> with third octave data
+between 100 Hz and 3.15 kHz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tl</strong> &#8211; Transmission Loss</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.building.rw_c">
+<code class="descclassname">acoustics.building.</code><code class="descname">rw_c</code><span class="sig-paren">(</span><em>tl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/building.html#rw_c"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.rw_c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate <span class="math">\(R_W + C\)</span> from a NumPy array <cite>tl</cite> with third octave data
+between 100 Hz and 3.15 kHz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tl</strong> &#8211; Transmission Loss</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.building.rw_ctr">
+<code class="descclassname">acoustics.building.</code><code class="descname">rw_ctr</code><span class="sig-paren">(</span><em>tl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/building.html#rw_ctr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.rw_ctr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate <span class="math">\(R_W + C_{tr}\)</span> from a NumPy array <cite>tl</cite> with third octave
+data between 100 Hz and 3.15 kHz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tl</strong> &#8211; Transmission Loss</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.building.stc_curve">
+<code class="descclassname">acoustics.building.</code><code class="descname">stc_curve</code><span class="sig-paren">(</span><em>tl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/building.html#stc_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.stc_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Sound Transmission Class (STC) curve from a NumPy array <cite>tl</cite>
+with third octave data between 125 Hz and 4 kHz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tl</strong> &#8211; Transmission Loss</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.building.stc">
+<code class="descclassname">acoustics.building.</code><code class="descname">stc</code><span class="sig-paren">(</span><em>tl</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/building.html#stc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.stc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Sound Transmission Class (STC) from a NumPy array <cite>tl</cite> with
+third octave data between 125 Hz and 4 kHz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tl</strong> &#8211; Transmission Loss</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.building.mass_law">
+<code class="descclassname">acoustics.building.</code><code class="descname">mass_law</code><span class="sig-paren">(</span><em>freq</em>, <em>vol_density</em>, <em>thickness</em>, <em>theta=0</em>, <em>c=343</em>, <em>rho0=1.225</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/building.html#mass_law"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.building.mass_law" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate transmission loss according to mass law.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>freq</strong> (<cite>float</cite> or <cite>NumPy array</cite>) &#8211; Frequency of interest in Hz.</li>
+<li><strong>vol_density</strong> (<cite>float</cite>) &#8211; Volumetric density of material in [kg/m^3].</li>
+<li><strong>thickness</strong> (<cite>float</cite>) &#8211; Thickness of wall.</li>
+<li><strong>theta</strong> (<cite>float</cite>) &#8211; Angle of incidence in degrees. Default value is <cite>0</cite> (normal incidence).</li>
+<li><strong>c</strong> (<cite>float</cite>) &#8211; Speed of sound in [m/s].</li>
+<li><strong>rho0</strong> (<cite>float</cite>) &#8211; Density of air in kg/m^3.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
 
           </div>
         </div>
@@ -61,7 +180,7 @@
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="bands.html"
-                        title="previous chapter">&lt;no title&gt;</a></p>
+                        title="previous chapter">Bands</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="criterion.html"
                         title="next chapter">Criterion</a></p>
@@ -96,10 +215,13 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="criterion.html" title="Criterion"
              >next</a> |</li>
         <li class="right" >
-          <a href="bands.html" title="&lt;no title&gt;"
+          <a href="bands.html" title="Bands"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &raquo;</li> 
@@ -107,7 +229,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

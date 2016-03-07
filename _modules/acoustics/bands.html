@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>acoustics.bands &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for acoustics.bands</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Bands</span>
+<span class="sd">=====</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="c1">#from acoustics.decibel import dbsum</span>
+<span class="kn">import</span> <span class="nn">acoustics</span>
+<span class="kn">from</span> <span class="nn">acoustics.standards.iec_61672_1_2013</span> <span class="kn">import</span> <span class="n">NOMINAL_OCTAVE_CENTER_FREQUENCIES</span> <span class="k">as</span> <span class="n">OCTAVE_CENTER_FREQUENCIES</span>
+<span class="kn">from</span> <span class="nn">acoustics.standards.iec_61672_1_2013</span> <span class="kn">import</span> <span class="n">NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES</span> <span class="k">as</span> <span class="n">THIRD_OCTAVE_CENTER_FREQUENCIES</span>
+
+<div class="viewcode-block" id="octave"><a class="viewcode-back" href="../../bands.html#acoustics.bands.octave">[docs]</a><span class="k">def</span> <span class="nf">octave</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a Numpy array for central frequencies of octave bands.</span>
+
+<span class="sd">    There are more information on how to calculate &#39;real&#39; bands in</span>
+<span class="sd">    http://blog.prosig.com/2006/02/17/standard-octave-bands/</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    first : scalar</span>
+<span class="sd">        First octave centerfrequency.</span>
+
+<span class="sd">    last : scalar</span>
+<span class="sd">        Last octave centerfrequency.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    octave_bands : array</span>
+<span class="sd">        An array of centerfrequency octave bands.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#octave_bands = OCTAVE_CENTER_FREQUENCIES</span>
+    <span class="c1">#low = np.where(octave_bands == first)[0]</span>
+    <span class="c1">#high = np.where(octave_bands == last)[0]</span>
+    <span class="c1">#return octave_bands[low: high+1]</span>
+    <span class="k">return</span> <span class="n">acoustics</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">OctaveBand</span><span class="p">(</span><span class="n">fstart</span><span class="o">=</span><span class="n">first</span><span class="p">,</span> <span class="n">fstop</span><span class="o">=</span><span class="n">last</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">nominal</span></div>
+
+
+<span class="k">def</span> <span class="nf">octave_low</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">octave</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="c1">#return acoustics.signal.OctaveBand(fstart=first, fstop=last, fraction=1).lower</span>
+
+
+<span class="k">def</span> <span class="nf">octave_high</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">octave</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="c1">#return acoustics.signal.OctaveBand(fstart=first, fstop=last, fraction=1).upper</span>
+
+
+<div class="viewcode-block" id="third"><a class="viewcode-back" href="../../bands.html#acoustics.bands.third">[docs]</a><span class="k">def</span> <span class="nf">third</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a Numpy array for central frequencies of third octave bands.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    first : scalar</span>
+<span class="sd">       First third octave centerfrequency.</span>
+
+<span class="sd">    last : scalar</span>
+<span class="sd">        Last third octave centerfrequency.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    octave_bands : array</span>
+<span class="sd">        An array of centerfrequency third octave bands.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#third_oct_bands = THIRD_OCTAVE_CENTER_FREQUENCIES</span>
+    <span class="c1">#low = np.where(third_oct_bands == first)[0]</span>
+    <span class="c1">#high = np.where(third_oct_bands == last)[0]</span>
+    <span class="c1">#return third_oct_bands[low: high+1]</span>
+    <span class="k">return</span> <span class="n">acoustics</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">OctaveBand</span><span class="p">(</span><span class="n">fstart</span><span class="o">=</span><span class="n">first</span><span class="p">,</span> <span class="n">fstop</span><span class="o">=</span><span class="n">last</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">nominal</span></div>
+
+
+<span class="k">def</span> <span class="nf">third_low</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">third</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span><span class="o">/</span><span class="mf">2.0</span><span class="o">**</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">)</span>
+    <span class="c1">#return acoustics.signal.OctaveBand(fstart=first, fstop=last, fraction=3).lower</span>
+
+
+<span class="k">def</span> <span class="nf">third_high</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">third</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span><span class="o">*</span><span class="mf">2.0</span><span class="o">**</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">)</span>
+    <span class="c1">#return Octaveband(fstart=first, fstop=last, fraction=3).upper</span>
+
+    
+<div class="viewcode-block" id="third2oct"><a class="viewcode-back" href="../../bands.html#acoustics.bands.third2oct">[docs]</a><span class="k">def</span> <span class="nf">third2oct</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate Octave levels from third octave levels.</span>
+<span class="sd">    </span>
+<span class="sd">    :param levels: Array containing third octave levels.</span>
+<span class="sd">    :type: :class:`np.ndarray`</span>
+<span class="sd">    :param axis: Axis over which to perform the summation. </span>
+<span class="sd">    :type axis: :class:`int`</span>
+<span class="sd">    </span>
+<span class="sd">    :returns: Third octave levels</span>
+<span class="sd">    :rtype: :class:`np.ndarray`</span>
+<span class="sd">    </span>
+<span class="sd">    .. note:: The number of elements along the summation axis should be a factor of 3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span> <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">levels</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">levels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span><span class="o">%</span><span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>    
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Wrong shape.&quot;</span><span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">levels</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">//</span> <span class="mi">3</span>
+    <span class="n">shape</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">axis</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">acoustics</span><span class="o">.</span><span class="n">decibel</span><span class="o">.</span><span class="n">dbsum</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span></div>
+
+<span class="k">def</span> <span class="nf">_check_band_type</span><span class="p">(</span><span class="n">freqs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if an array contains octave or third octave bands values sorted</span>
+<span class="sd">    or unsorted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">octave_bands</span> <span class="o">=</span> <span class="n">octave</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16000</span><span class="p">)</span>
+    <span class="n">third_oct_bands</span> <span class="o">=</span> <span class="n">third</span><span class="p">(</span><span class="mf">12.5</span><span class="p">,</span> <span class="mi">20000</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_check_sort</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">bands</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">bands</span><span class="p">,</span> <span class="n">freqs</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">band_pos</span> <span class="o">=</span> <span class="n">index</span> <span class="o">-</span> <span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">band_pos</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">band_pos</span><span class="o">.</span><span class="n">size</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="nb">sorted</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">sorted</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="nb">sorted</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">octave_bands</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">is_sorted</span> <span class="o">=</span> <span class="n">_check_sort</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">octave_bands</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_sorted</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">band_type</span> <span class="o">=</span> <span class="s1">&#39;octave&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">band_type</span> <span class="o">=</span> <span class="s1">&#39;octave-unsorted&#39;</span>
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">third_oct_bands</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">is_sorted</span> <span class="o">=</span> <span class="n">_check_sort</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">third_oct_bands</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_sorted</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">band_type</span> <span class="o">=</span> <span class="s1">&#39;third&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">band_type</span> <span class="o">=</span> <span class="s1">&#39;third-unsorted&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">band_type</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">return</span> <span class="n">band_type</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+  </body>
+</html>

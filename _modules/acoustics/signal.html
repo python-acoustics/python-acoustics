@@ -1,0 +1,1448 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>acoustics.signal &mdash; acoustics 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for acoustics.signal</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Signal</span>
+<span class="sd">======</span>
+
+<span class="sd">The signal module constains all kinds of signal processing related functions.</span>
+
+<span class="sd">.. inheritance-diagram:: acoustics.signal</span>
+
+
+<span class="sd">Filtering</span>
+<span class="sd">*********</span>
+
+<span class="sd">.. autoclass:: Filterbank</span>
+<span class="sd">.. autofunction:: bandpass_filter</span>
+<span class="sd">.. autofunction:: octave_filter</span>
+<span class="sd">.. autofunction:: bandpass</span>
+<span class="sd">.. autofunction:: lowpass</span>
+<span class="sd">.. autofunction:: highpass</span>
+<span class="sd">.. autofunction:: octavepass</span>
+<span class="sd">.. autofunction:: convolve</span>
+
+<span class="sd">Windowing</span>
+<span class="sd">*********</span>
+
+<span class="sd">.. autofunction:: window_scaling_factor</span>
+<span class="sd">.. autofunction:: apply_window</span>
+
+<span class="sd">Spectra</span>
+<span class="sd">*******</span>
+
+<span class="sd">Different types of spectra exist.</span>
+
+<span class="sd">.. autofunction:: amplitude_spectrum</span>
+<span class="sd">.. autofunction:: auto_spectrum</span>
+<span class="sd">.. autofunction:: power_spectrum</span>
+<span class="sd">.. autofunction:: density_spectrum</span>
+<span class="sd">.. autofunction:: angle_spectrum</span>
+<span class="sd">.. autofunction:: phase_spectrum</span>
+
+<span class="sd">Frequency bands</span>
+<span class="sd">***************</span>
+
+<span class="sd">.. autoclass:: Band</span>
+<span class="sd">.. autoclass:: Frequencies</span>
+<span class="sd">.. autoclass:: EqualBand</span>
+<span class="sd">.. autoclass:: OctaveBand</span>
+
+<span class="sd">.. autofunction:: integrate_bands</span>
+<span class="sd">.. autofunction:: octaves</span>
+<span class="sd">.. autofunction:: third_octaves</span>
+
+
+<span class="sd">Hilbert transform</span>
+<span class="sd">*****************</span>
+
+<span class="sd">.. autofunction:: amplitude_envelope</span>
+<span class="sd">.. autofunction:: instantaneous_phase</span>
+<span class="sd">.. autofunction:: instantaneous_frequency</span>
+
+
+<span class="sd">Conversion</span>
+<span class="sd">**********</span>
+
+<span class="sd">.. autofunction:: decibel_to_neper</span>
+<span class="sd">.. autofunction:: neper_to_decibel</span>
+
+
+<span class="sd">Other</span>
+<span class="sd">*****</span>
+
+<span class="sd">.. autofunction:: isolate</span>
+<span class="sd">.. autofunction:: zero_crossings</span>
+<span class="sd">.. autofunction:: rms</span>
+<span class="sd">.. autofunction:: ms</span>
+<span class="sd">.. autofunction:: normalize</span>
+<span class="sd">.. autofunction:: ir2fr</span>
+<span class="sd">.. autofunction:: wvd</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">spdiags</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">butter</span><span class="p">,</span> <span class="n">lfilter</span><span class="p">,</span> <span class="n">freqz</span><span class="p">,</span> <span class="n">filtfilt</span><span class="p">,</span> <span class="n">sosfilt</span>
+
+<span class="kn">import</span> <span class="nn">acoustics.octave</span>
+<span class="c1">#from acoustics.octave import REFERENCE</span>
+
+<span class="kn">import</span> <span class="nn">acoustics.bands</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">hilbert</span>
+<span class="kn">from</span> <span class="nn">acoustics.standards.iso_tr_25417_2007</span> <span class="kn">import</span> <span class="n">REFERENCE_PRESSURE</span>
+<span class="kn">from</span> <span class="nn">acoustics.standards.iec_61672_1_2013</span> <span class="kn">import</span> <span class="p">(</span><span class="n">NOMINAL_OCTAVE_CENTER_FREQUENCIES</span><span class="p">,</span>
+                                                  <span class="n">NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pyfftw.interfaces.numpy_fft</span> <span class="kn">import</span> <span class="n">rfft</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">numpy.fft</span> <span class="kn">import</span> <span class="n">rfft</span>
+
+<div class="viewcode-block" id="bandpass_filter"><a class="viewcode-back" href="../../signal.html#acoustics.signal.bandpass_filter">[docs]</a><span class="k">def</span> <span class="nf">bandpass_filter</span><span class="p">(</span><span class="n">lowcut</span><span class="p">,</span> <span class="n">highcut</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;sos&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Band-pass filter.</span>
+
+<span class="sd">    :param lowcut: Lower cut-off frequency</span>
+<span class="sd">    :param highcut: Upper cut-off frequency</span>
+<span class="sd">    :param fs: Sample frequency</span>
+<span class="sd">    :param order: Filter order</span>
+<span class="sd">    :param output: Output type. {&#39;ba&#39;, &#39;zpk&#39;, &#39;sos&#39;}. Default is &#39;sos&#39;. See also :func:`scipy.signal.butter`.</span>
+<span class="sd">    :returns: Returned value depends on `output`.</span>
+
+<span class="sd">    A Butterworth filter is used.</span>
+
+<span class="sd">    .. seealso:: :func:`scipy.signal.butter`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nyq</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">fs</span>
+    <span class="n">low</span> <span class="o">=</span> <span class="n">lowcut</span> <span class="o">/</span> <span class="n">nyq</span>
+    <span class="n">high</span> <span class="o">=</span> <span class="n">highcut</span> <span class="o">/</span> <span class="n">nyq</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">butter</span><span class="p">(</span><span class="n">order</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">],</span> <span class="n">btype</span><span class="o">=</span><span class="s1">&#39;band&#39;</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="bandpass"><a class="viewcode-back" href="../../signal.html#acoustics.signal.bandpass">[docs]</a><span class="k">def</span> <span class="nf">bandpass</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">lowcut</span><span class="p">,</span> <span class="n">highcut</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter signal with band-pass filter.</span>
+
+<span class="sd">    :param signal: Signal</span>
+<span class="sd">    :param lowcut: Lower cut-off frequency</span>
+<span class="sd">    :param highcut: Upper cut-off frequency</span>
+<span class="sd">    :param fs: Sample frequency</span>
+<span class="sd">    :param order: Filter order</span>
+<span class="sd">    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)</span>
+
+<span class="sd">    A Butterworth filter is used. Filtering is done with second-order sections.</span>
+
+<span class="sd">    .. seealso:: :func:`bandpass_filter` for the filter that is used.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sos</span> <span class="o">=</span> <span class="n">bandpass_filter</span><span class="p">(</span><span class="n">lowcut</span><span class="p">,</span> <span class="n">highcut</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;sos&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">zero_phase</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_sosfiltfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sosfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">bandstop</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">lowcut</span><span class="p">,</span> <span class="n">highcut</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter signal with band-stop filter.</span>
+
+<span class="sd">    :param signal: Signal</span>
+<span class="sd">    :param lowcut: Lower cut-off frequency</span>
+<span class="sd">    :param highcut: Upper cut-off frequency</span>
+<span class="sd">    :param fs: Sample frequency</span>
+<span class="sd">    :param order: Filter order</span>
+<span class="sd">    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">lowpass</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">lowcut</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="n">order</span><span class="o">//</span><span class="mi">2</span><span class="p">),</span> <span class="n">zero_phase</span><span class="o">=</span><span class="n">zero_phase</span><span class="p">)</span> <span class="o">+</span> <span class="n">highpass</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">highcut</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="n">order</span><span class="o">//</span><span class="mi">2</span><span class="p">),</span> <span class="n">zero_phase</span><span class="o">=</span><span class="n">zero_phase</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="lowpass"><a class="viewcode-back" href="../../signal.html#acoustics.signal.lowpass">[docs]</a><span class="k">def</span> <span class="nf">lowpass</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter signal with low-pass filter.</span>
+
+<span class="sd">    :param signal: Signal</span>
+<span class="sd">    :param fs: Sample frequency</span>
+<span class="sd">    :param cutoff: Cut-off frequency</span>
+<span class="sd">    :param order: Filter order</span>
+<span class="sd">    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)</span>
+
+<span class="sd">    A Butterworth filter is used. Filtering is done with second-order sections.</span>
+
+<span class="sd">    .. seealso:: :func:`scipy.signal.butter`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sos</span> <span class="o">=</span> <span class="n">butter</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">/</span><span class="p">(</span><span class="n">fs</span><span class="o">/</span><span class="mf">2.0</span><span class="p">),</span> <span class="n">btype</span><span class="o">=</span><span class="s1">&#39;low&#39;</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;sos&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">zero_phase</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_sosfiltfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sosfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="highpass"><a class="viewcode-back" href="../../signal.html#acoustics.signal.highpass">[docs]</a><span class="k">def</span> <span class="nf">highpass</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter signal with low-pass filter.</span>
+
+<span class="sd">    :param signal: Signal</span>
+<span class="sd">    :param fs: Sample frequency</span>
+<span class="sd">    :param cutoff: Cut-off frequency</span>
+<span class="sd">    :param order: Filter order</span>
+<span class="sd">    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)</span>
+
+<span class="sd">    A Butterworth filter is used. Filtering is done with second-order sections.</span>
+
+<span class="sd">    .. seealso:: :func:`scipy.signal.butter`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sos</span> <span class="o">=</span> <span class="n">butter</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">/</span><span class="p">(</span><span class="n">fs</span><span class="o">/</span><span class="mf">2.0</span><span class="p">),</span> <span class="n">btype</span><span class="o">=</span><span class="s1">&#39;high&#39;</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;sos&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">zero_phase</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_sosfiltfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sosfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="octave_filter"><a class="viewcode-back" href="../../signal.html#acoustics.signal.octave_filter">[docs]</a><span class="k">def</span> <span class="nf">octave_filter</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">fraction</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;sos&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fractional-octave band-pass filter.</span>
+
+<span class="sd">    :param center: Centerfrequency of fractional-octave band.</span>
+<span class="sd">    :param fs: Sample frequency</span>
+<span class="sd">    :param fraction: Fraction of fractional-octave band.</span>
+<span class="sd">    :param order: Filter order</span>
+<span class="sd">    :param output: Output type. {&#39;ba&#39;, &#39;zpk&#39;, &#39;sos&#39;}. Default is &#39;sos&#39;. See also :func:`scipy.signal.butter`.</span>
+
+<span class="sd">    A Butterworth filter is used.</span>
+
+<span class="sd">    .. seealso:: :func:`bandpass_filter`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ob</span> <span class="o">=</span> <span class="n">OctaveBand</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bandpass_filter</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">lower</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ob</span><span class="o">.</span><span class="n">upper</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="octavepass"><a class="viewcode-back" href="../../signal.html#acoustics.signal.octavepass">[docs]</a><span class="k">def</span> <span class="nf">octavepass</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">fraction</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter signal with fractional-octave bandpass filter.</span>
+
+<span class="sd">    :param signal: Signal</span>
+<span class="sd">    :param center: Centerfrequency of fractional-octave band.</span>
+<span class="sd">    :param fs: Sample frequency</span>
+<span class="sd">    :param fraction: Fraction of fractional-octave band.</span>
+<span class="sd">    :param order: Filter order</span>
+<span class="sd">    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)</span>
+
+<span class="sd">    A Butterworth filter is used. Filtering is done with second-order sections.</span>
+
+<span class="sd">    .. seealso:: :func:`octave_filter`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sos</span> <span class="o">=</span> <span class="n">octave_filter</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">fraction</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">zero_phase</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_sosfiltfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sosfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="convolve"><a class="viewcode-back" href="../../signal.html#acoustics.signal.convolve">[docs]</a><span class="k">def</span> <span class="nf">convolve</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">ltv</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform convolution of signal with linear time-variant system ``ltv``.</span>
+
+<span class="sd">    :param signal: Vector representing input signal :math:`u`.</span>
+<span class="sd">    :param ltv: 2D array where each column represents an impulse response</span>
+<span class="sd">    :param mode: &#39;full&#39;, &#39;valid&#39;, or &#39;same&#39;. See :func:`np.convolve` for an explanation of the options.</span>
+
+<span class="sd">    The convolution of two sequences is given by</span>
+
+<span class="sd">    .. math:: \mathbf{y} = \mathbf{t} \\star \mathbf{u}</span>
+
+<span class="sd">    This can be written as a matrix-vector multiplication</span>
+
+<span class="sd">    .. math:: \mathbf{y} = \mathbf{T} \\cdot \mathbf{u}</span>
+
+<span class="sd">    where :math:`T` is a Toeplitz matrix in which each column represents an impulse response.</span>
+<span class="sd">    In the case of a linear time-invariant (LTI) system, each column represents a time-shifted copy of the first column.</span>
+<span class="sd">    In the time-variant case (LTV), every column can contain a unique impulse response, both in values as in size.</span>
+
+<span class="sd">    This function assumes all impulse responses are of the same size.</span>
+<span class="sd">    The input matrix ``ltv`` thus represents the non-shifted version of the Toeplitz matrix.</span>
+
+<span class="sd">    .. seealso:: :func:`np.convolve`, :func:`scipy.signal.convolve` and :func:`scipy.signal.fftconvolve` for convolution with LTI system.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span> <span class="o">==</span> <span class="n">ltv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="n">n</span> <span class="o">=</span> <span class="n">ltv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>                          <span class="c1"># Length of output vector</span>
+    <span class="n">un</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">signal</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ltv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>   <span class="c1"># Resize input vector</span>
+    <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">ltv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>                   <span class="c1"># Offsets for impulse responses</span>
+    <span class="n">Cs</span> <span class="o">=</span> <span class="n">spdiags</span><span class="p">(</span><span class="n">ltv</span><span class="p">,</span> <span class="n">offsets</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>                            <span class="c1"># Sparse representation of IR&#39;s.</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">Cs</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">un</span><span class="p">)</span>                                            <span class="c1"># Calculate dot product.</span>
+
+    <span class="k">if</span> <span class="n">mode</span><span class="o">==</span><span class="s1">&#39;full&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">out</span>
+    <span class="k">elif</span> <span class="n">mode</span><span class="o">==</span><span class="s1">&#39;same&#39;</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">ltv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">ltv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">%</span><span class="mi">2</span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span> <span class="o">+</span> <span class="n">ltv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">ltv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">%</span><span class="mi">2</span>
+        <span class="k">return</span> <span class="n">out</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">mode</span><span class="o">==</span><span class="s1">&#39;valid&#39;</span><span class="p">:</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span> <span class="o">-</span> <span class="n">ltv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">ltv</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ir2fr"><a class="viewcode-back" href="../../signal.html#acoustics.signal.ir2fr">[docs]</a><span class="k">def</span> <span class="nf">ir2fr</span><span class="p">(</span><span class="n">ir</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert impulse response into frequency response. Returns single-sided RMS spectrum.</span>
+
+<span class="sd">    :param ir: Impulser response</span>
+<span class="sd">    :param fs: Sample frequency</span>
+<span class="sd">    :param N: Blocks</span>
+
+<span class="sd">    Calculates the positive frequencies using :func:`np.fft.rfft`.</span>
+<span class="sd">    Corrections are then applied to obtain the single-sided spectrum.</span>
+
+<span class="sd">    .. note:: Single-sided spectrum. Therefore, the amount of bins returned is either N/2 or N/2+1.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#ir = ir - np.mean(ir) # Remove DC component.</span>
+
+    <span class="n">N</span> <span class="o">=</span> <span class="n">N</span> <span class="k">if</span> <span class="n">N</span> <span class="k">else</span> <span class="n">ir</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">fr</span> <span class="o">=</span> <span class="n">rfft</span><span class="p">(</span><span class="n">ir</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>    <span class="c1">#/ 2.0</span>
+
+    <span class="n">fr</span> <span class="o">*=</span> <span class="mf">2.0</span>
+    <span class="n">fr</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="mf">2.0</span>    <span class="c1"># DC component should not be doubled.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">N</span><span class="o">%</span><span class="mi">2</span><span class="p">:</span> <span class="c1"># if not uneven</span>
+        <span class="n">fr</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="mf">2.0</span> <span class="c1"># And neither should fs/2 be.</span>
+
+    <span class="c1">#f = np.arange(0, N/2+1)*(fs/N)</span>
+
+    <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="n">fr</span></div>
+
+
+<div class="viewcode-block" id="decibel_to_neper"><a class="viewcode-back" href="../../signal.html#acoustics.signal.decibel_to_neper">[docs]</a><span class="k">def</span> <span class="nf">decibel_to_neper</span><span class="p">(</span><span class="n">decibel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert decibel to neper.</span>
+
+<span class="sd">    :param decibel: Value in decibel (dB).</span>
+<span class="sd">    :returns: Value in neper (Np).</span>
+
+<span class="sd">    The conversion is done according to</span>
+
+<span class="sd">    .. math :: \\mathrm{dB} = \\frac{\\log{10}}{20} \\mathrm{Np}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">20.0</span>  <span class="o">*</span> <span class="n">decibel</span></div>
+
+
+<div class="viewcode-block" id="neper_to_decibel"><a class="viewcode-back" href="../../signal.html#acoustics.signal.neper_to_decibel">[docs]</a><span class="k">def</span> <span class="nf">neper_to_decibel</span><span class="p">(</span><span class="n">neper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert neper to decibel.</span>
+
+<span class="sd">    :param neper: Value in neper (Np).</span>
+<span class="sd">    :returns: Value in decibel (dB).</span>
+
+<span class="sd">    The conversion is done according to</span>
+
+<span class="sd">    .. math :: \\mathrm{Np} = \\frac{20}{\\log{10}} \\mathrm{dB}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mf">20.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">neper</span></div>
+
+
+<div class="viewcode-block" id="Frequencies"><a class="viewcode-back" href="../../signal.html#acoustics.signal.Frequencies">[docs]</a><span class="k">class</span> <span class="nc">Frequencies</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Object describing frequency bands.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Frequencies.__init__"><a class="viewcode-back" href="../../signal.html#acoustics.signal.Frequencies.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Center frequencies.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lower frequencies.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Upper frequencies.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span> <span class="k">if</span> <span class="n">bandwidth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Bandwidth.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Frequencies({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Frequencies.angular"><a class="viewcode-back" href="../../signal.html#acoustics.signal.Frequencies.angular">[docs]</a>    <span class="k">def</span> <span class="nf">angular</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Angular center frequency in radians per second.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span></div></div>
+
+
+<div class="viewcode-block" id="EqualBand"><a class="viewcode-back" href="../../signal.html#acoustics.signal.EqualBand">[docs]</a><span class="k">class</span> <span class="nc">EqualBand</span><span class="p">(</span><span class="n">Frequencies</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Equal bandwidth spectrum. Generally used for narrowband data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="EqualBand.__init__"><a class="viewcode-back" href="../../signal.html#acoustics.signal.EqualBand.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fstart</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fstop</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nbands</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param center: Vector of center frequencies.</span>
+<span class="sd">        :param fstart: First center frequency.</span>
+<span class="sd">        :param fstop: Last center frequency.</span>
+<span class="sd">        :param nbands: Amount of frequency bands.</span>
+<span class="sd">        :param bandwidth: Bandwidth of bands.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">center</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">nbands</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">center</span><span class="p">]</span>
+                <span class="n">nbands</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">center</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">bandwidth</span> <span class="o">=</span> <span class="n">u</span>
+            <span class="k">elif</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Given center frequencies are not equally spaced.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">fstart</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#- bandwidth/2.0</span>
+            <span class="n">fstop</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#+ bandwidth/2.0</span>
+        <span class="k">elif</span> <span class="n">fstart</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">fstop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">nbands</span><span class="p">:</span>
+            <span class="n">bandwidth</span> <span class="o">=</span> <span class="p">(</span><span class="n">fstop</span> <span class="o">-</span> <span class="n">fstart</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">nbands</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fstart</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">fstop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">bandwidth</span><span class="p">:</span>
+            <span class="n">nbands</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">fstop</span> <span class="o">-</span> <span class="n">fstart</span><span class="p">)</span> <span class="o">/</span> <span class="n">bandwidth</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">fstart</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">bandwidth</span> <span class="ow">and</span> <span class="n">nbands</span><span class="p">:</span>
+            <span class="n">fstop</span> <span class="o">=</span> <span class="n">fstart</span> <span class="o">+</span> <span class="n">nbands</span> <span class="o">*</span> <span class="n">bandwidth</span>
+        <span class="k">elif</span> <span class="n">fstop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">bandwidth</span> <span class="ow">and</span> <span class="n">nbands</span><span class="p">:</span>
+            <span class="n">fstart</span> <span class="o">=</span> <span class="n">fstop</span> <span class="o">-</span> <span class="p">(</span><span class="n">nbands</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">bandwidth</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Insufficient parameters. Cannot determine fstart, fstop, bandwidth.&quot;</span><span class="p">)</span>
+
+        <span class="n">center</span> <span class="o">=</span> <span class="n">fstart</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nbands</span><span class="p">)</span> <span class="o">*</span> <span class="n">bandwidth</span> <span class="c1"># + bandwidth/2.0</span>
+        <span class="n">upper</span>  <span class="o">=</span> <span class="n">fstart</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nbands</span><span class="p">)</span> <span class="o">*</span> <span class="n">bandwidth</span> <span class="o">+</span> <span class="n">bandwidth</span><span class="o">/</span><span class="mf">2.0</span>
+        <span class="n">lower</span>  <span class="o">=</span> <span class="n">fstart</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nbands</span><span class="p">)</span> <span class="o">*</span> <span class="n">bandwidth</span> <span class="o">-</span> <span class="n">bandwidth</span><span class="o">/</span><span class="mf">2.0</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">EqualBand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="n">center</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">bandwidth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;EqualBand({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="OctaveBand"><a class="viewcode-back" href="../../signal.html#acoustics.signal.OctaveBand">[docs]</a><span class="k">class</span> <span class="nc">OctaveBand</span><span class="p">(</span><span class="n">Frequencies</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fractional-octave band spectrum.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="OctaveBand.__init__"><a class="viewcode-back" href="../../signal.html#acoustics.signal.OctaveBand.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fstart</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fstop</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">nbands</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">acoustics</span><span class="o">.</span><span class="n">octave</span><span class="o">.</span><span class="n">REFERENCE</span><span class="p">):</span></div>
+
+
+        <span class="k">if</span> <span class="n">center</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">nbands</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="n">center</span><span class="p">]</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">acoustics</span><span class="o">.</span><span class="n">octave</span><span class="o">.</span><span class="n">index_of_frequency</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">reference</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fstart</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">fstop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">nstart</span> <span class="o">=</span> <span class="n">acoustics</span><span class="o">.</span><span class="n">octave</span><span class="o">.</span><span class="n">index_of_frequency</span><span class="p">(</span><span class="n">fstart</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">reference</span><span class="p">)</span>
+            <span class="n">nstop</span> <span class="o">=</span> <span class="n">acoustics</span><span class="o">.</span><span class="n">octave</span><span class="o">.</span><span class="n">index_of_frequency</span><span class="p">(</span><span class="n">fstop</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">reference</span><span class="p">)</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nstart</span><span class="p">,</span> <span class="n">nstop</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fstart</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">nbands</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">nstart</span> <span class="o">=</span> <span class="n">acoustics</span><span class="o">.</span><span class="n">octave</span><span class="o">.</span><span class="n">index_of_frequency</span><span class="p">(</span><span class="n">fstart</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">reference</span><span class="p">)</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nstart</span><span class="p">,</span> <span class="n">nstart</span><span class="o">+</span><span class="n">nbands</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fstop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">nbands</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">nstop</span> <span class="o">=</span> <span class="n">acoustics</span><span class="o">.</span><span class="n">octave</span><span class="o">.</span><span class="n">index_of_frequency</span><span class="p">(</span><span class="n">fstop</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">reference</span><span class="p">)</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nstop</span><span class="o">-</span><span class="n">nbands</span><span class="p">,</span> <span class="n">nstop</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Insufficient parameters. Cannot determine fstart and/or fstop.&quot;</span><span class="p">)</span>
+
+        <span class="n">center</span> <span class="o">=</span> <span class="n">acoustics</span><span class="o">.</span><span class="n">octave</span><span class="o">.</span><span class="n">exact_center_frequency</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">indices</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">reference</span><span class="p">)</span>
+        <span class="n">lower</span> <span class="o">=</span> <span class="n">acoustics</span><span class="o">.</span><span class="n">octave</span><span class="o">.</span><span class="n">lower_frequency</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">)</span>
+        <span class="n">upper</span> <span class="o">=</span> <span class="n">acoustics</span><span class="o">.</span><span class="n">octave</span><span class="o">.</span><span class="n">upper_frequency</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">)</span>
+        <span class="n">bandwidth</span> <span class="o">=</span> <span class="n">upper</span> <span class="o">-</span> <span class="n">lower</span>
+        <span class="n">nominal</span> <span class="o">=</span> <span class="n">acoustics</span><span class="o">.</span><span class="n">octave</span><span class="o">.</span><span class="n">nominal_center_frequency</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">fraction</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">OctaveBand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fraction</span> <span class="o">=</span> <span class="n">fraction</span>
+        <span class="sd">&quot;&quot;&quot;Fraction of fractional-octave filter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference</span> <span class="o">=</span> <span class="n">reference</span>
+        <span class="sd">&quot;&quot;&quot;Reference center frequency.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nominal</span> <span class="o">=</span> <span class="n">nominal</span>
+        <span class="sd">&quot;&quot;&quot;Nominal center frequencies.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="n">center</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">fraction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fraction</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;OctaveBand({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ms"><a class="viewcode-back" href="../../signal.html#acoustics.signal.ms">[docs]</a><span class="k">def</span> <span class="nf">ms</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Mean value of signal `x` squared.</span>
+
+<span class="sd">    :param x: Dynamic quantity.</span>
+<span class="sd">    :returns: Mean squared of `x`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="rms"><a class="viewcode-back" href="../../signal.html#acoustics.signal.rms">[docs]</a><span class="k">def</span> <span class="nf">rms</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Root mean squared of signal `x`.</span>
+
+<span class="sd">    :param x: Dynamic quantity.</span>
+
+<span class="sd">    .. math:: x_{rms} = lim_{T \\to \\infty} \\sqrt{\\frac{1}{T} \int_0^T |f(x)|^2 \\mathrm{d} t }</span>
+
+<span class="sd">    :seealso: :func:`ms`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ms</span><span class="p">(</span><span class="n">x</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../../signal.html#acoustics.signal.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;normalize power in y to a (standard normal) white noise signal.</span>
+
+<span class="sd">    Optionally normalize to power in signal `x`.</span>
+
+<span class="sd">    #The mean power of a Gaussian with :math:`\\mu=0` and :math:`\\sigma=1` is 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#return y * np.sqrt( (np.abs(x)**2.0).mean() / (np.abs(y)**2.0).mean() )</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">ms</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="n">y</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="n">x</span> <span class="o">/</span> <span class="n">ms</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="p">)</span></div>
+    <span class="c1">#return y * np.sqrt( 1.0 / (np.abs(y)**2.0).mean() )</span>
+
+    <span class="c1">## Broken? Caused correlation in auralizations....weird!</span>
+
+
+
+
+<div class="viewcode-block" id="window_scaling_factor"><a class="viewcode-back" href="../../signal.html#acoustics.signal.window_scaling_factor">[docs]</a><span class="k">def</span> <span class="nf">window_scaling_factor</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate window scaling factor.</span>
+
+<span class="sd">    :param window: Window.</span>
+
+<span class="sd">    When analysing broadband (filtered noise) signals it is common to normalize</span>
+<span class="sd">    the windowed signal so that it has the same power as the un-windowed one.</span>
+
+<span class="sd">    .. math:: S = \\sqrt{\\frac{\\sum_{i=0}^N w_i^2}{N}}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">window</span><span class="o">*</span><span class="n">window</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="apply_window"><a class="viewcode-back" href="../../signal.html#acoustics.signal.apply_window">[docs]</a><span class="k">def</span> <span class="nf">apply_window</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">window</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply window to signal.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param window: Vector representing window.</span>
+
+<span class="sd">    :returns: Signal with window applied to it.</span>
+
+<span class="sd">    .. math:: x_s(t) = x(t) / S</span>
+
+<span class="sd">    where :math:`S` is the window scaling factor.</span>
+
+<span class="sd">    .. seealso:: :func:`window_scaling_factor`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">window_scaling_factor</span><span class="p">(</span><span class="n">window</span><span class="p">)</span> <span class="c1"># Determine window scaling factor.</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+    <span class="n">windows</span> <span class="o">=</span> <span class="n">x</span><span class="o">//</span><span class="n">n</span>  <span class="c1"># Amount of windows.</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">windows</span><span class="o">*</span><span class="n">n</span><span class="p">]</span> <span class="c1"># Truncate final part of signal that does not fit.</span>
+    <span class="c1">#x = x.reshape(-1, len(window)) # Reshape so we can apply window.</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">windows</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">/</span> <span class="n">s</span></div>
+
+
+<div class="viewcode-block" id="amplitude_spectrum"><a class="viewcode-back" href="../../signal.html#acoustics.signal.amplitude_spectrum">[docs]</a><span class="k">def</span> <span class="nf">amplitude_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Amplitude spectrum of instantaneous signal :math:`x(t)`.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency :math:`f_s`.</span>
+<span class="sd">    :param N: Amount of FFT bins.</span>
+
+<span class="sd">    The amplitude spectrum gives the amplitudes of the sinusoidal the signal is built</span>
+<span class="sd">    up from, and the RMS (root-mean-square) amplitudes can easily be found by dividing</span>
+<span class="sd">    these amplitudes with :math:`\\sqrt{2}`.</span>
+
+<span class="sd">    The amplitude spectrum is double-sided.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">N</span> <span class="k">if</span> <span class="n">N</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">fr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">fr</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="auto_spectrum"><a class="viewcode-back" href="../../signal.html#acoustics.signal.auto_spectrum">[docs]</a><span class="k">def</span> <span class="nf">auto_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Auto-spectrum of instantaneous signal :math:`x(t)`.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency :math:`f_s`.</span>
+<span class="sd">    :param N: Amount of FFT bins.</span>
+
+<span class="sd">    The auto-spectrum contains the squared amplitudes of the signal. Squared amplitudes</span>
+<span class="sd">    are used when presenting data as it is a measure of the power/energy in the signal.</span>
+
+<span class="sd">    .. math:: S_{xx} (f_n) = \\overline{X (f_n)} \\cdot X (f_n)</span>
+
+<span class="sd">    The auto-spectrum is double-sided.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">amplitude_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">a</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span><span class="o">.</span><span class="n">real</span></div>
+
+
+<div class="viewcode-block" id="power_spectrum"><a class="viewcode-back" href="../../signal.html#acoustics.signal.power_spectrum">[docs]</a><span class="k">def</span> <span class="nf">power_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Power spectrum of instantaneous signal :math:`x(t)`.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency :math:`f_s`.</span>
+<span class="sd">    :param N: Amount of FFT bins.</span>
+
+<span class="sd">    The power spectrum, or single-sided autospectrum, contains the squared RMS amplitudes of the signal.</span>
+
+<span class="sd">    A power spectrum is a spectrum with squared RMS values. The power spectrum is</span>
+<span class="sd">    calculated from the autospectrum of the signal.</span>
+
+<span class="sd">    .. warning:: Does not include scaling to reference value!</span>
+
+<span class="sd">    .. seealso:: :func:`auto_spectrum`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">N</span> <span class="k">if</span> <span class="n">N</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">auto_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="n">a</span> <span class="o">*=</span> <span class="mf">2.0</span>
+    <span class="n">a</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="mf">2.0</span>    <span class="c1"># DC component should not be doubled.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">N</span><span class="o">%</span><span class="mi">2</span><span class="p">:</span> <span class="c1"># if not uneven</span>
+        <span class="n">a</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="mf">2.0</span> <span class="c1"># And neither should fs/2 be.</span>
+    <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="n">a</span></div>
+
+
+<div class="viewcode-block" id="angle_spectrum"><a class="viewcode-back" href="../../signal.html#acoustics.signal.angle_spectrum">[docs]</a><span class="k">def</span> <span class="nf">angle_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Phase angle spectrum of instantaneous signal :math:`x(t)`.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency :math:`f_s`.</span>
+<span class="sd">    :param N: Amount of FFT bins.</span>
+
+<span class="sd">    This function returns a single-sided wrapped phase angle spectrum.</span>
+
+<span class="sd">    .. seealso:: :func:`phase_spectrum` for unwrapped phase spectrum.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">N</span> <span class="k">if</span> <span class="n">N</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">amplitude_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="n">a</span></div>
+
+
+<div class="viewcode-block" id="phase_spectrum"><a class="viewcode-back" href="../../signal.html#acoustics.signal.phase_spectrum">[docs]</a><span class="k">def</span> <span class="nf">phase_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Phase spectrum of instantaneous signal :math:`x(t)`.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency :math:`f_s`.</span>
+<span class="sd">    :param N: Amount of FFT bins.</span>
+
+<span class="sd">    This function returns a single-sided unwrapped phase spectrum.</span>
+
+<span class="sd">    .. seealso:: :func:`angle_spectrum` for wrapped phase angle.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">angle_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></div>
+
+
+
+<span class="c1">#def power_and_phase_spectrum(x, fs, N=None):</span>
+    <span class="c1">#&quot;&quot;&quot;</span>
+    <span class="c1">#Power spectrum and phase of instantaneous signal :math:`x(t)`.</span>
+
+    <span class="c1">#:param x: Instantaneous signal :math:`x(t)`.</span>
+    <span class="c1">#:param fs: Sample frequency :math:`f_s`.</span>
+    <span class="c1">#:param N: Amount of FFT bins.</span>
+
+    <span class="c1">#Often one is interested in both the power spectrum and the phase. This function returns the power and a single-sided phase spectrum.</span>
+    <span class="c1">#For an explanation of the power spectrum, see :func:`power_spectrum`.</span>
+    <span class="c1">#&quot;&quot;&quot;</span>
+
+
+    <span class="c1">#returns f, power, phase</span>
+
+
+
+<div class="viewcode-block" id="density_spectrum"><a class="viewcode-back" href="../../signal.html#acoustics.signal.density_spectrum">[docs]</a><span class="k">def</span> <span class="nf">density_spectrum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Density spectrum of instantaneous signal :math:`x(t)`.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency :math:`f_s`.</span>
+<span class="sd">    :param N: Amount of FFT bins.</span>
+
+<span class="sd">    A density spectrum considers the amplitudes per unit frequency.</span>
+<span class="sd">    Density spectra are used to compare spectra with different frequency resolution as the</span>
+<span class="sd">    magnitudes are not influenced by the resolution because it is per Hertz. The amplitude</span>
+<span class="sd">    spectra on the other hand depend on the chosen frequency resolution.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">N</span> <span class="k">if</span> <span class="n">N</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">fr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">fs</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">fr</span><span class="p">)</span></div>
+
+<span class="c1">#def auto_density_spectrum(x, fs, N=None):</span>
+    <span class="c1">#&quot;&quot;&quot;</span>
+    <span class="c1">#Auto density spectrum of instantaneous signal :math:`x(t)`.</span>
+    <span class="c1">#&quot;&quot;&quot;</span>
+    <span class="c1">#f, d = density_spectrum(x, fs, N=N)</span>
+    <span class="c1">#return f, (d*d.conj()).real</span>
+
+<span class="c1">#def power_density_spectrum(x, fs, N=None):</span>
+    <span class="c1">#&quot;&quot;&quot;</span>
+    <span class="c1">#Power density spectrum.</span>
+    <span class="c1">#&quot;&quot;&quot;</span>
+    <span class="c1">#N = N if N else x.shape[-1]</span>
+    <span class="c1">#f, a = auto_density_spectrum(x, fs, N=N)</span>
+    <span class="c1">#a = a[N//2:]</span>
+    <span class="c1">#f = f[N//2:]</span>
+    <span class="c1">#a *= 2.0</span>
+    <span class="c1">#a[..., 0] /= 2.0    # DC component should not be doubled.</span>
+    <span class="c1">#if not N%2: # if not uneven</span>
+        <span class="c1">#a[..., -1] /= 2.0 # And neither should fs/2 be.</span>
+    <span class="c1">#return f, a</span>
+
+
+<div class="viewcode-block" id="integrate_bands"><a class="viewcode-back" href="../../signal.html#acoustics.signal.integrate_bands">[docs]</a><span class="k">def</span> <span class="nf">integrate_bands</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reduce frequency resolution of power spectrum. Merges frequency bands by integration.</span>
+
+<span class="sd">    :param data: Vector with narrowband powers.</span>
+<span class="sd">    :param a: Instance of :class:`Frequencies`.</span>
+<span class="sd">    :param b: Instance of :class:`Frequencies`.</span>
+
+<span class="sd">    .. note:: Needs rewriting so that the summation goes over axis=1.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">fraction</span><span class="o">%</span><span class="n">a</span><span class="o">.</span><span class="n">fraction</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Non-integer ratio of fractional-octaves are not supported.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="n">lower</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">center</span><span class="p">)</span>
+    <span class="n">upper</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">center</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">center</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">((</span><span class="n">lower</span> <span class="o">&lt;</span> <span class="n">center</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">center</span> <span class="o">&lt;=</span> <span class="n">upper</span><span class="p">)</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="bp">None</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">bandpass_frequencies</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">purge</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;&quot;Apply bandpass filters for frequencies</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency.</span>
+<span class="sd">    :param frequencies: Frequencies. Instance of :class:`Frequencies`.</span>
+<span class="sd">    :param order: Filter order.</span>
+<span class="sd">    :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.</span>
+<span class="sd">    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)</span>
+<span class="sd">    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">purge</span><span class="p">:</span>
+        <span class="n">frequencies</span> <span class="o">=</span> <span class="n">frequencies</span><span class="p">[</span><span class="n">frequencies</span><span class="o">.</span><span class="n">upper</span> <span class="o">&lt;</span> <span class="n">fs</span><span class="o">/</span><span class="mf">2.0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">frequencies</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">bandpass</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">band</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">band</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="n">zero_phase</span><span class="p">)</span> <span class="k">for</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">frequencies</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">bandpass_octaves</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">frequencies</span><span class="o">=</span><span class="n">NOMINAL_OCTAVE_CENTER_FREQUENCIES</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">purge</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply 1/1-octave bandpass filters.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency.</span>
+<span class="sd">    :param frequencies: Frequencies.</span>
+<span class="sd">    :param order: Filter order.</span>
+<span class="sd">    :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.</span>
+<span class="sd">    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)</span>
+<span class="sd">    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.</span>
+
+<span class="sd">    .. seealso:: :func:`octavepass`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">bandpass_fractional_octaves</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">purge</span><span class="o">=</span><span class="n">purge</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="n">zero_phase</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">bandpass_third_octaves</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">frequencies</span><span class="o">=</span><span class="n">NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">purge</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply 1/3-octave bandpass filters.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency.</span>
+<span class="sd">    :param frequencies: Frequencies.</span>
+<span class="sd">    :param order: Filter order.</span>
+<span class="sd">    :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.</span>
+<span class="sd">    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)</span>
+<span class="sd">    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.</span>
+
+<span class="sd">    .. seealso:: :func:`octavepass`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">bandpass_fractional_octaves</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">purge</span><span class="o">=</span><span class="n">purge</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="n">zero_phase</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">bandpass_fractional_octaves</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">purge</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply 1/N-octave bandpass filters.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency.</span>
+<span class="sd">    :param frequencies: Frequencies. Either instance of :class:`OctaveBand`, or array along with fs.</span>
+<span class="sd">    :param order: Filter order.</span>
+<span class="sd">    :param purge: Discard bands of which the upper corner frequency is above the Nyquist frequency.</span>
+<span class="sd">    :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)</span>
+<span class="sd">    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.</span>
+
+<span class="sd">    .. seealso:: :func:`octavepass`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">Frequencies</span><span class="p">):</span>
+        <span class="n">frequencies</span> <span class="o">=</span> <span class="n">OctaveBand</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bandpass_frequencies</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">purge</span><span class="o">=</span><span class="n">purge</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="n">zero_phase</span><span class="p">)</span>
+
+
+
+<div class="viewcode-block" id="third_octaves"><a class="viewcode-back" href="../../signal.html#acoustics.signal.third_octaves">[docs]</a><span class="k">def</span> <span class="nf">third_octaves</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                  <span class="n">frequencies</span><span class="o">=</span><span class="n">NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES</span><span class="p">,</span>
+                  <span class="n">ref</span><span class="o">=</span><span class="n">REFERENCE_PRESSURE</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate level per 1/3-octave in frequency domain using the FFT.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency.</span>
+<span class="sd">    :param density: Power density instead of power.</span>
+<span class="sd">    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.</span>
+
+<span class="sd">    .. note:: Based on power spectrum (FFT)</span>
+
+<span class="sd">    .. seealso:: :attr:`acoustics.bands.THIRD_OCTAVE_CENTER_FREQUENCIES`</span>
+
+<span class="sd">    .. note:: Exact center frequencies are always calculated.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fob</span> <span class="o">=</span> <span class="n">OctaveBand</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">power_spectrum</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="n">fnb</span> <span class="o">=</span> <span class="n">EqualBand</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">power</span> <span class="o">=</span> <span class="n">integrate_bands</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">fnb</span><span class="p">,</span> <span class="n">fob</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">density</span><span class="p">:</span>
+        <span class="n">power</span> <span class="o">/=</span> <span class="p">(</span><span class="n">fob</span><span class="o">.</span><span class="n">bandwidth</span><span class="o">/</span><span class="n">fnb</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">)</span>
+    <span class="n">level</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">power</span> <span class="o">/</span> <span class="n">ref</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fob</span><span class="p">,</span> <span class="n">level</span></div>
+
+
+<div class="viewcode-block" id="octaves"><a class="viewcode-back" href="../../signal.html#acoustics.signal.octaves">[docs]</a><span class="k">def</span> <span class="nf">octaves</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+            <span class="n">frequencies</span><span class="o">=</span><span class="n">NOMINAL_OCTAVE_CENTER_FREQUENCIES</span><span class="p">,</span>
+            <span class="n">ref</span><span class="o">=</span><span class="n">REFERENCE_PRESSURE</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate level per 1/1-octave in frequency domain using the FFT.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency.</span>
+<span class="sd">    :param density: Power density instead of power.</span>
+<span class="sd">    :param frequencies: Frequencies.</span>
+<span class="sd">    :param ref: Reference value.</span>
+<span class="sd">    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.</span>
+
+<span class="sd">    .. note:: Based on power spectrum (FFT)</span>
+
+<span class="sd">    .. seealso:: :attr:`acoustics.bands.OCTAVE_CENTER_FREQUENCIES`</span>
+
+<span class="sd">    .. note:: Exact center frequencies are always calculated.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fob</span> <span class="o">=</span> <span class="n">OctaveBand</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">power_spectrum</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="n">fnb</span> <span class="o">=</span> <span class="n">EqualBand</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">power</span> <span class="o">=</span> <span class="n">integrate_bands</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">fnb</span><span class="p">,</span> <span class="n">fob</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">density</span><span class="p">:</span>
+        <span class="n">power</span> <span class="o">/=</span> <span class="p">(</span><span class="n">fob</span><span class="o">.</span><span class="n">bandwidth</span><span class="o">/</span><span class="n">fnb</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">)</span>
+    <span class="n">level</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">power</span> <span class="o">/</span> <span class="n">ref</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fob</span><span class="p">,</span> <span class="n">level</span></div>
+
+
+<span class="k">def</span> <span class="nf">fractional_octaves</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="mf">16000.0</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate level per 1/N-octave in frequency domain using the FFT. N is `fraction`.</span>
+
+<span class="sd">    :param x: Instantaneous signal :math:`x(t)`.</span>
+<span class="sd">    :param fs: Sample frequency.</span>
+<span class="sd">    :param density: Power density instead of power.</span>
+<span class="sd">    :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.</span>
+
+<span class="sd">    .. note:: Based on power spectrum (FFT)</span>
+
+<span class="sd">    .. note:: This function does *not* use nominal center frequencies.</span>
+
+<span class="sd">    .. note:: Exact center frequencies are always calculated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fob</span> <span class="o">=</span> <span class="n">OctaveBand</span><span class="p">(</span><span class="n">fstart</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">fstop</span><span class="o">=</span><span class="n">stop</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">)</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">power_spectrum</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="n">fnb</span> <span class="o">=</span> <span class="n">EqualBand</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">power</span> <span class="o">=</span> <span class="n">integrate_bands</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">fnb</span><span class="p">,</span> <span class="n">fob</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">density</span><span class="p">:</span>
+        <span class="n">power</span> <span class="o">/=</span> <span class="p">(</span><span class="n">fob</span><span class="o">.</span><span class="n">bandwidth</span><span class="o">/</span><span class="n">fnb</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">)</span>
+    <span class="n">level</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">power</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fob</span><span class="p">,</span> <span class="n">level</span>
+
+
+<div class="viewcode-block" id="Filterbank"><a class="viewcode-back" href="../../signal.html#acoustics.signal.Filterbank">[docs]</a><span class="k">class</span> <span class="nc">Filterbank</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fractional-Octave filter bank.</span>
+
+
+<span class="sd">    .. warning:: For high frequencies the filter coefficients are wrong for low frequencies. Therefore, to improve the response for lower frequencies the signal should be downsampled. Currently, there is no easy way to do so within the Filterbank.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Filterbank.__init__"><a class="viewcode-back" href="../../signal.html#acoustics.signal.Filterbank.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">,</span> <span class="n">sample_frequency</span><span class="o">=</span><span class="mi">44100</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span></div>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span> <span class="o">=</span> <span class="n">frequencies</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Frequencies object.</span>
+
+<span class="sd">        See also :class:`Frequencies` and subclasses.</span>
+
+<span class="sd">        .. note:: A frequencies object should have the attributes center, lower and upper.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="n">order</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter order of Butterworth filter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_frequency</span> <span class="o">=</span> <span class="n">sample_frequency</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample frequency.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sample_frequency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample frequency.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sample_frequency</span>
+
+    <span class="nd">@sample_frequency.setter</span>
+    <span class="k">def</span> <span class="nf">sample_frequency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1">#if x &lt;= self.center_frequencies.max():</span>
+            <span class="c1">#raise ValueError(&quot;Sample frequency cannot be lower than the highest center frequency.&quot;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sample_frequency</span> <span class="o">=</span> <span class="n">x</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filters this filterbank consists of.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_frequency</span>
+        <span class="k">return</span> <span class="p">(</span> <span class="n">bandpass_filter</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;sos&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="c1">#order = self.order</span>
+        <span class="c1">#filters = list()</span>
+        <span class="c1">#nyq = self.sample_frequency / 2.0</span>
+        <span class="c1">#return ( butter(order, [lower/nyq, upper/nyq], btype=&#39;band&#39;, analog=False) for lower, upper in zip(self.frequencies.lower, self.frequencies.upper) )</span>
+
+<div class="viewcode-block" id="Filterbank.lfilter"><a class="viewcode-back" href="../../signal.html#acoustics.signal.Filterbank.lfilter">[docs]</a>    <span class="k">def</span> <span class="nf">lfilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter signal with filterbank.</span>
+
+<span class="sd">        .. note:: This function uses :func:`scipy.signal.lfilter`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span> <span class="n">sosfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span> <span class="k">for</span> <span class="n">sos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filters</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Filterbank.filtfilt"><a class="viewcode-back" href="../../signal.html#acoustics.signal.Filterbank.filtfilt">[docs]</a>    <span class="k">def</span> <span class="nf">filtfilt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter signal with filterbank.</span>
+<span class="sd">        Returns a list consisting of a filtered signal per filter.</span>
+
+<span class="sd">        .. note:: This function uses :func:`scipy.signal.filtfilt` and therefore has a zero-phase response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span> <span class="n">_sosfiltfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span> <span class="k">for</span> <span class="n">sos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filters</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Filterbank.power"><a class="viewcode-back" href="../../signal.html#acoustics.signal.Filterbank.power">[docs]</a>    <span class="k">def</span> <span class="nf">power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Power per band in signal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filtfilt</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">x</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">bw</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">bw</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">filtered</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="Filterbank.plot_response"><a class="viewcode-back" href="../../signal.html#acoustics.signal.Filterbank.plot_response">[docs]</a>    <span class="k">def</span> <span class="nf">plot_response</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot frequency response.</span>
+
+<span class="sd">        .. note:: The follow phase response is obtained in case :meth:`lfilter` is used. The method :meth:`filtfilt` results in a zero-phase response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">fs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_frequency</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">fc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">center</span><span class="p">):</span>
+            <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">freqz</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">fs</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span><span class="c1">#np.arange(fs/2.0))</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">w</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">fs</span><span class="p">,</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">h</span><span class="p">)),</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">fc</span><span class="p">)))</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">w</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">fs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">fc</span><span class="p">)))</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">r&#39;$f$ in Hz&#39;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">r&#39;$|H|$ in dB re. 1&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">r&#39;$f$ in Hz&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">r&#39;$\angle H$ in rad&#39;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">60.0</span><span class="p">,</span> <span class="o">+</span><span class="mf">10.0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fig</span></div>
+
+<div class="viewcode-block" id="Filterbank.plot_power"><a class="viewcode-back" href="../../signal.html#acoustics.signal.Filterbank.plot_power">[docs]</a>    <span class="k">def</span> <span class="nf">plot_power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot power in signal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">center</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mf">20.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$f$ in Hz&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$L$ in dB re. 1&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fig</span></div></div>
+
+
+<span class="c1">#class FilterbankFFT(object):</span>
+    <span class="c1">#&quot;&quot;&quot;</span>
+    <span class="c1">#Filterbank to filter signal using FFT.</span>
+    <span class="c1">#&quot;&quot;&quot;</span>
+
+    <span class="c1">#def __init__(self, frequencies, sample_frequency=44100):</span>
+
+       <span class="c1">#self.frequencies = frequencies</span>
+       <span class="c1">#&quot;&quot;&quot;</span>
+       <span class="c1">#Frequencies.</span>
+
+       <span class="c1">#See also :class:`Frequencies` and subclasses.</span>
+       <span class="c1">#&quot;&quot;&quot;</span>
+       <span class="c1">#self.sample_frequency = sample_frequency</span>
+
+
+    <span class="c1">#def power(self, signal):</span>
+        <span class="c1">#pass</span>
+
+    <span class="c1">#def plot_power(self, signal):</span>
+        <span class="c1">#pass</span>
+
+
+
+<div class="viewcode-block" id="isolate"><a class="viewcode-back" href="../../signal.html#acoustics.signal.isolate">[docs]</a><span class="k">def</span> <span class="nf">isolate</span><span class="p">(</span><span class="n">signals</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Isolate signals.</span>
+
+<span class="sd">    :param signals: Array of shape N x M where N is the amount of samples and M the amount of signals. Thus, each column is a signal.</span>
+<span class="sd">    :returns: Array of isolated signals. Each column is a signal.</span>
+
+<span class="sd">    Isolate signals using Singular Value Decomposition.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">signals</span><span class="p">)</span>
+
+    <span class="n">W</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">T</span></div>
+
+
+<div class="viewcode-block" id="zero_crossings"><a class="viewcode-back" href="../../signal.html#acoustics.signal.zero_crossings">[docs]</a><span class="k">def</span> <span class="nf">zero_crossings</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine the positions of zero crossings in `data`.</span>
+
+<span class="sd">    :param data: Vector</span>
+
+<span class="sd">    :returns: Vector with indices of samples *before* the zero crossing.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">npos</span> <span class="o">=</span> <span class="o">~</span><span class="n">pos</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">pos</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">npos</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">|</span> <span class="p">(</span><span class="n">npos</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="amplitude_envelope"><a class="viewcode-back" href="../../signal.html#acoustics.signal.amplitude_envelope">[docs]</a><span class="k">def</span> <span class="nf">amplitude_envelope</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Instantaneous amplitude of tone.</span>
+
+<span class="sd">    The instantaneous amplitude is the magnitude of the analytic signal.</span>
+
+<span class="sd">    .. seealso:: :func:`scipy.signal.hilbert`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">hilbert</span><span class="p">(</span><span class="n">signal</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="instantaneous_phase"><a class="viewcode-back" href="../../signal.html#acoustics.signal.instantaneous_phase">[docs]</a><span class="k">def</span> <span class="nf">instantaneous_phase</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Instantaneous phase of tone.</span>
+
+<span class="sd">    The instantaneous phase is the angle of the analytic signal.</span>
+<span class="sd">    This function returns a wrapped angle.</span>
+
+<span class="sd">    .. seealso:: :func:`scipy.signal.hilbert`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">hilbert</span><span class="p">(</span><span class="n">signal</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="instantaneous_frequency"><a class="viewcode-back" href="../../signal.html#acoustics.signal.instantaneous_frequency">[docs]</a><span class="k">def</span> <span class="nf">instantaneous_frequency</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine instantaneous frequency of tone.</span>
+
+<span class="sd">    The instantaneous frequency can be obtained by differentiating the unwrapped instantaneous phase.</span>
+
+<span class="sd">    .. seealso:: :func:`instantaneous_phase`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(</span><span class="n">instantaneous_phase</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">)))</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">fs</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="wvd"><a class="viewcode-back" href="../../signal.html#acoustics.signal.wvd">[docs]</a><span class="k">def</span> <span class="nf">wvd</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">analytic</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wigner-Ville Distribution</span>
+
+<span class="sd">    :param signal: Signal</span>
+<span class="sd">    :param fs: Sample frequency</span>
+<span class="sd">    :param analytic: Use the analytic signal, calculated using Hilbert transform.</span>
+
+<span class="sd">    .. math:: W_z(n, \\omega) = 2 \\sum_k z^*[n-k]z[n+k] e^{-j\\omega 2kT}</span>
+
+<span class="sd">    Includes positive and negative frequencies.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">signal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span><span class="o">%</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">length_FFT</span> <span class="o">=</span> <span class="n">N</span> <span class="c1"># Take an even value of N</span>
+
+    <span class="c1">#if N != len(signal):</span>
+    <span class="c1">#    signal = np.concatenate(signal, [0])</span>
+
+    <span class="n">length_time</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">analytic</span><span class="p">:</span>
+        <span class="n">signal</span> <span class="o">=</span> <span class="n">hilbert</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">length_time</span><span class="p">),</span> <span class="n">signal</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">length_time</span><span class="p">)))</span>
+    <span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">length_FFT</span><span class="p">,</span><span class="n">length_time</span><span class="p">))</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">length_time</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="n">length_time</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length_time</span><span class="p">):</span>
+        <span class="n">R</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="n">tau1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">tau</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">tau</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span> <span class="p">)</span> <span class="c1"># In one direction</span>
+        <span class="n">R</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="n">N</span><span class="o">-</span><span class="p">(</span><span class="n">tau</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="n">tau</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span> <span class="c1"># And the other direction</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">length_FFT</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">length_FFT</span><span class="p">)</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mf">1.</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="n">W</span><span class="o">.</span><span class="n">T</span></div>
+
+
+<span class="k">def</span> <span class="nf">_sosfiltfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">padtype</span><span class="o">=</span><span class="s1">&#39;odd&#39;</span><span class="p">,</span> <span class="n">padlen</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;pad&#39;</span><span class="p">,</span> <span class="n">irlen</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filtfilt version using Second Order sections. Code is taken from scipy.signal.filtfilt and adapted to make it work with SOS.</span>
+<span class="sd">    Note that broadcasting does not work.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">sosfilt_zi</span>
+    <span class="kn">from</span> <span class="nn">scipy.signal._arraytools</span> <span class="kn">import</span> <span class="n">odd_ext</span><span class="p">,</span> <span class="n">axis_slice</span><span class="p">,</span> <span class="n">axis_reverse</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">padlen</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">edge</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">edge</span> <span class="o">=</span> <span class="n">padlen</span>
+
+    <span class="c1"># x&#39;s &#39;axis&#39; dimension must be bigger than edge.</span>
+    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">edge</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The length of the input vector x must be at least &quot;</span>
+                         <span class="s2">&quot;padlen, which is </span><span class="si">%d</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="n">edge</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">padtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">edge</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Make an extension of length `edge` at each</span>
+        <span class="c1"># end of the input array.</span>
+        <span class="k">if</span> <span class="n">padtype</span> <span class="o">==</span> <span class="s1">&#39;even&#39;</span><span class="p">:</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">even_ext</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">padtype</span> <span class="o">==</span> <span class="s1">&#39;odd&#39;</span><span class="p">:</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">odd_ext</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">const_ext</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="n">x</span>
+
+    <span class="c1"># Get the steady state of the filter&#39;s step response.</span>
+    <span class="n">zi</span> <span class="o">=</span> <span class="n">sosfilt_zi</span><span class="p">(</span><span class="n">sos</span><span class="p">)</span>
+
+    <span class="c1"># Reshape zi and create x0 so that zi*x0 broadcasts</span>
+    <span class="c1"># to the correct value for the &#39;zi&#39; keyword argument</span>
+    <span class="c1"># to lfilter.</span>
+    <span class="c1">#zi_shape = [1] * x.ndim</span>
+    <span class="c1">#zi_shape[axis] = zi.size</span>
+    <span class="c1">#zi = np.reshape(zi, zi_shape)</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">axis_slice</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="c1"># Forward filter.</span>
+    <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">zf</span><span class="p">)</span> <span class="o">=</span> <span class="n">sosfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">ext</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">zi</span><span class="o">=</span><span class="n">zi</span> <span class="o">*</span> <span class="n">x0</span><span class="p">)</span>
+
+    <span class="c1"># Backward filter.</span>
+    <span class="c1"># Create y0 so zi*y0 broadcasts appropriately.</span>
+    <span class="n">y0</span> <span class="o">=</span> <span class="n">axis_slice</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">start</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">zf</span><span class="p">)</span> <span class="o">=</span> <span class="n">sosfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">axis_reverse</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">zi</span><span class="o">=</span><span class="n">zi</span> <span class="o">*</span> <span class="n">y0</span><span class="p">)</span>
+
+    <span class="c1"># Reverse y.</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">axis_reverse</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">edge</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Slice the actual signal from the extended signal.</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">axis_slice</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">edge</span><span class="p">,</span> <span class="n">stop</span><span class="o">=-</span><span class="n">edge</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">y</span>
+
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">lti</span><span class="p">,</span> <span class="n">cheby1</span><span class="p">,</span> <span class="n">firwin</span>
+
+<span class="k">def</span> <span class="nf">decimate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ftype</span><span class="o">=</span><span class="s1">&#39;iir&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">zero_phase</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Downsample the signal by using a filter.</span>
+
+<span class="sd">    By default, an order 8 Chebyshev type I filter is used.  A 30 point FIR</span>
+<span class="sd">    filter with hamming window is used if `ftype` is &#39;fir&#39;.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : ndarray</span>
+<span class="sd">        The signal to be downsampled, as an N-dimensional array.</span>
+<span class="sd">    q : int</span>
+<span class="sd">        The downsampling factor.</span>
+<span class="sd">    n : int, optional</span>
+<span class="sd">        The order of the filter (1 less than the length for &#39;fir&#39;).</span>
+<span class="sd">    ftype : str {&#39;iir&#39;, &#39;fir&#39;}, optional</span>
+<span class="sd">        The type of the lowpass filter.</span>
+<span class="sd">    axis : int, optional</span>
+<span class="sd">        The axis along which to decimate.</span>
+<span class="sd">    zero_phase : bool</span>
+<span class="sd">        Prevent phase shift by filtering with ``filtfilt`` instead of ``lfilter``.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    y : ndarray</span>
+<span class="sd">        The down-sampled signal.</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    resample</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The ``zero_phase`` keyword was added in 0.17.0.</span>
+<span class="sd">    The possibility to use instances of ``lti`` as ``ftype`` was added in 0.17.0.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;q must be an integer&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ftype</span> <span class="o">==</span> <span class="s1">&#39;fir&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span>
+        <span class="n">system</span> <span class="o">=</span> <span class="n">lti</span><span class="p">(</span><span class="n">firwin</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">q</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s1">&#39;hamming&#39;</span><span class="p">),</span> <span class="mf">1.</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">ftype</span> <span class="o">==</span> <span class="s1">&#39;iir&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="n">system</span> <span class="o">=</span> <span class="n">lti</span><span class="p">(</span><span class="o">*</span><span class="n">cheby1</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.8</span> <span class="o">/</span> <span class="n">q</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">system</span> <span class="o">=</span> <span class="n">ftype</span>
+
+    <span class="k">if</span> <span class="n">zero_phase</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">filtfilt</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="n">system</span><span class="o">.</span><span class="n">den</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">lfilter</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="n">system</span><span class="o">.</span><span class="n">den</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+
+    <span class="n">sl</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span> <span class="o">*</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span>
+    <span class="n">sl</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">y</span><span class="p">[</span><span class="n">sl</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">impulse_response_real_even</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">ntaps</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The impulse response of a real and even frequency response is also real and even.</span>
+
+<span class="sd">    :param tf: Real and even frequency response. Only positive frequencies.</span>
+<span class="sd">    :param ntaps: Amount of taps.</span>
+<span class="sd">    :returns: A real and even (double-sided) impulse response with length `ntaps`.</span>
+
+<span class="sd">    A symmetric impulse response is needed. The center of symmetry determines the delay of the filter and thereby whether the filter is causal (delay&gt;0, linear-phase) or non-causal (delay=0, linear-phase, zero-phase).</span>
+
+<span class="sd">    https://ccrma.stanford.edu/~jos/filters/Zero_Phase_Filters_Even_Impulse.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ir</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">irfft</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">ntaps</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
+    <span class="k">return</span> <span class="n">ir</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;bandpass&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;bandpass_frequencies&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;bandpass_fractional_octaves&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;bandpass_octaves&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;bandpass_third_octaves&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;lowpass&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;highpass&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;octavepass&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;octave_filter&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;bandpass_filter&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;convolve&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;ir2fr&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;decibel_to_neper&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;neper_to_decibel&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;EqualBand&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;OctaveBand&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;ms&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;rms&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;normalize&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;window_scaling_factor&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;apply_window&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;amplitude_spectrum&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;auto_spectrum&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;power_spectrum&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;angle_spectrum&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;phase_spectrum&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;density_spectrum&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;integrate_bands&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;octaves&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;third_octaves&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;fractional_octaves&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;Filterbank&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;isolate&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;zero_crossings&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;amplitude_envelope&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;instantaneous_phase&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;instantaneous_frequency&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;wvd&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;decimate&#39;</span><span class="p">,</span>
+           <span class="p">]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2013, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+    </div>
+  </body>
+</html>

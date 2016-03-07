@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>&lt;no title&gt; &mdash; acoustics 0.0 documentation</title>
+    <title>Ambisonics &mdash; acoustics 0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
     <link rel="up" title="API Reference" href="reference.html" />
-    <link rel="next" title="&lt;no title&gt;" href="atmosphere.html" />
+    <link rel="next" title="Atmosphere" href="atmosphere.html" />
     <link rel="prev" title="API Reference" href="reference.html" /> 
   </head>
   <body role="document">
@@ -37,7 +37,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="atmosphere.html" title="&lt;no title&gt;"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="atmosphere.html" title="Atmosphere"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="reference.html" title="API Reference"
@@ -52,7 +55,101 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  
+  <span class="target" id="module-acoustics.ambisonics"></span><div class="section" id="ambisonics">
+<h1>Ambisonics<a class="headerlink" href="#ambisonics" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="acoustics.ambisonics.acn">
+<code class="descclassname">acoustics.ambisonics.</code><code class="descname">acn</code><span class="sig-paren">(</span><em>order=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/ambisonics.html#acn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.ambisonics.acn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spherical harmonic degree <cite>n</cite> and order <cite>m</cite> for ambisonics order <cite>order</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>order</strong> &#8211; Ambisonics order.</td>
+</tr>
+</tbody>
+</table>
+<p>Yields tuples <cite>(n, m)</cite> where <cite>n</cite> is the degree and <cite>m</cite> the order.</p>
+<p>Follows ACN.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="15%" />
+<col width="15%" />
+<col width="46%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">ACN</th>
+<th class="head">n</th>
+<th class="head">m</th>
+<th class="head">letter</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>0</td>
+<td>0</td>
+<td>W</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>1</td>
+<td>-1</td>
+<td>Y</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>1</td>
+<td>0</td>
+<td>Z</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>1</td>
+<td>+1</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.ambisonics.sn3d">
+<code class="descclassname">acoustics.ambisonics.</code><code class="descname">sn3d</code><span class="sig-paren">(</span><em>m</em>, <em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/ambisonics.html#sn3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.ambisonics.sn3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>SN3D or Schmidt semi-normalisation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m</strong> &#8211; order <cite>n</cite></li>
+<li><strong>n</strong> &#8211; degree <cite>m</cite></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference external" href="http://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#SN3D">http://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#SN3D</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.ambisonics.n3d">
+<code class="descclassname">acoustics.ambisonics.</code><code class="descname">n3d</code><span class="sig-paren">(</span><em>m</em>, <em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/ambisonics.html#n3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.ambisonics.n3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>N3D or full three-D normalisation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>m</strong> &#8211; order <cite>n</cite></li>
+<li><strong>n</strong> &#8211; degree <cite>m</cite></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference external" href="http://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#N3D">http://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#N3D</a></p>
+</dd></dl>
+
+</div>
+
 
           </div>
         </div>
@@ -64,7 +161,7 @@
                         title="previous chapter">API Reference</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="atmosphere.html"
-                        title="next chapter">&lt;no title&gt;</a></p>
+                        title="next chapter">Atmosphere</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -96,7 +193,10 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="atmosphere.html" title="&lt;no title&gt;"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="atmosphere.html" title="Atmosphere"
              >next</a> |</li>
         <li class="right" >
           <a href="reference.html" title="API Reference"
@@ -107,7 +207,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>
