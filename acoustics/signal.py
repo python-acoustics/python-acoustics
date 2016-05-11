@@ -1103,17 +1103,29 @@ def zero_crossings(data):
 
 
 def amplitude_envelope(signal, fs):
+def amplitude_envelope(signal, fs, axis=-1):
     """Instantaneous amplitude of tone.
 
     The instantaneous amplitude is the magnitude of the analytic signal.
 
+    :param signal: Signal.
+    :param fs: Sample frequency.
+    :param axis: Axis.
+    :returns: Amplitude envelope of `signal`.
+
     .. seealso:: :func:`scipy.signal.hilbert`
 
     """
-    return np.abs(hilbert(signal))
+    return np.abs(hilbert(signal, axis=axis))
 
-def instantaneous_phase(signal, fs):
+
+def instantaneous_phase(signal, fs, axis=-1):
     """Instantaneous phase of tone.
+
+    :param signal: Signal.
+    :param fs: Sample frequency.
+    :param axis: Axis.
+    :returns: Instantaneous phase of `signal`.
 
     The instantaneous phase is the angle of the analytic signal.
     This function returns a wrapped angle.
@@ -1121,20 +1133,23 @@ def instantaneous_phase(signal, fs):
     .. seealso:: :func:`scipy.signal.hilbert`
 
     """
-    return np.angle(hilbert(signal))
+    return np.angle(hilbert(signal, axis=axis))
 
-def instantaneous_frequency(signal, fs):
+
+def instantaneous_frequency(signal, fs, axis=-1):
     """Determine instantaneous frequency of tone.
+
+    :param signal: Signal.
+    :param fs: Sample frequency.
+    :param axis: Axis.
+    :returns: Instantaneous frequency of `signal`.
 
     The instantaneous frequency can be obtained by differentiating the unwrapped instantaneous phase.
 
     .. seealso:: :func:`instantaneous_phase`
 
     """
-    return np.diff( np.unwrap(instantaneous_phase(signal, fs))) / (2.0*np.pi) * fs
-
-
-
+    return np.diff( np.unwrap(instantaneous_phase(signal, fs, axis=axis), axis=axis), axis=axis) / (2.0*np.pi) * fs
 
 
 def wvd(signal, fs, analytic=True):
