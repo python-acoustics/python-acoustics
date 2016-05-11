@@ -589,7 +589,7 @@ class Signal(numpy.ndarray):
             'yscale': 'linear',
             'xlabel': "$f$ in Hz",
             'ylabel': "$\\angle \phi$",
-            'title' : 'Phase spectrum',
+            'title' : 'Phase response (wrapped)',
             }
         params.update(kwargs)
         f, o = self.angle_spectrum(N=N)
@@ -613,7 +613,7 @@ class Signal(numpy.ndarray):
             'yscale': 'linear',
             'xlabel': "$f$ in Hz",
             'ylabel': "$\\angle \phi$",
-            'title' : 'Phase spectrum',
+            'title' : 'Phase response (unwrapped)',
             }
         params.update(kwargs)
         f, o = self.phase_spectrum(N=N)
