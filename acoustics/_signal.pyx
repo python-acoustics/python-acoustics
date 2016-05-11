@@ -3,7 +3,7 @@ cimport numpy
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
-from scipy.signal import detrend, correlate, lfilter, bilinear, spectrogram, filtfilt, resample
+from scipy.signal import detrend, lfilter, bilinear, spectrogram, filtfilt, resample, fftconvolve
 import acoustics
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
@@ -275,7 +275,7 @@ class Signal(numpy.ndarray):
         :param other: Other signal.
         :param mode: Mode.
 
-        .. seealso:: :func:`np.correlate`
+        .. seealso:: :func:`np.correlate`, :func:`scipy.signal.fftconvolve`
 
         """
         if other is None:
@@ -284,7 +284,7 @@ class Signal(numpy.ndarray):
             raise ValueError("Cannot correlate. Sample frequencies are not the same.")
         if self.channels > 1 or other.channels > 1:
             raise ValueError("Cannot correlate. Not supported for multichannel signals.")
-        return correlate(self, other, mode=mode)
+        return self._construct(fftconvolve(self, other[::-1], mode=mode))
 
     def amplitude_envelope(self):
         """Amplitude envelope.
