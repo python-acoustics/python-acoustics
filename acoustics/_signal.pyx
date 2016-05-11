@@ -894,7 +894,7 @@ class Signal(numpy.ndarray):
         f, o = self.third_octaves()
         return _base_plot(f.center, o.leq().T, params)
 
-    def plot_fractional_octaves(self, fraction, **kwargs):
+    def plot_fractional_octaves(self, frequencies=None, fraction=1, order=8, purge=True, zero_phase=False, **kwargs):
         """Plot fractional octaves.
         """
         title = '1/{}-Octaves SPL'.format(fraction)
@@ -907,7 +907,7 @@ class Signal(numpy.ndarray):
             'title'     :   title,
         }
         params.update(kwargs)
-        f, o = self.fractional_octaves(fraction=fraction)
+        f, o = self.fractional_octaves(frequencies=frequencies, fraction=fraction, order=order, purge=purge, zero_phase=zero_phase)
         return _base_plot(f.center, o.leq().T, params)
 
     def plot(self, **kwargs):
