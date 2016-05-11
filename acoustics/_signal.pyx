@@ -72,6 +72,10 @@ class Signal(numpy.ndarray):
     def __repr__(self):
         return "Signal({})".format(str(self))
 
+    def _construct(self, x):
+        """Construct signal like x."""
+        return Signal(x, self.fs)
+
     @property
     def samples(self):
         """Amount of samples in signal."""
@@ -259,9 +263,9 @@ class Signal(numpy.ndarray):
         num, den = WEIGHTING_SYSTEMS[weighting]()
         b, a = bilinear(num, den, self.fs)
         if zero_phase:
-            type(self)(filtfilt(b, a, self), self.fs)
+            self._construct(filtfilt(b, a, self))
         else:
-            return type(self)(lfilter(b, a, self), self.fs)
+            return self._construct(lfilter(b, a, self))
 
 
     def correlate(self, other=None, mode='full'):
@@ -291,7 +295,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.signal.amplitude_envelope`
 
         """
-        return type(self)(acoustics.signal.amplitude_envelope(self, self.fs), self.fs)
+        return self._construct(acoustics.signal.amplitude_envelope(self, self.fs))
 
     def instantaneous_frequency(self):
         """Instantaneous frequency.
@@ -302,7 +306,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.signal.instantaneous_frequency`
 
         """
-        return type(self)(acoustics.signal.instantaneous_frequency(self, self.fs), self.fs)
+        return self._construct(acoustics.signal.instantaneous_frequency(self, self.fs))
 
     def instantaneous_phase(self):
         """Instantaneous phase.
@@ -313,7 +317,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`acoustics.signal.instantaneous_phase`
 
         """
-        return type(self)(acoustics.signal.instantaneous_phase(self, self.fs), self.fs)
+        return self._construct(acoustics.signal.instantaneous_phase(self, self.fs))
 
 
     def detrend(self, **kwargs):
@@ -325,7 +329,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`scipy.signal.detrend`
 
         """
-        return type(self)(detrend(self, **kwargs), self.fs)
+        return self._construct(detrend(self, **kwargs))
 
     def unwrap(self):
         """Unwrap signal in case the signal represents wrapped phase.
@@ -336,7 +340,7 @@ class Signal(numpy.ndarray):
         .. seealso:: :func:`np.unwrap`
 
         """
-        return type(self)(np.unwrap(self), self.fs)
+        return self._construct(np.unwrap(self))
 
     def complex_cepstrum(self, N=None):
         """Complex cepstrum.
