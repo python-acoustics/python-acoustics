@@ -1102,7 +1102,6 @@ def zero_crossings(data):
     return ((pos[:-1] & npos[1:]) | (npos[:-1] & pos[1:])).nonzero()[0]
 
 
-def amplitude_envelope(signal, fs):
 def amplitude_envelope(signal, fs, axis=-1):
     """Instantaneous amplitude of tone.
 
