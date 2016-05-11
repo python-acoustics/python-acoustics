@@ -656,7 +656,7 @@ class Signal(numpy.ndarray):
         cb = fig.colorbar(mappable=im)
         cb.set_label('SPL in dB')
 
-        #ax0.set_xlim(params['xlim'])
+        ax0.set_xlim(params['xlim'])
         ax0.set_ylim(params['ylim'])
         im.set_clim(params['clim'])
 
