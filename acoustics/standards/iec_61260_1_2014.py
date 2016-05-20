@@ -142,7 +142,7 @@ def index_of_frequency(frequency, fraction=1, ref=REFERENCE_FREQUENCY, G=OCTAVE_
         #return np.round((2.0*fraction * np.log(frequency/ref) / np.log(G) - 1.0)) / 2.0
     fraction = np.asarray(fraction)
     uneven = (fraction%2).astype('bool')
-    return np.round((2.0*fraction * np.log(frequency/ref) / np.log(G) - 1.0)) / 2.0 * np.logical_not(uneven) + uneven * np.round(fraction * np.log(frequency/ref) / np.log(G)).astype('int16')
+    return (np.round((2.0*fraction * np.log(frequency/ref) / np.log(G) - 1.0)) / 2.0 * np.logical_not(uneven) + uneven * np.round(fraction * np.log(frequency/ref) / np.log(G)).astype('int16')).astype('int16')
 
 
 def _nominal_center_frequency(center, fraction):
