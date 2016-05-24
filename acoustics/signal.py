@@ -1327,6 +1327,23 @@ def impulse_response_real_even(tf, ntaps):
     ir = np.fft.ifftshift(np.fft.irfft(tf, n=ntaps)).real
     return ir
 
+
+def linear_phase(ntaps, steepness=1):
+    """Compute linear phase delay for a single-sided spectrum.
+
+    :param ntaps: Amount of filter taps.
+    :param steepness: Steepness of phase delay. Default value is 1, corresponding to delay in samples of `ntaps//2`.
+    :returns: Linear phase delay.
+
+    A linear phase delay can be added to an impulse response using the function `np.fft.ifftshift`.
+    Sometimes, however, you would like to add the linear phase delay to the frequency response instead.
+    This function computes the linear phase delay which can be multiplied with a single-sided frequency response.
+    """
+    f = np.fft.rfftfreq(ntaps, 1.0) # Frequencies normalized to Nyquist.
+    alpha = ntaps//2 * steepness
+    return np.exp(-1j*2.*np.pi*f*alpha)
+
+
 __all__ = ['bandpass',
            'bandpass_frequencies',
            'bandpass_fractional_octaves',
