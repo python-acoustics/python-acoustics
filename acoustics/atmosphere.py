@@ -168,30 +168,39 @@ class Atmosphere(object):
         The attenuation coefficient is calculated using :func:`acoustics.standards.iso_9613_1_1993.attenuation_coefficient`.
         """
         return attenuation_coefficient(self.pressure, self.temperature, self.reference_pressure, self.reference_temperature, self.relaxation_frequency_nitrogen, self.relaxation_frequency_oxygen, frequency)
-            
 
-    def impulse_response(self, distance, fs, ntaps=None, sign=-1):
+    def frequency_response(self, distance, frequencies, inverse=False):
+        """Frequency response.
+
+        :param distance: Distance between source and receiver.
+        :param frequencies: Frequencies for which to compute the response.
+        :param inverse: Whether the attenuation should be undone.
+
+        """
+        return frequency_response(self, distance, frequencies, inverse)
+
+    def impulse_response(self, distance, fs, ntaps=None, inverse=False):
         """Impulse response of sound travelling through `atmosphere` for a given `distance` sampled at `fs`.
 
         :param atmosphere: Atmosphere.
         :param distance: Distance between source and receiver.
         :param fs: Sample frequency
         :param ntaps: Amount of taps.
-        :param sign: Sign.
+        :param inverse: Whether the attenuation should be undone.
 
         .. seealso:: :func:`impulse_response`
         """
-        return impulse_response(self, distance, fs, ntaps, sign)
+        return impulse_response(self, distance, fs, ntaps, inverse)
 
     def plot_attenuation_coefficient(self, frequency):
         """
         Plot the attenuation coefficient :math:`\\alpha` as function of frequency and write the figure to ``filename``.
-        
+
         :param filename: Filename
         :param frequency: Frequencies
-        
+
         .. note:: The attenuation coefficient is plotted in dB/km!
-        
+
         """
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
@@ -201,18 +210,30 @@ class Atmosphere(object):
         ax0.set_xlabel(r'$f$ in Hz')
         ax0.set_ylabel(r'$\alpha$ in dB/km')
         ax0.legend()
-        
+
         return fig
 
 
-def impulse_response(atmosphere, distance, fs, ntaps=None, sign=-1):
+def frequency_response(atmosphere, distance, frequencies, inverse=False):
+    """Single-sided frequency response.
+
+    :param atmosphere: Atmosphere.
+    :param distance: Distance between source and receiver.
+    :param frequencies: Frequencies for which to compute the response.
+    :param inverse: Whether the attenuation should be undone.
+    """
+    sign = -1 if not inverse else +1
+    tf = 10.0**( float(sign) * distance * atmosphere.attenuation_coefficient(frequencies) / 20.0  )
+    return tf
+
+def impulse_response(atmosphere, distance, fs, ntaps, inverse=False):
     """Impulse response of sound travelling through `atmosphere` for a given `distance` sampled at `fs`.
 
     :param atmosphere: Atmosphere.
     :param distance: Distance between source and receiver.
     :param fs: Sample frequency
     :param ntaps: Amount of taps.
-    :param sign: Sign.
+    :param inverse: Whether the attenuation should be undone.
 
     The attenuation is calculated for a set of positive frequencies. Because the attenuation is the same for the negative frequencies, we have Hermitian symmetry.
     The attenuation is entirely real-valued. We like to have a constant group delay and therefore we need a linear-phase filter.
@@ -224,7 +245,7 @@ def impulse_response(atmosphere, distance, fs, ntaps=None, sign=-1):
     # Frequencies vector with positive frequencies only.
     frequencies = np.fft.rfftfreq(ntaps, 1./fs)
     # Single-sided spectrum. Negative frequencies have the same values.
-    tf = 10.0**( float(sign) * distance * atmosphere.attenuation_coefficient(frequencies) / 20.0  )
+    tf = frequency_response(atmosphere, distance, frequencies, inverse)
     # Impulse response. We design a zero-phase filter (linear-phase with zero slope).
     # We need to shift the IR to make it even. Taking the real part should not be necessary, see above.
     #ir = np.fft.ifftshift(np.fft.irfft(tf, n=ntaps)).real
@@ -240,4 +261,5 @@ __all__ = ['Atmosphere', 'SOUNDSPEED', 'REFERENCE_TEMPERATURE',
            'relaxation_frequency_nitrogen', 
            'attenuation_coefficient',
            'impulse_response',
+           'frequency_response'
            ]
