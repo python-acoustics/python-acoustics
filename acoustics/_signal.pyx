@@ -638,6 +638,10 @@ class Signal(numpy.ndarray):
             'clim' : None,
             'NFFT' : 4096,
             'noverlap' : 128,
+            'title': 'Spectrogram',
+            'xlabel': '$t$ in s',
+            'ylabel': '$f$ in Hz',
+            'clabel': 'SPL in dB',
             }
         params.update(kwargs)
 
@@ -645,7 +649,7 @@ class Signal(numpy.ndarray):
             raise ValueError("Cannot plot spectrogram of multichannel signal. Please select a single channel.")
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
-        ax0.set_title('Spectrogram')
+        ax0.set_title(params['title'])
         #f = ax0.specgram(self, Fs=self.fs)
         data = np.squeeze(self)
         try:
@@ -654,14 +658,14 @@ class Signal(numpy.ndarray):
             raise NotImplementedError("Your version of matplotlib is incompatible due to lack of support of the mode keyword argument to matplotlib.mlab.specgram.")
 
         cb = fig.colorbar(mappable=im)
-        cb.set_label('SPL in dB')
+        cb.set_label(params['clabel'])
 
         ax0.set_xlim(params['xlim'])
         ax0.set_ylim(params['ylim'])
         im.set_clim(params['clim'])
 
-        ax0.set_xlabel(r'$t$ in s')
-        ax0.set_ylabel(r'$f$ in Hz')
+        ax0.set_xlabel(params['xlabel'])
+        ax0.set_ylabel(params['ylabel'])
 
         return fig
 
