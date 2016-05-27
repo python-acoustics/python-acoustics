@@ -149,7 +149,7 @@ class Tonality(object):
                  reference_pressure=REFERENCE_PRESSURE,
                  tsc=TONE_SEEK_CRITERION,
                  regression_range_factor=REGRESSION_RANGE_FACTOR,
-                 bins=None,
+                 nbins=None,
                  force_tone_without_pause=False,
                  force_bandwidth_criterion=False,
                 ):
@@ -166,8 +166,8 @@ class Tonality(object):
         """Tone seeking criterium."""
         self.regression_range_factor = regression_range_factor
         """Regression range factor."""
-        self.bins = bins
-        """Amount of frequency bins to use. See attribute `nperseg` of :func:`scipy.signal.welch`."""
+        self.nbins = nbins
+        """Amount of frequency nbins to use. See attribute `nperseg` of :func:`scipy.signal.welch`."""
         
         self._noise_pauses = list()
         """Private list of noise pauses that were determined or assigned."""
@@ -202,11 +202,11 @@ class Tonality(object):
         """Power spectrum of the input signal.
         """
         if self._spectrum is None:
-            bins = self.bins
-            if bins is None:
-                bins = self.sample_frequency
-            bins //= 1 # Fix because of bug in welch with uneven bins
-            f, p = welch(self.signal, fs=self.sample_frequency, nperseg=bins, window=self.window, detrend=False, scaling='spectrum')
+            nbins = self.nbins
+            if nbins is None:
+                nbins = self.sample_frequency
+            nbins //= 1 # Fix because of bug in welch with uneven nbins
+            f, p = welch(self.signal, fs=self.sample_frequency, nperseg=nbins, window=self.window, detrend=False, scaling='spectrum')
             self._spectrum = pd.Series(10.0*np.log10(p / self.reference_pressure**2.0), index=f)
         return self._spectrum 
     
