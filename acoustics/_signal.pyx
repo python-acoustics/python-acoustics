@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from scipy.io import wavfile
 from scipy.signal import detrend, lfilter, bilinear, spectrogram, filtfilt, resample, fftconvolve
 import acoustics
+import itertools
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
 from acoustics.standards.iec_61672_1_2013 import WEIGHTING_SYSTEMS
@@ -1048,6 +1049,7 @@ _PLOTTING_PARAMS = {
     'xlim'      :   (None, None),
     'ylim'      :   (None, None),
     'labels'    :   None,
+    'linestyles':   ['-', '-.', '--', ':'],
     }
 
 def _get_plotting_params():
@@ -1061,10 +1063,16 @@ def _base_plot(x, y, given_params):
     params = _get_plotting_params()
     params.update(given_params)
 
+    linestyles = itertools.cycle(iter(params['linestyles']))
+
     fig = plt.figure()
     ax0 = fig.add_subplot(111)
     ax0.set_title(params['title'])
-    ax0.plot(x, y.T)
+    if y.ndim > 1:
+        for channel in y:
+            ax0.plot(x, channel, linestyle=next(linestyles))
+    else:
+        ax0.plot(x, y)
     ax0.set_xlabel(params['xlabel'])
     ax0.set_ylabel(params['ylabel'])
     ax0.set_xscale(params['xscale'])
@@ -1073,7 +1081,7 @@ def _base_plot(x, y, given_params):
     ax0.set_ylim(params['ylim'])
 
     if params['labels'] is None and y.ndim > 1:
-        params['labels'] = np.arange(y.shape[-2])
+        params['labels'] = np.arange(y.shape[-2])+1
     if params['labels'] is not None:
         ax0.legend(labels=params['labels'])
 
