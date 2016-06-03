@@ -1039,7 +1039,7 @@ class Signal(numpy.ndarray):
         return cls(data, fs=fs)
 
 
-_base_params = {
+_PLOTTING_PARAMS = {
     'title'     :   None,
     'xlabel'    :   None,
     'ylabel'    :   None,
@@ -1050,10 +1050,15 @@ _base_params = {
     'labels'    :   None,
     }
 
+def _get_plotting_params():
+    d = dict()
+    d.update(_PLOTTING_PARAMS)
+    return d
+
+
 def _base_plot(x, y, given_params):
 
-    params = dict()
-    params.update(_base_params)
+    params = _get_plotting_params()
     params.update(given_params)
 
     fig = plt.figure()
