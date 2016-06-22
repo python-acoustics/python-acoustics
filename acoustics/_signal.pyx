@@ -622,6 +622,27 @@ class Signal(numpy.ndarray):
 
 
     def spectrogram(self, **kwargs):
+        """Spectrogram of signal.
+
+        :returns: Spectrogram.
+
+        See :func:`scipy.signal.spectrogram`. Some of the default values have been changed.
+        The generated spectrogram consists by default of complex values.
+
+        """
+        params = {
+            'nfft' : 4096,
+            'noverlap' : 128,
+            'mode' : 'complex',
+            }
+        params.update(kwargs)
+
+        t, s, P = spectrogram(self, fs=self.fs, **params)
+
+        return t, s, P
+
+
+    def plot_spectrogram(self, **kwargs):
         """
         Plot spectrogram of the signal.
 
@@ -633,6 +654,7 @@ class Signal(numpy.ndarray):
         .. note:: This method only works for a single channel.
 
         """
+        # To do, use :meth:`spectrogram`.
         params = {
             'xlim' : None,
             'ylim' : None,

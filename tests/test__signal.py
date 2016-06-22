@@ -290,16 +290,18 @@ class TestSignal():
     def test_plot_phase_spectrum(self, signal):
         signal.plot_phase_spectrum()
     
-    def test_spectrogram(self, signal):
+    def test_plot_spectrogram(self, signal):
         if signal.channels > 1:
             with pytest.raises(ValueError):
-                signal.spectrogram()
+                signal.plot_spectrogram()
         else:
             try:
-                signal.spectrogram()
+                signal.plot_spectrogram()
             except NotImplementedError: # easy way to skip mpl 1.3.1 specgram mode issue
                 pass
         
+    def spectrogram(self, signal):
+        signal.spectrogram()
     
     def test_pickling(self, signal):
         import pickle
