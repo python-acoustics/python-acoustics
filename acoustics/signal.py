@@ -1320,7 +1320,13 @@ def impulse_response_real_even(tf, ntaps):
     :param ntaps: Amount of taps.
     :returns: A real and even (double-sided) impulse response with length `ntaps`.
 
-    A symmetric impulse response is needed. The center of symmetry determines the delay of the filter and thereby whether the filter is causal (delay>0, linear-phase) or non-causal (delay=0, linear-phase, zero-phase).
+    A symmetric impulse response is needed. The center of symmetry determines the delay
+    of the filter and thereby whether the filter is causal (delay>0, linear-phase) or
+    non-causal (delay=0, linear-phase, zero-phase).
+
+    Creating linear phase can be done by multiplying the magnitude with a complex
+    exponential corresponding to the desired shift. Another method is to rotate the
+    impulse response.
 
     https://ccrma.stanford.edu/~jos/filters/Zero_Phase_Filters_Even_Impulse.html
     """
