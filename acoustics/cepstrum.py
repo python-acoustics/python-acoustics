@@ -76,7 +76,7 @@ def complex_cepstrum(x, n=None):
     .. [2] M.P. Norton and D.G. Karczub, D.G., 
            "Fundamentals of Noise and Vibration Analysis for Engineers", 2003.
     .. [3] B. P. Bogert, M. J. R. Healy, and J. W. Tukey: 
-           "The Quefrency Alanysis of Time Series for Echoes: Cepstrum, Pseudo 
+           "The Quefrency Analysis of Time Series for Echoes: Cepstrum, Pseudo
            Autocovariance, Cross-Cepstrum and Saphe Cracking". 
            Proceedings of the Symposium on Time Series Analysis
            Chapter 15, 209-243. New York: Wiley, 1963.
@@ -233,6 +233,8 @@ def minimum_phase(x, n=None):
            EXPRESS BRIEFS, VOL. 53, NO. 10, OCTOBER 2006
     
     """
+    if n is None:
+        n = len(x)
     ceps = real_cepstrum(x, n=n)
     odd = n % 2 
     window = np.concatenate(([1.0], 2.0*np.ones((n+odd)/2-1), 
