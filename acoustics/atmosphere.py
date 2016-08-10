@@ -222,7 +222,7 @@ def frequency_response(atmosphere, distance, frequencies, inverse=False):
     :param frequencies: Frequencies for which to compute the response.
     :param inverse: Whether the attenuation should be undone.
     """
-    sign = -1 if not inverse else +1
+    sign = +1 if inverse else -1
     tf = 10.0**( float(sign) * distance * atmosphere.attenuation_coefficient(frequencies) / 20.0  )
     return tf
 
