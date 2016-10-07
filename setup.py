@@ -25,7 +25,7 @@ class PyTest(TestCommand):
 
 setup(
       name='acoustics',
-      version='0.1.1',
+      version='0.1.2',
       description="Acoustics module for Python.",
       long_description=long_description,
       author='Python Acoustics',
