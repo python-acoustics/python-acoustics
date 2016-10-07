@@ -1,5 +1,5 @@
 """
-ISO 1996-1-2003
+ISO 1996-1:2003
 ===============
 
 ISO 1996-1:2003 defines the basic quantities to be used for the description of 
