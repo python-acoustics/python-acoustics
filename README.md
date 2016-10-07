@@ -8,31 +8,23 @@ The `python-acoustics` module is a Python module with useful tools for acoustici
 
 ## Installation
 
-Currently there are no packages available.
+The latest release can be found on PyPI and installed with `pip install streaming`.
+Otherwise, you can clone this repository and install with `pip install` or `pip install -e` when you want an editable install.
 
-The recommended method to install is to clone this repository
-
-`git clone git@github.com:python-acoustics/python-acoustics.git`
-
-and install this package in development mode
-
-`python setup.py develop`
-
-This way one can easily update to the latest version using
-
-`git pull`
-
-and running again
-
-`python setup.py develop`
-
-Alernatively, you can download the ZIP archive and install using
-
-`python setup.py install`
 
 ## Examples
 
 Several examples can be found in the `examples` folder.
+
+## Tests
+
+The test suite can be run with
+
+`python setup.py test`
+
+or
+
+`py.test`
 
 ## Documentation
 
