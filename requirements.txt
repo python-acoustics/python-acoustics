@@ -1,0 +1,7 @@
+numpy
+scipy
+matplotib
+six
+cython
+pandas
+tabulate
