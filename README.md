@@ -8,7 +8,7 @@ The `python-acoustics` module is a Python module with useful tools for acoustici
 
 ## Installation
 
-The latest release can be found on PyPI and installed with `pip install streaming`.
+The latest release can be found on PyPI and installed with `pip install acoustics`.
 Otherwise, you can clone this repository and install with `pip install` or `pip install -e` when you want an editable install.
 
 
