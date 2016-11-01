@@ -149,7 +149,7 @@ class Signal(numpy.ndarray):
     def resample(self, nsamples, times=None, axis=-1, window=None):
         """Resample signal.
 
-        :param samples:: New amount of samples.
+        :param samples: New amount of samples.
         :param times: Times corresponding to samples.
         :param axis: Axis.
         :param window: Window.
@@ -235,7 +235,7 @@ class Signal(numpy.ndarray):
     def ms(self):
         """Mean value squared of signal.
 
-        .. seealso:: `acoustics.signal.ms`
+        .. seealso:: :func:`acoustics.signal.ms`
 
         """
         return acoustics.signal.ms(self)
@@ -243,7 +243,7 @@ class Signal(numpy.ndarray):
     def rms(self):
         """Root mean squared of signal.
 
-        .. seealso:: `acoustics.signal.rms`
+        .. seealso:: :func:`acoustics.signal.rms`
 
         """
         return acoustics.signal.rms(self)
@@ -253,8 +253,8 @@ class Signal(numpy.ndarray):
     def weigh(self, weighting='A', zero_phase=False):
         """Apply frequency-weighting. By default 'A'-weighting is applied.
 
-        :param weighting: Frequency-weighting filter to apply. Valid options are 'A', 'C' and 'Z'.
-        :returns: A-weighted signal.
+        :param weighting: Frequency-weighting filter to apply. Valid options are 'A', 'C' and 'Z'. Default weighting is 'A'.
+        :returns: Weighted signal.
         :rtype: :class:`Signal`.
 
         By default the weighting filter is applied using :func:`scipy.signal.lfilter` causing a frequency-dependent delay.
