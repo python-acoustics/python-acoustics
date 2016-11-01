@@ -33,8 +33,7 @@ setup(
       license='LICENSE',
       packages=find_packages(exclude=["tests"]),
       package_dir={'acoustics': 'acoustics'},
-      package_data={'acoustics': ['data/*']},
-      #py_modules=['turbulence'],
+      package_data={'acoustics': ['data/*', 'tests/*.py']},
       scripts=[],
       zip_safe=False,
       install_requires=[
