@@ -264,7 +264,7 @@ class Signal(numpy.ndarray):
         num, den = WEIGHTING_SYSTEMS[weighting]()
         b, a = bilinear(num, den, self.fs)
         if zero_phase:
-            self._construct(filtfilt(b, a, self))
+            return self._construct(filtfilt(b, a, self))
         else:
             return self._construct(lfilter(b, a, self))
 
