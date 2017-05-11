@@ -5,6 +5,7 @@
 #   url = https://github.com/python-acoustics/python-acoustics/archive/master.tar.gz;
 # });
 #
+# Note that the above should still be called, with the following arguments.
 { buildPythonPackage
 , pytest
 , cython
