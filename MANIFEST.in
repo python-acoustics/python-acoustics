@@ -1,3 +1,5 @@
-README.md
-LICENSE
+include README.md
+include LICENSE
 recursive-include acoustics *.pyx
+graft data
+graft tests
