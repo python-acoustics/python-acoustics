@@ -200,9 +200,9 @@ class Signal(numpy.ndarray):
 
         """
         if start is not None:
-            start = np.floor(start*self.fs)
+            start = int(np.floor(start*self.fs))
         if stop is not None:
-            stop  = np.floor(stop*self.fs)
+            stop  = int(np.floor(stop*self.fs))
         return self[..., start:stop]
 
     def times(self):
