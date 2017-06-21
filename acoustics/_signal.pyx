@@ -670,17 +670,18 @@ class Signal(numpy.ndarray):
 
         if self.channels > 1:
             raise ValueError("Cannot plot spectrogram of multichannel signal. Please select a single channel.")
-        fig = plt.figure()
-        ax0 = fig.add_subplot(111)
+
+        # Check if an axes object is passed in. Otherwise, create one.
+        ax0 = params.get('ax', plt.figure().add_subplot(111))
         ax0.set_title(params['title'])
-        #f = ax0.specgram(self, Fs=self.fs)
+
         data = np.squeeze(self)
         try:
             _, _, _, im = ax0.specgram(data, Fs=self.fs, noverlap=params['noverlap'], NFFT=params['NFFT'], mode='magnitude', scale_by_freq=False)
         except AttributeError:
             raise NotImplementedError("Your version of matplotlib is incompatible due to lack of support of the mode keyword argument to matplotlib.mlab.specgram.")
 
-        cb = fig.colorbar(mappable=im)
+        cb = ax0.get_figure().colorbar(mappable=im)
         cb.set_label(params['clabel'])
 
         ax0.set_xlim(params['xlim'])
@@ -690,7 +691,7 @@ class Signal(numpy.ndarray):
         ax0.set_xlabel(params['xlabel'])
         ax0.set_ylabel(params['ylabel'])
 
-        return fig
+        return ax0
 
 
     def levels(self, time=0.125, method='average'):
@@ -1081,14 +1082,20 @@ def _get_plotting_params():
 
 
 def _base_plot(x, y, given_params):
+    """Common function for creating plots.
+
+    :returns: Axes object.
+    :rtype: :class:`matplotlib.Axes`
+    """
 
     params = _get_plotting_params()
     params.update(given_params)
 
     linestyles = itertools.cycle(iter(params['linestyles']))
 
-    fig = plt.figure()
-    ax0 = fig.add_subplot(111)
+    # Check if an axes object is passed in. Otherwise, create one.
+    ax0 = params.get('ax', plt.figure().add_subplot(111))
+
     ax0.set_title(params['title'])
     if y.ndim > 1:
         for channel in y:
@@ -1107,4 +1114,4 @@ def _base_plot(x, y, given_params):
     if params['labels'] is not None:
         ax0.legend(labels=params['labels'])
 
-    return fig
+    return ax0
