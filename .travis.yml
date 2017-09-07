@@ -8,11 +8,6 @@ python:
   - 3.5
   - 3.6
 
-env:
-  global:
-    - NUMPY_VERSION=1.10
-    - SCIPY_VERSION=0.16
-
 before_install:
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
       wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -31,7 +26,7 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 
 install:
-  - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION matplotlib six pytest pip cython pandas
+  - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib six pytest pip cython pandas
   - source activate testenv
 
 script:
