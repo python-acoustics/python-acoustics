@@ -36,3 +36,12 @@ install:
 script:
   - python setup.py test
   - python setup.py install
+
+deploy:
+  provider: pypi
+  user: FRidh
+  password:
+    secure: M0yYahsvzDdS9fcQWVK8UHVqjttwNeg0/wtlnaqYoJXJ9k1tyiXlFOAHmYmcUTytixJI+L+cDmxUO/torx51C1zLKVVLd3i+NcqJmHjY8tBj+0F1jSsnXKlKEuslk9wgZ6dSap2WUvwewkX4ksQasPfCnbUypGS3mi/pznwZZhE=
+  on:
+    tags: true
+    python: '3.6'
