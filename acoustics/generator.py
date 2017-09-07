@@ -172,7 +172,7 @@ def brown(N, state=None):
     return normalize(y)
 
 
-def violet(N):
+def violet(N, state=None):
     """
     Violet noise. Power increases with 6 dB per octave. 
     
