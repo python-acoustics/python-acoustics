@@ -665,6 +665,7 @@ class Signal(numpy.ndarray):
             'xlabel': '$t$ in s',
             'ylabel': '$f$ in Hz',
             'clabel': 'SPL in dB',
+            'colorbar': True,
             }
         params.update(kwargs)
 
@@ -681,8 +682,9 @@ class Signal(numpy.ndarray):
         except AttributeError:
             raise NotImplementedError("Your version of matplotlib is incompatible due to lack of support of the mode keyword argument to matplotlib.mlab.specgram.")
 
-        cb = ax0.get_figure().colorbar(mappable=im)
-        cb.set_label(params['clabel'])
+        if params['colorbar']:
+            cb = ax0.get_figure().colorbar(mappable=im)
+            cb.set_label(params['clabel'])
 
         ax0.set_xlim(params['xlim'])
         ax0.set_ylim(params['ylim'])
