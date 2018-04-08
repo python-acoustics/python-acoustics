@@ -5,6 +5,7 @@ import tempfile
 
 import itertools as it
 from acoustics.signal import EqualBand
+import matplotlib.pyplot as plt
 
 #def test_operator():
     
@@ -265,31 +266,40 @@ class TestSignal():
             #getattr(signal, func)(**arguments)
         
     
+
+
     def test_plot(self, signal):
         signal.plot()
+        plt.close("all")
 
     def test_plot_levels(self, signal):
         signal.plot_levels()
         signal.plot_levels(method='average', time=1.0)
         signal.plot_levels(method='weighting', time=1.0)
-    
+        plt.close("all")
+
     def test_plot_octaves(self, signal):
         signal.plot_octaves()
-    
+        plt.close("all")
+
     def test_plot_third_octaves(self, signal):
         signal.plot_third_octaves()
-    
+        plt.close("all")
+
     def test_plot_fractional_octaves(self, signal):
         signal.plot_fractional_octaves(3)
         signal.plot_fractional_octaves(6)
         signal.plot_fractional_octaves(9)
-    
+        plt.close("all")
+
     def test_plot_power_spectrum(self, signal):
         signal.plot_power_spectrum()
-    
+        plt.close("all")
+
     def test_plot_phase_spectrum(self, signal):
         signal.plot_phase_spectrum()
-    
+        plt.close("all")
+
     def test_plot_spectrogram(self, signal):
         if signal.channels > 1:
             with pytest.raises(ValueError):
@@ -299,7 +309,8 @@ class TestSignal():
                 signal.plot_spectrogram()
             except NotImplementedError: # easy way to skip mpl 1.3.1 specgram mode issue
                 pass
-        
+        plt.close("all")
+
     def spectrogram(self, signal):
         signal.spectrogram()
     
