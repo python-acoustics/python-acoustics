@@ -38,8 +38,7 @@ buildPythonPackage rec {
   };
 
   checkPhase = ''
-    LC_ALL="en_US.UTF-8"
-    py.test tests
+    LC_ALL="en_US.UTF-8" py.test tests
   '';
 
 }
