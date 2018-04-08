@@ -36,7 +36,7 @@ deploy:
   provider: pypi
   user: FRidh
   password:
-    secure: M0yYahsvzDdS9fcQWVK8UHVqjttwNeg0/wtlnaqYoJXJ9k1tyiXlFOAHmYmcUTytixJI+L+cDmxUO/torx51C1zLKVVLd3i+NcqJmHjY8tBj+0F1jSsnXKlKEuslk9wgZ6dSap2WUvwewkX4ksQasPfCnbUypGS3mi/pznwZZhE=
+    secure: hJ2M6xqHLvT+uklOqfMlgaQB467GQnMQnQd5G/6ZCQSMnw3buMu/UrjQHhuSZnH0RKGnHlHwYB8ZN4//vP6WTzYSzf8zcq2joNo3FuE+M6S8hGagCl9Vq6IVSvk63ji/cuYjKwV6yjfp/LxbbFLZIVpgNCDvlzQyu3OkJmEtGso=
   on:
     tags: true
     python: '3.6'
