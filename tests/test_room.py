@@ -172,7 +172,7 @@ def test_t60_impulse(file_name, bands, rt, expected):
     (data_path() + 'living_room_1.wav', octave(63, 8000),
      np.array([  8.,  18.,  23.,  26.,  30.,  31.,  27.,  29.])),
     (data_path() + 'living_room_1.wav', third(100, 5000),
-     np.array([ 3.,   6.,   7.,  13.,  18.,  23.,  20.,  19.,  28., 
+     np.array([ 3.,   6.,   7.,  13.,  18.,  23.,  20.,  19.,  28.,
                30.,  30., 27.,  32.,  31.,  30.,  28.,  29.,  25.])),
 ])
 def test_c50_from_file(file_name, bands, expected):
@@ -185,7 +185,7 @@ def test_c50_from_file(file_name, bands, expected):
      np.array([18.542, 23.077, 27.015, 31.743,
                35.469, 36.836, 33.463, 36.062])),
     (data_path() + 'living_room_1.wav', third(100, 5000),
-     np.array([17.,  14.,  17.,  24.,  26.,  27.,  22.,  26.,  
+     np.array([17.,  14.,  17.,  24.,  26.,  27.,  22.,  26.,
                34.,  35.,  34., 32.,  38.,  38.,  34.,  34.,  35.,  32.])),
 ])
 def test_c80_from_file(file_name, bands, expected):

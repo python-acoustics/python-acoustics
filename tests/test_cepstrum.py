@@ -1,6 +1,6 @@
 import numpy as np
 
-#from scipy.signal import (complex_cepstrum, inverse_complex_cepstrum, 
+#from scipy.signal import (complex_cepstrum, inverse_complex_cepstrum,
 #                          real_cepstrum, minimum_phase, sawtooth)
 from scipy.signal import sawtooth
 from acoustics.cepstrum import *
@@ -9,7 +9,7 @@ from numpy.testing import (assert_array_almost_equal)
 
 
 def test_complex_cepstrum():
-    """The period of a periodic harmonic will show up as a peak in a 
+    """The period of a periodic harmonic will show up as a peak in a
     complex cepstrum.
     """
     duration = 5.0
@@ -22,7 +22,7 @@ def test_complex_cepstrum():
     assert(fundamental == 1.0/t[ceps.argmax()])
 
 def test_inverse_complex_cepstrum():
-    """Applying the complex cepstrum and then the inverse complex cepstrum 
+    """Applying the complex cepstrum and then the inverse complex cepstrum
     should result in the original sequence.
     """
     x = np.arange(10)

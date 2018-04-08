@@ -63,7 +63,7 @@ def test_third_low():
     #assert_array_almost_equal(generated, real)
 
 def test_third2oct():
-    
+
     levels = np.array([10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0])
     generated = third2oct(levels)
     real = np.array([ 14.77121255,  14.77121255,  14.77121255])
@@ -77,7 +77,7 @@ def test_third2oct_2darray_axis0():
     generated = third2oct(levels, axis=0)
     real = np.array([100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0])
     assert_array_almost_equal(generated, real)
-    
+
 def test_third2oct_2darray_axis1():
     levels = np.array([[  1.0,   1.0,   1.0,   1.0,   1.0,   1.0,   1.0,   1.0,   1.0],
                        [ 10.0,  10.0,  10.0,  10.0,  10.0,  10.0,  10.0,  10.0,  10.0],
@@ -89,9 +89,9 @@ def test_third2oct_2darray_axis1():
                     [ 104.77121255, 104.77121255, 104.77121255]
                     ])
     assert_array_almost_equal(generated, real)
-    
+
 def test_third2oct_3darray_axis0():
-    
+
     # Array of ones with shape (3,4,5)
     levels = np.array([[[ 1.,  1.,  1.,  1.,  1.],
         [ 1.,  1.,  1.,  1.,  1.],
@@ -114,8 +114,8 @@ def test_third2oct_3darray_axis0():
        [ 5.77121255,  5.77121255,  5.77121255,  5.77121255,  5.77121255],
        [ 5.77121255,  5.77121255,  5.77121255,  5.77121255,  5.77121255]])
     assert_array_almost_equal(generated, real)
-    
-    
+
+
 def test_third2oct_2darray():
     levels = np.array([[100, 95, 80, 55, 65, 85, 75, 70, 90, 95, 105, 110],
                        [100, 95, 80, 55, 65, 85, 75, 70, 90, 95, 105, 110]])

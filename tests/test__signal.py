@@ -8,21 +8,21 @@ from acoustics.signal import EqualBand
 import matplotlib.pyplot as plt
 
 #def test_operator():
-    
+
     #n = 10000
     #fs = 5000
 
 
 class test_wav():
     """Test writing to and reading from wav file."""
-    
+
     duration = 5.0
     fs = 10025
     samples = int(fs*duration)
     channels = 3
-    
+
     signal = Signal(np.random.randn(channels, samples), fs)
-    
+
     with tempfile.TemporaryFile() as file:
         signal.to_wav(file)
         signal = Signal.from_wav(file)
@@ -37,45 +37,45 @@ class TestSignal():
     @pytest.fixture(params=[(1, 88200, 22050), (3, 88200, 22050), (3, 88200, 44100)])
     def signal(self, request):
         return Signal(np.random.randn(request.param[0], request.param[1]), request.param[2])
-    
-    
+
+
     def test_samples(self, signal):
         x = signal.samples
-    
+
     def test_calibrate_to_scalar(self, signal):
         # Scalar decibel
         signal.calibrate_to(100.0)
         signal.copy().calibrate_to(100.0, inplace=True)
-        
+
     def test_calibrate_to_channels(self, signal):
         # Value per channel. Note that [...,None] is required!
         signal.calibrate_to((np.ones(signal.channels)*100.0)[...,None])
         signal.copy().calibrate_to((np.ones(signal.channels)*100.0)[...,None], inplace=True)
-        
+
     def test_calibrate_to_samples(self, signal):
         # Value per samples
         signal.calibrate_to(np.ones(signal.samples))
         signal.copy().calibrate_to(np.ones(signal.samples), inplace=True)
-    
+
     def test_calibrate_to_samples_channels(self, signal):
         # Value per sample per channel
         signal.calibrate_to(np.ones(signal.shape))
         signal.copy().calibrate_to(np.ones(signal.shape), inplace=True)
-    
+
     def test_calibrate_with(self, signal):
         calibration_signal_level = 50.0
         decibel = 94.0
         calibration_signal = Signal(np.random.randn(signal.samples), signal.fs).calibrate_to(calibration_signal_level)
-        
+
         out = signal.calibrate_with(calibration_signal, decibel)
-        assert ( (out.leq() - signal.leq()).mean() - (decibel - calibration_signal_level) ) < 0.01 
-        
+        assert ( (out.leq() - signal.leq()).mean() - (decibel - calibration_signal_level) ) < 0.01
+
     def test_channels(self, signal):
         x = signal.channels
 
     def test_duration(self, signal):
         x = signal.duration
-        
+
     def test_decimate(self, signal):
         factor = 4
         decimated = signal.decimate(factor)
@@ -92,31 +92,31 @@ class TestSignal():
         # `.all()` because of multichannel signals
         assert ( np.abs( signal.gain(gain).leq() - (signal.leq() + gain) ) < 0.01 ).all()
         assert ( np.abs( signal.copy().gain(gain, inplace=True).leq() - (signal.leq()+gain) ) < 0.01 ).all()
-        
+
     def test_pick(self, signal):
         x = signal.pick(signal.duration*0.1, signal.duration*0.6)
-    
-    
+
+
     def test_times(self, signal):
         times = signal.times()
-    
-    
+
+
     def test_energy(self, signal):
         energy = signal.energy()
-    
-    
+
+
     def test_power(self, signal):
         power = signal.power()
-    
-    
+
+
     def test_ms(self, signal):
         ms = signal.ms()
-        
-        
+
+
     def test_rms(self, signal):
         rms = signal.rms()
-        
-        
+
+
     def test_correlate(self, signal):
         signal = signal[..., 0:100]
         if signal.channels > 1: # Multichannel is not supported
@@ -124,112 +124,112 @@ class TestSignal():
                 assert((signal.correlate()==signal.correlate(signal)).all())
         else:
             assert((signal.correlate()==signal.correlate(signal)).all())
-    
+
     def test_amplitude_envelope(self, signal):
         x = signal.amplitude_envelope()
-    
-    
+
+
     def test_instantaneous_frequency(self, signal):
         x = signal.instantaneous_frequency()
-    
-    
+
+
     def test_instantaneous_phase(self, signal):
         x = signal.instantaneous_phase()
-    
-    
+
+
     def test_detrend(self, signal):
         x = signal.detrend()
-    
-    
+
+
     def test_unwrap(self, signal):
         x = signal.unwrap()
-    
-    
+
+
     def test_complex_cepstrum(self, signal):
         t, c, d = signal.complex_cepstrum()
-        
-    
+
+
     def test_real_cepstrum(self, signal):
         t, c = signal.real_cepstrum()
-        
-    
+
+
     def test_power_spectrum(self, signal):
         freq, power = signal.power_spectrum()
-    
+
 
     def test_phase_spectrum(self, signal):
         freq, phase = signal.phase_spectrum()
-    
-    
+
+
     def test_peak(self, signal):
         value = signal.peak()
         assert len(value) == signal.channels
-    
+
     def test_peak_level(self, signal):
         value = signal.peak_level()
         assert len(value) == signal.channels
-    
-    
+
+
     def test_sound_exposure(self, signal):
         value = signal.sound_exposure()
         assert len(value) == signal.channels
-      
+
     def test_sound_exposure_level(self, signal):
         value = signal.sound_exposure_level()
         assert len(value) == signal.channels
-        
+
     def test_octaves(self, signal):
-        
+
         freq, octaves = signal.octaves()
-        
-    
+
+
     def test_levels(self, signal):
 
         times, levels = signal.levels()
-        
-    
+
+
     def test_leq(self, signal):
-        
+
         #s = Signal(np.random.randn(10000), 22050)
-        
+
         leq = signal.leq()
-        
+
         assert(type(leq) is np.ndarray)
-    
+
     def test_bandpass(self, signal):
         x = signal.bandpass(1000.0, 2000.0)
-    
+
     def test_bandstop(self, signal):
         x = signal.bandstop(1000.0, 2000.0)
-    
+
     def test_highpass(self, signal):
         x = signal.highpass(1000.0)
-    
+
     def test_lowpass(self, signal):
         x = signal.lowpass(1000.0)
-    
+
     def test_octavepass(self, signal):
         x = signal.octavepass(1000.0, fraction=6)
 
     def test_bandpass_frequencies(self, signal):
         f = EqualBand(center=[100.,200.,300.], bandwidth=20.)
         f, x = signal.bandpass_frequencies(f)
-    
+
     def test_bandpass_octaves(self, signal):
         f, x = signal.octaves()
 
     def test_bandpass_third_octaves(self, signal):
         f, x = signal.third_octaves()
-    
+
     def test_bandpass_fractional_octaves(self, signal):
         f, x = signal.fractional_octaves()
-    
+
     def test_weigh(self, signal):
         s = signal.weigh()
         s = signal.weigh('C')
         s = signal.weigh('A', zero_phase=True)
-        
-    
+
+
     ## Plot methods with arguments to test.
     #plot_methods = {'plot'                      : None,
                     #'plot_levels'               :   {
@@ -256,16 +256,14 @@ class TestSignal():
                 #for prod in it.product(*arguments.values()):
                     #yield (func, dict(zip(arguments.keys(), prod)))
             #else:
-                #yield (func, None)       
-        
+                #yield (func, None)
+
     #def test_plot_functions(self, signal, plot_function_with_argument):
         #func, arguments = plot_function_with_argument
         #if arguments is None:
             #getattr(signal, func)()
         #else:
             #getattr(signal, func)(**arguments)
-        
-    
 
 
     def test_plot(self, signal):
@@ -313,15 +311,15 @@ class TestSignal():
 
     def spectrogram(self, signal):
         signal.spectrogram()
-    
+
     def test_pickling(self, signal):
         import pickle
-        
+
         p = pickle.dumps(signal)
         obj = pickle.loads(p)
-        
+
         assert((obj==signal).all())
         assert(obj.fs==signal.fs)
         assert(type(obj) is type(signal))
-        
-        
+
+
