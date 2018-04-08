@@ -464,7 +464,7 @@ class NoisePause(object):
 def create_tone(levels, tone_lines, bandwidth_for_tone_criterion, noise_pause):
     """Create an instance of Tone."""
 
-    center = levels.iloc[tone_lines].argmax()
+    center = levels.iloc[tone_lines].idxmax()
     tone_level = tones_level(levels.iloc[tone_lines])
     return Tone(center, tone_lines, tone_level, noise_pause, bandwidth_for_tone_criterion)
 
@@ -639,8 +639,8 @@ def determine_tone_lines(levels, df, start, end, force_tone_without_pause=False,
         # -3 dB bandwidth
         bandwidth_for_tone_criterion = (indices_3db.max()-indices_3db.min()) * df
         # Frequency of tone.
-        tone_center_frequency = levels.iloc[npr].argmax()
-        tone_center_index = levels.reset_index(drop=True).iloc[npr].argmax()
+        tone_center_frequency = levels.iloc[npr].idxmax()
+        tone_center_index = levels.reset_index(drop=True).iloc[npr].idxmax()
         # Critical band
         _, _, _, critical_band_bandwidth = critical_band(tone_center_frequency)
 
