@@ -80,9 +80,9 @@ def c_weighting(first, last):
 
 
 def _weighting(filter_type, first, last):
-    third_oct_bands = third(12.5, 20000.0)
-    low = np.where(third_oct_bands == first)[0]
-    high = np.where(third_oct_bands == last)[0]
+    third_oct_bands = third(12.5, 20000.0).tolist()
+    low = third_oct_bands.index(first)
+    high = third_oct_bands.index(last)
 
     if filter_type == "a":
         freq_weightings = THIRD_OCTAVE_A_WEIGHTING
