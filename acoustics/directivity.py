@@ -20,12 +20,12 @@ import numpy as np
 import abc
 from scipy.interpolate import interp2d as interpolate
 from scipy.special import sph_harm
-    
-    
+
+
 def cardioid(theta, a=1.0, k=1.0):
     """
     A cardioid pattern.
-    
+
     :param a: a
     :param k: k
     """
@@ -34,7 +34,7 @@ def cardioid(theta, a=1.0, k=1.0):
 def figure_eight(theta, phi=0.0):
     """
     A figure-of-eight pattern.
-    
+
     :param theta: angle :math:`\\theta`
     """
     #return spherical_harmonic(theta, phi, m=0, n=1)
@@ -42,23 +42,23 @@ def figure_eight(theta, phi=0.0):
 
 def spherical_harmonic(theta, phi, m=0, n=0):
     """Spherical harmonic of order `m` and degree `n`.
-    
+
     .. note:: The degree `n` is often denoted `l`.
-    
+
     .. seealso:: :func:`scipy.special.sph_harm`
-    
+
     """
     return sph_harm(m, n, phi, theta).real
-    
+
 
 def spherical_to_cartesian(r, theta , phi):
     """
     Convert spherical coordinates to cartesian coordinates.
-    
+
     :param r: norm
     :param theta: angle :math:`\\theta`
     :param phi: angle :math:`\\phi`
-    
+
     .. math:: x = r \\sin{\\theta}\\cos{\\phi}
     .. math:: y = r \\sin{\\theta}\\sin{\\phi}
     .. math:: z = r \\cos{\\theta}
@@ -71,15 +71,15 @@ def spherical_to_cartesian(r, theta , phi):
         r * np.sin(theta) * np.sin(phi),
         r * np.cos(theta)
         )
-    
+
 def cartesian_to_spherical(x, y, z):
     """
     Convert cartesian coordinates to spherical coordinates.
-    
+
     :param x: x
     :param y: y
     :param z: z
-    
+
     .. math:: r = \\sqrt{\\left( x^2 + y^2 + z^2 \\right)}
     .. math:: \\theta = \\arccos{\\frac{z}{r}}
     .. math:: \\phi = \\arccos{\\frac{y}{x}}
@@ -94,7 +94,7 @@ def cartesian_to_spherical(x, y, z):
 #def spherical_to_cartesian(spherical):
     #"""
     #Convert spherical coordinates to cartesian coordinates.
-    
+
     #.. math:: x = r \\sin{\\theta}\\cos{\\phi}
     #.. math:: y = r \\sin{\\theta}\\sin{\\phi}
     #.. math:: z = r \\cos{\\theta}
@@ -107,12 +107,12 @@ def cartesian_to_spherical(x, y, z):
         #r * np.sin(theta) * np.sin(phi),
         #r * np.cos(theta)
         #))
-    
+
 
 #def cartesian_to_spherical(cartesian):
     #"""
     #Convert cartesian coordinates to spherical coordinates.
-    
+
     #.. math:: r = \\sqrt{\\left( x^2 + y^2 + z^2 \\right)}
     #.. math:: \\theta = \\arccos{\\frac{z}{r}}
     #.. math:: \\phi = \\arccos{\\frac{y}{x}}
@@ -131,13 +131,13 @@ def cartesian_to_spherical(x, y, z):
 class Directivity(object):
     """
     Abstract directivity class.
-    
+
     This class defines several methods to be implemented by subclasses.
     """
-    
-    
+
+
     def __init__(self, rotation=None):
-        
+
         self.rotation = rotation if rotation else np.array([1.0, 0.0, 0.0]) # X, Y, Z rotation
         """
         Rotation of the directivity pattern.
@@ -155,124 +155,124 @@ class Directivity(object):
         Undo rotation.
         """
         pass
-        
+
 
     def using_spherical(self, r, theta, phi, include_rotation=True):
         """
         Return the directivity for given spherical coordinates.
-        
+
         :param r: norm
         :param theta: angle :math:`\\theta`
         :param phi: angle :math:`\\phi`
         """
-        
+
         """
         Correct for rotation!!!!
         """
-        return self._directivity(theta, phi)    
-    
+        return self._directivity(theta, phi)
+
     def using_cartesian(self, x, y, z, include_rotation=True):
         """
         Return the directivity for given cartesian coordinates.
-        
+
         :param x: x
         :param y: y
         :param z: z
         """
         return self.using_spherical(*cartesian_to_spherical(x, y, z))
-    
+
     def plot(self, filename=None, include_rotation=True):
         """
         Directivity plot. Plot to ``filename`` when given.
-        
+
         :param filename: Filename
         :param include_rotation: Apply the rotation to the directivity. By default the rotation is applied in this figure.
         """
-        
+
         return plot(self, filename, include_rotation)
-        
-        
+
+
         ##try:
             ##from mayavi import mlab
         ##except ImportError:
             ##raise ImportWarning("mayavi is not available.")
             ##return
-        
+
         #phi = np.linspace(-np.pi, +np.pi, 50)
         #theta = np.linspace(0.0, np.pi, 50)
-        
+
         #theta_n, phi_n = np.meshgrid(theta, phi)    # Create a 2-D mesh
-    
+
         #d = self._directivity(theta_n, phi_n.ravel)
-        
+
         ##fig = plt.figure()
         ##ax0 = fig.add_subplot(111, projection='3d')
         ##ax0.set_title('Directivity')
-        
+
         ##ax0.pcolormesh(u*180.0/np.pi, v*180.0/np.pi, r)
         #(x, y, z) = spherical_to_cartesian(d, theta_n, phi_n)
-        
-        
+
+
         #fig = plt.figure()
         #fig.add_subplot(111, projection='3d')
         #fig.surface()
-        
+
         ##fig = mlab.figure()
         ##s = mlab.mesh(x,y,z)
         ##fig.add(s)
         ##mlab.axes()
         ##mlab.outline()
         ##mlab.show()
-        
+
         ##ax0.plot_wireframe(x*180.0/np.pi, y*180.0/np.pi, z)
         ##ax0.set_xlabel(r'Latitude $u$ in degree')
         ##ax0.set_ylabel(r'Longitude $v$ in degree')
         ##ax0.grid()
-        
+
         ##if filename:
             ##fig.savefig(filename)
-    
+
 
 
 class Omni(Directivity):
     """
     Class to work with omni-directional directivity.
     """
-    
+
     def _directivity(self, theta, phi):
         """
         Directivity
         """
         return np.ones_like(theta)
-    
+
 
 class Cardioid(Directivity):
     """
     Cardioid directivity.
     """
-    
+
     def _directivity(self, theta, phi):
         """
         Directivity
         """
         return cardioid(theta)
-    
+
 class FigureEight(Directivity):
     """Directivity of a figure of eight.
     """
-    
+
     def _directivity(self, theta, phi):
         """Directivity
         """
         return figure_eight(theta, phi)
-        
+
 
 class SphericalHarmonic(Directivity):
     """Directivity of a spherical harmonic of degree `n` and order `m`.
     """
-    
+
     def __init__(self, rotation=None, m=None, n=None):
-        
+
         super().__init__(rotation=rotation)
         self.m = m
         """Order `m`.
@@ -280,24 +280,24 @@ class SphericalHarmonic(Directivity):
         self.n = n
         """Degree `n`.
         """
-        
+
     def _directivity(self, theta, phi):
         """Directivity
         """
         return spherical_harmonic(theta, phi, self.m, self.n)
-        
-        
+
+
 
 class Custom(Directivity):
     """
     A class to work with directivity.
     """
-    
+
     def __init__(self, theta=None, phi=None, r=None):
         """
         Constructor.
         """
-        
+
         self.theta = phi
         """
         Latitude. 1-D array.
@@ -310,44 +310,44 @@ class Custom(Directivity):
         """
         Magnitude or radius. 2-D array.
         """
-    
+
     def _directivity(self, theta, phi):
         """
         Custom directivity.
-        
+
         Interpolate the directivity given longitude and latitude vectors.
         """
         f = interpolate(self.theta, self.phi, self.r)
-        
+
         return f(theta, phi)
 
 
 def plot(d, sphere=False):
     """
     Plot directivity `d`.
-    
+
     :param d: Directivity
     :type d: :class:`Directivity`
-    
+
     :returns: Figure
     """
-    
+
     #phi = np.linspace(-np.pi, +np.pi, 50)
     #theta = np.linspace(0.0, np.pi, 50)
     phi = np.linspace(0.0, +2.0*np.pi, 50)
     theta = np.linspace(0.0, np.pi, 50)
     THETA, PHI = np.meshgrid(theta, phi)
-    
+
     # Directivity strength. Real-valued. Can be positive and negative.
     dr = d.using_spherical(THETA, PHI)
-    
+
     if sphere:
         x, y, z = spherical_to_cartesian(1.0, THETA, PHI)
-        
+
     else:
         x, y, z = spherical_to_cartesian( np.abs(dr), THETA, PHI )
     #R, THETA, PHI = cartesian_to_spherical(x, y, z)
-    
+
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     #p = ax.plot_surface(x, y, z, cmap=plt.cm.jet, rstride=1, cstride=1, linewidth=0)
@@ -360,7 +360,7 @@ def plot(d, sphere=False):
     m.set_array(dr)
     p = ax.plot_surface(x, y, z, facecolors=colors, rstride=1, cstride=1, linewidth=0)
     plt.colorbar(m, ax=ax)
-    
+
     ax.set_xlabel('$x$')
     ax.set_ylabel('$y$')
     ax.set_zlabel('$z$')

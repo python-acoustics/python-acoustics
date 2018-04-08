@@ -19,7 +19,7 @@ NC_CURVES = {
 """
 NC curves.
 """
-    
+
 def nc_curve(nc):
     """Return an array containing the `nc` curve.
 

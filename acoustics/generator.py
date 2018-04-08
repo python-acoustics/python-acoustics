@@ -11,7 +11,7 @@ For indefinitely long iteration over the samples, consider using the output of t
 Noise
 *****
 
-Different types of noise are available. The following table lists the color 
+Different types of noise are available. The following table lists the color
 of noise and how the power and power density change per octave.
 
 ====== ===== =============
@@ -70,12 +70,12 @@ from .signal import normalize
 
 def noise(N, color='white', state=None):
     """Noise generator.
-    
+
     :param N: Amount of samples.
     :param color: Color of noise.
     :param state: State of PRNG.
     :type state: :class:`np.random.RandomState`
-    
+
     """
     try:
         return _noise_generators[color](N, state)
@@ -86,13 +86,13 @@ def noise(N, color='white', state=None):
 def white(N, state=None):
     """
     White noise.
-    
+
     :param N: Amount of samples.
     :param state: State of PRNG.
     :type state: :class:`np.random.RandomState`
-    
+
     White noise has a constant power density. It's narrowband spectrum is therefore flat.
-    The power in white noise will increase by a factor of two for each octave band, 
+    The power in white noise will increase by a factor of two for each octave band,
     and therefore increases with 3 dB per octave.
     """
     state = np.random.RandomState() if state is None else state
@@ -101,15 +101,15 @@ def white(N, state=None):
 
 def pink(N, state=None):
     """
-    Pink noise. 
-    
+    Pink noise.
+
     :param N: Amount of samples.
     :param state: State of PRNG.
     :type state: :class:`np.random.RandomState`
-    
+
     Pink noise has equal power in bands that are proportionally wide.
     Power density decreases with 3 dB per octave.
-    
+
     """
     # This method uses the filter with the following coefficients.
     #b = np.array([0.049922035, -0.095993537, 0.050612699, -0.004408786])
@@ -117,7 +117,7 @@ def pink(N, state=None):
     #return lfilter(B, A, np.random.randn(N))
     # Another way would be using the FFT
     #x = np.random.randn(N)
-    #X = rfft(x) / N  
+    #X = rfft(x) / N
     state = np.random.RandomState() if state is None else state
     uneven = N%2
     X = state.randn(N//2+1+uneven) + 1j * state.randn(N//2+1+uneven)
@@ -130,15 +130,15 @@ def pink(N, state=None):
 
 def blue(N, state=None):
     """
-    Blue noise. 
-    
+    Blue noise.
+
     :param N: Amount of samples.
     :param state: State of PRNG.
     :type state: :class:`np.random.RandomState`
-    
+
     Power increases with 6 dB per octave.
-    Power density increases with 3 dB per octave. 
-    
+    Power density increases with 3 dB per octave.
+
     """
     state = np.random.RandomState() if state is None else state
     uneven = N%2
@@ -153,13 +153,13 @@ def blue(N, state=None):
 def brown(N, state=None):
     """
     Violet noise.
-    
+
     :param N: Amount of samples.
     :param state: State of PRNG.
     :type state: :class:`np.random.RandomState`
-    
+
     Power decreases with -3 dB per octave.
-    Power density decreases with 6 dB per octave. 
+    Power density decreases with 6 dB per octave.
 
     """
     state = np.random.RandomState() if state is None else state
@@ -174,15 +174,15 @@ def brown(N, state=None):
 
 def violet(N, state=None):
     """
-    Violet noise. Power increases with 6 dB per octave. 
-    
+    Violet noise. Power increases with 6 dB per octave.
+
     :param N: Amount of samples.
     :param state: State of PRNG.
     :type state: :class:`np.random.RandomState`
-    
+
     Power increases with +9 dB per octave.
-    Power density increases with +6 dB per octave. 
-    
+    Power density increases with +6 dB per octave.
+
     """
     state = np.random.RandomState() if state is None else state
     uneven = N%2
@@ -204,26 +204,26 @@ _noise_generators = {
 
 
 def noise_generator(N=44100, color='white', state=None):
-    """Noise generator. 
+    """Noise generator.
 
     :param N: Amount of unique samples to generate.
     :param color: Color of noise.
-     
+
     Generate `N` amount of unique samples and cycle over these samples.
-    
+
     """
     #yield from itertools.cycle(noise(N, color)) # Python 3.3
     for sample in itertools.cycle(noise(N, color, state)):
         yield sample
-    
+
 
 def heaviside(N):
     """Heaviside.
-    
+
     Returns the value 0 for `x < 0`, 1 for `x > 0`, and 1/2 for `x = 0`.
     """
     return 0.5 * (np.sign(N) + 1)
-    
+
 
 __all__ = ['noise', 'white', 'pink', 'blue', 'brown', 'violet',
            'noise_generator', 'heaviside']

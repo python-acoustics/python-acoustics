@@ -12,8 +12,8 @@ Descriptors from ISO/TR 25417:2007
 
 Descriptors from :mod:`acoustics.standards.iso_tr_25417_2007`.
 
-.. autoattribute:: acoustics.descriptors.REFERENCE_PRESSURE 
-.. autofunction:: acoustics.descriptors.sound_pressure_level 
+.. autoattribute:: acoustics.descriptors.REFERENCE_PRESSURE
+.. autofunction:: acoustics.descriptors.sound_pressure_level
 .. autofunction:: acoustics.descriptors.equivalent_sound_pressure_level
 .. autofunction:: acoustics.descriptors.peak_sound_pressure
 .. autofunction:: acoustics.descriptors.peak_sound_pressure_level
@@ -42,8 +42,8 @@ from __future__ import division
 
 import numpy as np
 
-from acoustics.standards.iso_tr_25417_2007 import (REFERENCE_PRESSURE, 
-                                                   sound_pressure_level, 
+from acoustics.standards.iso_tr_25417_2007 import (REFERENCE_PRESSURE,
+                                                   sound_pressure_level,
                                                    equivalent_sound_pressure_level,
                                                    peak_sound_pressure,
                                                    peak_sound_pressure_level,
@@ -74,11 +74,11 @@ def _leq(levels, time):
 def leq(levels, int_time=1.0):
     """
     Equivalent level :math:`L_{eq}`.
-    
+
     :param levels: Levels as function of time.
     :param int_time: Integration time. Default value is 1.0 second.
     :returns: Equivalent level L_{eq}.
-    
+
     Sum of levels in dB.
     """
     levels = np.asarray(levels)
@@ -97,7 +97,7 @@ def sel(levels):
 def lw(W, Wref=1.0e-12):
     """
     Sound power level :math:`L_{w}` for sound power :math:`W` and reference power :math:`W_{ref}`.
-    
+
     :param W: Sound power :math:`W`.
     :param Wref: Reference power :math:`W_{ref}`. Default value is :math:`10^{12}` watt.
     """
@@ -108,14 +108,14 @@ def lw(W, Wref=1.0e-12):
 def lden(lday, levening, lnight, hours=(12.0, 4.0, 8.0), adjustment=(0.0, 5.0, 10.0)):
     """
     Calculate :math:`L_{den}` from :math:`L_{day}`, :math:`L_{evening}` and :math:`L_{night}`.
-    
+
     :param lday: Equivalent level during day period :math:`L_{day}`.
     :param levening: Equivalent level during evening period :math:`L_{evening}`.
     :param lnight: Equivalent level during night period :math:`L_{night}`.
     :param hours: Hours per period.
     :param adjustment: Correction factor per period.
     :returns: :math:`L_{den}`
-    
+
     .. seealso:: :func:`acoustics.standards.iso_1996_1_2003.composite_rating_level`
     """
     lday = np.asarray(lday)
@@ -127,13 +127,13 @@ def lden(lday, levening, lnight, hours=(12.0, 4.0, 8.0), adjustment=(0.0, 5.0, 1
 def ldn(lday, lnight, hours=(15.0, 9.0), adjustment=(0.0, 10.0)):
     """
     Calculate :math:`L_{dn}` from :math:`L_{day}` and :math:`L_{night}`.
-    
+
     :param lday: Equivalent level during day period :math:`L_{day}`.
     :param lnight: Equivalent level during night period :math:`L_{night}`.
     :param hours: Hours per period.
     :param adjustment: Correction factor per period.
     :returns: :math:`L_{dn}`
-    
+
     .. seealso:: :func:`acoustics.standards.iso_1996_1_2003.composite_rating_level`
     """
     lday = np.asarray(lday)

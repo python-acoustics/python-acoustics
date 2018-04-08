@@ -210,7 +210,7 @@ def plot_bands(data, bands, axes, band_type, k_ticks=False, xlabel=None,
 
 TICKS_OCTAVE = ['16', '31.5', '63', '125', '250', '500', '1000', '2000', '4000', '8000', '16000']
 """
-Octave center frequencies as strings. 
+Octave center frequencies as strings.
 """
 
 TICKS_OCTAVE_KHZ = ['16', '31.5', '63', '125', '250', '500', '1k', '2k', '4k', '8k', '16k']
@@ -256,7 +256,7 @@ def _get_ticklabels(band_type, kHz, separator):
             ticklabels = TICKS_THIRD_OCTAVE_KHZ
         else:
             ticklabels = TICKS_THIRD_OCTAVE
-            
+
     ticklabels = _set_separator(ticklabels, separator)
     return ticklabels
 

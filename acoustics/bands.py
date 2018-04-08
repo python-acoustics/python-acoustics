@@ -82,28 +82,28 @@ def third_high(first, last):
     return third(first, last)*2.0**(1.0/6.0)
     #return Octaveband(fstart=first, fstop=last, fraction=3).upper
 
-    
+
 def third2oct(levels, axis=None):
     """
     Calculate Octave levels from third octave levels.
-    
+
     :param levels: Array containing third octave levels.
     :type: :class:`np.ndarray`
-    :param axis: Axis over which to perform the summation. 
+    :param axis: Axis over which to perform the summation.
     :type axis: :class:`int`
-    
+
     :returns: Third octave levels
     :rtype: :class:`np.ndarray`
-    
+
     .. note:: The number of elements along the summation axis should be a factor of 3.
     """
-    
+
     levels = np.array(levels)
     axis = axis if axis is not None else levels.ndim - 1
-    
+
     try:
         assert(levels.shape[axis]%3 == 0)
-    except AssertionError:    
+    except AssertionError:
         raise ValueError("Wrong shape.")
     shape = list(levels.shape)
     shape[axis] = shape[axis] // 3

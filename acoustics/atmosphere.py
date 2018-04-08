@@ -2,7 +2,7 @@
 Atmosphere
 ==========
 
-The atmosphere module contains functions and classes related to atmospheric 
+The atmosphere module contains functions and classes related to atmospheric
 acoustics and is based on :mod:`acoustics.standards.iso_9613_1_1993`.
 
 Atmosphere class
@@ -42,26 +42,26 @@ import matplotlib.pyplot as plt
 
 import acoustics
 from acoustics.standards.iso_9613_1_1993 import *
-                                                
+
 
 class Atmosphere(object):
     """
     Class describing atmospheric conditions.
     """
-    
+
     REF_TEMP = 293.15
     """Reference temperature"""
-    
+
     REF_PRESSURE = 101.325
     """International Standard Atmosphere in kilopascal"""
-    
+
     TRIPLE_TEMP = 273.16
     """Triple point isotherm temperature."""
 
-    def __init__(self, 
-                 temperature=REFERENCE_TEMPERATURE, 
+    def __init__(self,
+                 temperature=REFERENCE_TEMPERATURE,
                  pressure=REFERENCE_PRESSURE,
-                 relative_humidity=0.0, 
+                 relative_humidity=0.0,
                  reference_temperature=REFERENCE_TEMPERATURE,
                  reference_pressure=REFERENCE_PRESSURE,
                  triple_temperature=TRIPLE_TEMPERATURE):
@@ -74,41 +74,41 @@ class Atmosphere(object):
         :param reference_pressure: Reference pressure.
         :param triple_temperature: Triple temperature.
         """
-        
+
         self.temperature = temperature
         """Ambient temperature :math:`T`."""
-        
+
         self.pressure = pressure
         """Ambient pressure :math:`p_a`."""
-        
+
         self.relative_humidity = relative_humidity
         """Relative humidity"""
-        
+
         self.reference_temperature = reference_temperature
         """
         Reference temperature.
         """
-        
+
         self.reference_pressure = reference_pressure
         """
         Reference pressure.
         """
-        
+
         self.triple_temperature = triple_temperature
         """
         Triple temperature.
         """
-    
+
     def __repr__(self):
         return "Atmosphere{}".format(self.__str__())
-    
+
     def __str__(self):
         return "(temperature={}, pressure={}, relative_humidity={}, " \
                "reference_temperature={}, reference_pressure={}, " \
-               "triple_temperature={})".format(self.temperature, self.pressure, 
-                                            self.relative_humidity, 
-                                            self.reference_temperature, 
-                                            self.reference_pressure, 
+               "triple_temperature={})".format(self.temperature, self.pressure,
+                                            self.relative_humidity,
+                                            self.reference_temperature,
+                                            self.reference_pressure,
                                             self.triple_temperature)
 
     def __eq__(self, other):
@@ -117,54 +117,54 @@ class Atmosphere(object):
     @property
     def soundspeed(self):
         """
-        Speed of sound :math:`c`. 
-        
+        Speed of sound :math:`c`.
+
         The speed of sound is calculated using :func:`acoustics.standards.iso_9613_1_1993.soundspeed`.
         """
         return soundspeed(self.temperature, self.reference_temperature)
-        
+
     @property
     def saturation_pressure(self):
         """
         Saturation pressure :math:`p_{sat}`.
-        
+
         The saturation pressure is calculated using :func:`acoustics.standards.iso_9613_1_1993.saturation_pressure`.
         """
         return saturation_pressure(self.temperature, self.reference_pressure, self.triple_temperature)
-    
+
     @property
     def molar_concentration_water_vapour(self):
         """
         Molar concentration of water vapour :math:`h`.
-        
+
         The molar concentration of water vapour is calculated using :func:`acoustics.standards.iso_9613_1_1993.molar_concentration_water_vapour`.
         """
         return molar_concentration_water_vapour(self.relative_humidity, self.saturation_pressure, self.pressure)
-        
+
     @property
     def relaxation_frequency_nitrogen(self):
         """
         Resonance frequency of nitrogen :math:`f_{r,N}`.
-        
+
         The resonance frequency is calculated using :func:`acoustics.standards.iso_9613_1_1993.relaxation_frequency_nitrogen`.
         """
         return relaxation_frequency_nitrogen(self.pressure, self.temperature, self.molar_concentration_water_vapour, self.reference_pressure, self.reference_temperature)
-    
+
     @property
     def relaxation_frequency_oxygen(self):
         """
         Resonance frequency of oxygen :math:`f_{r,O}`.
-        
+
         The resonance frequency is calculated using :func:`acoustics.standards.iso_9613_1_1993.relaxation_frequency_oxygen`.
         """
         return relaxation_frequency_oxygen(self.pressure, self.molar_concentration_water_vapour, self.reference_pressure)
-    
+
     def attenuation_coefficient(self, frequency):
         """
         Attenuation coefficient :math:`\\alpha` describing atmospheric absorption in dB/m as function of ``frequency``.
-        
+
         :param frequency: Frequencies to be considered.
-        
+
         The attenuation coefficient is calculated using :func:`acoustics.standards.iso_9613_1_1993.attenuation_coefficient`.
         """
         return attenuation_coefficient(self.pressure, self.temperature, self.reference_pressure, self.reference_temperature, self.relaxation_frequency_nitrogen, self.relaxation_frequency_oxygen, frequency)
@@ -253,12 +253,12 @@ def impulse_response(atmosphere, distance, fs, ntaps, inverse=False):
     return ir
 
 
-__all__ = ['Atmosphere', 'SOUNDSPEED', 'REFERENCE_TEMPERATURE', 
+__all__ = ['Atmosphere', 'SOUNDSPEED', 'REFERENCE_TEMPERATURE',
            'REFERENCE_TEMPERATURE', 'TRIPLE_TEMPERATURE',
-           'soundspeed', 'saturation_pressure', 
-           'molar_concentration_water_vapour', 
-           'relaxation_frequency_oxygen', 
-           'relaxation_frequency_nitrogen', 
+           'soundspeed', 'saturation_pressure',
+           'molar_concentration_water_vapour',
+           'relaxation_frequency_oxygen',
+           'relaxation_frequency_nitrogen',
            'attenuation_coefficient',
            'impulse_response',
            'frequency_response'

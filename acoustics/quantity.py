@@ -29,12 +29,12 @@ Dictionary with units. Each unit is stored as a tuple.
 class Unit(object):
     """
     Unit of quantity.
-    
+
     .. note:: Perhaps inherit from tuple or :class:`collections.namedTuple`?
-    
+
     """
     def __init__(self, name, symbol, symbol_latex):
-        
+
         self.name = name
         """
         Name of the unit.
@@ -43,7 +43,7 @@ class Unit(object):
         """
         Symbol of the unit.
         """
-        
+
         self.symbol_latex
         """
         Symbol of the unit in LaTeX.
@@ -51,7 +51,7 @@ class Unit(object):
 
     def __repr__(self):
         return "Unit({})".format(self.name)
-    
+
     def __str__(self):
         return self.name
 
@@ -61,40 +61,40 @@ class Quantity(object):
     Quantity.
     """
     def __init__(self, name, unit, dynamic, symbol=None, symbol_latex=None, reference=1.0):
-        
+
         self.name = name
         """
         Name of the quantity.
         """
-        
+
         self.symbol = symbol
         """
         Symbol of the quantity.
         """
-        
+
         self.symbol_latex = symbol_latex
         """
         Symbol of the unit in LaTeX.
         """
-        
+
         self.unit = unit
         """
         Unit. See :class:`Unit`.
         """
-        
+
         self.dynamic = dynamic
         """
         Dynamic quantity (`True`) or energetic (`False`).
         """
-        
+
         self.reference = reference
         """
         Reference value of the quantity.
         """
-    
+
     def __repr__(self):
         return "Quantity({})".format(self.name)
-    
+
     def __str__(self):
         return self.name
 
@@ -109,9 +109,9 @@ class Quantity(object):
 def get_quantity(name):
     """
     Get quantity by name. Returns instance of :class:`Quantity`.
-    
+
     :param name: Name of the quantity.
-    
+
     """
     try:
         q = list(quantities[name])
@@ -121,7 +121,7 @@ def get_quantity(name):
         u = units[name]
     except KeyError:
         raise RuntimeError("Unknown unit. Quantity has been specified but unit has not.")
-    
+
     q[1] = Unit(*units[name])
-    
+
     return Quantity(*q)

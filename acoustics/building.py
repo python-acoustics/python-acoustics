@@ -14,9 +14,9 @@ def rw_curve(tl):
     """
     Calculate the curve of :math:`Rw` from a NumPy array `tl` with third
     octave data between 100 Hz and 3.15 kHz.
-    
+
     :param tl: Transmission Loss
-    
+
     """
     ref_curve = np.array([0, 3, 6, 9, 12, 15, 18, 19, 20, 21, 22, 23, 23, 23,
                           23, 23])
@@ -33,7 +33,7 @@ def rw(tl):
     """
     Calculate :math:`R_W` from a NumPy array `tl` with third octave data
     between 100 Hz and 3.15 kHz.
-    
+
     :param tl: Transmission Loss
     """
     return rw_curve(tl)[7]
@@ -43,7 +43,7 @@ def rw_c(tl):
     """
     Calculate :math:`R_W + C` from a NumPy array `tl` with third octave data
     between 100 Hz and 3.15 kHz.
-    
+
     :param tl: Transmission Loss
     """
     k = np.array([-29, -26, -23, -21, -19, -17, -15, -13, -12, -11, -10, -9,
@@ -56,7 +56,7 @@ def rw_ctr(tl):
     """
     Calculate :math:`R_W + C_{tr}` from a NumPy array `tl` with third octave
     data between 100 Hz and 3.15 kHz.
-    
+
     :param tl: Transmission Loss
     """
     k_tr = np.array([-20, -20, -18, -16, -15, -14, -13, -12, -11, -9, -8, -9,
@@ -69,7 +69,7 @@ def stc_curve(tl):
     """
     Calculate the Sound Transmission Class (STC) curve from a NumPy array `tl`
     with third octave data between 125 Hz and 4 kHz.
-    
+
     :param tl: Transmission Loss
     """
     ref_curve = np.array([0, 3, 6, 9, 12, 15, 16, 17, 18, 19, 20, 20, 20,
@@ -92,7 +92,7 @@ def stc(tl):
     """
     Calculate the Sound Transmission Class (STC) from a NumPy array `tl` with
     third octave data between 125 Hz and 4 kHz.
-    
+
     :param tl: Transmission Loss
     """
     return stc_curve(tl)[6]
@@ -100,7 +100,7 @@ def stc(tl):
 
 def mass_law(freq, vol_density, thickness, theta=0, c=343, rho0=1.225):
     """ Calculate transmission loss according to mass law.
-    
+
     :param freq: Frequency of interest in Hz.
     :type freq: `float` or `NumPy array`
     :param vol_density: Volumetric density of material in [kg/m^3].

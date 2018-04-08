@@ -264,9 +264,9 @@ def convolve(signal, ltv, mode='full'):
     .. seealso:: :func:`np.convolve`, :func:`scipy.signal.convolve` and :func:`scipy.signal.fftconvolve` for convolution with LTI system.
 
     """
-    
+
     assert(len(signal) == ltv.shape[1])
-    
+
     n = ltv.shape[0] + len(signal) - 1                          # Length of output vector
     un = np.concatenate((signal, np.zeros(ltv.shape[0] - 1)))   # Resize input vector
     offsets = np.arange(0, -ltv.shape[0], -1)                   # Offsets for impulse responses
