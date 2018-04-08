@@ -16,11 +16,12 @@
 , pandas
 , six
 , tabulate
+, glibcLocales
 }:
 
 buildPythonPackage rec {
-  name = "acoustics-${version}";
-  version = "0.1.2dev";
+  pname = "acoustics";
+  version = "dev";
 
   src = ./.;
 
@@ -28,12 +29,17 @@ buildPythonPackage rec {
     make clean
   '';
 
-  buildInputs = [ pytest cython ];
+  checkInputs = [ pytest glibcLocales ];
+  buildInputs = [ cython ];
   propagatedBuildInputs = [ cytoolz numpy scipy matplotlib pandas six tabulate ];
 
   meta = {
     description = "Acoustics module for Python";
   };
 
-  doCheck = false;
+  checkPhase = ''
+    LC_ALL="en_US.UTF-8"
+    py.test tests
+  '';
+
 }

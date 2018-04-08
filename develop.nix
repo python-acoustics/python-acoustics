@@ -4,9 +4,7 @@
 
 let
   pkgs = import <nixpkgs> {};
-  python = pkgs.python35;
-#   python = "python35";
-#   pythonPackages = pkgs.${python+"Packages"};
+  python = pkgs.python3;
 
 in pkgs.callPackage ./default.nix {
   inherit (python.pkgs) buildPythonPackage pytest cython cytoolz numpy scipy matplotlib pandas six tabulate;
