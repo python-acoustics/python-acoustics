@@ -1,6 +1,6 @@
 numpy
 scipy
-matplotib
+matplotlib
 six
 cython
 pandas
