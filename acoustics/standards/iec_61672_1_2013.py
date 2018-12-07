@@ -157,8 +157,9 @@ def integrate(data, sample_frequency, integration_time):
     integration_time = np.asarray(integration_time)
     sample_frequency = np.asarray(sample_frequency)
     samples = data.shape[-1]
-    b, a  = zpk2tf([1.0], [1.0, integration_time], [1.0])
-    b, a = bilinear(b, a, fs=sample_frequency)
+    b_analog = np.poly1d([1])
+    a_analog = np.poly1d([integration_time, 1])
+    b, a = bilinear(b_analog, a_analog, fs=sample_frequency)
     #b, a = bilinear([1.0], [1.0, integration_time], fs=sample_frequency) # Bilinear: Analog to Digital filter.
     n = np.floor(integration_time * sample_frequency).astype(int)
     data = data[..., 0:n*(samples//n)]

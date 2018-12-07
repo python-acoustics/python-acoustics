@@ -651,6 +651,7 @@ class Signal(numpy.ndarray):
         * xlim
         * ylim
         * clim
+        * pref (default to 1, set pref=20e-6 for SPL)
         .. note:: This method only works for a single channel.
 
         """
@@ -659,6 +660,7 @@ class Signal(numpy.ndarray):
             'xlim' : None,
             'ylim' : None,
             'clim' : None,
+            'pref' : 1,
             'NFFT' : 4096,
             'noverlap' : 128,
             'title': 'Spectrogram',
@@ -676,7 +678,7 @@ class Signal(numpy.ndarray):
         ax0 = params.get('ax', plt.figure().add_subplot(111))
         ax0.set_title(params['title'])
 
-        data = np.squeeze(self)
+        data = np.squeeze(self) / pref
         try:
             _, _, _, im = ax0.specgram(data, Fs=self.fs, noverlap=params['noverlap'], NFFT=params['NFFT'], mode='magnitude', scale_by_freq=False)
         except AttributeError:
