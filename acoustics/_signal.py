@@ -5,7 +5,7 @@ from scipy.io import wavfile
 from scipy.signal import detrend, lfilter, bilinear, spectrogram, filtfilt, resample, fftconvolve
 import acoustics
 
-from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
+from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE, sound_pressure_level
 from acoustics.standards.iec_61672_1_2013 import WEIGHTING_SYSTEMS
 from acoustics.standards.iec_61672_1_2013 import (NOMINAL_OCTAVE_CENTER_FREQUENCIES,
                                                   NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES)
@@ -117,6 +117,22 @@ class Signal(np.ndarray):
         if not isinstance(other, Signal):
             other = Signal(other, self.fs)
         gain = decibel - other.leq()
+        return self.gain(gain, inplace=inplace)
+
+    def calibrate_peak(self, decibel, inplace=False):
+        """Calibrate signal knowing its SPL for peak FS.
+
+        :param decibel: Peak FS value to calibrate to.
+        :param inplace: Whether to perform inplace or not.
+        :returns: Calibrated signal.
+        :rtype: :class:`Signal`
+
+        Values of `decibel` are broadcasted. To set a value per channel, use `decibel[...,None]`.
+        """
+        # Calculate the gain so that samples represent the pressure values
+        # We know that peak value equals 1. 1 Pa is roughly 94 dB SPL.
+        # In that case, we have to boost the signal by decibel - ~94.
+        gain = decibel * np.ones(self.shape) - sound_pressure_level(1)
         return self.gain(gain, inplace=inplace)
 
     def decimate(self, factor, zero_phase=False, ftype='iir', order=None):
