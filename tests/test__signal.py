@@ -20,11 +20,14 @@ class test_wav():
     fs = 10025
     samples = int(fs * duration)
     channels = 3
+    values = np.random.randn(channels, samples)
 
-    signal = Signal(np.random.randn(channels, samples), fs)
+    signal = Signal(values, fs)
+    signal.normalize(inplace=True)
 
     with tempfile.TemporaryFile() as file:
         signal.to_wav(file)
+        file.seek(0)
         signal = Signal.from_wav(file)
         assert signal.samples == samples
         assert signal.fs == fs

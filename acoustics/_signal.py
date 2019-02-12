@@ -1,8 +1,8 @@
 import itertools
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.io import wavfile
 from scipy.signal import detrend, lfilter, bilinear, spectrogram, filtfilt, resample, fftconvolve
+import soundfile as sf
 import acoustics
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
@@ -1019,22 +1019,18 @@ class Signal(np.ndarray):
         else:
             return self / factor[..., None]
 
-    def to_wav(self, filename, depth=16):
+    def to_wav(self, filename, depth=16, format="WAV"):
         """Save signal as WAV file.
 
         :param filename: Name of file to save to.
         :param depth: If given, convert to integer with specified depth. Else, try to store using the original data type.
+        :param format: It can be either WAV or FLAC
 
-        By default, this function saves a normalized 16-bit version of the signal with at least 6 dB range till clipping occurs.
+        Note that the floating point samples are not yet supported.
 
         """
-        data = self
-        dtype = data.dtype if not depth else 'int' + str(depth)
-        if depth:
-            data = (data * 2**(depth - 1) - 1).astype(dtype)
-        wavfile.write(filename, int(self.fs), data.T)
-        #wavfile.write(filename, int(self.fs), self._data/np.abs(self._data).max() *  0.5)
-        #wavfile.write(filename, int(self.fs), np.int16(self._data/(np.abs(self._data).max()) * 32767) )
+        subtype = "PCM_{}".format(depth)
+        sf.write(filename, self.T, int(self.fs), format=format, subtype=subtype)
 
     @classmethod
     def from_wav(cls, filename, normalize=True):

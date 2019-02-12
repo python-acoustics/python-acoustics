@@ -4,3 +4,4 @@ matplotlib
 six
 pandas
 tabulate
+pysoundfile
