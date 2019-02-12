@@ -5,3 +5,4 @@ six
 cython
 pandas
 tabulate
+pysoundfile

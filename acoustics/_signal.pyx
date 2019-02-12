@@ -2,7 +2,7 @@ cimport cython
 cimport numpy
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.io import wavfile
+import soundfile as sf
 from scipy.signal import detrend, lfilter, bilinear, spectrogram, filtfilt, resample, fftconvolve
 import acoustics
 import itertools
@@ -1034,35 +1034,34 @@ class Signal(numpy.ndarray):
             return self / factor[..., None]
 
 
-    def to_wav(self, filename, depth=16):
+    def to_wav(self, filename, depth=16, format="WAV"):
         """Save signal as WAV file.
 
         :param filename: Name of file to save to.
         :param depth: If given, convert to integer with specified depth. Else, try to store using the original data type.
+        :param format: It can be either WAV or FLAC
 
-        By default, this function saves a normalized 16-bit version of the signal with at least 6 dB range till clipping occurs.
+        Note that the floating point samples are not yet supported.
 
         """
         data = self
-        dtype = data.dtype if not depth else 'int'+str(depth)
-        if depth:
-            data = (data * 2**(depth-1)-1).astype(dtype)
-        wavfile.write(filename, int(self.fs), data.T)
-        #wavfile.write(filename, int(self.fs), self._data/np.abs(self._data).max() *  0.5)
-        #wavfile.write(filename, int(self.fs), np.int16(self._data/(np.abs(self._data).max()) * 32767) )
+        subtype = "PCM_{}".format(depth)
+        to_save = data
+        sf.write(filename, to_save.T, int(self.fs), format=format, subtype=subtype)
 
     @classmethod
-    def from_wav(cls, filename):
+    def from_wav(cls, filename, normalize=False):
         """
         Create an instance of `Signal` from a WAV file.
 
         :param filename: Filename
+        :param normalize: Optionally normalize the input samples
 
         """
-        fs, data = wavfile.read(filename)
-        data = data.astype(np.float32, copy=False).T
-        data /= np.max(np.abs(data))
-        return cls(data, fs=fs)
+        data, fs = sf.read(filename)
+        if normalize:
+            data /= np.max(np.abs(data))
+        return cls(data.T, fs=fs)
 
 
 _PLOTTING_PARAMS = {
