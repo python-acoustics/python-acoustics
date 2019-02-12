@@ -1012,12 +1012,12 @@ class Signal(np.ndarray):
         By default a 6 decibel gap is used.
 
         """
-        factor = (self.max() * 10.0**(gap / 20.0))
+        factor = (np.abs(self).max() * 10.0**(gap/20.0))
         if inplace:
-            self /= factor
+            self /= factor[..., None]
             return self
         else:
-            return self / factor
+            return self / factor[..., None]
 
     def to_wav(self, filename, depth=16):
         """Save signal as WAV file.
