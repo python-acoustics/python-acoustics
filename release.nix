@@ -1,9 +1,39 @@
 { nixpkgs ? (fetchTarball "channel:nixos-18.09")
 }:
 
+with nixpkgs;
+
 let
+
+  # Create an sdist given a derivation.
+  # Should add an sdist and wheel output to buildPythonPackage
+  create-sdist = drv:
+    drv.overridePythonAttrs(oldAttrs: with oldAttrs; rec {
+      name = "${pname}-${version}-sdist";
+
+      postBuild = ''
+        rm -rf dist
+        ${drv.pythonModule.interpreter} nix_run_setup sdist
+
+      '';
+
+      installPhase = ''
+        mkdir -p $out
+        mv dist/*.tar.gz $out/
+      '';
+
+      fixupPhase = "true";
+      doCheck = false;
+      propagatedBuildInputs = [];
+    });
+
   overrides = self: super: {
-    acoustics = self.callPackage ./. {};
+    acoustics = super.callPackage ./default.nix {
+      development = true;
+    };
+    acoustics-sdist = create-sdist (self.acoustics.override {
+      development = false;
+    });
   };
 
   overlay = self: super: {
@@ -14,4 +44,3 @@ let
 in import nixpkgs {
   overlays = [ overlay ];
 }
-
