@@ -1,3 +1,8 @@
+"""
+Criterion
+=========
+
+"""
 from __future__ import division
 
 import numpy as np
@@ -29,10 +34,7 @@ def nc_curve(nc):
     nc: `int` between 15 and 70 with step of 5. Valid values are: 15, 20, 25,
     ..., 60, 65 and 70. Invalid values (e.g. 23) returns `None`.
     """
-    try:
-        return NC_CURVES[nc]
-    except KeyError:
-        return None
+    return NC_CURVES.get(nc)
 
 
 def nc(levels):
@@ -48,12 +50,12 @@ def nc(levels):
     nc_range = np.arange(15, 71, 5)
     for nc_test in nc_range:
         curve = nc_curve(nc_test)
-        if (levels <= curve).all() == True:
+        if (levels <= curve).all():
             break
         if nc_test == 70:
             nc_test = '70+'
             break
-    return nc_test
+    return nc_test  # pylint: disable=undefined-loop-variable
 
 
 __all__ = ['NC_CURVES', 'nc_curve', 'nc']

@@ -1,3 +1,11 @@
+"""
+Cirrus
+======
+
+Handle Cirrus data.
+
+"""
+
 from __future__ import unicode_literals
 
 import csv
@@ -7,7 +15,7 @@ import re
 import pandas as pd
 
 
-def read_csv_cirrus(filename):
+def read_csv_cirrus(filename):  # pylint: disable=too-many-locals
     """Read a Cirrus CSV file. Currently exists support for some types of
     CSV files extracted with NoiseTools. There is no support for CSVs related
     with occupational noise.
@@ -71,7 +79,8 @@ def read_csv_cirrus(filename):
         try:
             data.nc = nc
             data.nr = nr
-        except:
+        # TODO specify exception type:
+        except:  # pylint: disable=bare-except
             pass
 
         # If the csv file contains global data from the "Details" tab in

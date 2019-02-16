@@ -140,3 +140,33 @@ def ldn(lday, lnight, hours=(15.0, 9.0), adjustment=(0.0, 10.0)):
     lday = np.asarray(lday)
     lnight = np.asarray(lnight)
     return composite_rating_level(np.vstack((lday, lnight)).T, hours, adjustment)
+
+
+__all__ = [
+    # Following we take from another module
+    "REFERENCE_PRESSURE",
+    "sound_pressure_level",
+    "equivalent_sound_pressure_level",
+    "peak_sound_pressure",
+    "peak_sound_pressure_level",
+    "REFERENCE_SOUND_EXPOSURE",
+    "sound_exposure",
+    "sound_exposure_level",
+    "REFERENCE_POWER",
+    "sound_power_level",
+    "sound_energy",
+    "REFERENCE_ENERGY",
+    "sound_energy_level",
+    "sound_intensity",
+    "time_averaged_sound_intensity",
+    "REFERENCE_INTENSITY",
+    "time_averaged_sound_intensity_level",
+    "normal_time_averaged_sound_intensity",
+    "normal_time_averaged_sound_intensity_level",
+    # Following are locally defined
+    "leq",
+    "sel",
+    "lw",
+    "lden",
+    "ldn",
+]

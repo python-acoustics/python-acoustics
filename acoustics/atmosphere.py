@@ -31,9 +31,6 @@ Functions
 .. autofunction:: acoustics.standards.iso_9613_1_1993.relaxation_frequency_oxygen
 .. autofunction:: acoustics.standards.iso_9613_1_1993.attenuation_coefficient
 
-
-
-
 """
 from __future__ import division, print_function
 
@@ -41,7 +38,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import acoustics
-from acoustics.standards.iso_9613_1_1993 import *
+from acoustics.standards.iso_9613_1_1993 import *  # pylint: disable=wildcard-import
 
 
 class Atmosphere(object):
@@ -105,13 +102,15 @@ class Atmosphere(object):
         return "Atmosphere{}".format(self.__str__())
 
     def __str__(self):
-        return "(temperature={}, pressure={}, relative_humidity={}, " \
-               "reference_temperature={}, reference_pressure={}, " \
-               "triple_temperature={})".format(self.temperature, self.pressure,
-                                            self.relative_humidity,
-                                            self.reference_temperature,
-                                            self.reference_pressure,
-                                            self.triple_temperature,)
+        attributes = [
+            "temperature",
+            "pressure",
+            "relative_humidity",
+            "reference_temperature",
+            "reference_pressure",
+            "triple_temperature",
+        ]
+        return "({})".format(", ".join(map(lambda attr: "{}={}".format(attr, getattr(self, attr)), attributes)))
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ == other.__class__
@@ -146,7 +145,8 @@ class Atmosphere(object):
         """
         Molar concentration of water vapour :math:`h`.
 
-        The molar concentration of water vapour is calculated using :func:`acoustics.standards.iso_9613_1_1993.molar_concentration_water_vapour`.
+        The molar concentration of water vapour is calculated using
+        :func:`acoustics.standards.iso_9613_1_1993.molar_concentration_water_vapour`.
         """
         return molar_concentration_water_vapour(
             self.relative_humidity,
@@ -159,7 +159,8 @@ class Atmosphere(object):
         """
         Resonance frequency of nitrogen :math:`f_{r,N}`.
 
-        The resonance frequency is calculated using :func:`acoustics.standards.iso_9613_1_1993.relaxation_frequency_nitrogen`.
+        The resonance frequency is calculated using
+        :func:`acoustics.standards.iso_9613_1_1993.relaxation_frequency_nitrogen`.
         """
         return relaxation_frequency_nitrogen(
             self.pressure,
@@ -174,7 +175,8 @@ class Atmosphere(object):
         """
         Resonance frequency of oxygen :math:`f_{r,O}`.
 
-        The resonance frequency is calculated using :func:`acoustics.standards.iso_9613_1_1993.relaxation_frequency_oxygen`.
+        The resonance frequency is calculated using
+        :func:`acoustics.standards.iso_9613_1_1993.relaxation_frequency_oxygen`.
         """
         return relaxation_frequency_oxygen(
             self.pressure,
@@ -184,11 +186,13 @@ class Atmosphere(object):
 
     def attenuation_coefficient(self, frequency):
         """
-        Attenuation coefficient :math:`\\alpha` describing atmospheric absorption in dB/m as function of ``frequency``.
+        Attenuation coefficient :math:`\\alpha` describing atmospheric absorption in dB/m
+        as function of ``frequency``.
 
         :param frequency: Frequencies to be considered.
 
-        The attenuation coefficient is calculated using :func:`acoustics.standards.iso_9613_1_1993.attenuation_coefficient`.
+        The attenuation coefficient is calculated using
+        :func:`acoustics.standards.iso_9613_1_1993.attenuation_coefficient`.
         """
         return attenuation_coefficient(
             self.pressure,
@@ -278,12 +282,16 @@ def impulse_response(atmosphere, distance, fs, ntaps, inverse=False):
     :param ntaps: Amount of taps.
     :param inverse: Whether the attenuation should be undone.
 
-    The attenuation is calculated for a set of positive frequencies. Because the attenuation is the same for the negative frequencies, we have Hermitian symmetry.
-    The attenuation is entirely real-valued. We like to have a constant group delay and therefore we need a linear-phase filter.
-    This function creates a zero-phase filter, which is the special case of a linear-phase filter with zero phase slope.
-    The type of filter is non-causal.
-    The impulse response of the filter is made causal by rotating it by M/2 samples and discarding the imaginary parts.
-    A real, even impulse response corresponds to a real, even frequency response.
+    The attenuation is calculated for a set of positive frequencies. Because the
+    attenuation is the same for the negative frequencies, we have Hermitian
+    symmetry. The attenuation is entirely real-valued. We like to have a constant
+    group delay and therefore we need a linear-phase filter.
+
+    This function creates a zero-phase filter, which is the special case of a
+    linear-phase filter with zero phase slope. The type of filter is non-causal. The
+    impulse response of the filter is made causal by rotating it by M/2 samples and
+    discarding the imaginary parts. A real, even impulse response corresponds to a
+    real, even frequency response.
     """
     # Frequencies vector with positive frequencies only.
     frequencies = np.fft.rfftfreq(ntaps, 1. / fs)

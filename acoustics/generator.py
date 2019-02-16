@@ -6,7 +6,8 @@ The generator module provides signal generators.
 
 The following functions calculate ``N`` samples and return an array containing the samples.
 
-For indefinitely long iteration over the samples, consider using the output of these functions in :func:`itertools.cycle`.
+For indefinitely long iteration over the samples, consider using the output of these functions
+in :func:`itertools.cycle`.
 
 Noise
 *****
@@ -54,16 +55,13 @@ For related functions, check :mod:`scipy.signal`.
 
 
 """
-
-import numpy as np
-import random
 import itertools
-#import scipy.signal.sawtooth
+import numpy as np
 
 try:
-    from pyfftw.interfaces.numpy_fft import rfft, irfft  # Performs much better than numpy's fftpack
+    from pyfftw.interfaces.numpy_fft import irfft  # Performs much better than numpy's fftpack
 except ImportError:  # Use monkey-patching np.fft perhaps instead?
-    from numpy.fft import rfft, irfft
+    from numpy.fft import irfft  # pylint: disable=ungrouped-imports
 
 from .signal import normalize
 

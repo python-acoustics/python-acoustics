@@ -66,13 +66,13 @@ def dbsub(a, b):
 
 
 def dbmul(levels, f, axis=None):
-    """Energetically add `levels` `f` times.
+    r"""Energetically add `levels` `f` times.
 
     :param levels: Sequence of levels.
     :param f: Multiplication factor `f`.
     :param axis: Axis over which to perform the operation.
 
-    .. math:: L_{sum} = 10 \\log_{10}{\\sum_{i=0}^n{10^{L/10} \cdot f}}
+    .. math:: L_{sum} = 10 \log_{10}{\sum_{i=0}^n{10^{L/10} \cdot f}}
     """
     levels = np.asanyarray(levels)
     return 10.0 * np.log10((10.0**(levels / 10.0) * f).sum(axis=axis))

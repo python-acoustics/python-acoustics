@@ -205,10 +205,10 @@ class Octave(object):
 
     @property
     def center(self):
-        """
+        r"""
         Return center frequencies :math:`f_c`.
 
-        .. math::  f_c = f_{ref} \cdot 2^{n/N} \\cdot 10^{\\frac{3}{10N}}
+        .. math::  f_c = f_{ref} \cdot 2^{n/N} \cdot 10^{\frac{3}{10N}}
 
         """
         n = self.n
@@ -226,10 +226,10 @@ class Octave(object):
 
     @property
     def lower(self):
-        """
+        r"""
         Lower frequency limits of bands.
 
-        .. math:: f_l = f_c \cdot 2^{\\frac{-1}{2N}}
+        .. math:: f_l = f_c \cdot 2^{\frac{-1}{2N}}
 
         See also :func:`lower_frequency`.
         """
@@ -237,10 +237,10 @@ class Octave(object):
 
     @property
     def upper(self):
-        """
+        r"""
         Upper frequency limits of bands.
 
-        .. math:: f_u = f_c \cdot 2^{\\frac{+1}{2N}}
+        .. math:: f_u = f_c \cdot 2^{\frac{+1}{2N}}
 
         See also :func:`upper_frequency`.
         """

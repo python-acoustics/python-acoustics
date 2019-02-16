@@ -9,8 +9,11 @@ from __future__ import division
 import numpy as np
 #from acoustics.decibel import dbsum
 import acoustics
-from acoustics.standards.iec_61672_1_2013 import NOMINAL_OCTAVE_CENTER_FREQUENCIES as OCTAVE_CENTER_FREQUENCIES
-from acoustics.standards.iec_61672_1_2013 import NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES as THIRD_OCTAVE_CENTER_FREQUENCIES
+from acoustics.standards.iec_61672_1_2013 import (NOMINAL_OCTAVE_CENTER_FREQUENCIES,
+                                                  NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES)
+
+OCTAVE_CENTER_FREQUENCIES = NOMINAL_OCTAVE_CENTER_FREQUENCIES
+THIRD_OCTAVE_CENTER_FREQUENCIES = NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES
 
 
 def octave(first, last):
@@ -41,11 +44,13 @@ def octave(first, last):
 
 
 def octave_low(first, last):
+    """Lower cornerfrequencies of octaves."""
     return octave(first, last) / np.sqrt(2.0)
     #return acoustics.signal.OctaveBand(fstart=first, fstop=last, fraction=1).lower
 
 
 def octave_high(first, last):
+    """Upper cornerfrequencies of octaves."""
     return octave(first, last) * np.sqrt(2.0)
     #return acoustics.signal.OctaveBand(fstart=first, fstop=last, fraction=1).upper
 
@@ -75,11 +80,13 @@ def third(first, last):
 
 
 def third_low(first, last):
+    """Lower cornerfrequencies of third-octaves."""
     return third(first, last) / 2.0**(1.0 / 6.0)
     #return acoustics.signal.OctaveBand(fstart=first, fstop=last, fraction=3).lower
 
 
 def third_high(first, last):
+    """Higher cornerfrequencies of third-octaves."""
     return third(first, last) * 2.0**(1.0 / 6.0)
     #return Octaveband(fstart=first, fstop=last, fraction=3).upper
 
@@ -103,7 +110,7 @@ def third2oct(levels, axis=None):
     axis = axis if axis is not None else levels.ndim - 1
 
     try:
-        assert (levels.shape[axis] % 3 == 0)
+        assert levels.shape[axis] % 3 == 0
     except AssertionError:
         raise ValueError("Wrong shape.")
     shape = list(levels.shape)
@@ -123,24 +130,14 @@ def _check_band_type(freqs):
     def _check_sort(freqs, bands):
         index = np.where(np.in1d(bands, freqs))[0]
         band_pos = index - index[0]
-        if (band_pos == np.arange(band_pos.size)).all():
-            sorted = True
-        else:
-            sorted = False
-        return sorted
+        return (band_pos == np.arange(band_pos.size)).all()
 
-    if np.in1d(freqs, octave_bands).all() == True:
+    if np.in1d(freqs, octave_bands).all():
         is_sorted = _check_sort(freqs, octave_bands)
-        if is_sorted is True:
-            band_type = 'octave'
-        else:
-            band_type = 'octave-unsorted'
-    elif np.in1d(freqs, third_oct_bands).all() == True:
+        band_type = "octave" if is_sorted else "octave-unsorted"
+    elif np.in1d(freqs, third_oct_bands).all():
         is_sorted = _check_sort(freqs, third_oct_bands)
-        if is_sorted is True:
-            band_type = 'third'
-        else:
-            band_type = 'third-unsorted'
+        band_type = "third" if is_sorted else "third-unsorted"
     else:
         band_type = None
 

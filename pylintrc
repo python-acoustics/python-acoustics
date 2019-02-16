@@ -141,9 +141,18 @@ disable=print-statement,
         comprehension-escape,
         # Following are addded on purpose
         # Broken, https://github.com/PyCQA/pylint/issues/2694
-        assignment-from-no-return
+        assignment-from-no-return,
         # Does not seem to handle numpy very well
-        no-member
+        no-member,
+        # Mostly because of names like `n`.
+        # Fixing this requires changing the API
+        invalid-name,
+        # Inevitable with models that depends on many variables
+        too-many-arguments,
+        # While technically not needed, it can help understand the code flow
+        no-else-return,
+        # fixme should not raise
+        fixme,
 
 
 # Enable the message, report, category or checker with the given id(s). You can

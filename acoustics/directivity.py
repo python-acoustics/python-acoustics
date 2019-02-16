@@ -11,15 +11,14 @@ The following conventions are used within this module:
 
 """
 from __future__ import division
-
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.cm as cm
-from matplotlib.colors import Normalize
-import numpy as np
 import abc
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
 from scipy.interpolate import interp2d as interpolate
-from scipy.special import sph_harm
+from scipy.special import sph_harm  # pylint: disable=no-name-in-module
 
 
 def cardioid(theta, a=1.0, k=1.0):
@@ -38,6 +37,7 @@ def figure_eight(theta, phi=0.0):
 
     :param theta: angle :math:`\\theta`
     """
+    del phi
     #return spherical_harmonic(theta, phi, m=0, n=1)
     return np.abs(np.cos(theta))
 
@@ -109,13 +109,11 @@ class Directivity(object):
         """
         This function should return the directivity as function of :math:`\\theta` and :math:`\\phi`.
         """
-        pass
 
     def _undo_rotation(self, theta, phi):
         """
         Undo rotation.
         """
-        pass
 
     def using_spherical(self, r, theta, phi, include_rotation=True):
         """
@@ -125,9 +123,8 @@ class Directivity(object):
         :param theta: angle :math:`\\theta`
         :param phi: angle :math:`\\phi`
         """
-        """
-        Correct for rotation!!!!
-        """
+        # TODO: Correct for rotation!!!!
+        del r, include_rotation
         return self._directivity(theta, phi)
 
     def using_cartesian(self, x, y, z, include_rotation=True):
@@ -138,6 +135,8 @@ class Directivity(object):
         :param y: y
         :param z: z
         """
+        # TODO: Correct for rotation!!!!
+        del include_rotation
         return self.using_spherical(*cartesian_to_spherical(x, y, z))
 
     def plot(self, filename=None, include_rotation=True):
@@ -145,10 +144,12 @@ class Directivity(object):
         Directivity plot. Plot to ``filename`` when given.
 
         :param filename: Filename
-        :param include_rotation: Apply the rotation to the directivity. By default the rotation is applied in this figure.
+        :param include_rotation: Apply the rotation to the directivity.
+            By default the rotation is applied in this figure.
         """
-
-        return plot(self, filename, include_rotation)
+        # TODO: filename
+        del filename
+        return plot(self, include_rotation)
 
 
 class Omni(Directivity):
@@ -215,7 +216,7 @@ class Custom(Directivity):
         Constructor.
         """
 
-        self.theta = phi
+        self.theta = theta
         """
         Latitude. 1-D array.
         """
@@ -248,19 +249,17 @@ def plot(d, sphere=False):
 
     :returns: Figure
     """
-    phi = np.linspace(0.0, +2.0 * np.pi, 50)
-    theta = np.linspace(0.0, np.pi, 50)
-    THETA, PHI = np.meshgrid(theta, phi)
+    theta, phi = np.meshgrid(np.linspace(0.0, np.pi, 50), np.linspace(0.0, +2.0 * np.pi, 50))
 
     # Directivity strength. Real-valued. Can be positive and negative.
-    dr = d.using_spherical(THETA, PHI)
+    dr = d.using_spherical(theta, phi)
 
     if sphere:
-        x, y, z = spherical_to_cartesian(1.0, THETA, PHI)
+        x, y, z = spherical_to_cartesian(1.0, theta, phi)
 
     else:
-        x, y, z = spherical_to_cartesian(np.abs(dr), THETA, PHI)
-    #R, THETA, PHI = cartesian_to_spherical(x, y, z)
+        x, y, z = spherical_to_cartesian(np.abs(dr), theta, phi)
+    #R, theta, phi = cartesian_to_spherical(x, y, z)
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -271,7 +270,7 @@ def plot(d, sphere=False):
     colors = cm.jet(norm(dr))
     m = cm.ScalarMappable(cmap=cm.jet, norm=norm)
     m.set_array(dr)
-    p = ax.plot_surface(x, y, z, facecolors=colors, rstride=1, cstride=1, linewidth=0)
+    ax.plot_surface(x, y, z, facecolors=colors, rstride=1, cstride=1, linewidth=0)
     plt.colorbar(m, ax=ax)
 
     ax.set_xlabel('$x$')

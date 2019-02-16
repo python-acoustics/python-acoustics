@@ -1,4 +1,7 @@
-"""Cepstrum.
+"""
+Cepstrum
+========
+
 """
 
 import numpy as np
@@ -7,7 +10,7 @@ __all__ = ['complex_cepstrum', 'real_cepstrum', 'inverse_complex_cepstrum', 'min
 
 
 def complex_cepstrum(x, n=None):
-    """Compute the complex cepstrum of a real sequence.
+    r"""Compute the complex cepstrum of a real sequence.
 
     Parameters
     ----------
@@ -102,7 +105,7 @@ def complex_cepstrum(x, n=None):
 
 
 def real_cepstrum(x, n=None):
-    """Compute the real cepstrum of a real sequence.
+    r"""Compute the real cepstrum of a real sequence.
 
     x : ndarray
         Real sequence to compute real cepstrum of.
@@ -116,7 +119,7 @@ def real_cepstrum(x, n=None):
 
     The real cepstrum is given by
 
-    .. math:: c[n] = F^{-1}\\left{\\log_{10}{\\left|F{x[n]}\\right|}\\right}
+    .. math:: c[n] = F^{-1}\left{\log_{10}{\left|F{x[n]}\right|}\right}
 
     where :math:`x_[n]` is the input signal and :math:`F` and :math:`F_{-1}
     are respectively the forward and backward Fourier transform. Note that
@@ -146,7 +149,7 @@ def real_cepstrum(x, n=None):
 
 
 def inverse_complex_cepstrum(ceps, ndelay):
-    """Compute the inverse complex cepstrum of a real sequence.
+    r"""Compute the inverse complex cepstrum of a real sequence.
 
     ceps : ndarray
         Real sequence to compute inverse complex cepstrum of.
@@ -160,7 +163,7 @@ def inverse_complex_cepstrum(ceps, ndelay):
 
     The inverse complex cepstrum is given by
 
-    .. math:: x[n] = F^{-1}\\left{\\exp(F(c[n]))\\right}
+    .. math:: x[n] = F^{-1}\left{\exp(F(c[n]))\right}
 
     where :math:`c_[n]` is the input signal and :math:`F` and :math:`F_{-1}
     are respectively the forward and backward Fourier transform.
@@ -204,7 +207,7 @@ def inverse_complex_cepstrum(ceps, ndelay):
 
 
 def minimum_phase(x, n=None):
-    """Compute the minimum phase reconstruction of a real sequence.
+    r"""Compute the minimum phase reconstruction of a real sequence.
 
     x : ndarray
         Real sequence to compute the minimum phase reconstruction of.

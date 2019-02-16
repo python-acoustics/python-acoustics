@@ -1117,3 +1117,6 @@ def _base_plot(x, y, given_params):
         ax0.legend(labels=params['labels'])
 
     return ax0
+
+
+__all__ = ["Signal"]

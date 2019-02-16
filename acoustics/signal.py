@@ -240,7 +240,7 @@ def octavepass(signal, center, fs, fraction, order=8, zero_phase=True):
 
 
 def convolve(signal, ltv, mode='full'):
-    """
+    r"""
     Perform convolution of signal with linear time-variant system ``ltv``.
 
     :param signal: Vector representing input signal :math:`u`.
@@ -249,11 +249,11 @@ def convolve(signal, ltv, mode='full'):
 
     The convolution of two sequences is given by
 
-    .. math:: \mathbf{y} = \mathbf{t} \\star \mathbf{u}
+    .. math:: \mathbf{y} = \mathbf{t} \star \mathbf{u}
 
     This can be written as a matrix-vector multiplication
 
-    .. math:: \mathbf{y} = \mathbf{T} \\cdot \mathbf{u}
+    .. math:: \mathbf{y} = \mathbf{T} \cdot \mathbf{u}
 
     where :math:`T` is a Toeplitz matrix in which each column represents an impulse response.
     In the case of a linear time-invariant (LTI) system, each column represents a time-shifted copy of the first column.
@@ -265,7 +265,6 @@ def convolve(signal, ltv, mode='full'):
     .. seealso:: :func:`np.convolve`, :func:`scipy.signal.convolve` and :func:`scipy.signal.fftconvolve` for convolution with LTI system.
 
     """
-
     assert (len(signal) == ltv.shape[1])
 
     n = ltv.shape[0] + len(signal) - 1  # Length of output vector
@@ -515,7 +514,7 @@ def ms(x):
 
 
 def rms(x):
-    """Root mean squared of signal `x`.
+    r"""Root mean squared of signal `x`.
 
     :param x: Dynamic quantity.
 
