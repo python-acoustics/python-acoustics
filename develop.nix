@@ -7,5 +7,5 @@ let
   python = pkgs.python3;
 
 in pkgs.callPackage ./default.nix {
-  inherit (python.pkgs) buildPythonPackage pytest cython cytoolz numpy scipy matplotlib pandas six tabulate;
+  inherit (python.pkgs) buildPythonPackage pytest cytoolz numpy scipy matplotlib pandas six tabulate;
 }

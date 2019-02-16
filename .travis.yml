@@ -25,7 +25,7 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 
 install:
-  - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib six pytest pip cython pandas
+  - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib six pytest pip pandas
   - source activate testenv
 
 script:

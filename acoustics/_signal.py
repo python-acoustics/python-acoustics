@@ -1,5 +1,3 @@
-cimport cython
-cimport numpy
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
@@ -13,7 +11,7 @@ from acoustics.standards.iec_61672_1_2013 import (NOMINAL_OCTAVE_CENTER_FREQUENC
                                                   NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES)
 
 
-class Signal(numpy.ndarray):
+class Signal(np.ndarray):
     """A signal consisting of samples (array) and a sample frequency (float).
 
     """
@@ -433,17 +431,17 @@ class Signal(numpy.ndarray):
     def min(self, axis=-1):
         """Return the minimum along a given axis.
 
-        Refer to `numpy.amin` for full documentation.
+        Refer to `np.amin` for full documentation.
         """
-        return numpy.ndarray.min(self, axis=axis)
+        return np.ndarray.min(self, axis=axis)
 
 
     def max(self, axis=-1):
         """Return the minimum along a given axis.
 
-        Refer to `numpy.amax` for full documentation.
+        Refer to `np.amax` for full documentation.
         """
-        return numpy.ndarray.max(self, axis=axis)
+        return np.ndarray.max(self, axis=axis)
 
 
     def max_level(self, axis=-1):

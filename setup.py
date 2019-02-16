@@ -5,8 +5,6 @@ pkg_resources.require('setuptools>=30.3.0')
 import setuptools
 from setuptools.command.test import test as TestCommand
 import sys
-import numpy as np
-from Cython.Build import cythonize
 
 
 class PyTest(TestCommand):
@@ -23,6 +21,4 @@ class PyTest(TestCommand):
 
 setuptools.setup(
     cmdclass={'test': PyTest},
-    ext_modules=cythonize('acoustics/*.pyx'),
-    include_dirs=[np.get_include()],
 )

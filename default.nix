@@ -8,7 +8,6 @@
 # Note that the above should still be called, with the following arguments.
 { buildPythonPackage
 , pytest
-, cython
 , cytoolz
 , numpy
 , scipy
@@ -30,7 +29,6 @@ buildPythonPackage rec {
   '';
 
   checkInputs = [ pytest glibcLocales ];
-  buildInputs = [ cython ];
   propagatedBuildInputs = [ cytoolz numpy scipy matplotlib pandas six tabulate ];
 
   meta = {
