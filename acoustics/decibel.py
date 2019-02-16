@@ -8,6 +8,7 @@ The `decibel` module contains basic functions for decibel arithmetic.
 
 import numpy as np
 
+
 def dbsum(levels, axis=None):
     """Energetic summation of levels.
 
@@ -18,7 +19,7 @@ def dbsum(levels, axis=None):
 
     """
     levels = np.asanyarray(levels)
-    return 10.0 * np.log10((10.0**(levels/10.0)).sum(axis=axis))
+    return 10.0 * np.log10((10.0**(levels / 10.0)).sum(axis=axis))
 
 
 def dbmean(levels, axis=None):
@@ -31,7 +32,7 @@ def dbmean(levels, axis=None):
 
     """
     levels = np.asanyarray(levels)
-    return 10.0 * np.log10((10.0**(levels/10.0)).mean(axis=axis))
+    return 10.0 * np.log10((10.0**(levels / 10.0)).mean(axis=axis))
 
 
 def dbadd(a, b):
@@ -46,7 +47,7 @@ def dbadd(a, b):
     """
     a = np.asanyarray(a)
     b = np.asanyarray(b)
-    return 10.0*np.log10(10.0**(a/10.0)+10.0**(b/10.0))
+    return 10.0 * np.log10(10.0**(a / 10.0) + 10.0**(b / 10.0))
 
 
 def dbsub(a, b):
@@ -61,7 +62,7 @@ def dbsub(a, b):
     """
     a = np.asanyarray(a)
     b = np.asanyarray(b)
-    return 10.0*np.log10(10.0**(a/10.0)-10.0**(b/10.0))
+    return 10.0 * np.log10(10.0**(a / 10.0) - 10.0**(b / 10.0))
 
 
 def dbmul(levels, f, axis=None):
@@ -74,7 +75,7 @@ def dbmul(levels, f, axis=None):
     .. math:: L_{sum} = 10 \\log_{10}{\\sum_{i=0}^n{10^{L/10} \cdot f}}
     """
     levels = np.asanyarray(levels)
-    return 10.0 * np.log10((10.0**(levels/10.0) * f).sum(axis=axis))
+    return 10.0 * np.log10((10.0**(levels / 10.0) * f).sum(axis=axis))
 
 
 def dbdiv(levels, f, axis=None):
@@ -88,6 +89,7 @@ def dbdiv(levels, f, axis=None):
 
     """
     levels = np.asanyarray(levels)
-    return 10.0 * np.log10((10.0**(levels/10.0) / f).sum(axis=axis))
+    return 10.0 * np.log10((10.0**(levels / 10.0) / f).sum(axis=axis))
+
 
 __all__ = ['dbsum', 'dbmean', 'dbadd', 'dbsub', 'dbmul', 'dbdiv']

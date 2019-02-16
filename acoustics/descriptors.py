@@ -42,33 +42,34 @@ from __future__ import division
 
 import numpy as np
 
-from acoustics.standards.iso_tr_25417_2007 import (REFERENCE_PRESSURE,
-                                                   sound_pressure_level,
-                                                   equivalent_sound_pressure_level,
-                                                   peak_sound_pressure,
-                                                   peak_sound_pressure_level,
-                                                   REFERENCE_SOUND_EXPOSURE,
-                                                   sound_exposure,
-                                                   sound_exposure_level,
-                                                   REFERENCE_POWER,
-                                                   sound_power_level,
-                                                   sound_energy,
-                                                   REFERENCE_ENERGY,
-                                                   sound_energy_level,
-                                                   sound_intensity,
-                                                   time_averaged_sound_intensity,
-                                                   REFERENCE_INTENSITY,
-                                                   time_averaged_sound_intensity_level,
-                                                   normal_time_averaged_sound_intensity,
-                                                   normal_time_averaged_sound_intensity_level,
-                                                   )
-
+from acoustics.standards.iso_tr_25417_2007 import (
+    REFERENCE_PRESSURE,
+    sound_pressure_level,
+    equivalent_sound_pressure_level,
+    peak_sound_pressure,
+    peak_sound_pressure_level,
+    REFERENCE_SOUND_EXPOSURE,
+    sound_exposure,
+    sound_exposure_level,
+    REFERENCE_POWER,
+    sound_power_level,
+    sound_energy,
+    REFERENCE_ENERGY,
+    sound_energy_level,
+    sound_intensity,
+    time_averaged_sound_intensity,
+    REFERENCE_INTENSITY,
+    time_averaged_sound_intensity_level,
+    normal_time_averaged_sound_intensity,
+    normal_time_averaged_sound_intensity_level,
+)
 
 from acoustics.standards.iso_1996_1_2003 import composite_rating_level
 
+
 def _leq(levels, time):
     levels = np.asarray(levels)
-    return 10.0 * np.log10((1.0/time) * np.sum(10.0**(levels/10.0)))
+    return 10.0 * np.log10((1.0 / time) * np.sum(10.0**(levels / 10.0)))
 
 
 def leq(levels, int_time=1.0):
@@ -102,7 +103,7 @@ def lw(W, Wref=1.0e-12):
     :param Wref: Reference power :math:`W_{ref}`. Default value is :math:`10^{12}` watt.
     """
     W = np.asarray(W)
-    return 10.0 * np.log10(W/Wref)
+    return 10.0 * np.log10(W / Wref)
 
 
 def lden(lday, levening, lnight, hours=(12.0, 4.0, 8.0), adjustment=(0.0, 5.0, 10.0)):

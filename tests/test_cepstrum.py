@@ -14,12 +14,13 @@ def test_complex_cepstrum():
     """
     duration = 5.0
     fs = 8000.0
-    samples = int(fs*duration)
+    samples = int(fs * duration)
     t = np.arange(samples) / fs
     fundamental = 100.0
-    signal = sawtooth(2.*np.pi*fundamental*t)
+    signal = sawtooth(2. * np.pi * fundamental * t)
     ceps, _ = complex_cepstrum(signal)
-    assert(fundamental == 1.0/t[ceps.argmax()])
+    assert (fundamental == 1.0 / t[ceps.argmax()])
+
 
 def test_inverse_complex_cepstrum():
     """Applying the complex cepstrum and then the inverse complex cepstrum

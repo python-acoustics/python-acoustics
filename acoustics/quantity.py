@@ -12,19 +12,20 @@ The Quantity module provides two classes to work with quantities and units.
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
 
 quantities = {
-    'pressure' : ('Pressure', 'pascal', True, 'p', '$p$', REFERENCE_PRESSURE)
-    }
+    'pressure': ('Pressure', 'pascal', True, 'p', '$p$', REFERENCE_PRESSURE),
+}
 """
 Dictionary with quantities. Each quantity is stored as a tuple.
 """
 
 units = {
-    'meter' : ('meter', 'm', '$m$'),
-    'pascal' : ('pascal', 'Pa', '$Pa$'),
-    }
+    'meter': ('meter', 'm', '$m$'),
+    'pascal': ('pascal', 'Pa', '$Pa$'),
+}
 """
 Dictionary with units. Each unit is stored as a tuple.
 """
+
 
 class Unit(object):
     """
@@ -33,6 +34,7 @@ class Unit(object):
     .. note:: Perhaps inherit from tuple or :class:`collections.namedTuple`?
 
     """
+
     def __init__(self, name, symbol, symbol_latex):
 
         self.name = name
@@ -44,7 +46,7 @@ class Unit(object):
         Symbol of the unit.
         """
 
-        self.symbol_latex
+        self.symbol_latex = symbol_latex
         """
         Symbol of the unit in LaTeX.
         """
@@ -60,6 +62,7 @@ class Quantity(object):
     """
     Quantity.
     """
+
     def __init__(self, name, unit, dynamic, symbol=None, symbol_latex=None, reference=1.0):
 
         self.name = name

@@ -25,14 +25,14 @@ def lw_iso3746(LpAi, LpAiB, S, alpha, surfaces):
 
     :returns: Sound power level :math:`L_{w}`.
     """
-    LpA = 10.0 * np.log10(np.sum(10.0**(0.1*LpAi))/LpAi.size)
-    LpAB = 10.0 * np.log10(np.sum(10.0**(0.1*LpAiB))/LpAiB.size)
+    LpA = 10.0 * np.log10(np.sum(10.0**(0.1 * LpAi)) / LpAi.size)
+    LpAB = 10.0 * np.log10(np.sum(10.0**(0.1 * LpAiB)) / LpAiB.size)
     deltaLpA = LpA - LpAB
 
     if deltaLpA > 10.0:
         k_1a = 0.0
     elif 3.0 <= deltaLpA <= 10.0:
-        k_1a = -10.0 * np.log10(1.0 - 10.0**(-0.1*deltaLpA))
+        k_1a = -10.0 * np.log10(1.0 - 10.0**(-0.1 * deltaLpA))
     else:
         # This should alert to user because poor condition of the measurement.
         k_1a = 3.0

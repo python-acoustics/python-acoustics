@@ -14,11 +14,10 @@ from scipy import stats
 
 from acoustics.utils import _is_1d
 from acoustics.signal import bandpass
-from acoustics.bands import (_check_band_type, octave_low, octave_high,
-                                  third_low, third_high)
-
+from acoustics.bands import (_check_band_type, octave_low, octave_high, third_low, third_high)
 
 SOUNDSPEED = 343.0
+
 
 def mean_alpha(alphas, surfaces):
     """
@@ -89,7 +88,7 @@ def t60_eyring(surfaces, alpha, volume, c=SOUNDSPEED):
     """
     mean_alpha = np.average(alpha, axis=0, weights=surfaces)
     S = np.sum(surfaces, axis=0)
-    A = -S * np.log(1-mean_alpha)
+    A = -S * np.log(1 - mean_alpha)
     t60 = 4.0 * np.log(10.0**6.0) * volume / (c * A)
     return t60
 
@@ -128,7 +127,7 @@ def t60_fitzroy(surfaces, alpha, volume, c=SOUNDSPEED):
     a_x = np.average(alpha[:, 0:2], weights=surfaces[0:2], axis=1)
     a_y = np.average(alpha[:, 2:4], weights=surfaces[2:4], axis=1)
     a_z = np.average(alpha[:, 4:6], weights=surfaces[4:6], axis=1)
-    factor = -(Sx / np.log(1.0-a_x) + Sy / np.log(1.0-a_y) + Sz / np.log(1-a_z))
+    factor = -(Sx / np.log(1.0 - a_x) + Sy / np.log(1.0 - a_y) + Sz / np.log(1 - a_z))
     t60 = 4.0 * np.log(10.0**6.0) * volume * factor / (c * St**2.0)
     return t60
 
@@ -152,7 +151,7 @@ def t60_arau(Sx, Sy, Sz, alpha, volume, c=SOUNDSPEED):
     a_y = -np.log(1 - alpha[1])
     a_z = -np.log(1 - alpha[2])
     St = np.sum(np.array([Sx, Sy, Sz]))
-    A = St * a_x**(Sx/St) * a_y**(Sy/St) * a_z**(Sz/St)
+    A = St * a_x**(Sx / St) * a_y**(Sy / St) * a_z**(Sz / St)
     t60 = 4.0 * np.log(10.0**6.0) * volume / (c * A)
     return t60
 
@@ -199,8 +198,7 @@ def t60_impulse(file_name, bands, rt='t30'):
 
     for band in range(bands.size):
         # Filtering signal
-        filtered_signal = bandpass(raw_signal, low[band],
-                                                 high[band], fs, order=8)
+        filtered_signal = bandpass(raw_signal, low[band], high[band], fs, order=8)
         abs_signal = np.abs(filtered_signal) / np.max(np.abs(filtered_signal))
 
         # Schroeder integration
@@ -213,8 +211,8 @@ def t60_impulse(file_name, bands, rt='t30'):
         init_sample = np.where(sch_db == sch_init)[0][0]
         end_sample = np.where(sch_db == sch_end)[0][0]
         x = np.arange(init_sample, end_sample + 1) / fs
-        y = sch_db[init_sample: end_sample + 1]
-        slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
+        y = sch_db[init_sample:end_sample + 1]
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
 
         # Reverberation time (T30, T20, T10 or EDT)
         db_regress_init = (init - intercept) / slope
@@ -246,11 +244,10 @@ def clarity(time, signal, fs, bands=None):
 
     c = np.zeros(bands.size)
     for band in range(bands.size):
-        filtered_signal = bandpass(signal, low[band],high[band],
-                                                 fs, order=8)
+        filtered_signal = bandpass(signal, low[band], high[band], fs, order=8)
         h2 = filtered_signal**2.0
-        t = int((time/1000.0)*fs + 1)
-        c[band] = 10.0*np.log10((np.sum(h2[:t])/np.sum(h2[t:])))
+        t = int((time / 1000.0) * fs + 1)
+        c[band] = 10.0 * np.log10((np.sum(h2[:t]) / np.sum(h2[t:])))
     return c
 
 

@@ -17,12 +17,13 @@ from acoustics.decibel import dbsum
 
 esum = dbsum
 
+
 def mean_tl(tl, surfaces):
     try:
         tau_axis = tl.ndim - 1
     except AttributeError:
         tau_axis = 0
-    tau = 1.0 / (10.0**(tl/10.0))
+    tau = 1.0 / (10.0**(tl / 10.0))
     return 10.0 * np.log10(1.0 / np.average(tau, tau_axis, surfaces))
 
 
@@ -30,7 +31,7 @@ def wavelength(freq, c=SOUNDSPEED):
     """
     Wavelength for one or more frequencies (as ``NumPy array``).
     """
-    return c/freq
+    return c / freq
 
 
 def w(freq):

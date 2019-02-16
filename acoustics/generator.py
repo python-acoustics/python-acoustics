@@ -61,8 +61,8 @@ import itertools
 #import scipy.signal.sawtooth
 
 try:
-    from pyfftw.interfaces.numpy_fft import rfft, irfft       # Performs much better than numpy's fftpack
-except ImportError:                                    # Use monkey-patching np.fft perhaps instead?
+    from pyfftw.interfaces.numpy_fft import rfft, irfft  # Performs much better than numpy's fftpack
+except ImportError:  # Use monkey-patching np.fft perhaps instead?
     from numpy.fft import rfft, irfft
 
 from .signal import normalize
@@ -119,10 +119,10 @@ def pink(N, state=None):
     #x = np.random.randn(N)
     #X = rfft(x) / N
     state = np.random.RandomState() if state is None else state
-    uneven = N%2
-    X = state.randn(N//2+1+uneven) + 1j * state.randn(N//2+1+uneven)
-    S = np.sqrt(np.arange(len(X))+1.) # +1 to avoid divide by zero
-    y = (irfft(X/S)).real
+    uneven = N % 2
+    X = state.randn(N // 2 + 1 + uneven) + 1j * state.randn(N // 2 + 1 + uneven)
+    S = np.sqrt(np.arange(len(X)) + 1.)  # +1 to avoid divide by zero
+    y = (irfft(X / S)).real
     if uneven:
         y = y[:-1]
     return normalize(y)
@@ -141,10 +141,10 @@ def blue(N, state=None):
 
     """
     state = np.random.RandomState() if state is None else state
-    uneven = N%2
-    X = state.randn(N//2+1+uneven) + 1j * state.randn(N//2+1+uneven)
-    S = np.sqrt(np.arange(len(X)))# Filter
-    y = (irfft(X*S)).real
+    uneven = N % 2
+    X = state.randn(N // 2 + 1 + uneven) + 1j * state.randn(N // 2 + 1 + uneven)
+    S = np.sqrt(np.arange(len(X)))  # Filter
+    y = (irfft(X * S)).real
     if uneven:
         y = y[:-1]
     return normalize(y)
@@ -163,10 +163,10 @@ def brown(N, state=None):
 
     """
     state = np.random.RandomState() if state is None else state
-    uneven = N%2
-    X = state.randn(N//2+1+uneven) + 1j * state.randn(N//2+1+uneven)
-    S = (np.arange(len(X))+1)# Filter
-    y = (irfft(X/S)).real
+    uneven = N % 2
+    X = state.randn(N // 2 + 1 + uneven) + 1j * state.randn(N // 2 + 1 + uneven)
+    S = (np.arange(len(X)) + 1)  # Filter
+    y = (irfft(X / S)).real
     if uneven:
         y = y[:-1]
     return normalize(y)
@@ -185,22 +185,22 @@ def violet(N, state=None):
 
     """
     state = np.random.RandomState() if state is None else state
-    uneven = N%2
-    X = state.randn(N//2+1+uneven) + 1j * state.randn(N//2+1+uneven)
-    S = (np.arange(len(X)))# Filter
-    y = (irfft(X*S)).real
+    uneven = N % 2
+    X = state.randn(N // 2 + 1 + uneven) + 1j * state.randn(N // 2 + 1 + uneven)
+    S = (np.arange(len(X)))  # Filter
+    y = (irfft(X * S)).real
     if uneven:
         y = y[:-1]
     return normalize(y)
 
 
 _noise_generators = {
-    'white'  : white,
-    'pink'   : pink,
-    'blue'   : blue,
-    'brown'  : brown,
-    'violet' : violet,
-    }
+    'white': white,
+    'pink': pink,
+    'blue': blue,
+    'brown': brown,
+    'violet': violet,
+}
 
 
 def noise_generator(N=44100, color='white', state=None):
@@ -225,5 +225,4 @@ def heaviside(N):
     return 0.5 * (np.sign(N) + 1)
 
 
-__all__ = ['noise', 'white', 'pink', 'blue', 'brown', 'violet',
-           'noise_generator', 'heaviside']
+__all__ = ['noise', 'white', 'pink', 'blue', 'brown', 'violet', 'noise_generator', 'heaviside']

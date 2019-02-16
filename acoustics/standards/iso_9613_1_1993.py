@@ -9,12 +9,10 @@ as a result of atmospheric absorption for a variety of meteorological conditions
 
 import numpy as np
 
-
 SOUNDSPEED = 343.2
 """
 Speed of sound.
 """
-
 
 REFERENCE_TEMPERATURE = 293.15
 """
@@ -31,6 +29,7 @@ TRIPLE_TEMPERATURE = 273.16
 Triple point isotherm temperature.
 """
 
+
 def soundspeed(temperature, reference_temperature=REFERENCE_TEMPERATURE):
     """
     Speed of sound :math:`c`.
@@ -45,6 +44,7 @@ def soundspeed(temperature, reference_temperature=REFERENCE_TEMPERATURE):
 
     """
     return 343.2 * np.sqrt(temperature / reference_temperature)
+
 
 def saturation_pressure(temperature, reference_pressure=REFERENCE_PRESSURE, triple_temperature=TRIPLE_TEMPERATURE):
     """
@@ -63,7 +63,8 @@ def saturation_pressure(temperature, reference_pressure=REFERENCE_PRESSURE, trip
     .. math:: C = -6.8346 \cdot \\left( \\frac{T_{01}}{T} \\right)^{1.261}  + 4.6151
 
     """
-    return reference_pressure * 10.0** (-6.8346 *(triple_temperature/temperature)**(1.261) + 4.6151)
+    return reference_pressure * 10.0**(-6.8346 * (triple_temperature / temperature)**(1.261) + 4.6151)
+
 
 def molar_concentration_water_vapour(relative_humidity, saturation_pressure, pressure):
     """
@@ -80,6 +81,7 @@ def molar_concentration_water_vapour(relative_humidity, saturation_pressure, pre
     """
     return relative_humidity * saturation_pressure / pressure
 
+
 def relaxation_frequency_oxygen(pressure, h, reference_pressure=REFERENCE_PRESSURE):
     """
     Relaxation frequency of oxygen :math:`f_{r,O}`.
@@ -93,9 +95,11 @@ def relaxation_frequency_oxygen(pressure, h, reference_pressure=REFERENCE_PRESSU
     .. math:: f_{r,O} = \\frac{p_a}{p_r} \\left( 24 + 4.04 \cdot 10^4 h \\frac{0.02 + h}{0.391 + h}  \\right)
 
     """
-    return pressure / reference_pressure * ( 24.0 + 4.04 * 10.0**4.0 * h * (0.02 + h) / (0.391 + h) )
+    return pressure / reference_pressure * (24.0 + 4.04 * 10.0**4.0 * h * (0.02 + h) / (0.391 + h))
 
-def relaxation_frequency_nitrogen(pressure, temperature, h, reference_pressure=REFERENCE_PRESSURE, reference_temperature=REFERENCE_TEMPERATURE):
+
+def relaxation_frequency_nitrogen(pressure, temperature, h, reference_pressure=REFERENCE_PRESSURE,
+                                  reference_temperature=REFERENCE_TEMPERATURE):
     """
     Relaxation frequency of nitrogen :math:`f_{r,N}`.
 
@@ -110,10 +114,12 @@ def relaxation_frequency_nitrogen(pressure, temperature, h, reference_pressure=R
     .. math:: f_{r,N} = \\frac{p_a}{p_r} \\left( \\frac{T}{T_0} \\right)^{-1/2} \cdot \\left( 9 + 280 h \exp{\\left\{ -4.170 \\left[ \\left(\\frac{T}{T_0} \\right)^{-1/3} -1 \\right] \\right\} } \\right)
 
     """
-    return pressure / reference_pressure * (temperature/reference_temperature)**(-0.5) * (9.0 + 280.0 * h * np.exp(-4.170 * ((temperature/reference_temperature)**(-1.0/3.0) - 1.0 ) ) )
+    return pressure / reference_pressure * (temperature / reference_temperature)**(-0.5) * (
+        9.0 + 280.0 * h * np.exp(-4.170 * ((temperature / reference_temperature)**(-1.0 / 3.0) - 1.0)))
 
 
-def attenuation_coefficient(pressure, temperature, reference_pressure, reference_temperature, relaxation_frequency_nitrogen, relaxation_frequency_oxygen, frequency):
+def attenuation_coefficient(pressure, temperature, reference_pressure, reference_temperature,
+                            relaxation_frequency_nitrogen, relaxation_frequency_oxygen, frequency):
     """
     Attenuation coefficient :math:`\\alpha` describing atmospheric absorption in dB/m for the specified ``frequency``.
 
@@ -126,4 +132,11 @@ def attenuation_coefficient(pressure, temperature, reference_pressure, reference
     :param frequency: Frequencies to calculate :math:`\\alpha` for.
 
     """
-    return 8.686 * frequency**2.0 * ( ( 1.84 * 10.0**(-11.0) * (reference_pressure/pressure) * (temperature/reference_temperature)**(0.5)) + (temperature/reference_temperature)**(-2.5) * ( 0.01275 * np.exp(-2239.1 / temperature) * (relaxation_frequency_oxygen + (frequency**2.0/relaxation_frequency_oxygen))**(-1.0) + 0.1068 * np.exp(-3352.0/temperature) * (relaxation_frequency_nitrogen + (frequency**2.0/relaxation_frequency_nitrogen))**(-1.0) ) )
+    return 8.686 * frequency**2.0 * (
+        (1.84 * 10.0**(-11.0) * (reference_pressure / pressure) * (temperature / reference_temperature)**
+         (0.5)) + (temperature / reference_temperature)**
+        (-2.5) * (0.01275 * np.exp(-2239.1 / temperature) * (relaxation_frequency_oxygen +
+                                                             (frequency**2.0 / relaxation_frequency_oxygen))**
+                  (-1.0) + 0.1068 * np.exp(-3352.0 / temperature) * (relaxation_frequency_nitrogen +
+                                                                     (frequency**2.0 / relaxation_frequency_nitrogen))**
+                  (-1.0)))

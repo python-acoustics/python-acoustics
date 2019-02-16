@@ -19,6 +19,7 @@ REFERENCE_PRESSURE = 2.0e-5
 Reference value of the sound pressure :math:`p_0` is :math:`2 \cdot 10^{-5}` Pa.
 """
 
+
 def sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE):
     """
     Sound pressure level :math:`L_p` in dB.
@@ -30,7 +31,7 @@ def sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE):
 
     See section 2.2.
     """
-    return 10.0 * np.log10( pressure**2.0 / reference_pressure**2.0 )
+    return 10.0 * np.log10(pressure**2.0 / reference_pressure**2.0)
 
 
 def equivalent_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE, axis=-1):
@@ -45,7 +46,7 @@ def equivalent_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESS
 
     See section 2.3.
     """
-    return 10.0 * np.log10( (pressure**2.0).mean(axis=axis) / reference_pressure**2.0)
+    return 10.0 * np.log10((pressure**2.0).mean(axis=axis) / reference_pressure**2.0)
 
 
 def max_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE, axis=-1):
@@ -60,6 +61,7 @@ def max_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE, ax
 
     """
     return sound_pressure_level(pressure, reference_pressure=reference_pressure).max(axis=axis)
+
 
 def peak_sound_pressure(pressure, axis=-1):
     """
@@ -85,13 +87,14 @@ def peak_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE, a
     .. math:: L_{p,peak} = 10.0 \\log \\frac{p_{peak}^2.0}{p_0^2}
 
     """
-    return 10.0 * np.log10 (peak_sound_pressure(pressure, axis=axis)**2.0 / reference_pressure**2.0)
+    return 10.0 * np.log10(peak_sound_pressure(pressure, axis=axis)**2.0 / reference_pressure**2.0)
 
 
 REFERENCE_SOUND_EXPOSURE = 4.0e-10
 """
 Reference value of the sound exposure :math:`E_0` is :math:`4 \cdot 10^{-12} \\mathrm{Pa}^2\\mathrm{s}`.
 """
+
 
 def sound_exposure(pressure, fs, axis=-1):
     """
@@ -104,7 +107,8 @@ def sound_exposure(pressure, fs, axis=-1):
     .. math:: E_T = \\int_{t_1}^{t_2} p^2 (t) \\mathrm{d}t
 
     """
-    return (pressure**2.0/fs).sum(axis=axis)
+    return (pressure**2.0 / fs).sum(axis=axis)
+
 
 def sound_exposure_level(pressure, fs, reference_sound_exposure=REFERENCE_SOUND_EXPOSURE, axis=-1):
     """
@@ -118,13 +122,14 @@ def sound_exposure_level(pressure, fs, reference_sound_exposure=REFERENCE_SOUND_
     .. math:: L_{E,T} = 10 \\log_{10}{ \\frac{E_T}{E_0}  }
 
     """
-    return 10.0 * np.log10(sound_exposure(pressure, fs, axis=axis)/reference_sound_exposure)
+    return 10.0 * np.log10(sound_exposure(pressure, fs, axis=axis) / reference_sound_exposure)
 
 
 REFERENCE_POWER = 1.0e-12
 """
 Reference value of the sound power :math:`P_0` is 1 pW.
 """
+
 
 def sound_power_level(power, reference_power=REFERENCE_POWER):
     """
@@ -136,7 +141,7 @@ def sound_power_level(power, reference_power=REFERENCE_POWER):
     .. math:: 10 \\log_{10}{ \\frac{P}{P_0}  }
 
     """
-    return 10.0 * np.log10(power/reference_power)
+    return 10.0 * np.log10(power / reference_power)
 
 
 def sound_energy(power, axis=-1):
@@ -155,6 +160,7 @@ REFERENCE_ENERGY = 1.0e-12
 Reference value of the sound energy :math:`J_0` is 1 pJ.
 """
 
+
 def sound_energy_level(energy, reference_energy=REFERENCE_ENERGY):
     """
     Sound energy level L_{J} in dB.
@@ -165,7 +171,8 @@ def sound_energy_level(energy, reference_energy=REFERENCE_ENERGY):
     .. math:: L_{J} = 10 \\log_{10}{ \\frac{J}{J_0} }
 
     """
-    return np.log10( energy/reference_energy )
+    return np.log10(energy / reference_energy)
+
 
 def sound_intensity(pressure, velocity):
     """
@@ -185,6 +192,7 @@ REFERENCE_INTENSITY = 1.0e-12
 Reference value of the sound intensity :math:`I_0` is :math:`\\mathrm{1 pW/m^2}`.
 """
 
+
 def time_averaged_sound_intensity(intensity, axis=-1):
     """
     Time-averaged sound intensity :math:`\\mathbf{I}_T`.
@@ -198,7 +206,8 @@ def time_averaged_sound_intensity(intensity, axis=-1):
     return intensity.mean(axis=axis)
 
 
-def time_averaged_sound_intensity_level(time_averaged_sound_intensity, reference_intensity=REFERENCE_INTENSITY, axis=-1):
+def time_averaged_sound_intensity_level(time_averaged_sound_intensity, reference_intensity=REFERENCE_INTENSITY,
+                                        axis=-1):
     """
     Time-averaged sound intensity level :math:`L_{I,T}`.
 
@@ -208,7 +217,7 @@ def time_averaged_sound_intensity_level(time_averaged_sound_intensity, reference
     .. math:: L_{I,T} = 10 \\log_{10} { \\frac{|\\mathbf{I}_T|}{I_0} }
 
     """
-    return 10.0 * np.log10( np.linalg.norm(time_averaged_sound_intensity,axis=axis) / reference_intensity )
+    return 10.0 * np.log10(np.linalg.norm(time_averaged_sound_intensity, axis=axis) / reference_intensity)
 
 
 def normal_time_averaged_sound_intensity(time_averaged_sound_intensity, unit_normal_vector):
@@ -224,7 +233,8 @@ def normal_time_averaged_sound_intensity(time_averaged_sound_intensity, unit_nor
     return time_averaged_sound_intensity.dot(unit_normal_vector)
 
 
-def normal_time_averaged_sound_intensity_level(normal_time_averaged_sound_intensity, reference_intensity=REFERENCE_INTENSITY):
+def normal_time_averaged_sound_intensity_level(normal_time_averaged_sound_intensity,
+                                               reference_intensity=REFERENCE_INTENSITY):
     """
     Normal time-averaged sound intensity level :math:`L_{In,T}` in dB.
 
@@ -234,4 +244,4 @@ def normal_time_averaged_sound_intensity_level(normal_time_averaged_sound_intens
     .. math:: I_{n,T} = 10 \\log_{10} { \\frac{|I_{n,T}|}{I_0}}
 
     """
-    return 10.0 * np.log10( np.abs(normal_time_averaged_sound_intensity / reference_intensity) )
+    return 10.0 * np.log10(np.abs(normal_time_averaged_sound_intensity / reference_intensity))

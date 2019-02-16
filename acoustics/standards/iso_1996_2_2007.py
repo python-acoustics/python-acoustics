@@ -17,7 +17,6 @@ from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
 import weakref
 from tabulate import tabulate
 
-
 TONE_WITHIN_PAUSE_CRITERION_DB = 6.0
 """A tone may exist when the level of any line in the noise pause is 6 dB or more about...."""
 
@@ -33,8 +32,10 @@ TONE_SEEK_CRITERION = 1.0
 REGRESSION_RANGE_FACTOR = 0.75
 """Range of regression is usually +/- 0.75 critical bandwidth."""
 
-_WINDOW_CORRECTION = {'hanning' : -1.8,
-                      }
+_WINDOW_CORRECTION = {
+    'hanning': -1.8,
+}
+
 
 def window_correction(window):
     """Correction to be applied to :math:`L_{pt}` due to use of window."""
@@ -52,14 +53,14 @@ def critical_band(frequency):
 
     """
     if isinstance(frequency, np.ndarray):
-        center[frequency<50.0] = 50.0
+        center[frequency < 50.0] = 50.0
     else:
         center = 50.0 if frequency < 50 else frequency
 
-    bandwidth = (center>500.0)*(center*0.20) + (center<=500.0)*100.0
+    bandwidth = (center > 500.0) * (center * 0.20) + (center <= 500.0) * 100.0
 
-    upper = center + bandwidth/2.0
-    lower = center - bandwidth/2.0
+    upper = center + bandwidth / 2.0
+    lower = center - bandwidth / 2.0
 
     return center, lower, upper, bandwidth
 
@@ -86,7 +87,7 @@ def masking_noise_level(noise_lines, frequency_resolution, effective_analysis_ba
     See equation C.11 in section C.4.4.
 
     """
-    return dbsum(noise_lines) + 10.0*np.log10(frequency_resolution/effective_analysis_bandwidth)
+    return dbsum(noise_lines) + 10.0 * np.log10(frequency_resolution / effective_analysis_bandwidth)
 
 
 def masking_noise_lines(levels, line_classifier, center, bandwidth, regression_range_factor):
@@ -100,10 +101,10 @@ def masking_noise_lines(levels, line_classifier, center, bandwidth, regression_r
     :param regression_range_factor: Range factor.
     :returns: (Array with masking noise lines, slope, intercept).
     """
-    slicer = slice(center-bandwidth*regression_range_factor, center+bandwidth*regression_range_factor)
+    slicer = slice(center - bandwidth * regression_range_factor, center + bandwidth * regression_range_factor)
     levels = levels[slicer]
     frequencies = levels.index
-    regression_levels = levels[line_classifier=='noise']
+    regression_levels = levels[line_classifier == 'noise']
     slope, intercept = linregress(x=regression_levels.index, y=regression_levels)[0:2]
     levels_from_regression = slope * frequencies + intercept
     return levels_from_regression, slope, intercept
@@ -121,7 +122,7 @@ def tonal_audibility(tones_level, masking_noise_level, center):
 
     See equation C.3. in section C.2.4.
     """
-    return tones_level - masking_noise_level + 2.0 + np.log10(1.0+(center/502.0)**(2.5))
+    return tones_level - masking_noise_level + 2.0 + np.log10(1.0 + (center / 502.0)**(2.5))
 
 
 def tonal_adjustment(tonal_audibility):
@@ -145,14 +146,18 @@ class Tonality(object):
     Objective method for assessing the audibility of tones in noise.
     """
 
-    def __init__(self, signal, sample_frequency, window='hanning',
-                 reference_pressure=REFERENCE_PRESSURE,
-                 tsc=TONE_SEEK_CRITERION,
-                 regression_range_factor=REGRESSION_RANGE_FACTOR,
-                 nbins=None,
-                 force_tone_without_pause=False,
-                 force_bandwidth_criterion=False,
-                ):
+    def __init__(
+            self,
+            signal,
+            sample_frequency,
+            window='hanning',
+            reference_pressure=REFERENCE_PRESSURE,
+            tsc=TONE_SEEK_CRITERION,
+            regression_range_factor=REGRESSION_RANGE_FACTOR,
+            nbins=None,
+            force_tone_without_pause=False,
+            force_bandwidth_criterion=False,
+    ):
 
         self.signal = signal
         """Samples in time-domain."""
@@ -176,7 +181,6 @@ class Tonality(object):
 
         self.force_tone_without_pause = force_tone_without_pause
         self.force_bandwidth_criterion = force_bandwidth_criterion
-
 
     @property
     def noise_pauses(self):
@@ -205,11 +209,11 @@ class Tonality(object):
             nbins = self.nbins
             if nbins is None:
                 nbins = self.sample_frequency
-            nbins //= 1 # Fix because of bug in welch with uneven nbins
-            f, p = welch(self.signal, fs=self.sample_frequency, nperseg=nbins, window=self.window, detrend=False, scaling='spectrum')
-            self._spectrum = pd.Series(10.0*np.log10(p / self.reference_pressure**2.0), index=f)
+            nbins //= 1  # Fix because of bug in welch with uneven nbins
+            f, p = welch(self.signal, fs=self.sample_frequency, nperseg=nbins, window=self.window, detrend=False,
+                         scaling='spectrum')
+            self._spectrum = pd.Series(10.0 * np.log10(p / self.reference_pressure**2.0), index=f)
         return self._spectrum
-
 
     @property
     def frequency_resolution(self):
@@ -218,7 +222,6 @@ class Tonality(object):
         df = np.diff(np.array(self.spectrum.index)).mean()
         return df
         #return 1.0 / self.sample_frequency
-
 
     @property
     def effective_analysis_bandwidth(self):
@@ -233,7 +236,7 @@ class Tonality(object):
         C.2.2: Note 1.
         """
         if self.window == 'hanning':
-            return 1.5 *  self.frequency_resolution
+            return 1.5 * self.frequency_resolution
         else:
             raise ValueError()
 
@@ -257,7 +260,8 @@ class Tonality(object):
         levels = self.spectrum
 
         categories = ['noise', 'start', 'end', 'neither', 'tone']
-        self.line_classifier = pd.Series(pd.Categorical(['noise']*len(levels), categories=categories), index=levels.index)
+        self.line_classifier = pd.Series(
+            pd.Categorical(['noise'] * len(levels), categories=categories), index=levels.index)
 
         # Add noise pauses
         for noise_pause in self.noise_pauses:
@@ -265,7 +269,7 @@ class Tonality(object):
             self.line_classifier.iloc[noise_pause.start] = 'start'
             self.line_classifier.iloc[noise_pause.end] = 'end'
             # Mark all other lines within noise pause as neither tone nor noise.
-            self.line_classifier.iloc[noise_pause.start+1:noise_pause.end] = 'neither' # Half-open interval
+            self.line_classifier.iloc[noise_pause.start + 1:noise_pause.end] = 'neither'  # Half-open interval
 
         # Add tone lines
         for tone in self.tones:
@@ -282,17 +286,19 @@ class Tonality(object):
         # First we need to check for the tones.
         for noise_pause in self.noise_pauses:
             # Determine the indices of the tones in a noise pause
-            tone_indices, bandwidth_for_tone_criterion = determine_tone_lines(levels,
-                                                                              self.frequency_resolution,
-                                                                              noise_pause.start,
-                                                                              noise_pause.end,
-                                                                              self.force_tone_without_pause,
-                                                                              self.force_bandwidth_criterion,
-                                                                              )
+            tone_indices, bandwidth_for_tone_criterion = determine_tone_lines(
+                levels,
+                self.frequency_resolution,
+                noise_pause.start,
+                noise_pause.end,
+                self.force_tone_without_pause,
+                self.force_bandwidth_criterion,
+            )
             # If we have indices, ...
             if np.any(tone_indices):
                 # ...then we create a tone object.
-                noise_pause.tone = create_tone(levels, tone_indices, bandwidth_for_tone_criterion, weakref.proxy(noise_pause))
+                noise_pause.tone = create_tone(levels, tone_indices, bandwidth_for_tone_criterion,
+                                               weakref.proxy(noise_pause))
         return self
 
     def _determine_critical_bands(self):
@@ -310,7 +316,6 @@ class Tonality(object):
         Per frequency line results are available via :attr:`line_classifier`.
         """
 
-
         # Determine tones. Puts noise pause starts/ends in classier as well as tone lines
         # and lines that are neither tone nor noise.
         self._determine_tones()
@@ -325,11 +330,8 @@ class Tonality(object):
         In order to use this function :attr:`line_classifier` needs to be available,
         which means :meth:`analyse` needs to be used first.
         """
-        return create_critical_band(self.spectrum, self.line_classifier, frequency,
-                                    self.frequency_resolution,
-                                    self.effective_analysis_bandwidth,
-                                    self.regression_range_factor, self.window)
-
+        return create_critical_band(self.spectrum, self.line_classifier, frequency, self.frequency_resolution,
+                                    self.effective_analysis_bandwidth, self.regression_range_factor, self.window)
 
     def plot_spectrum(self):
         """Plot power spectrum."""
@@ -351,21 +353,11 @@ class Tonality(object):
             return sorted(self.tones, key=lambda x: x.critical_band.tonal_audibility, reverse=True)[0]
         except IndexError:
             return None
-        #elif self.tones:
-            #raise RuntimeError("Tones were determined but critical bands were not...?")
-        #elif self.noise_pauses:
-            #raise ValueError("Need to run analysis first.")
-        #else:
-            #raise ValueError("Need to define/search noise pauses first.")
-
 
     def plot_results(self, noise_pauses=False, tones=True, critical_bands=True):
         """Plot overview of results."""
 
         df = self.frequency_resolution
-        #fig = self.plot_spectrum()
-        #ax = fig.axes[0]
-
         levels = self.spectrum
 
         fig = plt.figure()
@@ -376,7 +368,7 @@ class Tonality(object):
 
         if noise_pauses:
             for pause in self.noise_pauses:
-                ax.axvspan(pause.start*df, pause.end*df, color='green', alpha=0.05)
+                ax.axvspan(pause.start * df, pause.end * df, color='green', alpha=0.05)
 
         if tones:
             for tone in self.tones:
@@ -387,7 +379,6 @@ class Tonality(object):
                 ax.axvspan(band.start, band.end, color='yellow', alpha=0.05)
 
         band = self.dominant_tone.critical_band
-            #ax.avxspan(band.start, band.end, color='blue')
         ax.axvline(band.start, color='red', linewidth=0.1)
         ax.axvline(band.end, color='red', linewidth=0.1)
 
@@ -396,11 +387,8 @@ class Tonality(object):
             _items = list(self.noise_pauses)
         elif critical_bands:
             _items = list(self.critical_bands)
-        #span = IntervalTree(Interval(pause.start, pause.end) for pause in _items).range()
-        #ax.set_xlim(span.begin, span.end)
         ax.set_xlim(min(item.start for item in _items), max(item.end for item in _items))
         return fig
-
 
     def overview(self):
         """Print overview of results."""
@@ -411,35 +399,37 @@ class Tonality(object):
 
         tones = [("Tone", "{:4.1f} Hz: {:4.1f} dB".format(tone.center, tone.tone_level)) for tone in self.tones]
 
-        table = [("Critical band", "{:4.1f} to {:4.1f} Hz".format(cb.start, cb.end)),
-                 ("Masking noise level $L_{pn}$", "{:4.1f} dB".format(cb.masking_noise_level)),
-                 ("Tonal level $L_{pt}$", "{:4.1f} dB".format(cb.total_tone_level)),
-                 ("Dominant tone", "{:4.1f} Hz".format(cb.tone.center)),
-                 ("3 dB bandwidth of tone", "{:2.1f}% of {:4.1f}".format(cb.tone.bandwidth_3db/cb.bandwidth*100.0, cb.bandwidth)),
-                 ("Tonal audibility $L_{ta}$", "{:4.1f} dB".format(cb.tonal_audibility)),
-                 ("Adjustment $K_{t}$", "{:4.1f} dB".format(cb.adjustment)),
-                 ("Frequency resolution", "{:4.1f} Hz".format(self.frequency_resolution)),
-                 ("Effective analysis bandwidth", "{:4.1f} Hz".format(self.effective_analysis_bandwidth)),
-            ]
+        table = [
+            ("Critical band", "{:4.1f} to {:4.1f} Hz".format(cb.start, cb.end)),
+            ("Masking noise level $L_{pn}$", "{:4.1f} dB".format(cb.masking_noise_level)),
+            ("Tonal level $L_{pt}$", "{:4.1f} dB".format(cb.total_tone_level)),
+            ("Dominant tone", "{:4.1f} Hz".format(cb.tone.center)),
+            ("3 dB bandwidth of tone", "{:2.1f}% of {:4.1f}".format(cb.tone.bandwidth_3db / cb.bandwidth * 100.0,
+                                                                    cb.bandwidth)),
+            ("Tonal audibility $L_{ta}$", "{:4.1f} dB".format(cb.tonal_audibility)),
+            ("Adjustment $K_{t}$", "{:4.1f} dB".format(cb.adjustment)),
+            ("Frequency resolution", "{:4.1f} Hz".format(self.frequency_resolution)),
+            ("Effective analysis bandwidth", "{:4.1f} Hz".format(self.effective_analysis_bandwidth)),
+        ]
         table += tones
         return tabulate(table)
 
     def results_as_dataframe(self):
         """Return results in dataframe."""
-        data = ((tone.center, tone.tone_level, tone.bandwidth_3db, tone.critical_band.start,
-                 tone.critical_band.end, tone.critical_band.bandwidth,
-                 tone.critical_band.regression_slope, tone.critical_band.regression_intercept,
-                 tone.critical_band.masking_noise_level, tone.critical_band.total_tone_level,
-                 tone.critical_band.tonal_audibility, tone.critical_band.adjustment) for tone in self.tones)
-        columns = ['center', 'tone_level', 'bandwidth_3db', 'critical_band_start', 'critical_band_end',
-                   'critical_band_bandwidth', 'regression_slope', 'regression_intercept', 'masking_noise_level',
-                   'total_tone_level', 'tonal_audibility', 'adjustment']
+        data = ((tone.center, tone.tone_level, tone.bandwidth_3db, tone.critical_band.start, tone.critical_band.end,
+                 tone.critical_band.bandwidth, tone.critical_band.regression_slope,
+                 tone.critical_band.regression_intercept, tone.critical_band.masking_noise_level,
+                 tone.critical_band.total_tone_level, tone.critical_band.tonal_audibility,
+                 tone.critical_band.adjustment) for tone in self.tones)
+        columns = [
+            'center', 'tone_level', 'bandwidth_3db', 'critical_band_start', 'critical_band_end',
+            'critical_band_bandwidth', 'regression_slope', 'regression_intercept', 'masking_noise_level',
+            'total_tone_level', 'tonal_audibility', 'adjustment'
+        ]
         return pd.DataFrame(list(data), columns=columns)
 
 
-
 class NoisePause(object):
-
     def __init__(self, start, end, tone=None):
         self.start = start
         self.end = end
@@ -456,8 +446,7 @@ class NoisePause(object):
         yield self.stop
 
     def _repr_html_(self):
-        table = [("Start", self.start),
-                 ("End", self.end)]
+        table = [("Start", self.start), ("End", self.end)]
         return tabulate(table, tablefmt="html")
 
 
@@ -492,35 +481,65 @@ class Tone(object):
         return tabulate(table, tablefmt='html')
 
 
-def create_critical_band(levels, line_classifier, frequency, frequency_resolution,
-                         effective_analysis_bandwidth, regression_range_factor, window, tone=None):
+def create_critical_band(
+        levels,
+        line_classifier,
+        frequency,
+        frequency_resolution,
+        effective_analysis_bandwidth,
+        regression_range_factor,
+        window,
+        tone=None,
+):
     """Create an instance of CriticalBand."""
 
     center, start, end, bandwidth = critical_band(frequency)
 
     # Masking noise lines
-    noise_lines, regression_slope, regression_intercept = masking_noise_lines(levels, line_classifier, center, bandwidth, regression_range_factor)
+    noise_lines, regression_slope, regression_intercept = masking_noise_lines(levels, line_classifier, center,
+                                                                              bandwidth, regression_range_factor)
     # Masking noise level
     noise_level = masking_noise_level(noise_lines, frequency_resolution, effective_analysis_bandwidth)
     # Total tone level
-    tone_lines = levels[line_classifier=='tone'][start:end]
+    tone_lines = levels[line_classifier == 'tone'][start:end]
     tone_level = tones_level(tone_lines) - window_correction(window)
     # Tonal audibility
     audibility = tonal_audibility(tone_level, noise_level, center)
     # Adjustment Kt
     adjustment = tonal_adjustment(audibility)
 
-    return CriticalBand(center, start, end, bandwidth,
-                        regression_range_factor, regression_slope, regression_intercept,
-                        noise_level, tone_level, audibility, adjustment, tone)
+    return CriticalBand(
+        center,
+        start,
+        end,
+        bandwidth,
+        regression_range_factor,
+        regression_slope,
+        regression_intercept,
+        noise_level,
+        tone_level,
+        audibility,
+        adjustment,
+        tone,
+    )
 
 
 class CriticalBand(object):
-
-    def __init__(self, center, start, end, bandwidth,
-                 regression_range_factor, regression_slope, regression_intercept,
-                 noise_level, tone_level, audibility,
-                 adjustment, tone=None):
+    def __init__(
+            self,
+            center,
+            start,
+            end,
+            bandwidth,
+            regression_range_factor,
+            regression_slope,
+            regression_intercept,
+            noise_level,
+            tone_level,
+            audibility,
+            adjustment,
+            tone=None,
+    ):
 
         self.center = center
         """Center frequency of the critical band."""
@@ -547,10 +566,8 @@ class CriticalBand(object):
         self.tone = tone
 
     def __str__(self):
-        return "(center={:4.1f}, bandwidth={:4.1f}, tonal_audibility={:4.1f}, adjustment={:4.1f}".format(self.center,
-                                                                                                         self.bandwidth,
-                                                                                                         self.tonal_audibility,
-                                                                                                         self.adjustment)
+        return "(center={:4.1f}, bandwidth={:4.1f}, tonal_audibility={:4.1f}, adjustment={:4.1f}".format(
+            self.center, self.bandwidth, self.tonal_audibility, self.adjustment)
 
     def __repr__(self):
         return "CriticalBand{}".format(str(self))
@@ -569,23 +586,24 @@ class CriticalBand(object):
             ("Total tone level", "{:4.1f} dB".format(self.total_tone_level)),
             ("Tonal audibility $L_{ta}$", "{:4.1f} dB".format(self.tonal_audibility)),
             ("Adjustment $K_{t}$", "{:4.1f} dB".format(self.adjustment)),
-            ]
+        ]
 
         return tabulate(table, tablefmt='html')
 
 
 #----------Noise pauses----------------------------
 
+
 def _search_noise_pauses(levels, tsc):
     pauses = list()
     possible_start = None
-    for i in range(2, len(levels)-2):
-            if (levels[i] - levels[i-1]) >= tsc and (levels[i-1] - levels[i-2]) < tsc:
-                possible_start = i
-            if (levels[i] - levels[i+1]) >= tsc and (levels[i+1] - levels[i+2]) < tsc:
-                if possible_start:
-                    pauses.append((possible_start, i))
-                    possible_start = None
+    for i in range(2, len(levels) - 2):
+        if (levels[i] - levels[i - 1]) >= tsc and (levels[i - 1] - levels[i - 2]) < tsc:
+            possible_start = i
+        if (levels[i] - levels[i + 1]) >= tsc and (levels[i + 1] - levels[i + 2]) < tsc:
+            if possible_start:
+                pauses.append((possible_start, i))
+                possible_start = None
     return pauses
 
 
@@ -602,11 +620,13 @@ def noise_pause_seeker(levels, tsc):
     n = len(levels)
     forward_pauses = _search_noise_pauses(levels, tsc)
     backward_pauses = _search_noise_pauses(levels[::-1], tsc)
-    backward_pauses = [(n-1-start, n-1-end) for end, start in reversed(backward_pauses)]
-    possible_pauses = sorted(list( set(forward_pauses) & set(backward_pauses) ) )
+    backward_pauses = [(n - 1 - start, n - 1 - end) for end, start in reversed(backward_pauses)]
+    possible_pauses = sorted(list(set(forward_pauses) & set(backward_pauses)))
     return possible_pauses
 
+
 #------------------- Tone seeking--------------------
+
 
 def determine_tone_lines(levels, df, start, end, force_tone_without_pause=False, force_bandwidth_criterion=False):
     """Determine tone lines in noise pause.
@@ -620,7 +640,7 @@ def determine_tone_lines(levels, df, start, end, force_tone_without_pause=False,
 
     """
     # Noise pause range object
-    npr = slice(start, end+1)
+    npr = slice(start, end + 1)
 
     # Return values
     tone_indices = np.array([])
@@ -631,13 +651,13 @@ def determine_tone_lines(levels, df, start, end, force_tone_without_pause=False,
     levels_int = levels.reset_index(drop=True)
 
     # If any of the lines is six 6 dB above. See section C.4.3.
-    if np.any((levels.iloc[npr] >= TONE_WITHIN_PAUSE_CRITERION_DB + levels.iloc[start-1]) &
-              (levels.iloc[npr] >= TONE_WITHIN_PAUSE_CRITERION_DB + levels.iloc[end+1])) or force_tone_without_pause:
+    if np.any((levels.iloc[npr] >= TONE_WITHIN_PAUSE_CRITERION_DB + levels.iloc[start - 1]) &
+              (levels.iloc[npr] >= TONE_WITHIN_PAUSE_CRITERION_DB + levels.iloc[end + 1])) or force_tone_without_pause:
 
         # Indices of values that are within -3 dB point.
         indices_3db = np.nonzero(levels.iloc[npr] >= levels.iloc[npr].max() - TONE_BANDWIDTH_CRITERION_DB)[0]
         # -3 dB bandwidth
-        bandwidth_for_tone_criterion = (indices_3db.max()-indices_3db.min()) * df
+        bandwidth_for_tone_criterion = (indices_3db.max() - indices_3db.min()) * df
         # Frequency of tone.
         tone_center_frequency = levels.iloc[npr].idxmax()
         tone_center_index = levels.reset_index(drop=True).iloc[npr].idxmax()
@@ -647,6 +667,7 @@ def determine_tone_lines(levels, df, start, end, force_tone_without_pause=False,
         # Fullfill bandwidth criterion? See section C.4.3
         if (bandwidth_for_tone_criterion < 0.10 * critical_band_bandwidth) or force_bandwidth_criterion:
             # All values within 6 decibel are designated as tones.
-            tone_indices = (levels_int.iloc[npr][ levels_int.iloc[npr] >= levels_int.iloc[npr].max() - TONE_LINES_CRITERION_DB ]).index.get_values()
+            tone_indices = (levels_int.iloc[npr][
+                levels_int.iloc[npr] >= levels_int.iloc[npr].max() - TONE_LINES_CRITERION_DB]).index.get_values()
 
     return tone_indices, bandwidth_for_tone_criterion

@@ -3,8 +3,8 @@
 
 import numpy as np
 
-__all__ = ['complex_cepstrum', 'real_cepstrum', 'inverse_complex_cepstrum',
-           'minimum_phase']
+__all__ = ['complex_cepstrum', 'real_cepstrum', 'inverse_complex_cepstrum', 'minimum_phase']
+
 
 def complex_cepstrum(x, n=None):
     """Compute the complex cepstrum of a real sequence.
@@ -82,19 +82,20 @@ def complex_cepstrum(x, n=None):
            Chapter 15, 209-243. New York: Wiley, 1963.
 
     """
+
     def _unwrap(phase):
         samples = phase.shape[-1]
         unwrapped = np.unwrap(phase)
-        center = (samples+1)//2
+        center = (samples + 1) // 2
         if samples == 1:
             center = 0
-        ndelay = np.array(np.round(unwrapped[...,center]/np.pi))
-        unwrapped -= np.pi * ndelay[...,None] * np.arange(samples) / center
+        ndelay = np.array(np.round(unwrapped[..., center] / np.pi))
+        unwrapped -= np.pi * ndelay[..., None] * np.arange(samples) / center
         return unwrapped, ndelay
 
     spectrum = np.fft.fft(x, n=n)
     unwrapped_phase, ndelay = _unwrap(np.angle(spectrum))
-    log_spectrum = np.log(np.abs(spectrum)) + 1j*unwrapped_phase
+    log_spectrum = np.log(np.abs(spectrum)) + 1j * unwrapped_phase
     ceps = np.fft.ifft(log_spectrum).real
 
     return ceps, ndelay
@@ -188,11 +189,12 @@ def inverse_complex_cepstrum(ceps, ndelay):
            http://en.wikipedia.org/wiki/Cepstrum
 
     """
+
     def _wrap(phase, ndelay):
         ndelay = np.array(ndelay)
         samples = phase.shape[-1]
-        center = (samples+1)//2
-        wrapped = phase + np.pi * ndelay[...,None] * np.arange(samples) / center
+        center = (samples + 1) // 2
+        wrapped = phase + np.pi * ndelay[..., None] * np.arange(samples) / center
         return wrapped
 
     log_spectrum = np.fft.fft(ceps)
@@ -237,9 +239,8 @@ def minimum_phase(x, n=None):
         n = len(x)
     ceps = real_cepstrum(x, n=n)
     odd = n % 2
-    window = np.concatenate(([1.0], 2.0*np.ones((n+odd)/2-1),
-                             np.ones(1-odd), np.zeros((n+odd)/2-1)))
+    window = np.concatenate(([1.0], 2.0 * np.ones((n + odd) / 2 - 1), np.ones(1 - odd), np.zeros((n + odd) / 2 - 1)))
 
-    m = np.fft.ifft(np.exp(np.fft.fft(window*ceps))).real
+    m = np.fft.ifft(np.exp(np.fft.fft(window * ceps))).real
 
     return m

@@ -98,6 +98,7 @@ try:
 except ImportError:
     from numpy.fft import rfft
 
+
 def bandpass_filter(lowcut, highcut, fs, order=8, output='sos'):
     """Band-pass filter.
 
@@ -116,7 +117,7 @@ def bandpass_filter(lowcut, highcut, fs, order=8, output='sos'):
     nyq = 0.5 * fs
     low = lowcut / nyq
     high = highcut / nyq
-    output = butter(order/2, [low, high], btype='band', output=output)
+    output = butter(order / 2, [low, high], btype='band', output=output)
     return output
 
 
@@ -153,7 +154,8 @@ def bandstop(signal, lowcut, highcut, fs, order=8, zero_phase=False):
     :param zero_phase: Prevent phase error by filtering in both directions (filtfilt)
 
     """
-    return lowpass(signal, lowcut, fs, order=(order//2), zero_phase=zero_phase) + highpass(signal, highcut, fs, order=(order//2), zero_phase=zero_phase)
+    return lowpass(signal, lowcut, fs, order=(order // 2), zero_phase=zero_phase) + highpass(
+        signal, highcut, fs, order=(order // 2), zero_phase=zero_phase)
 
 
 def lowpass(signal, cutoff, fs, order=4, zero_phase=False):
@@ -170,7 +172,7 @@ def lowpass(signal, cutoff, fs, order=4, zero_phase=False):
     .. seealso:: :func:`scipy.signal.butter`.
 
     """
-    sos = butter(order, cutoff/(fs/2.0), btype='low', output='sos')
+    sos = butter(order, cutoff / (fs / 2.0), btype='low', output='sos')
     if zero_phase:
         return _sosfiltfilt(sos, signal)
     else:
@@ -191,7 +193,7 @@ def highpass(signal, cutoff, fs, order=4, zero_phase=False):
     .. seealso:: :func:`scipy.signal.butter`.
 
     """
-    sos = butter(order, cutoff/(fs/2.0), btype='high', output='sos')
+    sos = butter(order, cutoff / (fs / 2.0), btype='high', output='sos')
     if zero_phase:
         return _sosfiltfilt(sos, signal)
     else:
@@ -265,21 +267,21 @@ def convolve(signal, ltv, mode='full'):
 
     """
 
-    assert(len(signal) == ltv.shape[1])
+    assert (len(signal) == ltv.shape[1])
 
-    n = ltv.shape[0] + len(signal) - 1                          # Length of output vector
-    un = np.concatenate((signal, np.zeros(ltv.shape[0] - 1)))   # Resize input vector
-    offsets = np.arange(0, -ltv.shape[0], -1)                   # Offsets for impulse responses
-    Cs = spdiags(ltv, offsets, n, n)                            # Sparse representation of IR's.
-    out = Cs.dot(un)                                            # Calculate dot product.
+    n = ltv.shape[0] + len(signal) - 1  # Length of output vector
+    un = np.concatenate((signal, np.zeros(ltv.shape[0] - 1)))  # Resize input vector
+    offsets = np.arange(0, -ltv.shape[0], -1)  # Offsets for impulse responses
+    Cs = spdiags(ltv, offsets, n, n)  # Sparse representation of IR's.
+    out = Cs.dot(un)  # Calculate dot product.
 
-    if mode=='full':
+    if mode == 'full':
         return out
-    elif mode=='same':
-        start = ltv.shape[0]/2 - 1 + ltv.shape[0]%2
-        stop = len(signal) + ltv.shape[0]/2 - 1 + ltv.shape[0]%2
+    elif mode == 'same':
+        start = ltv.shape[0] / 2 - 1 + ltv.shape[0] % 2
+        stop = len(signal) + ltv.shape[0] / 2 - 1 + ltv.shape[0] % 2
         return out[start:stop]
-    elif mode=='valid':
+    elif mode == 'valid':
         length = len(signal) - ltv.shape[0]
         start = ltv.shape[0] - 1
         stop = len(signal)
@@ -304,12 +306,12 @@ def ir2fr(ir, fs, N=None):
 
     N = N if N else ir.shape[-1]
     fr = rfft(ir, n=N) / N
-    f = np.fft.rfftfreq(N, 1.0/fs)    #/ 2.0
+    f = np.fft.rfftfreq(N, 1.0 / fs)  #/ 2.0
 
     fr *= 2.0
-    fr[..., 0] /= 2.0    # DC component should not be doubled.
-    if not N%2: # if not uneven
-        fr[..., -1] /= 2.0 # And neither should fs/2 be.
+    fr[..., 0] /= 2.0  # DC component should not be doubled.
+    if not N % 2:  # if not uneven
+        fr[..., -1] /= 2.0  # And neither should fs/2 be.
 
     #f = np.arange(0, N/2+1)*(fs/N)
 
@@ -328,7 +330,7 @@ def decibel_to_neper(decibel):
     .. math :: \\mathrm{dB} = \\frac{\\log{10}}{20} \\mathrm{Np}
 
     """
-    return np.log(10.0) / 20.0  * decibel
+    return np.log(10.0) / 20.0 * decibel
 
 
 def neper_to_decibel(neper):
@@ -367,7 +369,8 @@ class Frequencies(object):
         Upper frequencies.
         """
 
-        self.bandwidth = np.asarray(bandwidth) if bandwidth is not None else np.asarray(self.upper) - np.asarray(self.lower)
+        self.bandwidth = np.asarray(bandwidth) if bandwidth is not None else np.asarray(self.upper) - np.asarray(
+            self.lower)
         """
         Bandwidth.
         """
@@ -422,22 +425,22 @@ class EqualBand(Frequencies):
                 raise ValueError("Given center frequencies are not equally spaced.")
             else:
                 pass
-            fstart = center[0] #- bandwidth/2.0
-            fstop = center[-1] #+ bandwidth/2.0
+            fstart = center[0]  #- bandwidth/2.0
+            fstop = center[-1]  #+ bandwidth/2.0
         elif fstart is not None and fstop is not None and nbands:
-            bandwidth = (fstop - fstart) / (nbands-1)
+            bandwidth = (fstop - fstart) / (nbands - 1)
         elif fstart is not None and fstop is not None and bandwidth:
             nbands = round((fstop - fstart) / bandwidth) + 1
         elif fstart is not None and bandwidth and nbands:
             fstop = fstart + nbands * bandwidth
         elif fstop is not None and bandwidth and nbands:
-            fstart = fstop - (nbands-1) * bandwidth
+            fstart = fstop - (nbands - 1) * bandwidth
         else:
             raise ValueError("Insufficient parameters. Cannot determine fstart, fstop, bandwidth.")
 
-        center = fstart + np.arange(0, nbands) * bandwidth # + bandwidth/2.0
-        upper  = fstart + np.arange(0, nbands) * bandwidth + bandwidth/2.0
-        lower  = fstart + np.arange(0, nbands) * bandwidth - bandwidth/2.0
+        center = fstart + np.arange(0, nbands) * bandwidth  # + bandwidth/2.0
+        upper = fstart + np.arange(0, nbands) * bandwidth + bandwidth / 2.0
+        lower = fstart + np.arange(0, nbands) * bandwidth - bandwidth / 2.0
 
         super(EqualBand, self).__init__(center, lower, upper, bandwidth)
 
@@ -448,13 +451,12 @@ class EqualBand(Frequencies):
         return "EqualBand({})".format(str(self.center))
 
 
-
 class OctaveBand(Frequencies):
     """Fractional-octave band spectrum.
     """
 
-    def __init__(self, center=None, fstart=None, fstop=None, nbands=None, fraction=1, reference=acoustics.octave.REFERENCE):
-
+    def __init__(self, center=None, fstart=None, fstop=None, nbands=None, fraction=1,
+                 reference=acoustics.octave.REFERENCE):
 
         if center is not None:
             try:
@@ -466,13 +468,13 @@ class OctaveBand(Frequencies):
         elif fstart is not None and fstop is not None:
             nstart = acoustics.octave.index_of_frequency(fstart, fraction=fraction, ref=reference)
             nstop = acoustics.octave.index_of_frequency(fstop, fraction=fraction, ref=reference)
-            indices = np.arange(nstart, nstop+1)
+            indices = np.arange(nstart, nstop + 1)
         elif fstart is not None and nbands is not None:
             nstart = acoustics.octave.index_of_frequency(fstart, fraction=fraction, ref=reference)
-            indices = np.arange(nstart, nstart+nbands)
+            indices = np.arange(nstart, nstart + nbands)
         elif fstop is not None and nbands is not None:
             nstop = acoustics.octave.index_of_frequency(fstop, fraction=fraction, ref=reference)
-            indices = np.arange(nstop-nbands, nstop)
+            indices = np.arange(nstop - nbands, nstop)
         else:
             raise ValueError("Insufficient parameters. Cannot determine fstart and/or fstop.")
 
@@ -512,6 +514,7 @@ def ms(x):
     """
     return (np.abs(x)**2.0).mean()
 
+
 def rms(x):
     """Root mean squared of signal `x`.
 
@@ -523,6 +526,7 @@ def rms(x):
 
     """
     return np.sqrt(ms(x))
+
 
 def normalize(y, x=None):
     """normalize power in y to a (standard normal) white noise signal.
@@ -536,12 +540,10 @@ def normalize(y, x=None):
         x = ms(x)
     else:
         x = 1.0
-    return y * np.sqrt( x / ms(y) )
+    return y * np.sqrt(x / ms(y))
     #return y * np.sqrt( 1.0 / (np.abs(y)**2.0).mean() )
 
     ## Broken? Caused correlation in auralizations....weird!
-
-
 
 
 def window_scaling_factor(window, axis=-1):
@@ -556,7 +558,7 @@ def window_scaling_factor(window, axis=-1):
     .. math:: S = \\sqrt{\\frac{\\sum_{i=0}^N w_i^2}{N}}
 
     """
-    return np.sqrt((window*window).mean(axis=axis))
+    return np.sqrt((window * window).mean(axis=axis))
 
 
 def apply_window(x, window):
@@ -575,10 +577,10 @@ def apply_window(x, window):
     .. seealso:: :func:`window_scaling_factor`.
 
     """
-    s = window_scaling_factor(window) # Determine window scaling factor.
+    s = window_scaling_factor(window)  # Determine window scaling factor.
     n = len(window)
-    windows = x//n  # Amount of windows.
-    x = x[0:windows*n] # Truncate final part of signal that does not fit.
+    windows = x // n  # Amount of windows.
+    x = x[0:windows * n]  # Truncate final part of signal that does not fit.
     #x = x.reshape(-1, len(window)) # Reshape so we can apply window.
     y = np.tile(window, windows)
 
@@ -602,7 +604,7 @@ def amplitude_spectrum(x, fs, N=None):
     """
     N = N if N else x.shape[-1]
     fr = np.fft.fft(x, n=N) / N
-    f = np.fft.fftfreq(N, 1.0/fs)
+    f = np.fft.fftfreq(N, 1.0 / fs)
     return np.fft.fftshift(f), np.fft.fftshift(fr, axes=[-1])
 
 
@@ -623,7 +625,7 @@ def auto_spectrum(x, fs, N=None):
 
     """
     f, a = amplitude_spectrum(x, fs, N=N)
-    return f, (a*a.conj()).real
+    return f, (a * a.conj()).real
 
 
 def power_spectrum(x, fs, N=None):
@@ -646,12 +648,12 @@ def power_spectrum(x, fs, N=None):
     """
     N = N if N else x.shape[-1]
     f, a = auto_spectrum(x, fs, N=N)
-    a = a[..., N//2:]
-    f = f[..., N//2:]
+    a = a[..., N // 2:]
+    f = f[..., N // 2:]
     a *= 2.0
-    a[..., 0] /= 2.0    # DC component should not be doubled.
-    if not N%2: # if not uneven
-        a[..., -1] /= 2.0 # And neither should fs/2 be.
+    a[..., 0] /= 2.0  # DC component should not be doubled.
+    if not N % 2:  # if not uneven
+        a[..., -1] /= 2.0  # And neither should fs/2 be.
     return f, a
 
 
@@ -671,8 +673,8 @@ def angle_spectrum(x, fs, N=None):
     N = N if N else x.shape[-1]
     f, a = amplitude_spectrum(x, fs, N)
     a = np.angle(a)
-    a = a[..., N//2:]
-    f = f[..., N//2:]
+    a = a[..., N // 2:]
+    f = f[..., N // 2:]
     return f, a
 
 
@@ -693,24 +695,6 @@ def phase_spectrum(x, fs, N=None):
     return f, np.unwrap(a)
 
 
-
-#def power_and_phase_spectrum(x, fs, N=None):
-    #"""
-    #Power spectrum and phase of instantaneous signal :math:`x(t)`.
-
-    #:param x: Instantaneous signal :math:`x(t)`.
-    #:param fs: Sample frequency :math:`f_s`.
-    #:param N: Amount of FFT bins.
-
-    #Often one is interested in both the power spectrum and the phase. This function returns the power and a single-sided phase spectrum.
-    #For an explanation of the power spectrum, see :func:`power_spectrum`.
-    #"""
-
-
-    #returns f, power, phase
-
-
-
 def density_spectrum(x, fs, N=None):
     """
     Density spectrum of instantaneous signal :math:`x(t)`.
@@ -727,29 +711,8 @@ def density_spectrum(x, fs, N=None):
     """
     N = N if N else x.shape[-1]
     fr = np.fft.fft(x, n=N) / fs
-    f = np.fft.fftfreq(N, 1.0/fs)
+    f = np.fft.fftfreq(N, 1.0 / fs)
     return np.fft.fftshift(f), np.fft.fftshift(fr)
-
-#def auto_density_spectrum(x, fs, N=None):
-    #"""
-    #Auto density spectrum of instantaneous signal :math:`x(t)`.
-    #"""
-    #f, d = density_spectrum(x, fs, N=N)
-    #return f, (d*d.conj()).real
-
-#def power_density_spectrum(x, fs, N=None):
-    #"""
-    #Power density spectrum.
-    #"""
-    #N = N if N else x.shape[-1]
-    #f, a = auto_density_spectrum(x, fs, N=N)
-    #a = a[N//2:]
-    #f = f[N//2:]
-    #a *= 2.0
-    #a[..., 0] /= 2.0    # DC component should not be doubled.
-    #if not N%2: # if not uneven
-        #a[..., -1] /= 2.0 # And neither should fs/2 be.
-    #return f, a
 
 
 def integrate_bands(data, a, b):
@@ -765,16 +728,16 @@ def integrate_bands(data, a, b):
     """
 
     try:
-        if b.fraction%a.fraction:
+        if b.fraction % a.fraction:
             raise NotImplementedError("Non-integer ratio of fractional-octaves are not supported.")
     except AttributeError:
         pass
 
     lower, _ = np.meshgrid(b.lower, a.center)
     upper, _ = np.meshgrid(b.upper, a.center)
-    _, center= np.meshgrid(b.center, a.center)
+    _, center = np.meshgrid(b.center, a.center)
 
-    return ((lower < center) * (center <= upper) * data[...,None]).sum(axis=-2)
+    return ((lower < center) * (center <= upper) * data[..., None]).sum(axis=-2)
 
 
 def bandpass_frequencies(x, fs, frequencies, order=8, purge=False, zero_phase=False):
@@ -789,8 +752,9 @@ def bandpass_frequencies(x, fs, frequencies, order=8, purge=False, zero_phase=Fa
     :returns: Tuple. First element is an instance of :class:`OctaveBand`. The second element an array.
     """
     if purge:
-        frequencies = frequencies[frequencies.upper < fs/2.0]
-    return frequencies, np.array([bandpass(x, band.lower, band.upper, fs, order, zero_phase=zero_phase) for band in frequencies])
+        frequencies = frequencies[frequencies.upper < fs / 2.0]
+    return frequencies, np.array(
+        [bandpass(x, band.lower, band.upper, fs, order, zero_phase=zero_phase) for band in frequencies])
 
 
 def bandpass_octaves(x, fs, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order=8, purge=False, zero_phase=False):
@@ -809,7 +773,8 @@ def bandpass_octaves(x, fs, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order
     return bandpass_fractional_octaves(x, fs, frequencies, fraction=1, order=order, purge=purge, zero_phase=zero_phase)
 
 
-def bandpass_third_octaves(x, fs, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, order=8, purge=False, zero_phase=False):
+def bandpass_third_octaves(x, fs, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, order=8, purge=False,
+                           zero_phase=False):
     """Apply 1/3-octave bandpass filters.
 
     :param x: Instantaneous signal :math:`x(t)`.
@@ -843,10 +808,7 @@ def bandpass_fractional_octaves(x, fs, frequencies, fraction=None, order=8, purg
     return bandpass_frequencies(x, fs, frequencies, order=order, purge=purge, zero_phase=zero_phase)
 
 
-
-def third_octaves(p, fs, density=False,
-                  frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES,
-                  ref=REFERENCE_PRESSURE):
+def third_octaves(p, fs, density=False, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, ref=REFERENCE_PRESSURE):
     """Calculate level per 1/3-octave in frequency domain using the FFT.
 
     :param x: Instantaneous signal :math:`x(t)`.
@@ -866,14 +828,12 @@ def third_octaves(p, fs, density=False,
     fnb = EqualBand(f)
     power = integrate_bands(p, fnb, fob)
     if density:
-        power /= (fob.bandwidth/fnb.bandwidth)
-    level = 10.0*np.log10(power / ref**2.0)
+        power /= (fob.bandwidth / fnb.bandwidth)
+    level = 10.0 * np.log10(power / ref**2.0)
     return fob, level
 
 
-def octaves(p, fs, density=False,
-            frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES,
-            ref=REFERENCE_PRESSURE):
+def octaves(p, fs, density=False, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, ref=REFERENCE_PRESSURE):
     """Calculate level per 1/1-octave in frequency domain using the FFT.
 
     :param x: Instantaneous signal :math:`x(t)`.
@@ -895,8 +855,8 @@ def octaves(p, fs, density=False,
     fnb = EqualBand(f)
     power = integrate_bands(p, fnb, fob)
     if density:
-        power /= (fob.bandwidth/fnb.bandwidth)
-    level = 10.0*np.log10(power / ref**2.0)
+        power /= (fob.bandwidth / fnb.bandwidth)
+    level = 10.0 * np.log10(power / ref**2.0)
     return fob, level
 
 
@@ -919,8 +879,8 @@ def fractional_octaves(p, fs, start=5.0, stop=16000.0, fraction=3, density=False
     fnb = EqualBand(f)
     power = integrate_bands(p, fnb, fob)
     if density:
-        power /= (fob.bandwidth/fnb.bandwidth)
-    level = 10.0*np.log10(power)
+        power /= (fob.bandwidth / fnb.bandwidth)
+    level = 10.0 * np.log10(power)
     return fob, level
 
 
@@ -934,7 +894,6 @@ class Filterbank(object):
     """
 
     def __init__(self, frequencies, sample_frequency=44100, order=8):
-
 
         self.frequencies = frequencies
         """
@@ -966,7 +925,7 @@ class Filterbank(object):
     @sample_frequency.setter
     def sample_frequency(self, x):
         #if x <= self.center_frequencies.max():
-            #raise ValueError("Sample frequency cannot be lower than the highest center frequency.")
+        #raise ValueError("Sample frequency cannot be lower than the highest center frequency.")
         self._sample_frequency = x
 
     @property
@@ -975,7 +934,8 @@ class Filterbank(object):
         Filters this filterbank consists of.
         """
         fs = self.sample_frequency
-        return ( bandpass_filter(lower, upper, fs, order=self.order, output='sos') for lower, upper in zip(self.frequencies.lower, self.frequencies.upper) )
+        return (bandpass_filter(lower, upper, fs, order=self.order, output='sos')
+                for lower, upper in zip(self.frequencies.lower, self.frequencies.upper))
 
         #order = self.order
         #filters = list()
@@ -988,7 +948,7 @@ class Filterbank(object):
 
         .. note:: This function uses :func:`scipy.signal.lfilter`.
         """
-        return ( sosfilt(sos, signal) for sos in self.filters )
+        return (sosfilt(sos, signal) for sos in self.filters)
 
     def filtfilt(self, signal):
         """
@@ -997,14 +957,14 @@ class Filterbank(object):
 
         .. note:: This function uses :func:`scipy.signal.filtfilt` and therefore has a zero-phase response.
         """
-        return ( _sosfiltfilt(sos, signal) for sos in self.filters )
+        return (_sosfiltfilt(sos, signal) for sos in self.filters)
 
     def power(self, signal):
         """
         Power per band in signal.
         """
         filtered = self.filtfilt(signal)
-        return np.array([(x**2.0).sum()/len(x) / bw for x, bw in zip(filtered, self.frequencies.bandwidth)])
+        return np.array([(x**2.0).sum() / len(x) / bw for x, bw in zip(filtered, self.frequencies.bandwidth)])
 
     def plot_response(self):
         """
@@ -1018,9 +978,9 @@ class Filterbank(object):
         ax1 = fig.add_subplot(211)
         ax2 = fig.add_subplot(212)
         for f, fc in zip(self.filters, self.frequencies.center):
-            w, h = freqz(f[0], f[1], int(fs/2))#np.arange(fs/2.0))
-            ax1.semilogx(w / (2.0*np.pi) * fs, 20.0 * np.log10(np.abs(h)), label=str(int(fc)))
-            ax2.semilogx(w / (2.0*np.pi) * fs, np.angle(h), label=str(int(fc)))
+            w, h = freqz(f[0], f[1], int(fs / 2))  #np.arange(fs/2.0))
+            ax1.semilogx(w / (2.0 * np.pi) * fs, 20.0 * np.log10(np.abs(h)), label=str(int(fc)))
+            ax2.semilogx(w / (2.0 * np.pi) * fs, np.angle(h), label=str(int(fc)))
         ax1.set_xlabel(r'$f$ in Hz')
         ax1.set_ylabel(r'$|H|$ in dB re. 1')
         ax2.set_xlabel(r'$f$ in Hz')
@@ -1041,36 +1001,12 @@ class Filterbank(object):
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        p = ax.bar(f, 20.0*np.log10(p))
+        p = ax.bar(f, 20.0 * np.log10(p))
         ax.set_xlabel('$f$ in Hz')
         ax.set_ylabel('$L$ in dB re. 1')
         ax.set_xscale('log')
 
         return fig
-
-
-#class FilterbankFFT(object):
-    #"""
-    #Filterbank to filter signal using FFT.
-    #"""
-
-    #def __init__(self, frequencies, sample_frequency=44100):
-
-       #self.frequencies = frequencies
-       #"""
-       #Frequencies.
-
-       #See also :class:`Frequencies` and subclasses.
-       #"""
-       #self.sample_frequency = sample_frequency
-
-
-    #def power(self, signal):
-        #pass
-
-    #def plot_power(self, signal):
-        #pass
-
 
 
 def isolate(signals):
@@ -1084,7 +1020,7 @@ def isolate(signals):
     """
     x = np.asarray(signals)
 
-    W, s, v = np.linalg.svd( (np.tile( (x*x).sum(axis=0), (len(x), 1) ) * x).dot(x.T) )
+    W, s, v = np.linalg.svd((np.tile((x * x).sum(axis=0), (len(x), 1)) * x).dot(x.T))
     return v.T
 
 
@@ -1148,7 +1084,7 @@ def instantaneous_frequency(signal, fs, axis=-1):
     .. seealso:: :func:`instantaneous_phase`
 
     """
-    return np.diff( np.unwrap(instantaneous_phase(signal, fs, axis=axis), axis=axis), axis=axis) / (2.0*np.pi) * fs
+    return np.diff(np.unwrap(instantaneous_phase(signal, fs, axis=axis), axis=axis), axis=axis) / (2.0 * np.pi) * fs
 
 
 def wvd(signal, fs, analytic=True):
@@ -1165,8 +1101,8 @@ def wvd(signal, fs, analytic=True):
     """
     signal = np.asarray(signal)
 
-    N = int(len(signal)+len(signal)%2)
-    length_FFT = N # Take an even value of N
+    N = int(len(signal) + len(signal) % 2)
+    length_FFT = N  # Take an even value of N
 
     #if N != len(signal):
     #    signal = np.concatenate(signal, [0])
@@ -1176,19 +1112,19 @@ def wvd(signal, fs, analytic=True):
     if analytic:
         signal = hilbert(signal)
     s = np.concatenate((np.zeros(length_time), signal, np.zeros(length_time)))
-    W = np.zeros((length_FFT,length_time))
-    tau = np.arange(0, N//2)
+    W = np.zeros((length_FFT, length_time))
+    tau = np.arange(0, N // 2)
 
     R = np.zeros((N, length_time), dtype='float64')
 
     i = length_time
     for t in range(length_time):
-        R[t, tau1] = ( s[i+tau] * s[i-tau].conj() ) # In one direction
-        R[t, N-(tau+1)] = R[t, tau+1].conj() # And the other direction
+        R[t, tau1] = (s[i + tau] * s[i - tau].conj())  # In one direction
+        R[t, N - (tau + 1)] = R[t, tau + 1].conj()  # And the other direction
         i += 1
-    W = np.fft.fft(R, length_FFT) / (2*length_FFT)
+    W = np.fft.fft(R, length_FFT) / (2 * length_FFT)
 
-    f = np.fft.fftfreq(N, 1./fs)
+    f = np.fft.fftfreq(N, 1. / fs)
     return f, W.T
 
 
@@ -1207,8 +1143,7 @@ def _sosfiltfilt(sos, x, axis=-1, padtype='odd', padlen=None, method='pad', irle
 
     # x's 'axis' dimension must be bigger than edge.
     if x.shape[axis] <= edge:
-        raise ValueError("The length of the input vector x must be at least "
-                         "padlen, which is %d." % edge)
+        raise ValueError("The length of the input vector x must be at least " "padlen, which is %d." % edge)
 
     if padtype is not None and edge > 0:
         # Make an extension of length `edge` at each
@@ -1249,7 +1184,9 @@ def _sosfiltfilt(sos, x, axis=-1, padtype='odd', padlen=None, method='pad', irle
 
     return y
 
+
 from scipy.signal import lti, cheby1, firwin
+
 
 def decimate(x, q, n=None, ftype='iir', axis=-1, zero_phase=False):
     """
@@ -1345,48 +1282,49 @@ def linear_phase(ntaps, steepness=1):
     Sometimes, however, you would like to add the linear phase delay to the frequency response instead.
     This function computes the linear phase delay which can be multiplied with a single-sided frequency response.
     """
-    f = np.fft.rfftfreq(ntaps, 1.0) # Frequencies normalized to Nyquist.
-    alpha = ntaps//2 * steepness
-    return np.exp(-1j*2.*np.pi*f*alpha)
+    f = np.fft.rfftfreq(ntaps, 1.0)  # Frequencies normalized to Nyquist.
+    alpha = ntaps // 2 * steepness
+    return np.exp(-1j * 2. * np.pi * f * alpha)
 
 
-__all__ = ['bandpass',
-           'bandpass_frequencies',
-           'bandpass_fractional_octaves',
-           'bandpass_octaves',
-           'bandpass_third_octaves',
-           'lowpass',
-           'highpass',
-           'octavepass',
-           'octave_filter',
-           'bandpass_filter',
-           'convolve',
-           'ir2fr',
-           'decibel_to_neper',
-           'neper_to_decibel',
-           'EqualBand',
-           'OctaveBand',
-           'ms',
-           'rms',
-           'normalize',
-           'window_scaling_factor',
-           'apply_window',
-           'amplitude_spectrum',
-           'auto_spectrum',
-           'power_spectrum',
-           'angle_spectrum',
-           'phase_spectrum',
-           'density_spectrum',
-           'integrate_bands',
-           'octaves',
-           'third_octaves',
-           'fractional_octaves',
-           'Filterbank',
-           'isolate',
-           'zero_crossings',
-           'amplitude_envelope',
-           'instantaneous_phase',
-           'instantaneous_frequency',
-           'wvd',
-           'decimate',
-           ]
+__all__ = [
+    'bandpass',
+    'bandpass_frequencies',
+    'bandpass_fractional_octaves',
+    'bandpass_octaves',
+    'bandpass_third_octaves',
+    'lowpass',
+    'highpass',
+    'octavepass',
+    'octave_filter',
+    'bandpass_filter',
+    'convolve',
+    'ir2fr',
+    'decibel_to_neper',
+    'neper_to_decibel',
+    'EqualBand',
+    'OctaveBand',
+    'ms',
+    'rms',
+    'normalize',
+    'window_scaling_factor',
+    'apply_window',
+    'amplitude_spectrum',
+    'auto_spectrum',
+    'power_spectrum',
+    'angle_spectrum',
+    'phase_spectrum',
+    'density_spectrum',
+    'integrate_bands',
+    'octaves',
+    'third_octaves',
+    'fractional_octaves',
+    'Filterbank',
+    'isolate',
+    'zero_crossings',
+    'amplitude_envelope',
+    'instantaneous_phase',
+    'instantaneous_frequency',
+    'wvd',
+    'decimate',
+]

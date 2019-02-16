@@ -131,7 +131,6 @@ class Octave(object):
         self.unique = unique
         """Whether or not to calculate the requested values for every value of ``interval``."""
 
-
     @property
     def fmin(self):
         """Minimum frequency of an interval."""
@@ -143,7 +142,7 @@ class Octave(object):
     @fmin.setter
     def fmin(self, x):
         if self.interval is not None:
-            pass    # Warning, remove interval first.
+            pass  # Warning, remove interval first.
         else:
             self._fmin = x
 
@@ -202,7 +201,7 @@ class Octave(object):
         if self.interval is not None and self.unique:
             return self._n(self.interval)
         else:
-            return np.arange(self._n(self.fmin), self._n(self.fmax)+1)
+            return np.arange(self._n(self.fmin), self._n(self.fmax) + 1)
 
     @property
     def center(self):
@@ -248,27 +247,13 @@ class Octave(object):
         return upper_frequency(self.center, self.fraction)
 
 
-__all__ = ['exact_center_frequency', 'nominal_center_frequency',
-           'lower_frequency', 'upper_frequency', 'index_of_frequency',
-           'Octave', 'frequency_of_band', 'band_of_frequency', # These three will be deprecated?
-           ]
-
-###def center_frequency_octave(frequencies, fraction=1):
-    ###"""
-    ###Calculate the center frequencies :math:`f_c` of the octaves that (partially) cover ``frequencies``.
-
-    ###:param frequencies: An iterable containing frequencies.
-    ###:param order: An integer indicating the octave order. E.g., for 1/3-octaves use ``order=3``
-
-    ###Center frequencies are calculated using:
-
-    ###.. math::  f_c = 1000 \cdot 2^{n/N} \\cdot 10^{\\frac{3}{10N}}
-
-    ###"""
-    ###n = lambda fc, N: np.log2(fc/1000.0) - 1.0/N    # To calculate the nth octave from a given frequency.
-
-    ###n_min = np.floor(n(np.min(frequencies), order))
-    ###n_max = np.ceil(n(np.max(frequencies), order))
-    ###n = np.arange(n_min, n_max+1)
-    ###fc = 1000.0 * 10.0**(3.0/order/10.0) * 2.0**(n)
-    ###return fc
+__all__ = [
+    'exact_center_frequency',
+    'nominal_center_frequency',
+    'lower_frequency',
+    'upper_frequency',
+    'index_of_frequency',
+    'Octave',
+    'frequency_of_band',
+    'band_of_frequency',  # These three will be deprecated?
+]

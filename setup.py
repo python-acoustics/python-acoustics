@@ -20,8 +20,9 @@ class PyTest(TestCommand):
         errno = pytest.main(self.test_args)
         sys.exit(errno)
 
+
 setuptools.setup(
     cmdclass={'test': PyTest},
     ext_modules=cythonize('acoustics/*.pyx'),
-    include_dirs=[np.get_include()]
+    include_dirs=[np.get_include()],
 )

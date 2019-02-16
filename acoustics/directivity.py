@@ -29,7 +29,8 @@ def cardioid(theta, a=1.0, k=1.0):
     :param a: a
     :param k: k
     """
-    return np.abs( a + a * np.cos(k*theta) )
+    return np.abs(a + a * np.cos(k * theta))
+
 
 def figure_eight(theta, phi=0.0):
     """
@@ -38,7 +39,8 @@ def figure_eight(theta, phi=0.0):
     :param theta: angle :math:`\\theta`
     """
     #return spherical_harmonic(theta, phi, m=0, n=1)
-    return np.abs( np.cos(theta) )
+    return np.abs(np.cos(theta))
+
 
 def spherical_harmonic(theta, phi, m=0, n=0):
     """Spherical harmonic of order `m` and degree `n`.
@@ -51,7 +53,7 @@ def spherical_harmonic(theta, phi, m=0, n=0):
     return sph_harm(m, n, phi, theta).real
 
 
-def spherical_to_cartesian(r, theta , phi):
+def spherical_to_cartesian(r, theta, phi):
     """
     Convert spherical coordinates to cartesian coordinates.
 
@@ -66,11 +68,8 @@ def spherical_to_cartesian(r, theta , phi):
     r = np.asanyarray(r)
     theta = np.asanyarray(theta)
     phi = np.asanyarray(phi)
-    return (
-        r * np.sin(theta) * np.cos(phi),
-        r * np.sin(theta) * np.sin(phi),
-        r * np.cos(theta)
-        )
+    return (r * np.sin(theta) * np.cos(phi), r * np.sin(theta) * np.sin(phi), r * np.cos(theta))
+
 
 def cartesian_to_spherical(x, y, z):
     """
@@ -87,45 +86,8 @@ def cartesian_to_spherical(x, y, z):
     x = np.asanyarray(x)
     y = np.asanyarray(y)
     z = np.asanyarray(z)
-    r = np.linalg.norm(np.vstack((x,y,z)), axis=0)
-    return r, np.arccos(z/r), np.arctan(y/x)
-
-
-#def spherical_to_cartesian(spherical):
-    #"""
-    #Convert spherical coordinates to cartesian coordinates.
-
-    #.. math:: x = r \\sin{\\theta}\\cos{\\phi}
-    #.. math:: y = r \\sin{\\theta}\\sin{\\phi}
-    #.. math:: z = r \\cos{\\theta}
-    #"""
-    #r = spherical[0,:]
-    #theta = spherical[1,:]
-    #phi = spherical[2,:]
-    #return np.vstack((
-        #r * np.sin(theta) * np.cos(phi),
-        #r * np.sin(theta) * np.sin(phi),
-        #r * np.cos(theta)
-        #))
-
-
-#def cartesian_to_spherical(cartesian):
-    #"""
-    #Convert cartesian coordinates to spherical coordinates.
-
-    #.. math:: r = \\sqrt{\\left( x^2 + y^2 + z^2 \\right)}
-    #.. math:: \\theta = \\arccos{\\frac{z}{r}}
-    #.. math:: \\phi = \\arccos{\\frac{y}{x}}
-    #"""
-    #x = spherical[0,:]
-    #y = spherical[1,:]
-    #z = spherical[2,:]
-    #r = np.sqrt(np.sum(np.abs(cartesian)**2, axis=0)),
-    #return np.vstack((
-        #r,
-        #np.arccos(z/r),
-        #np.arctan(y/x)
-        #))
+    r = np.linalg.norm(np.vstack((x, y, z)), axis=0)
+    return r, np.arccos(z / r), np.arctan(y / x)
 
 
 class Directivity(object):
@@ -135,10 +97,9 @@ class Directivity(object):
     This class defines several methods to be implemented by subclasses.
     """
 
-
     def __init__(self, rotation=None):
 
-        self.rotation = rotation if rotation else np.array([1.0, 0.0, 0.0]) # X, Y, Z rotation
+        self.rotation = rotation if rotation else np.array([1.0, 0.0, 0.0])  # X, Y, Z rotation
         """
         Rotation of the directivity pattern.
         """
@@ -156,7 +117,6 @@ class Directivity(object):
         """
         pass
 
-
     def using_spherical(self, r, theta, phi, include_rotation=True):
         """
         Return the directivity for given spherical coordinates.
@@ -165,7 +125,6 @@ class Directivity(object):
         :param theta: angle :math:`\\theta`
         :param phi: angle :math:`\\phi`
         """
-
         """
         Correct for rotation!!!!
         """
@@ -192,48 +151,6 @@ class Directivity(object):
         return plot(self, filename, include_rotation)
 
 
-        ##try:
-            ##from mayavi import mlab
-        ##except ImportError:
-            ##raise ImportWarning("mayavi is not available.")
-            ##return
-
-        #phi = np.linspace(-np.pi, +np.pi, 50)
-        #theta = np.linspace(0.0, np.pi, 50)
-
-        #theta_n, phi_n = np.meshgrid(theta, phi)    # Create a 2-D mesh
-
-        #d = self._directivity(theta_n, phi_n.ravel)
-
-        ##fig = plt.figure()
-        ##ax0 = fig.add_subplot(111, projection='3d')
-        ##ax0.set_title('Directivity')
-
-        ##ax0.pcolormesh(u*180.0/np.pi, v*180.0/np.pi, r)
-        #(x, y, z) = spherical_to_cartesian(d, theta_n, phi_n)
-
-
-        #fig = plt.figure()
-        #fig.add_subplot(111, projection='3d')
-        #fig.surface()
-
-        ##fig = mlab.figure()
-        ##s = mlab.mesh(x,y,z)
-        ##fig.add(s)
-        ##mlab.axes()
-        ##mlab.outline()
-        ##mlab.show()
-
-        ##ax0.plot_wireframe(x*180.0/np.pi, y*180.0/np.pi, z)
-        ##ax0.set_xlabel(r'Latitude $u$ in degree')
-        ##ax0.set_ylabel(r'Longitude $v$ in degree')
-        ##ax0.grid()
-
-        ##if filename:
-            ##fig.savefig(filename)
-
-
-
 class Omni(Directivity):
     """
     Class to work with omni-directional directivity.
@@ -256,6 +173,7 @@ class Cardioid(Directivity):
         Directivity
         """
         return cardioid(theta)
+
 
 class FigureEight(Directivity):
     """Directivity of a figure of eight.
@@ -285,7 +203,6 @@ class SphericalHarmonic(Directivity):
         """Directivity
         """
         return spherical_harmonic(theta, phi, self.m, self.n)
-
 
 
 class Custom(Directivity):
@@ -331,10 +248,7 @@ def plot(d, sphere=False):
 
     :returns: Figure
     """
-
-    #phi = np.linspace(-np.pi, +np.pi, 50)
-    #theta = np.linspace(0.0, np.pi, 50)
-    phi = np.linspace(0.0, +2.0*np.pi, 50)
+    phi = np.linspace(0.0, +2.0 * np.pi, 50)
     theta = np.linspace(0.0, np.pi, 50)
     THETA, PHI = np.meshgrid(theta, phi)
 
@@ -345,13 +259,12 @@ def plot(d, sphere=False):
         x, y, z = spherical_to_cartesian(1.0, THETA, PHI)
 
     else:
-        x, y, z = spherical_to_cartesian( np.abs(dr), THETA, PHI )
+        x, y, z = spherical_to_cartesian(np.abs(dr), THETA, PHI)
     #R, THETA, PHI = cartesian_to_spherical(x, y, z)
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     #p = ax.plot_surface(x, y, z, cmap=plt.cm.jet, rstride=1, cstride=1, linewidth=0)
-
 
     norm = Normalize()
     norm.autoscale(dr)

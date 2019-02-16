@@ -4,14 +4,15 @@ from acoustics.standards.iso_1996_2_2007 import Tonality
 from acoustics import Signal
 import collections
 
+
 def test_tonality():
 
     duration = 60.0
     fs = 10025.0
-    samples = int(fs*duration)
-    times = np.arange(samples)/fs
+    samples = int(fs * duration)
+    times = np.arange(samples) / fs
 
-    signal = Signal(np.sin(2.0*np.pi*1000.0*times), fs)
+    signal = Signal(np.sin(2.0 * np.pi * 1000.0 * times), fs)
 
     tonality = Tonality(signal, signal.fs)
 

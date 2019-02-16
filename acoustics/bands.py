@@ -12,6 +12,7 @@ import acoustics
 from acoustics.standards.iec_61672_1_2013 import NOMINAL_OCTAVE_CENTER_FREQUENCIES as OCTAVE_CENTER_FREQUENCIES
 from acoustics.standards.iec_61672_1_2013 import NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES as THIRD_OCTAVE_CENTER_FREQUENCIES
 
+
 def octave(first, last):
     """
     Generate a Numpy array for central frequencies of octave bands.
@@ -40,12 +41,12 @@ def octave(first, last):
 
 
 def octave_low(first, last):
-    return octave(first, last)/np.sqrt(2.0)
+    return octave(first, last) / np.sqrt(2.0)
     #return acoustics.signal.OctaveBand(fstart=first, fstop=last, fraction=1).lower
 
 
 def octave_high(first, last):
-    return octave(first, last)*np.sqrt(2.0)
+    return octave(first, last) * np.sqrt(2.0)
     #return acoustics.signal.OctaveBand(fstart=first, fstop=last, fraction=1).upper
 
 
@@ -74,12 +75,12 @@ def third(first, last):
 
 
 def third_low(first, last):
-    return third(first, last)/2.0**(1.0/6.0)
+    return third(first, last) / 2.0**(1.0 / 6.0)
     #return acoustics.signal.OctaveBand(fstart=first, fstop=last, fraction=3).lower
 
 
 def third_high(first, last):
-    return third(first, last)*2.0**(1.0/6.0)
+    return third(first, last) * 2.0**(1.0 / 6.0)
     #return Octaveband(fstart=first, fstop=last, fraction=3).upper
 
 
@@ -102,14 +103,15 @@ def third2oct(levels, axis=None):
     axis = axis if axis is not None else levels.ndim - 1
 
     try:
-        assert(levels.shape[axis]%3 == 0)
+        assert (levels.shape[axis] % 3 == 0)
     except AssertionError:
         raise ValueError("Wrong shape.")
     shape = list(levels.shape)
     shape[axis] = shape[axis] // 3
-    shape.insert(axis+1, 3)
+    shape.insert(axis + 1, 3)
     levels = np.reshape(levels, shape)
-    return np.squeeze(acoustics.decibel.dbsum(levels, axis=axis+1))
+    return np.squeeze(acoustics.decibel.dbsum(levels, axis=axis + 1))
+
 
 def _check_band_type(freqs):
     """Check if an array contains octave or third octave bands values sorted

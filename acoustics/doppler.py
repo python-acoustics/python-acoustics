@@ -10,6 +10,7 @@ SOUNDSPEED = 343.0
 """Speed of sound
 """
 
+
 def velocity_from_doppler_shift(f1, f2, c=SOUNDSPEED):
     """Calculate velocity based on measured frequency shifts due to Doppler shift.
 

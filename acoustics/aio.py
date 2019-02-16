@@ -29,10 +29,12 @@ def read_csv_cirrus(filename):
         dialect = csv.Sniffer().sniff(csvreader, delimiters=",;")
         separator = dialect.delimiter
         # Guess decimal separator
-        decimal_sep = re.search(r"\"\d{2,3}"
-                                r"(\.|,)"  # Decimal separator
-                                r"\d{1,2}\"",
-                                csvreader).group(1)
+        decimal_sep = re.search(
+            r"\"\d{2,3}"
+            r"(\.|,)"  # Decimal separator
+            r"\d{1,2}\"",
+            csvreader,
+        ).group(1)
     n_cols = re.search("(.+)\n", csvreader).group(1).count(separator) + 1
     if n_cols < 5:
         unsorted_data = []
@@ -59,8 +61,11 @@ def read_csv_cirrus(filename):
         for row in csv_data:
             temp_csv += separator.join(row) + "\n"
         # Then, read it with pandas
-        data = pd.read_csv(io.StringIO(temp_csv), sep=separator,
-                           decimal=decimal_sep)
+        data = pd.read_csv(
+            io.StringIO(temp_csv),
+            sep=separator,
+            decimal=decimal_sep,
+        )
 
         # Assign NC and NR data if they are present
         try:
@@ -75,8 +80,12 @@ def read_csv_cirrus(filename):
             data.index = pdindex
 
     else:
-        data = pd.read_csv(filename, parse_dates=[[0, 1]], sep=separator,
-                           decimal=decimal_sep)
+        data = pd.read_csv(
+            filename,
+            parse_dates=[[0, 1]],
+            sep=separator,
+            decimal=decimal_sep,
+        )
 
         # Fix time name column
         en_columns = data.columns.values

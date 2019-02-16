@@ -58,13 +58,15 @@ class Atmosphere(object):
     TRIPLE_TEMP = 273.16
     """Triple point isotherm temperature."""
 
-    def __init__(self,
-                 temperature=REFERENCE_TEMPERATURE,
-                 pressure=REFERENCE_PRESSURE,
-                 relative_humidity=0.0,
-                 reference_temperature=REFERENCE_TEMPERATURE,
-                 reference_pressure=REFERENCE_PRESSURE,
-                 triple_temperature=TRIPLE_TEMPERATURE):
+    def __init__(
+            self,
+            temperature=REFERENCE_TEMPERATURE,
+            pressure=REFERENCE_PRESSURE,
+            relative_humidity=0.0,
+            reference_temperature=REFERENCE_TEMPERATURE,
+            reference_pressure=REFERENCE_PRESSURE,
+            triple_temperature=TRIPLE_TEMPERATURE,
+    ):
         """
 
         :param temperature: Temperature in kelvin
@@ -109,7 +111,7 @@ class Atmosphere(object):
                                             self.relative_humidity,
                                             self.reference_temperature,
                                             self.reference_pressure,
-                                            self.triple_temperature)
+                                            self.triple_temperature,)
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ == other.__class__
@@ -121,7 +123,10 @@ class Atmosphere(object):
 
         The speed of sound is calculated using :func:`acoustics.standards.iso_9613_1_1993.soundspeed`.
         """
-        return soundspeed(self.temperature, self.reference_temperature)
+        return soundspeed(
+            self.temperature,
+            self.reference_temperature,
+        )
 
     @property
     def saturation_pressure(self):
@@ -130,7 +135,11 @@ class Atmosphere(object):
 
         The saturation pressure is calculated using :func:`acoustics.standards.iso_9613_1_1993.saturation_pressure`.
         """
-        return saturation_pressure(self.temperature, self.reference_pressure, self.triple_temperature)
+        return saturation_pressure(
+            self.temperature,
+            self.reference_pressure,
+            self.triple_temperature,
+        )
 
     @property
     def molar_concentration_water_vapour(self):
@@ -139,7 +148,11 @@ class Atmosphere(object):
 
         The molar concentration of water vapour is calculated using :func:`acoustics.standards.iso_9613_1_1993.molar_concentration_water_vapour`.
         """
-        return molar_concentration_water_vapour(self.relative_humidity, self.saturation_pressure, self.pressure)
+        return molar_concentration_water_vapour(
+            self.relative_humidity,
+            self.saturation_pressure,
+            self.pressure,
+        )
 
     @property
     def relaxation_frequency_nitrogen(self):
@@ -148,7 +161,13 @@ class Atmosphere(object):
 
         The resonance frequency is calculated using :func:`acoustics.standards.iso_9613_1_1993.relaxation_frequency_nitrogen`.
         """
-        return relaxation_frequency_nitrogen(self.pressure, self.temperature, self.molar_concentration_water_vapour, self.reference_pressure, self.reference_temperature)
+        return relaxation_frequency_nitrogen(
+            self.pressure,
+            self.temperature,
+            self.molar_concentration_water_vapour,
+            self.reference_pressure,
+            self.reference_temperature,
+        )
 
     @property
     def relaxation_frequency_oxygen(self):
@@ -157,7 +176,11 @@ class Atmosphere(object):
 
         The resonance frequency is calculated using :func:`acoustics.standards.iso_9613_1_1993.relaxation_frequency_oxygen`.
         """
-        return relaxation_frequency_oxygen(self.pressure, self.molar_concentration_water_vapour, self.reference_pressure)
+        return relaxation_frequency_oxygen(
+            self.pressure,
+            self.molar_concentration_water_vapour,
+            self.reference_pressure,
+        )
 
     def attenuation_coefficient(self, frequency):
         """
@@ -167,7 +190,15 @@ class Atmosphere(object):
 
         The attenuation coefficient is calculated using :func:`acoustics.standards.iso_9613_1_1993.attenuation_coefficient`.
         """
-        return attenuation_coefficient(self.pressure, self.temperature, self.reference_pressure, self.reference_temperature, self.relaxation_frequency_nitrogen, self.relaxation_frequency_oxygen, frequency)
+        return attenuation_coefficient(
+            self.pressure,
+            self.temperature,
+            self.reference_pressure,
+            self.reference_temperature,
+            self.relaxation_frequency_nitrogen,
+            self.relaxation_frequency_oxygen,
+            frequency,
+        )
 
     def frequency_response(self, distance, frequencies, inverse=False):
         """Frequency response.
@@ -177,7 +208,12 @@ class Atmosphere(object):
         :param inverse: Whether the attenuation should be undone.
 
         """
-        return frequency_response(self, distance, frequencies, inverse)
+        return frequency_response(
+            self,
+            distance,
+            frequencies,
+            inverse,
+        )
 
     def impulse_response(self, distance, fs, ntaps=None, inverse=False):
         """Impulse response of sound travelling through `atmosphere` for a given `distance` sampled at `fs`.
@@ -190,7 +226,13 @@ class Atmosphere(object):
 
         .. seealso:: :func:`impulse_response`
         """
-        return impulse_response(self, distance, fs, ntaps, inverse)
+        return impulse_response(
+            self,
+            distance,
+            fs,
+            ntaps,
+            inverse,
+        )
 
     def plot_attenuation_coefficient(self, frequency):
         """
@@ -204,7 +246,7 @@ class Atmosphere(object):
         """
         fig = plt.figure()
         ax0 = fig.add_subplot(111)
-        ax0.plot(frequency, self.attenuation_coefficient(frequency)*1000.0)
+        ax0.plot(frequency, self.attenuation_coefficient(frequency) * 1000.0)
         ax0.set_xscale('log')
         ax0.set_yscale('log')
         ax0.set_xlabel(r'$f$ in Hz')
@@ -223,8 +265,9 @@ def frequency_response(atmosphere, distance, frequencies, inverse=False):
     :param inverse: Whether the attenuation should be undone.
     """
     sign = +1 if inverse else -1
-    tf = 10.0**( float(sign) * distance * atmosphere.attenuation_coefficient(frequencies) / 20.0  )
+    tf = 10.0**(float(sign) * distance * atmosphere.attenuation_coefficient(frequencies) / 20.0)
     return tf
+
 
 def impulse_response(atmosphere, distance, fs, ntaps, inverse=False):
     """Impulse response of sound travelling through `atmosphere` for a given `distance` sampled at `fs`.
@@ -243,7 +286,7 @@ def impulse_response(atmosphere, distance, fs, ntaps, inverse=False):
     A real, even impulse response corresponds to a real, even frequency response.
     """
     # Frequencies vector with positive frequencies only.
-    frequencies = np.fft.rfftfreq(ntaps, 1./fs)
+    frequencies = np.fft.rfftfreq(ntaps, 1. / fs)
     # Single-sided spectrum. Negative frequencies have the same values.
     tf = frequency_response(atmosphere, distance, frequencies, inverse)
     # Impulse response. We design a zero-phase filter (linear-phase with zero slope).
@@ -253,13 +296,8 @@ def impulse_response(atmosphere, distance, fs, ntaps, inverse=False):
     return ir
 
 
-__all__ = ['Atmosphere', 'SOUNDSPEED', 'REFERENCE_TEMPERATURE',
-           'REFERENCE_TEMPERATURE', 'TRIPLE_TEMPERATURE',
-           'soundspeed', 'saturation_pressure',
-           'molar_concentration_water_vapour',
-           'relaxation_frequency_oxygen',
-           'relaxation_frequency_nitrogen',
-           'attenuation_coefficient',
-           'impulse_response',
-           'frequency_response'
-           ]
+__all__ = [
+    'Atmosphere', 'SOUNDSPEED', 'REFERENCE_TEMPERATURE', 'REFERENCE_TEMPERATURE', 'TRIPLE_TEMPERATURE', 'soundspeed',
+    'saturation_pressure', 'molar_concentration_water_vapour', 'relaxation_frequency_oxygen',
+    'relaxation_frequency_nitrogen', 'attenuation_coefficient', 'impulse_response', 'frequency_response'
+]

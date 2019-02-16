@@ -2,6 +2,8 @@ DOCS=docs
 
 .PHONY: docs tests
 
+FORMAT_FILES=acoustics $(DOCS)/conf.py setup.py
+
 docs:
 	cd $(DOCS) && $(MAKE) clean && $(MAKE) html
 
@@ -21,6 +23,8 @@ clean:
 	rm -rf build
 	rm -rf .pytest_cache
 
+format:
+	yapf -ipr $(FORMAT_FILES)
 
 sdist:
 	python3 setup.py sdist
