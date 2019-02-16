@@ -84,7 +84,7 @@ class Signal(np.ndarray):
     def duration(self):
         """Duration of signal in seconds.
         """
-        return self.samples / self.fs
+        return float(self.samples / self.fs)
 
     @property
     def values(self):
@@ -248,16 +248,14 @@ class Signal(np.ndarray):
 
         By default the weighting filter is applied using
         :func:`scipy.signal.lfilter` causing a frequency-dependent delay. In case a
-        delay is undesired, the filter can applied using :func:`scipy.signal.filtfilt`
-        by settings `zero_phase=True`.
+        delay is undesired, the filter can be applied using :func:`scipy.signal.filtfilt`
+        by setting `zero_phase=True`.
 
         """
         num, den = WEIGHTING_SYSTEMS[weighting]()
         b, a = bilinear(num, den, self.fs)
-        if zero_phase:
-            return self._construct(filtfilt(b, a, self))
-        else:
-            return self._construct(lfilter(b, a, self))
+        func = filtfilt if zero_phase else lfilter
+        return self._construct(func(b, a, self))
 
     def correlate(self, other=None, mode='full'):
         """Correlate signal with `other` signal. In case `other==None` this
