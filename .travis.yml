@@ -1,6 +1,7 @@
 sudo: false
 
 language: nix
+nix: 2.2.1
 
 env:
   - PYTHON=36
