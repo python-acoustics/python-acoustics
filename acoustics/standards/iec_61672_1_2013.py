@@ -29,8 +29,6 @@ Weighting systems
 
 
 """
-from __future__ import division
-
 import numpy as np
 from scipy.signal import zpk2tf
 from scipy.signal import lfilter, bilinear

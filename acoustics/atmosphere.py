@@ -32,8 +32,6 @@ Functions
 .. autofunction:: acoustics.standards.iso_9613_1_1993.attenuation_coefficient
 
 """
-from __future__ import division, print_function
-
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -41,7 +39,7 @@ import acoustics
 from acoustics.standards.iso_9613_1_1993 import *  # pylint: disable=wildcard-import
 
 
-class Atmosphere(object):
+class Atmosphere:
     """
     Class describing atmospheric conditions.
     """

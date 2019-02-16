@@ -6,8 +6,6 @@ Weightings according to IEC 61672-1:2003.
 
 
 """
-from __future__ import division
-
 import numpy as np
 
 from acoustics.bands import third

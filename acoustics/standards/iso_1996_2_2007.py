@@ -140,7 +140,7 @@ def tonal_adjustment(tonal_audibility):
         return tonal_audibility - 4.0
 
 
-class Tonality(object):
+class Tonality:
     """Perform assessment of audibility of tones in noise.
 
     Objective method for assessing the audibility of tones in noise.
@@ -429,7 +429,7 @@ class Tonality(object):
         return pd.DataFrame(list(data), columns=columns)
 
 
-class NoisePause(object):
+class NoisePause:
     def __init__(self, start, end, tone=None):
         self.start = start
         self.end = end
@@ -458,7 +458,7 @@ def create_tone(levels, tone_lines, bandwidth_for_tone_criterion, noise_pause):
     return Tone(center, tone_lines, tone_level, noise_pause, bandwidth_for_tone_criterion)
 
 
-class Tone(object):
+class Tone:
     """Tone."""
 
     def __init__(self, center, tone_lines, tone_level, noise_pause, bandwidth_3db, critical_band=None):
@@ -524,7 +524,7 @@ def create_critical_band(
     )
 
 
-class CriticalBand(object):
+class CriticalBand:
     def __init__(
             self,
             center,

@@ -10,7 +10,6 @@ The following conventions are used within this module:
 * The azimuth angle :math:`\\phi` has a range :math:`[0 , 2 \\pi]`.
 
 """
-from __future__ import division
 import abc
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
@@ -90,7 +89,7 @@ def cartesian_to_spherical(x, y, z):
     return r, np.arccos(z / r), np.arctan(y / x)
 
 
-class Directivity(object):
+class Directivity:
     """
     Abstract directivity class.
 

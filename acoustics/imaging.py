@@ -10,9 +10,6 @@ Plotting functions using matplotlib_ library.
 .. _matplotlib: http://matplotlib.org/
 
 """
-
-from __future__ import division, unicode_literals
-
 import numpy as np
 
 import matplotlib.pyplot as plt

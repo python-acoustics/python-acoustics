@@ -4,8 +4,6 @@ Doppler
 
 Doppler shift module.
 """
-from __future__ import division
-
 SOUNDSPEED = 343.0
 """Speed of sound
 """

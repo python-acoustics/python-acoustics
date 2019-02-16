@@ -5,9 +5,6 @@ Cirrus
 Handle Cirrus data.
 
 """
-
-from __future__ import unicode_literals
-
 import csv
 import io
 import re

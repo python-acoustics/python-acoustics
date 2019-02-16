@@ -25,8 +25,6 @@ Nominal center frequencies
 .. autoattribute:: acoustics.standards.iec_61260_1_2014.OCTAVE_FREQUENCY_RATIO
 
 """
-from __future__ import division
-
 import acoustics
 import numpy as np
 

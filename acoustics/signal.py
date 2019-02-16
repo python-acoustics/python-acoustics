@@ -76,8 +76,6 @@ Other
 .. autofunction:: wvd
 
 """
-from __future__ import division
-
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.sparse import spdiags
@@ -345,7 +343,7 @@ def neper_to_decibel(neper):
     return 20.0 / np.log(10.0) * neper
 
 
-class Frequencies(object):
+class Frequencies:
     """
     Object describing frequency bands.
     """
@@ -882,7 +880,7 @@ def fractional_octaves(p, fs, start=5.0, stop=16000.0, fraction=3, density=False
     return fob, level
 
 
-class Filterbank(object):
+class Filterbank:
     """
     Fractional-Octave filter bank.
 

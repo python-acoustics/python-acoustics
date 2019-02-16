@@ -37,9 +37,6 @@ Other descriptors
 *****************
 
 """
-
-from __future__ import division
-
 import numpy as np
 
 from acoustics.standards.iso_tr_25417_2007 import (

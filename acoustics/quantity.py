@@ -27,7 +27,7 @@ Dictionary with units. Each unit is stored as a tuple.
 """
 
 
-class Unit(object):
+class Unit:
     """
     Unit of quantity.
 
@@ -58,7 +58,7 @@ class Unit(object):
         return self.name
 
 
-class Quantity(object):
+class Quantity:
     """
     Quantity.
     """

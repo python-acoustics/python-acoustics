@@ -4,8 +4,6 @@ Reflection
 
 The reflection module contains functions for calculating reflection factors and impedances.
 """
-from __future__ import division
-
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import AxesGrid, make_axes_locatable
@@ -22,7 +20,7 @@ DENSITY = 1.296
 """Density of air :math:`\\rho`."""
 
 
-class Boundary(object):
+class Boundary:
     """
     An object describing a boundary.
     """

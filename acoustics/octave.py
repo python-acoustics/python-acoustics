@@ -9,8 +9,6 @@ The following is an example on how to use :class:`acoustics.octave.Octave`.
 .. literalinclude:: ../examples/octave.py
 
 """
-from __future__ import division
-
 import numpy as np
 import acoustics
 
@@ -99,7 +97,7 @@ frequency_of_band = acoustics.standards.iec_61260_1_2014.exact_center_frequency
 band_of_frequency = index_of_frequency
 
 
-class Octave(object):
+class Octave:
     """
     Class to calculate octave center frequencies.
     """
