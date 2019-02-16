@@ -6,7 +6,8 @@
 # });
 #
 # Note that the above should still be called, with the following arguments.
-{ buildPythonPackage
+{ lib
+, buildPythonPackage
 , pytest
 , cytoolz
 , numpy
@@ -16,11 +17,15 @@
 , six
 , tabulate
 , glibcLocales
+, pylint
+, yapf
+, sphinx
+, development ? false
 }:
 
 buildPythonPackage rec {
   pname = "acoustics";
-  version = "dev";
+  version = "0.1.3";
 
   src = ./.;
 
@@ -29,6 +34,7 @@ buildPythonPackage rec {
   '';
 
   checkInputs = [ pytest glibcLocales ];
+  nativeBuildInputs = lib.optionals development [ sphinx pylint yapf ];
   propagatedBuildInputs = [ cytoolz numpy scipy matplotlib pandas six tabulate ];
 
   meta = {
@@ -38,5 +44,4 @@ buildPythonPackage rec {
   checkPhase = ''
     LC_ALL="en_US.UTF-8" py.test tests
   '';
-
 }
