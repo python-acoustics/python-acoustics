@@ -1,37 +1,9 @@
 sudo: false
 
-language: python
+language: nix
 
-python:
-  - 3.6
-  - 3.7
-
-before_install:
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  # Useful for debugging any issues with conda
-  - conda info -a
-  # Fix for headless TravisCI
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-
-install:
-  - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib six pytest pip pandas
-  - source activate testenv
+env:
+  - PYTHON=36
 
 script:
-  - python setup.py test
-  - python setup.py install
-
-deploy:
-  provider: pypi
-  user: FRidh
-  password:
-    secure: hJ2M6xqHLvT+uklOqfMlgaQB467GQnMQnQd5G/6ZCQSMnw3buMu/UrjQHhuSZnH0RKGnHlHwYB8ZN4//vP6WTzYSzf8zcq2joNo3FuE+M6S8hGagCl9Vq6IVSvk63ji/cuYjKwV6yjfp/LxbbFLZIVpgNCDvlzQyu3OkJmEtGso=
-  on:
-    tags: true
-    python: '3.7'
+  - nix-build -A python$PYTHON.pkgs.acoustics release.nix
