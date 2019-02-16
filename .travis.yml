@@ -18,6 +18,5 @@ deploy:
   password:
     secure: hJ2M6xqHLvT+uklOqfMlgaQB467GQnMQnQd5G/6ZCQSMnw3buMu/UrjQHhuSZnH0RKGnHlHwYB8ZN4//vP6WTzYSzf8zcq2joNo3FuE+M6S8hGagCl9Vq6IVSvk63ji/cuYjKwV6yjfp/LxbbFLZIVpgNCDvlzQyu3OkJmEtGso=
   on:
-    branch: master
     tags: true
     condition: $PYTHON = 36
