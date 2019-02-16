@@ -95,7 +95,7 @@ def read_csv_cirrus(filename):
         # Guess integration time with statistical mode because the csv could
         # have been cleaned from unwanted noise
         data["time"] = pd.to_datetime(data.time)
-        delta = data.time.diff().fillna(0)
+        delta = data.time.diff().fillna(0.0)
         # Mode and change from ns to s
         int_time = int(delta.mode().astype(int) * 1e-9)
         if round(int_time, 2) == 0.06:  # Fix for 1/16 s

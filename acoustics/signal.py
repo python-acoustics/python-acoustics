@@ -40,7 +40,6 @@ Different types of spectra exist.
 Frequency bands
 ***************
 
-.. autoclass:: Band
 .. autoclass:: Frequencies
 .. autoclass:: EqualBand
 .. autoclass:: OctaveBand
@@ -1247,7 +1246,7 @@ def decimate(x, q, n=None, ftype='iir', axis=-1, zero_phase=False):
 
     sl = [slice(None)] * y.ndim
     sl[axis] = slice(None, None, q)
-    return y[sl]
+    return y[tuple(sl)]
 
 
 def impulse_response_real_even(tf, ntaps):
