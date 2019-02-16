@@ -1,22 +1,20 @@
 sudo: false
 
 language: nix
-nix: "2.2.1"
+nix: 2.2.1
 
 env:
-  - PYTHON=36
+  global:
+    - PYTHON=36
 
 script:
   - nix-build -A python$PYTHON.pkgs.acoustics release.nix
-
-after_success:
   - nix-build -A python$PYTHON.pkgs.acoustics-sdist release.nix -o dist
 
 deploy:
-  provider: pypi
-  user: FRidh
-  password:
-    secure: hJ2M6xqHLvT+uklOqfMlgaQB467GQnMQnQd5G/6ZCQSMnw3buMu/UrjQHhuSZnH0RKGnHlHwYB8ZN4//vP6WTzYSzf8zcq2joNo3FuE+M6S8hGagCl9Vq6IVSvk63ji/cuYjKwV6yjfp/LxbbFLZIVpgNCDvlzQyu3OkJmEtGso=
+  provider: script
+  script: bash .deploy-from-travis.sh
+  skip_cleanup: true
   on:
     tags: true
-    condition: $PYTHON = 36
+
