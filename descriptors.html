@@ -1,35 +1,25 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Descriptors &mdash; acoustics 0.0 documentation</title>
-    
+    <title>Descriptors &#8212; acoustics 0.2.0.post1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
-    <link rel="up" title="API Reference" href="reference.html" />
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Directivity" href="directivity.html" />
     <link rel="prev" title="Generator" href="generator.html" /> 
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,8 +35,8 @@
         <li class="right" >
           <a href="generator.html" title="Generator"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -59,12 +49,10 @@
 <h1>Descriptors<a class="headerlink" href="#descriptors" title="Permalink to this headline">¶</a></h1>
 <p>The descriptors module offers all kinds of acoustics related descriptors.</p>
 <div class="toctree-wrapper compound">
-<ul class="simple">
-</ul>
 </div>
 <div class="section" id="descriptors-from-iso-tr-25417-2007">
 <h2>Descriptors from ISO/TR 25417:2007<a class="headerlink" href="#descriptors-from-iso-tr-25417-2007" title="Permalink to this headline">¶</a></h2>
-<p>Descriptors from <a class="reference internal" href="standards.html#module-acoustics.standards.iso_tr_25417_2007" title="acoustics.standards.iso_tr_25417_2007"><code class="xref py py-mod docutils literal"><span class="pre">acoustics.standards.iso_tr_25417_2007</span></code></a>.</p>
+<p>Descriptors from <a class="reference internal" href="standards.html#module-acoustics.standards.iso_tr_25417_2007" title="acoustics.standards.iso_tr_25417_2007"><code class="xref py py-mod docutils literal notranslate"><span class="pre">acoustics.standards.iso_tr_25417_2007</span></code></a>.</p>
 <dl class="attribute">
 <dt id="acoustics.descriptors.REFERENCE_PRESSURE">
 <code class="descclassname">descriptors.</code><code class="descname">REFERENCE_PRESSURE</code><em class="property"> = 2e-05</em><a class="headerlink" href="#acoustics.descriptors.REFERENCE_PRESSURE" title="Permalink to this definition">¶</a></dt>
@@ -73,20 +61,20 @@
 <dl class="function">
 <dt id="acoustics.descriptors.sound_pressure_level">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_pressure_level</code><span class="sig-paren">(</span><em>pressure</em>, <em>reference_pressure=2e-05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_pressure_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.sound_pressure_level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sound pressure level <span class="math">\(L_p\)</span> in dB.</p>
+<dd><p>Sound pressure level <span class="math notranslate nohighlight">\(L_p\)</span> in dB.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pressure</strong> &#8211; Instantaneous sound pressure <span class="math">\(p\)</span>.</li>
-<li><strong>reference_pressure</strong> &#8211; Reference value <span class="math">\(p_0\)</span>.</li>
+<li><strong>pressure</strong> – Instantaneous sound pressure <span class="math notranslate nohighlight">\(p\)</span>.</li>
+<li><strong>reference_pressure</strong> – Reference value <span class="math notranslate nohighlight">\(p_0\)</span>.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[L_p = 10 \log_{10}{ \left( \frac{p^2}{p_0^2} \right)}\]</div>
 <p>See section 2.2.</p>
 </dd></dl>
@@ -94,21 +82,21 @@
 <dl class="function">
 <dt id="acoustics.descriptors.equivalent_sound_pressure_level">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">equivalent_sound_pressure_level</code><span class="sig-paren">(</span><em>pressure</em>, <em>reference_pressure=2e-05</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#equivalent_sound_pressure_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.equivalent_sound_pressure_level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Time-averaged sound pressure level <span class="math">\(L_{p,T}\)</span> or equivalent-continious sound pressure level <span class="math">\(L_{p,eqT}\)</span> in dB.</p>
+<dd><p>Time-averaged sound pressure level <span class="math notranslate nohighlight">\(L_{p,T}\)</span> or equivalent-continious sound pressure level <span class="math notranslate nohighlight">\(L_{p,eqT}\)</span> in dB.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pressure</strong> &#8211; Instantaneous sound pressure <span class="math">\(p\)</span>.</li>
-<li><strong>reference_pressure</strong> &#8211; Reference value <span class="math">\(p_0\)</span>.</li>
-<li><strong>axis</strong> &#8211; Axis.</li>
+<li><strong>pressure</strong> – Instantaneous sound pressure <span class="math notranslate nohighlight">\(p\)</span>.</li>
+<li><strong>reference_pressure</strong> – Reference value <span class="math notranslate nohighlight">\(p_0\)</span>.</li>
+<li><strong>axis</strong> – Axis.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[L_{p,T} = L_{p,eqT} = 10.0 \log_{10}{ \left( \frac{\frac{1}{T} \int_{t_1}^{t_2} p^2 (t) \mathrm{d} t  }{p_0^2} \right)}\]</div>
 <p>See section 2.3.</p>
 </dd></dl>
@@ -116,41 +104,41 @@
 <dl class="function">
 <dt id="acoustics.descriptors.peak_sound_pressure">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">peak_sound_pressure</code><span class="sig-paren">(</span><em>pressure</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#peak_sound_pressure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.peak_sound_pressure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Peak sound pressure <span class="math">\(p_{peak}\)</span> is the greatest absolute sound pressure during a certain time interval.</p>
+<dd><p>Peak sound pressure <span class="math notranslate nohighlight">\(p_{peak}\)</span> is the greatest absolute sound pressure during a certain time interval.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pressure</strong> &#8211; Instantaneous sound pressure <span class="math">\(p\)</span>.</li>
-<li><strong>axis</strong> &#8211; Axis.</li>
+<li><strong>pressure</strong> – Instantaneous sound pressure <span class="math notranslate nohighlight">\(p\)</span>.</li>
+<li><strong>axis</strong> – Axis.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[p_{peak} = \mathrm{max}(|p|)\]</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="acoustics.descriptors.peak_sound_pressure_level">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">peak_sound_pressure_level</code><span class="sig-paren">(</span><em>pressure</em>, <em>reference_pressure=2e-05</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#peak_sound_pressure_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.peak_sound_pressure_level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Peak sound pressure level <span class="math">\(L_{p,peak}\)</span> in dB.</p>
+<dd><p>Peak sound pressure level <span class="math notranslate nohighlight">\(L_{p,peak}\)</span> in dB.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pressure</strong> &#8211; Instantaneous sound pressure <span class="math">\(p\)</span>.</li>
-<li><strong>reference_pressure</strong> &#8211; Reference value <span class="math">\(p_0\)</span>.</li>
-<li><strong>axis</strong> &#8211; Axis.</li>
+<li><strong>pressure</strong> – Instantaneous sound pressure <span class="math notranslate nohighlight">\(p\)</span>.</li>
+<li><strong>reference_pressure</strong> – Reference value <span class="math notranslate nohighlight">\(p_0\)</span>.</li>
+<li><strong>axis</strong> – Axis.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[L_{p,peak} = 10.0 \log \frac{p_{peak}^2.0}{p_0^2}\]</div>
 </dd></dl>
 
@@ -162,43 +150,43 @@
 <dl class="function">
 <dt id="acoustics.descriptors.sound_exposure">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_exposure</code><span class="sig-paren">(</span><em>pressure</em>, <em>fs</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_exposure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.sound_exposure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sound exposure <span class="math">\(E_{T}\)</span>.</p>
+<dd><p>Sound exposure <span class="math notranslate nohighlight">\(E_{T}\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pressure</strong> &#8211; Instantaneous sound pressure <span class="math">\(p\)</span>.</li>
-<li><strong>fs</strong> &#8211; Sample frequency <span class="math">\(f_s\)</span>.</li>
-<li><strong>axis</strong> &#8211; Axis.</li>
+<li><strong>pressure</strong> – Instantaneous sound pressure <span class="math notranslate nohighlight">\(p\)</span>.</li>
+<li><strong>fs</strong> – Sample frequency <span class="math notranslate nohighlight">\(f_s\)</span>.</li>
+<li><strong>axis</strong> – Axis.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[E_T = \int_{t_1}^{t_2} p^2 (t) \mathrm{d}t\]</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="acoustics.descriptors.sound_exposure_level">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_exposure_level</code><span class="sig-paren">(</span><em>pressure</em>, <em>fs</em>, <em>reference_sound_exposure=4e-10</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_exposure_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.sound_exposure_level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sound exposure level <span class="math">\(L_{E,T}\)</span> in dB.</p>
+<dd><p>Sound exposure level <span class="math notranslate nohighlight">\(L_{E,T}\)</span> in dB.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pressure</strong> &#8211; Instantaneous sound pressure <span class="math">\(p\)</span>.</li>
-<li><strong>fs</strong> &#8211; Sample frequency <span class="math">\(f_s\)</span>.</li>
-<li><strong>sound_exposure</strong> &#8211; Sound exposure <span class="math">\(E_{T}\)</span>.</li>
-<li><strong>reference_sound_exposure</strong> &#8211; Reference value <span class="math">\(E_{0}\)</span></li>
+<li><strong>pressure</strong> – Instantaneous sound pressure <span class="math notranslate nohighlight">\(p\)</span>.</li>
+<li><strong>fs</strong> – Sample frequency <span class="math notranslate nohighlight">\(f_s\)</span>.</li>
+<li><strong>sound_exposure</strong> – Sound exposure <span class="math notranslate nohighlight">\(E_{T}\)</span>.</li>
+<li><strong>reference_sound_exposure</strong> – Reference value <span class="math notranslate nohighlight">\(E_{0}\)</span></li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[L_{E,T} = 10 \log_{10}{ \frac{E_T}{E_0}  }\]</div>
 </dd></dl>
 
@@ -210,36 +198,36 @@
 <dl class="function">
 <dt id="acoustics.descriptors.sound_power_level">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_power_level</code><span class="sig-paren">(</span><em>power</em>, <em>reference_power=1e-12</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_power_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.sound_power_level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sound power level <span class="math">\(L_{W}\)</span>.</p>
+<dd><p>Sound power level <span class="math notranslate nohighlight">\(L_{W}\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>power</strong> &#8211; Sound power <span class="math">\(P\)</span>.</li>
-<li><strong>reference_power</strong> &#8211; Reference sound power <span class="math">\(P_0\)</span>.</li>
+<li><strong>power</strong> – Sound power <span class="math notranslate nohighlight">\(P\)</span>.</li>
+<li><strong>reference_power</strong> – Reference sound power <span class="math notranslate nohighlight">\(P_0\)</span>.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[10 \log_{10}{ \frac{P}{P_0}  }\]</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="acoustics.descriptors.sound_energy">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_energy</code><span class="sig-paren">(</span><em>power</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.sound_energy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sound energy <span class="math">\(J\)</span>..</p>
+<dd><p>Sound energy <span class="math notranslate nohighlight">\(J\)</span>..</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>power</strong> &#8211; Sound power <span class="math">\(P\)</span>.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>power</strong> – Sound power <span class="math notranslate nohighlight">\(P\)</span>.</td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[J = \int_{t_1}^{t_2} P(t) \mathrm{d} t\]</div>
 </dd></dl>
 
@@ -252,14 +240,14 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>energy</strong> &#8211; Sound energy <span class="math">\(J\)</span>.</li>
-<li><strong>reference_energy</strong> &#8211; Reference sound energy <span class="math">\(J_0\)</span>.</li>
+<li><strong>energy</strong> – Sound energy <span class="math notranslate nohighlight">\(J\)</span>.</li>
+<li><strong>reference_energy</strong> – Reference sound energy <span class="math notranslate nohighlight">\(J_0\)</span>.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[L_{J} = 10 \log_{10}{ \frac{J}{J_0} }\]</div>
 </dd></dl>
 
@@ -271,40 +259,40 @@
 <dl class="function">
 <dt id="acoustics.descriptors.sound_intensity">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_intensity</code><span class="sig-paren">(</span><em>pressure</em>, <em>velocity</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_intensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.sound_intensity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sound intensity <span class="math">\(\mathbf{i}\)</span>.</p>
+<dd><p>Sound intensity <span class="math notranslate nohighlight">\(\mathbf{i}\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pressure</strong> &#8211; Sound pressure <span class="math">\(p(t)\)</span>.</li>
-<li><strong>velocity</strong> &#8211; Particle velocity <span class="math">\(\mathbf{u}(t)\)</span>.</li>
+<li><strong>pressure</strong> – Sound pressure <span class="math notranslate nohighlight">\(p(t)\)</span>.</li>
+<li><strong>velocity</strong> – Particle velocity <span class="math notranslate nohighlight">\(\mathbf{u}(t)\)</span>.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\mathbf{i} = p(t) \cdot \mathbf{u}(t)\]</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="acoustics.descriptors.time_averaged_sound_intensity">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">time_averaged_sound_intensity</code><span class="sig-paren">(</span><em>intensity</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#time_averaged_sound_intensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.time_averaged_sound_intensity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Time-averaged sound intensity <span class="math">\(\mathbf{I}_T\)</span>.</p>
+<dd><p>Time-averaged sound intensity <span class="math notranslate nohighlight">\(\mathbf{I}_T\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>intensity</strong> &#8211; Sound intensity <span class="math">\(\mathbf{i}\)</span>.</li>
-<li><strong>axis</strong> &#8211; Axis.</li>
+<li><strong>intensity</strong> – Sound intensity <span class="math notranslate nohighlight">\(\mathbf{i}\)</span>.</li>
+<li><strong>axis</strong> – Axis.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[\mathbf{I}_T = \frac{1}{T} \int_{t_1}^{t_2} \mathbf{i}(t)\]</div>
 </dd></dl>
 
@@ -316,60 +304,60 @@
 <dl class="function">
 <dt id="acoustics.descriptors.time_averaged_sound_intensity_level">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">time_averaged_sound_intensity_level</code><span class="sig-paren">(</span><em>time_averaged_sound_intensity</em>, <em>reference_intensity=1e-12</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#time_averaged_sound_intensity_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.time_averaged_sound_intensity_level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Time-averaged sound intensity level <span class="math">\(L_{I,T}\)</span>.</p>
+<dd><p>Time-averaged sound intensity level <span class="math notranslate nohighlight">\(L_{I,T}\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>time_averaged_sound_intensity</strong> &#8211; Time-averaged sound intensity <span class="math">\(\mathbf{I}_T\)</span>.</li>
-<li><strong>reference_intensity</strong> &#8211; Reference sound intensity <span class="math">\(I_0\)</span>.</li>
+<li><strong>time_averaged_sound_intensity</strong> – Time-averaged sound intensity <span class="math notranslate nohighlight">\(\mathbf{I}_T\)</span>.</li>
+<li><strong>reference_intensity</strong> – Reference sound intensity <span class="math notranslate nohighlight">\(I_0\)</span>.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[L_{I,T} = 10 \log_{10} { \frac{|\mathbf{I}_T|}{I_0} }\]</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="acoustics.descriptors.normal_time_averaged_sound_intensity">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">normal_time_averaged_sound_intensity</code><span class="sig-paren">(</span><em>time_averaged_sound_intensity</em>, <em>unit_normal_vector</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#normal_time_averaged_sound_intensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.normal_time_averaged_sound_intensity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normal time-averaged sound intensity <span class="math">\(I_{n,T}\)</span>.</p>
+<dd><p>Normal time-averaged sound intensity <span class="math notranslate nohighlight">\(I_{n,T}\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>time_averaged_sound_intensity</strong> &#8211; Time-averaged sound intensity <span class="math">\(\mathbf{I}_T\)</span>.</li>
-<li><strong>unit_normal_vector</strong> &#8211; Unit normal vector <span class="math">\(\mathbf{n}\)</span>.</li>
+<li><strong>time_averaged_sound_intensity</strong> – Time-averaged sound intensity <span class="math notranslate nohighlight">\(\mathbf{I}_T\)</span>.</li>
+<li><strong>unit_normal_vector</strong> – Unit normal vector <span class="math notranslate nohighlight">\(\mathbf{n}\)</span>.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[I_{n,T} = \mathbf{I}_T \cdot \mathbf{n}\]</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="acoustics.descriptors.normal_time_averaged_sound_intensity_level">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">normal_time_averaged_sound_intensity_level</code><span class="sig-paren">(</span><em>normal_time_averaged_sound_intensity</em>, <em>reference_intensity=1e-12</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#normal_time_averaged_sound_intensity_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.normal_time_averaged_sound_intensity_level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normal time-averaged sound intensity level <span class="math">\(L_{In,T}\)</span> in dB.</p>
+<dd><p>Normal time-averaged sound intensity level <span class="math notranslate nohighlight">\(L_{In,T}\)</span> in dB.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>normal_time_averaged_sound_intensity</strong> &#8211; Normal time-averaged sound intensity <span class="math">\(I{n,T}\)</span>.</li>
-<li><strong>reference_intensity</strong> &#8211; Reference sound intensity <span class="math">\(I_0\)</span>.</li>
+<li><strong>normal_time_averaged_sound_intensity</strong> – Normal time-averaged sound intensity <span class="math notranslate nohighlight">\(I{n,T}\)</span>.</li>
+<li><strong>reference_intensity</strong> – Reference sound intensity <span class="math notranslate nohighlight">\(I_0\)</span>.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="math">
+<div class="math notranslate nohighlight">
 \[I_{n,T} = 10 \log_{10} { \frac{|I_{n,T}|}{I_0}}\]</div>
 </dd></dl>
 
@@ -377,71 +365,299 @@
 <div class="section" id="other-descriptors">
 <h2>Other descriptors<a class="headerlink" href="#other-descriptors" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="acoustics.descriptors.lden">
-<code class="descclassname">acoustics.descriptors.</code><code class="descname">lden</code><span class="sig-paren">(</span><em>lday</em>, <em>levening</em>, <em>lnight</em>, <em>hours=(12.0</em>, <em>4.0</em>, <em>8.0)</em>, <em>adjustment=(0.0</em>, <em>5.0</em>, <em>10.0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/descriptors.html#lden"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.lden" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate <span class="math">\(L_{den}\)</span> from <span class="math">\(L_{day}\)</span>, <span class="math">\(L_{evening}\)</span> and <span class="math">\(L_{night}\)</span>.</p>
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_pressure_level</code><span class="sig-paren">(</span><em>pressure</em>, <em>reference_pressure=2e-05</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_pressure_level"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sound pressure level <span class="math notranslate nohighlight">\(L_p\)</span> in dB.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>lday</strong> &#8211; Equivalent level during day period <span class="math">\(L_{day}\)</span>.</li>
-<li><strong>levening</strong> &#8211; Equivalent level during evening period <span class="math">\(L_{evening}\)</span>.</li>
-<li><strong>lnight</strong> &#8211; Equivalent level during night period <span class="math">\(L_{night}\)</span>.</li>
-<li><strong>hours</strong> &#8211; Hours per period.</li>
-<li><strong>adjustment</strong> &#8211; Correction factor per period.</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pressure</strong> – Instantaneous sound pressure <span class="math notranslate nohighlight">\(p\)</span>.</li>
+<li><strong>reference_pressure</strong> – Reference value <span class="math notranslate nohighlight">\(p_0\)</span>.</li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><span class="math">\(L_{den}\)</span></p>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="standards.html#acoustics.standards.iso_1996_1_2003.composite_rating_level" title="acoustics.standards.iso_1996_1_2003.composite_rating_level"><code class="xref py py-func docutils literal"><span class="pre">acoustics.standards.iso_1996_1_2003.composite_rating_level()</span></code></a></p>
-</div>
+<div class="math notranslate nohighlight">
+\[L_p = 10 \log_{10}{ \left( \frac{p^2}{p_0^2} \right)}\]</div>
+<p>See section 2.2.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="acoustics.descriptors.ldn">
-<code class="descclassname">acoustics.descriptors.</code><code class="descname">ldn</code><span class="sig-paren">(</span><em>lday</em>, <em>lnight</em>, <em>hours=(15.0</em>, <em>9.0)</em>, <em>adjustment=(0.0</em>, <em>10.0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/descriptors.html#ldn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.ldn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate <span class="math">\(L_{dn}\)</span> from <span class="math">\(L_{day}\)</span> and <span class="math">\(L_{night}\)</span>.</p>
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">equivalent_sound_pressure_level</code><span class="sig-paren">(</span><em>pressure</em>, <em>reference_pressure=2e-05</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#equivalent_sound_pressure_level"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Time-averaged sound pressure level <span class="math notranslate nohighlight">\(L_{p,T}\)</span> or equivalent-continious sound pressure level <span class="math notranslate nohighlight">\(L_{p,eqT}\)</span> in dB.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>lday</strong> &#8211; Equivalent level during day period <span class="math">\(L_{day}\)</span>.</li>
-<li><strong>lnight</strong> &#8211; Equivalent level during night period <span class="math">\(L_{night}\)</span>.</li>
-<li><strong>hours</strong> &#8211; Hours per period.</li>
-<li><strong>adjustment</strong> &#8211; Correction factor per period.</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pressure</strong> – Instantaneous sound pressure <span class="math notranslate nohighlight">\(p\)</span>.</li>
+<li><strong>reference_pressure</strong> – Reference value <span class="math notranslate nohighlight">\(p_0\)</span>.</li>
+<li><strong>axis</strong> – Axis.</li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><span class="math">\(L_{dn}\)</span></p>
 </td>
 </tr>
 </tbody>
 </table>
-<div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="standards.html#acoustics.standards.iso_1996_1_2003.composite_rating_level" title="acoustics.standards.iso_1996_1_2003.composite_rating_level"><code class="xref py py-func docutils literal"><span class="pre">acoustics.standards.iso_1996_1_2003.composite_rating_level()</span></code></a></p>
-</div>
+<div class="math notranslate nohighlight">
+\[L_{p,T} = L_{p,eqT} = 10.0 \log_{10}{ \left( \frac{\frac{1}{T} \int_{t_1}^{t_2} p^2 (t) \mathrm{d} t  }{p_0^2} \right)}\]</div>
+<p>See section 2.3.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">peak_sound_pressure</code><span class="sig-paren">(</span><em>pressure</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#peak_sound_pressure"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Peak sound pressure <span class="math notranslate nohighlight">\(p_{peak}\)</span> is the greatest absolute sound pressure during a certain time interval.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pressure</strong> – Instantaneous sound pressure <span class="math notranslate nohighlight">\(p\)</span>.</li>
+<li><strong>axis</strong> – Axis.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[p_{peak} = \mathrm{max}(|p|)\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">peak_sound_pressure_level</code><span class="sig-paren">(</span><em>pressure</em>, <em>reference_pressure=2e-05</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#peak_sound_pressure_level"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Peak sound pressure level <span class="math notranslate nohighlight">\(L_{p,peak}\)</span> in dB.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pressure</strong> – Instantaneous sound pressure <span class="math notranslate nohighlight">\(p\)</span>.</li>
+<li><strong>reference_pressure</strong> – Reference value <span class="math notranslate nohighlight">\(p_0\)</span>.</li>
+<li><strong>axis</strong> – Axis.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[L_{p,peak} = 10.0 \log \frac{p_{peak}^2.0}{p_0^2}\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_exposure</code><span class="sig-paren">(</span><em>pressure</em>, <em>fs</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_exposure"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sound exposure <span class="math notranslate nohighlight">\(E_{T}\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pressure</strong> – Instantaneous sound pressure <span class="math notranslate nohighlight">\(p\)</span>.</li>
+<li><strong>fs</strong> – Sample frequency <span class="math notranslate nohighlight">\(f_s\)</span>.</li>
+<li><strong>axis</strong> – Axis.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[E_T = \int_{t_1}^{t_2} p^2 (t) \mathrm{d}t\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_exposure_level</code><span class="sig-paren">(</span><em>pressure</em>, <em>fs</em>, <em>reference_sound_exposure=4e-10</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_exposure_level"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sound exposure level <span class="math notranslate nohighlight">\(L_{E,T}\)</span> in dB.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pressure</strong> – Instantaneous sound pressure <span class="math notranslate nohighlight">\(p\)</span>.</li>
+<li><strong>fs</strong> – Sample frequency <span class="math notranslate nohighlight">\(f_s\)</span>.</li>
+<li><strong>sound_exposure</strong> – Sound exposure <span class="math notranslate nohighlight">\(E_{T}\)</span>.</li>
+<li><strong>reference_sound_exposure</strong> – Reference value <span class="math notranslate nohighlight">\(E_{0}\)</span></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[L_{E,T} = 10 \log_{10}{ \frac{E_T}{E_0}  }\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_power_level</code><span class="sig-paren">(</span><em>power</em>, <em>reference_power=1e-12</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_power_level"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sound power level <span class="math notranslate nohighlight">\(L_{W}\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>power</strong> – Sound power <span class="math notranslate nohighlight">\(P\)</span>.</li>
+<li><strong>reference_power</strong> – Reference sound power <span class="math notranslate nohighlight">\(P_0\)</span>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[10 \log_{10}{ \frac{P}{P_0}  }\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_energy</code><span class="sig-paren">(</span><em>power</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_energy"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sound energy <span class="math notranslate nohighlight">\(J\)</span>..</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>power</strong> – Sound power <span class="math notranslate nohighlight">\(P\)</span>.</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[J = \int_{t_1}^{t_2} P(t) \mathrm{d} t\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_energy_level</code><span class="sig-paren">(</span><em>energy</em>, <em>reference_energy=1e-12</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_energy_level"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sound energy level L_{J} in dB.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>energy</strong> – Sound energy <span class="math notranslate nohighlight">\(J\)</span>.</li>
+<li><strong>reference_energy</strong> – Reference sound energy <span class="math notranslate nohighlight">\(J_0\)</span>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[L_{J} = 10 \log_{10}{ \frac{J}{J_0} }\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">sound_intensity</code><span class="sig-paren">(</span><em>pressure</em>, <em>velocity</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#sound_intensity"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Sound intensity <span class="math notranslate nohighlight">\(\mathbf{i}\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pressure</strong> – Sound pressure <span class="math notranslate nohighlight">\(p(t)\)</span>.</li>
+<li><strong>velocity</strong> – Particle velocity <span class="math notranslate nohighlight">\(\mathbf{u}(t)\)</span>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[\mathbf{i} = p(t) \cdot \mathbf{u}(t)\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">time_averaged_sound_intensity</code><span class="sig-paren">(</span><em>intensity</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#time_averaged_sound_intensity"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Time-averaged sound intensity <span class="math notranslate nohighlight">\(\mathbf{I}_T\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>intensity</strong> – Sound intensity <span class="math notranslate nohighlight">\(\mathbf{i}\)</span>.</li>
+<li><strong>axis</strong> – Axis.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[\mathbf{I}_T = \frac{1}{T} \int_{t_1}^{t_2} \mathbf{i}(t)\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">time_averaged_sound_intensity_level</code><span class="sig-paren">(</span><em>time_averaged_sound_intensity</em>, <em>reference_intensity=1e-12</em>, <em>axis=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#time_averaged_sound_intensity_level"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Time-averaged sound intensity level <span class="math notranslate nohighlight">\(L_{I,T}\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time_averaged_sound_intensity</strong> – Time-averaged sound intensity <span class="math notranslate nohighlight">\(\mathbf{I}_T\)</span>.</li>
+<li><strong>reference_intensity</strong> – Reference sound intensity <span class="math notranslate nohighlight">\(I_0\)</span>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[L_{I,T} = 10 \log_{10} { \frac{|\mathbf{I}_T|}{I_0} }\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">normal_time_averaged_sound_intensity</code><span class="sig-paren">(</span><em>time_averaged_sound_intensity</em>, <em>unit_normal_vector</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#normal_time_averaged_sound_intensity"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Normal time-averaged sound intensity <span class="math notranslate nohighlight">\(I_{n,T}\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time_averaged_sound_intensity</strong> – Time-averaged sound intensity <span class="math notranslate nohighlight">\(\mathbf{I}_T\)</span>.</li>
+<li><strong>unit_normal_vector</strong> – Unit normal vector <span class="math notranslate nohighlight">\(\mathbf{n}\)</span>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[I_{n,T} = \mathbf{I}_T \cdot \mathbf{n}\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">normal_time_averaged_sound_intensity_level</code><span class="sig-paren">(</span><em>normal_time_averaged_sound_intensity</em>, <em>reference_intensity=1e-12</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/standards/iso_tr_25417_2007.html#normal_time_averaged_sound_intensity_level"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Normal time-averaged sound intensity level <span class="math notranslate nohighlight">\(L_{In,T}\)</span> in dB.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>normal_time_averaged_sound_intensity</strong> – Normal time-averaged sound intensity <span class="math notranslate nohighlight">\(I{n,T}\)</span>.</li>
+<li><strong>reference_intensity</strong> – Reference sound intensity <span class="math notranslate nohighlight">\(I_0\)</span>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[I_{n,T} = 10 \log_{10} { \frac{|I_{n,T}|}{I_0}}\]</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="acoustics.descriptors.leq">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">leq</code><span class="sig-paren">(</span><em>levels</em>, <em>int_time=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/descriptors.html#leq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.leq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Equivalent level <span class="math">\(L_{eq}\)</span>.</p>
+<dd><p>Equivalent level <span class="math notranslate nohighlight">\(L_{eq}\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>levels</strong> &#8211; Levels as function of time.</li>
-<li><strong>int_time</strong> &#8211; Integration time. Default value is 1.0 second.</li>
+<li><strong>levels</strong> – Levels as function of time.</li>
+<li><strong>int_time</strong> – Integration time. Default value is 1.0 second.</li>
 </ul>
 </td>
 </tr>
@@ -454,16 +670,22 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="acoustics.descriptors.sel">
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">sel</code><span class="sig-paren">(</span><em>levels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/descriptors.html#sel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.sel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sound Exposure Level from <code class="docutils literal notranslate"><span class="pre">levels</span></code> (NumPy array).</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="acoustics.descriptors.lw">
 <code class="descclassname">acoustics.descriptors.</code><code class="descname">lw</code><span class="sig-paren">(</span><em>W</em>, <em>Wref=1e-12</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/descriptors.html#lw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.lw" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sound power level <span class="math">\(L_{w}\)</span> for sound power <span class="math">\(W\)</span> and reference power <span class="math">\(W_{ref}\)</span>.</p>
+<dd><p>Sound power level <span class="math notranslate nohighlight">\(L_{w}\)</span> for sound power <span class="math notranslate nohighlight">\(W\)</span> and reference power <span class="math notranslate nohighlight">\(W_{ref}\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>W</strong> &#8211; Sound power <span class="math">\(W\)</span>.</li>
-<li><strong>Wref</strong> &#8211; Reference power <span class="math">\(W_{ref}\)</span>. Default value is <span class="math">\(10^{12}\)</span> watt.</li>
+<li><strong>W</strong> – Sound power <span class="math notranslate nohighlight">\(W\)</span>.</li>
+<li><strong>Wref</strong> – Reference power <span class="math notranslate nohighlight">\(W_{ref}\)</span>. Default value is <span class="math notranslate nohighlight">\(10^{12}\)</span> watt.</li>
 </ul>
 </td>
 </tr>
@@ -472,9 +694,58 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="acoustics.descriptors.sel">
-<code class="descclassname">acoustics.descriptors.</code><code class="descname">sel</code><span class="sig-paren">(</span><em>levels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/descriptors.html#sel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.sel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sound Exposure Level from <code class="docutils literal"><span class="pre">levels</span></code> (NumPy array).</p>
+<dt id="acoustics.descriptors.lden">
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">lden</code><span class="sig-paren">(</span><em>lday</em>, <em>levening</em>, <em>lnight</em>, <em>hours=(12.0</em>, <em>4.0</em>, <em>8.0)</em>, <em>adjustment=(0.0</em>, <em>5.0</em>, <em>10.0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/descriptors.html#lden"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.lden" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate <span class="math notranslate nohighlight">\(L_{den}\)</span> from <span class="math notranslate nohighlight">\(L_{day}\)</span>, <span class="math notranslate nohighlight">\(L_{evening}\)</span> and <span class="math notranslate nohighlight">\(L_{night}\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lday</strong> – Equivalent level during day period <span class="math notranslate nohighlight">\(L_{day}\)</span>.</li>
+<li><strong>levening</strong> – Equivalent level during evening period <span class="math notranslate nohighlight">\(L_{evening}\)</span>.</li>
+<li><strong>lnight</strong> – Equivalent level during night period <span class="math notranslate nohighlight">\(L_{night}\)</span>.</li>
+<li><strong>hours</strong> – Hours per period.</li>
+<li><strong>adjustment</strong> – Correction factor per period.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><span class="math notranslate nohighlight">\(L_{den}\)</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="standards.html#acoustics.standards.iso_1996_1_2003.composite_rating_level" title="acoustics.standards.iso_1996_1_2003.composite_rating_level"><code class="xref py py-func docutils literal notranslate"><span class="pre">acoustics.standards.iso_1996_1_2003.composite_rating_level()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.descriptors.ldn">
+<code class="descclassname">acoustics.descriptors.</code><code class="descname">ldn</code><span class="sig-paren">(</span><em>lday</em>, <em>lnight</em>, <em>hours=(15.0</em>, <em>9.0)</em>, <em>adjustment=(0.0</em>, <em>10.0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/descriptors.html#ldn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.descriptors.ldn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate <span class="math notranslate nohighlight">\(L_{dn}\)</span> from <span class="math notranslate nohighlight">\(L_{day}\)</span> and <span class="math notranslate nohighlight">\(L_{night}\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lday</strong> – Equivalent level during day period <span class="math notranslate nohighlight">\(L_{day}\)</span>.</li>
+<li><strong>lnight</strong> – Equivalent level during night period <span class="math notranslate nohighlight">\(L_{night}\)</span>.</li>
+<li><strong>hours</strong> – Hours per period.</li>
+<li><strong>adjustment</strong> – Correction factor per period.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><span class="math notranslate nohighlight">\(L_{dn}\)</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="standards.html#acoustics.standards.iso_1996_1_2003.composite_rating_level" title="acoustics.standards.iso_1996_1_2003.composite_rating_level"><code class="xref py py-func docutils literal notranslate"><span class="pre">acoustics.standards.iso_1996_1_2003.composite_rating_level()</span></code></a></p>
+</div>
 </dd></dl>
 
 </div>
@@ -486,7 +757,7 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Descriptors</a><ul>
 <li><a class="reference internal" href="#descriptors-from-iso-tr-25417-2007">Descriptors from ISO/TR 25417:2007</a></li>
@@ -504,21 +775,20 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/descriptors.txt"
+      <li><a href="_sources/descriptors.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -540,13 +810,13 @@
         <li class="right" >
           <a href="generator.html" title="Generator"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+        &#169; Copyright 1970, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
     </div>
   </body>
 </html>

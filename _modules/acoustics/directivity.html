@@ -1,33 +1,23 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>acoustics.directivity &mdash; acoustics 0.0 documentation</title>
-    
+    <title>acoustics.directivity &#8212; acoustics 0.2.0.post1 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body role="document">
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -37,8 +27,8 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -48,7 +38,7 @@
           <div class="body" role="main">
             
   <h1>Source code for acoustics.directivity</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Directivity</span>
 <span class="sd">===========</span>
 
@@ -60,55 +50,56 @@
 <span class="sd">* The azimuth angle :math:`\\phi` has a range :math:`[0 , 2 \\pi]`.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
-<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="kn">as</span> <span class="nn">cm</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">Normalize</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">abc</span>
-<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp2d</span> <span class="k">as</span> <span class="n">interpolate</span>
-<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">sph_harm</span>
-    
-    
+<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="k">import</span> <span class="n">Normalize</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">import</span> <span class="n">Axes3D</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">interp2d</span> <span class="k">as</span> <span class="n">interpolate</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="k">import</span> <span class="n">sph_harm</span>  <span class="c1"># pylint: disable=no-name-in-module</span>
+
+
 <div class="viewcode-block" id="cardioid"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.cardioid">[docs]</a><span class="k">def</span> <span class="nf">cardioid</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A cardioid pattern.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param a: a</span>
 <span class="sd">    :param k: k</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span> <span class="n">a</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="n">theta</span><span class="p">)</span> <span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">theta</span><span class="p">))</span></div>
+
 
 <div class="viewcode-block" id="figure_eight"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.figure_eight">[docs]</a><span class="k">def</span> <span class="nf">figure_eight</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A figure-of-eight pattern.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param theta: angle :math:`\\theta`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">del</span> <span class="n">phi</span>
     <span class="c1">#return spherical_harmonic(theta, phi, m=0, n=1)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span></div>
+
 
 <div class="viewcode-block" id="spherical_harmonic"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.spherical_harmonic">[docs]</a><span class="k">def</span> <span class="nf">spherical_harmonic</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Spherical harmonic of order `m` and degree `n`.</span>
-<span class="sd">    </span>
+
 <span class="sd">    .. note:: The degree `n` is often denoted `l`.</span>
-<span class="sd">    </span>
+
 <span class="sd">    .. seealso:: :func:`scipy.special.sph_harm`</span>
-<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">sph_harm</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span><span class="o">.</span><span class="n">real</span></div>
-    
 
-<div class="viewcode-block" id="spherical_to_cartesian"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.spherical_to_cartesian">[docs]</a><span class="k">def</span> <span class="nf">spherical_to_cartesian</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">theta</span> <span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+
+<div class="viewcode-block" id="spherical_to_cartesian"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.spherical_to_cartesian">[docs]</a><span class="k">def</span> <span class="nf">spherical_to_cartesian</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert spherical coordinates to cartesian coordinates.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param r: norm</span>
 <span class="sd">    :param theta: angle :math:`\\theta`</span>
 <span class="sd">    :param phi: angle :math:`\\phi`</span>
-<span class="sd">    </span>
+
 <span class="sd">    .. math:: x = r \\sin{\\theta}\\cos{\\phi}</span>
 <span class="sd">    .. math:: y = r \\sin{\\theta}\\sin{\\phi}</span>
 <span class="sd">    .. math:: z = r \\cos{\\theta}</span>
@@ -116,20 +107,17 @@
     <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
     <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
     <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span>
-        <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span>
-        <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span>
-        <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
-        <span class="p">)</span></div>
-    
+    <span class="k">return</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span></div>
+
+
 <div class="viewcode-block" id="cartesian_to_spherical"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.cartesian_to_spherical">[docs]</a><span class="k">def</span> <span class="nf">cartesian_to_spherical</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert cartesian coordinates to spherical coordinates.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param x: x</span>
 <span class="sd">    :param y: y</span>
 <span class="sd">    :param z: z</span>
-<span class="sd">    </span>
+
 <span class="sd">    .. math:: r = \\sqrt{\\left( x^2 + y^2 + z^2 \\right)}</span>
 <span class="sd">    .. math:: \\theta = \\arccos{\\frac{z}{r}}</span>
 <span class="sd">    .. math:: \\phi = \\arccos{\\frac{y}{x}}</span>
@@ -137,218 +125,137 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">z</span><span class="o">/</span><span class="n">r</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">x</span><span class="p">)</span></div>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">z</span> <span class="o">/</span> <span class="n">r</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">y</span> <span class="o">/</span> <span class="n">x</span><span class="p">)</span></div>
 
 
-<span class="c1">#def spherical_to_cartesian(spherical):</span>
-    <span class="c1">#&quot;&quot;&quot;</span>
-    <span class="c1">#Convert spherical coordinates to cartesian coordinates.</span>
-    
-    <span class="c1">#.. math:: x = r \\sin{\\theta}\\cos{\\phi}</span>
-    <span class="c1">#.. math:: y = r \\sin{\\theta}\\sin{\\phi}</span>
-    <span class="c1">#.. math:: z = r \\cos{\\theta}</span>
-    <span class="c1">#&quot;&quot;&quot;</span>
-    <span class="c1">#r = spherical[0,:]</span>
-    <span class="c1">#theta = spherical[1,:]</span>
-    <span class="c1">#phi = spherical[2,:]</span>
-    <span class="c1">#return np.vstack((</span>
-        <span class="c1">#r * np.sin(theta) * np.cos(phi),</span>
-        <span class="c1">#r * np.sin(theta) * np.sin(phi),</span>
-        <span class="c1">#r * np.cos(theta)</span>
-        <span class="c1">#))</span>
-    
-
-<span class="c1">#def cartesian_to_spherical(cartesian):</span>
-    <span class="c1">#&quot;&quot;&quot;</span>
-    <span class="c1">#Convert cartesian coordinates to spherical coordinates.</span>
-    
-    <span class="c1">#.. math:: r = \\sqrt{\\left( x^2 + y^2 + z^2 \\right)}</span>
-    <span class="c1">#.. math:: \\theta = \\arccos{\\frac{z}{r}}</span>
-    <span class="c1">#.. math:: \\phi = \\arccos{\\frac{y}{x}}</span>
-    <span class="c1">#&quot;&quot;&quot;</span>
-    <span class="c1">#x = spherical[0,:]</span>
-    <span class="c1">#y = spherical[1,:]</span>
-    <span class="c1">#z = spherical[2,:]</span>
-    <span class="c1">#r = np.sqrt(np.sum(np.abs(cartesian)**2, axis=0)),</span>
-    <span class="c1">#return np.vstack((</span>
-        <span class="c1">#r,</span>
-        <span class="c1">#np.arccos(z/r),</span>
-        <span class="c1">#np.arctan(y/x)</span>
-        <span class="c1">#))</span>
-
-
-<div class="viewcode-block" id="Directivity"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Directivity">[docs]</a><span class="k">class</span> <span class="nc">Directivity</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Directivity"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Directivity">[docs]</a><span class="k">class</span> <span class="nc">Directivity</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract directivity class.</span>
-<span class="sd">    </span>
+
 <span class="sd">    This class defines several methods to be implemented by subclasses.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    
-<div class="viewcode-block" id="Directivity.__init__"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Directivity.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></div>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">rotation</span> <span class="k">if</span> <span class="n">rotation</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="c1"># X, Y, Z rotation</span>
+
+<div class="viewcode-block" id="Directivity.__init__"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Directivity.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">rotation</span> <span class="k">if</span> <span class="n">rotation</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>  <span class="c1"># X, Y, Z rotation</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rotation of the directivity pattern.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
 
-    <span class="nd">@abc.abstractmethod</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_directivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function should return the directivity as function of :math:`\\theta` and :math:`\\phi`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span>
 
     <span class="k">def</span> <span class="nf">_undo_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Undo rotation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span>
-        
 
-<div class="viewcode-block" id="Directivity.using_spherical"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Directivity.using_spherical">[docs]</a>    <span class="k">def</span> <span class="nf">using_spherical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">include_rotation</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Directivity.using_spherical"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Directivity.using_spherical">[docs]</a>    <span class="k">def</span> <span class="nf">using_spherical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">include_rotation</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the directivity for given spherical coordinates.</span>
-<span class="sd">        </span>
+
 <span class="sd">        :param r: norm</span>
 <span class="sd">        :param theta: angle :math:`\\theta`</span>
 <span class="sd">        :param phi: angle :math:`\\phi`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Correct for rotation!!!!</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_directivity</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>    </div>
-    
-<div class="viewcode-block" id="Directivity.using_cartesian"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Directivity.using_cartesian">[docs]</a>    <span class="k">def</span> <span class="nf">using_cartesian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">include_rotation</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="c1"># TODO: Correct for rotation!!!!</span>
+        <span class="k">del</span> <span class="n">r</span><span class="p">,</span> <span class="n">include_rotation</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_directivity</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Directivity.using_cartesian"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Directivity.using_cartesian">[docs]</a>    <span class="k">def</span> <span class="nf">using_cartesian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">include_rotation</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the directivity for given cartesian coordinates.</span>
-<span class="sd">        </span>
+
 <span class="sd">        :param x: x</span>
 <span class="sd">        :param y: y</span>
 <span class="sd">        :param z: z</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: Correct for rotation!!!!</span>
+        <span class="k">del</span> <span class="n">include_rotation</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">using_spherical</span><span class="p">(</span><span class="o">*</span><span class="n">cartesian_to_spherical</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span></div>
-    
-<div class="viewcode-block" id="Directivity.plot"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Directivity.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">include_rotation</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Directivity.plot"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Directivity.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_rotation</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Directivity plot. Plot to ``filename`` when given.</span>
-<span class="sd">        </span>
+
 <span class="sd">        :param filename: Filename</span>
-<span class="sd">        :param include_rotation: Apply the rotation to the directivity. By default the rotation is applied in this figure.</span>
+<span class="sd">        :param include_rotation: Apply the rotation to the directivity.</span>
+<span class="sd">            By default the rotation is applied in this figure.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
-        <span class="k">return</span> <span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">include_rotation</span><span class="p">)</span></div></div>
-        
-        
-        <span class="c1">##try:</span>
-            <span class="c1">##from mayavi import mlab</span>
-        <span class="c1">##except ImportError:</span>
-            <span class="c1">##raise ImportWarning(&quot;mayavi is not available.&quot;)</span>
-            <span class="c1">##return</span>
-        
-        <span class="c1">#phi = np.linspace(-np.pi, +np.pi, 50)</span>
-        <span class="c1">#theta = np.linspace(0.0, np.pi, 50)</span>
-        
-        <span class="c1">#theta_n, phi_n = np.meshgrid(theta, phi)    # Create a 2-D mesh</span>
-    
-        <span class="c1">#d = self._directivity(theta_n, phi_n.ravel)</span>
-        
-        <span class="c1">##fig = plt.figure()</span>
-        <span class="c1">##ax0 = fig.add_subplot(111, projection=&#39;3d&#39;)</span>
-        <span class="c1">##ax0.set_title(&#39;Directivity&#39;)</span>
-        
-        <span class="c1">##ax0.pcolormesh(u*180.0/np.pi, v*180.0/np.pi, r)</span>
-        <span class="c1">#(x, y, z) = spherical_to_cartesian(d, theta_n, phi_n)</span>
-        
-        
-        <span class="c1">#fig = plt.figure()</span>
-        <span class="c1">#fig.add_subplot(111, projection=&#39;3d&#39;)</span>
-        <span class="c1">#fig.surface()</span>
-        
-        <span class="c1">##fig = mlab.figure()</span>
-        <span class="c1">##s = mlab.mesh(x,y,z)</span>
-        <span class="c1">##fig.add(s)</span>
-        <span class="c1">##mlab.axes()</span>
-        <span class="c1">##mlab.outline()</span>
-        <span class="c1">##mlab.show()</span>
-        
-        <span class="c1">##ax0.plot_wireframe(x*180.0/np.pi, y*180.0/np.pi, z)</span>
-        <span class="c1">##ax0.set_xlabel(r&#39;Latitude $u$ in degree&#39;)</span>
-        <span class="c1">##ax0.set_ylabel(r&#39;Longitude $v$ in degree&#39;)</span>
-        <span class="c1">##ax0.grid()</span>
-        
-        <span class="c1">##if filename:</span>
-            <span class="c1">##fig.savefig(filename)</span>
-    
+        <span class="c1"># TODO: filename</span>
+        <span class="k">del</span> <span class="n">filename</span>
+        <span class="k">return</span> <span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_rotation</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Omni"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Omni">[docs]</a><span class="k">class</span> <span class="nc">Omni</span><span class="p">(</span><span class="n">Directivity</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to work with omni-directional directivity.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="k">def</span> <span class="nf">_directivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Directivity</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span></div>
-    
+
 
 <div class="viewcode-block" id="Cardioid"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Cardioid">[docs]</a><span class="k">class</span> <span class="nc">Cardioid</span><span class="p">(</span><span class="n">Directivity</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Cardioid directivity.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="k">def</span> <span class="nf">_directivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Directivity</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">cardioid</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span></div>
-    
+
+
 <div class="viewcode-block" id="FigureEight"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.FigureEight">[docs]</a><span class="k">class</span> <span class="nc">FigureEight</span><span class="p">(</span><span class="n">Directivity</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Directivity of a figure of eight.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="k">def</span> <span class="nf">_directivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Directivity</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">figure_eight</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span></div>
-        
+
 
 <div class="viewcode-block" id="SphericalHarmonic"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.SphericalHarmonic">[docs]</a><span class="k">class</span> <span class="nc">SphericalHarmonic</span><span class="p">(</span><span class="n">Directivity</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Directivity of a spherical harmonic of degree `n` and order `m`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-<div class="viewcode-block" id="SphericalHarmonic.__init__"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.SphericalHarmonic.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></div>
-        
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="n">rotation</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SphericalHarmonic.__init__"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.SphericalHarmonic.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="n">rotation</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="n">m</span>
         <span class="sd">&quot;&quot;&quot;Order `m`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
         <span class="sd">&quot;&quot;&quot;Degree `n`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
     <span class="k">def</span> <span class="nf">_directivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Directivity</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">spherical_harmonic</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span></div>
-        
-        
+
 
 <div class="viewcode-block" id="Custom"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Custom">[docs]</a><span class="k">class</span> <span class="nc">Custom</span><span class="p">(</span><span class="n">Directivity</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class to work with directivity.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-<div class="viewcode-block" id="Custom.__init__"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Custom.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Custom.__init__"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.Custom.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">phi</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Latitude. 1-D array.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -360,57 +267,51 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Magnitude or radius. 2-D array.</span>
 <span class="sd">        &quot;&quot;&quot;</span></div>
-    
+
     <span class="k">def</span> <span class="nf">_directivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Custom directivity.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Interpolate the directivity given longitude and latitude vectors.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
-        
+
         <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">sphere</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../directivity.html#acoustics.directivity.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">sphere</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot directivity `d`.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param d: Directivity</span>
 <span class="sd">    :type d: :class:`Directivity`</span>
-<span class="sd">    </span>
+
 <span class="sd">    :returns: Figure</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="c1">#phi = np.linspace(-np.pi, +np.pi, 50)</span>
-    <span class="c1">#theta = np.linspace(0.0, np.pi, 50)</span>
-    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">+</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
-    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
-    <span class="n">THETA</span><span class="p">,</span> <span class="n">PHI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
-    
+    <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">+</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+
     <span class="c1"># Directivity strength. Real-valued. Can be positive and negative.</span>
-    <span class="n">dr</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">using_spherical</span><span class="p">(</span><span class="n">THETA</span><span class="p">,</span> <span class="n">PHI</span><span class="p">)</span>
-    
+    <span class="n">dr</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">using_spherical</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">sphere</span><span class="p">:</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">spherical_to_cartesian</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">THETA</span><span class="p">,</span> <span class="n">PHI</span><span class="p">)</span>
-        
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">spherical_to_cartesian</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">spherical_to_cartesian</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dr</span><span class="p">),</span> <span class="n">THETA</span><span class="p">,</span> <span class="n">PHI</span> <span class="p">)</span>
-    <span class="c1">#R, THETA, PHI = cartesian_to_spherical(x, y, z)</span>
-    
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">spherical_to_cartesian</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dr</span><span class="p">),</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+    <span class="c1">#R, theta, phi = cartesian_to_spherical(x, y, z)</span>
+
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
     <span class="c1">#p = ax.plot_surface(x, y, z, cmap=plt.cm.jet, rstride=1, cstride=1, linewidth=0)</span>
-
 
     <span class="n">norm</span> <span class="o">=</span> <span class="n">Normalize</span><span class="p">()</span>
     <span class="n">norm</span><span class="o">.</span><span class="n">autoscale</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
     <span class="n">colors</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">jet</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">dr</span><span class="p">))</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">jet</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">set_array</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">facecolors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">facecolors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
-    
+
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$x$&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$y$&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;$z$&#39;</span><span class="p">)</span>
@@ -424,15 +325,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -448,13 +348,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+        &#169; Copyright 1970, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
     </div>
   </body>
 </html>

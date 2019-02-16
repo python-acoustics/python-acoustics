@@ -1,33 +1,23 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>acoustics.imaging &mdash; acoustics 0.0 documentation</title>
-    
+    <title>acoustics.imaging &#8212; acoustics 0.2.0.post1 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body role="document">
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -37,8 +27,8 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -48,7 +38,7 @@
           <div class="body" role="main">
             
   <h1>Source code for acoustics.imaging</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Imaging</span>
 <span class="sd">=======</span>
 
@@ -60,19 +50,15 @@
 <span class="sd">.. _matplotlib: http://matplotlib.org/</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">scale</span> <span class="k">as</span> <span class="n">mscale</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">transforms</span> <span class="k">as</span> <span class="n">mtransforms</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="k">import</span> <span class="n">NullLocator</span><span class="p">,</span> <span class="n">FixedLocator</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="k">import</span> <span class="n">ScalarFormatter</span><span class="p">,</span> <span class="n">NullFormatter</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">unicode_literals</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">scale</span> <span class="k">as</span> <span class="n">mscale</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">transforms</span> <span class="k">as</span> <span class="n">mtransforms</span>
-<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">NullLocator</span><span class="p">,</span> <span class="n">FixedLocator</span>
-<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">ScalarFormatter</span><span class="p">,</span> <span class="n">NullFormatter</span>
-
-<span class="kn">from</span> <span class="nn">acoustics.bands</span> <span class="kn">import</span> <span class="n">octave</span><span class="p">,</span> <span class="n">third</span>
+<span class="kn">from</span> <span class="nn">acoustics.bands</span> <span class="k">import</span> <span class="n">octave</span><span class="p">,</span> <span class="n">third</span>
 
 
 <div class="viewcode-block" id="OctaveBandScale"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.OctaveBandScale">[docs]</a><span class="k">class</span> <span class="nc">OctaveBandScale</span><span class="p">(</span><span class="n">mscale</span><span class="o">.</span><span class="n">ScaleBase</span><span class="p">):</span>
@@ -82,31 +68,32 @@
     <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;octave&#39;</span>
 
 <div class="viewcode-block" id="OctaveBandScale.__init__"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.OctaveBandScale.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">mscale</span><span class="o">.</span><span class="n">ScaleBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="n">mscale</span><span class="o">.</span><span class="n">ScaleBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">BandTransform</span><span class="p">()</span>
+<div class="viewcode-block" id="OctaveBandScale.get_transform"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.OctaveBandScale.get_transform">[docs]</a>    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">BandTransform</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">set_default_locators_and_formatters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+<div class="viewcode-block" id="OctaveBandScale.set_default_locators_and_formatters"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.OctaveBandScale.set_default_locators_and_formatters">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_locators_and_formatters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
         <span class="n">axis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">FixedLocator</span><span class="p">(</span><span class="n">octave</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16000</span><span class="p">)))</span>
         <span class="n">axis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">ScalarFormatter</span><span class="p">())</span>
         <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">NullLocator</span><span class="p">())</span>
-        <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><span class="n">NullFormatter</span><span class="p">())</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><span class="n">NullFormatter</span><span class="p">())</span></div>
 
-    <span class="k">def</span> <span class="nf">limit_range_for_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">minpos</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span>
+<div class="viewcode-block" id="OctaveBandScale.limit_range_for_scale"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.OctaveBandScale.limit_range_for_scale">[docs]</a>    <span class="k">def</span> <span class="nf">limit_range_for_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">minpos</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span></div>
 
-    <span class="k">class</span> <span class="nc">BandTransform</span><span class="p">(</span><span class="n">mtransforms</span><span class="o">.</span><span class="n">Transform</span><span class="p">):</span>
+<div class="viewcode-block" id="OctaveBandScale.BandTransform"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.OctaveBandScale.BandTransform">[docs]</a>    <span class="k">class</span> <span class="nc">BandTransform</span><span class="p">(</span><span class="n">mtransforms</span><span class="o">.</span><span class="n">Transform</span><span class="p">):</span>
         <span class="n">input_dims</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">output_dims</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">is_separable</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="n">has_inverse</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">is_separable</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">has_inverse</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="n">mtransforms</span><span class="o">.</span><span class="n">Transform</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<div class="viewcode-block" id="OctaveBandScale.BandTransform.__init__"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.OctaveBandScale.BandTransform.__init__">[docs]</a>        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">mtransforms</span><span class="o">.</span><span class="n">Transform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-        <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span></div>
+<div class="viewcode-block" id="OctaveBandScale.BandTransform.transform_non_affine"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.OctaveBandScale.BandTransform.transform_non_affine">[docs]</a>        <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div></div></div>
+
 
 <span class="n">mscale</span><span class="o">.</span><span class="n">register_scale</span><span class="p">(</span><span class="n">OctaveBandScale</span><span class="p">)</span>
 
@@ -118,37 +105,48 @@
     <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;third&#39;</span>
 
 <div class="viewcode-block" id="ThirdBandScale.__init__"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.ThirdBandScale.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">mscale</span><span class="o">.</span><span class="n">ScaleBase</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="n">mscale</span><span class="o">.</span><span class="n">ScaleBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">BandTransform</span><span class="p">()</span>
+<div class="viewcode-block" id="ThirdBandScale.get_transform"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.ThirdBandScale.get_transform">[docs]</a>    <span class="k">def</span> <span class="nf">get_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">BandTransform</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">set_default_locators_and_formatters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+<div class="viewcode-block" id="ThirdBandScale.set_default_locators_and_formatters"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.ThirdBandScale.set_default_locators_and_formatters">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_locators_and_formatters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
         <span class="n">axis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">NullLocator</span><span class="p">())</span>
         <span class="n">axis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">ScalarFormatter</span><span class="p">())</span>
         <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">FixedLocator</span><span class="p">(</span><span class="n">third</span><span class="p">(</span><span class="mf">12.5</span><span class="p">,</span> <span class="mi">20000</span><span class="p">)))</span>
-        <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><span class="n">ScalarFormatter</span><span class="p">())</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><span class="n">ScalarFormatter</span><span class="p">())</span></div>
 
-    <span class="k">def</span> <span class="nf">limit_range_for_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">minpos</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span>
+<div class="viewcode-block" id="ThirdBandScale.limit_range_for_scale"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.ThirdBandScale.limit_range_for_scale">[docs]</a>    <span class="k">def</span> <span class="nf">limit_range_for_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">minpos</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span></div>
 
-    <span class="k">class</span> <span class="nc">BandTransform</span><span class="p">(</span><span class="n">mtransforms</span><span class="o">.</span><span class="n">Transform</span><span class="p">):</span>
+<div class="viewcode-block" id="ThirdBandScale.BandTransform"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.ThirdBandScale.BandTransform">[docs]</a>    <span class="k">class</span> <span class="nc">BandTransform</span><span class="p">(</span><span class="n">mtransforms</span><span class="o">.</span><span class="n">Transform</span><span class="p">):</span>
         <span class="n">input_dims</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">output_dims</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">is_separable</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="n">has_inverse</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">is_separable</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">has_inverse</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="n">mtransforms</span><span class="o">.</span><span class="n">Transform</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<div class="viewcode-block" id="ThirdBandScale.BandTransform.__init__"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.ThirdBandScale.BandTransform.__init__">[docs]</a>        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">mtransforms</span><span class="o">.</span><span class="n">Transform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-        <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ThirdBandScale.BandTransform.transform_non_affine"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.ThirdBandScale.BandTransform.transform_non_affine">[docs]</a>        <span class="k">def</span> <span class="nf">transform_non_affine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div></div></div>
+
 
 <span class="n">mscale</span><span class="o">.</span><span class="n">register_scale</span><span class="p">(</span><span class="n">ThirdBandScale</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="plot_octave"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.plot_octave">[docs]</a><span class="k">def</span> <span class="nf">plot_octave</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">octaves</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">kHz</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                <span class="n">title</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_octave"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.plot_octave">[docs]</a><span class="k">def</span> <span class="nf">plot_octave</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">octaves</span><span class="p">,</span>
+        <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">kHz</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">separator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot octave bands from `data` levels and `octaves` bands.</span>
 
@@ -173,12 +171,33 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">band_type</span> <span class="o">=</span> <span class="s1">&#39;octave&#39;</span>
     <span class="n">k_ticks</span> <span class="o">=</span> <span class="n">kHz</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">plot_bands</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">octaves</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">band_type</span><span class="p">,</span> <span class="n">k_ticks</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span>
-                       <span class="n">title</span><span class="p">,</span> <span class="n">separator</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="n">plot_bands</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">octaves</span><span class="p">,</span>
+        <span class="n">axes</span><span class="p">,</span>
+        <span class="n">band_type</span><span class="p">,</span>
+        <span class="n">k_ticks</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">,</span>
+        <span class="n">separator</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="plot_third"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.plot_third">[docs]</a><span class="k">def</span> <span class="nf">plot_third</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">thirds</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">kHz</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-               <span class="n">title</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_third"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.plot_third">[docs]</a><span class="k">def</span> <span class="nf">plot_third</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">thirds</span><span class="p">,</span>
+        <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">kHz</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">separator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot third octave bands from `data` levels and `thirds` bands.</span>
 
@@ -203,12 +222,34 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">band_type</span> <span class="o">=</span> <span class="s1">&#39;third&#39;</span>
     <span class="n">k_ticks</span> <span class="o">=</span> <span class="n">kHz</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">plot_bands</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">thirds</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">band_type</span><span class="p">,</span> <span class="n">k_ticks</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span>
-                       <span class="n">title</span><span class="p">,</span> <span class="n">separator</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="n">plot_bands</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">thirds</span><span class="p">,</span>
+        <span class="n">axes</span><span class="p">,</span>
+        <span class="n">band_type</span><span class="p">,</span>
+        <span class="n">k_ticks</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">,</span>
+        <span class="n">separator</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="plot_bands"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.plot_bands">[docs]</a><span class="k">def</span> <span class="nf">plot_bands</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">bands</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">band_type</span><span class="p">,</span> <span class="n">k_ticks</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-               <span class="n">ylabel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_bands"><a class="viewcode-back" href="../../imaging.html#acoustics.imaging.plot_bands">[docs]</a><span class="k">def</span> <span class="nf">plot_bands</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">bands</span><span class="p">,</span>
+        <span class="n">axes</span><span class="p">,</span>
+        <span class="n">band_type</span><span class="p">,</span>
+        <span class="n">k_ticks</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">separator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot bands from `data` levels and `bands`.</span>
 <span class="sd">    Only use if you want to plot from arbitrary octave or third octave data.</span>
@@ -233,34 +274,35 @@
 <span class="sd">    separator: a `str` defining the decimal separator. By default takes &#39;.&#39;</span>
 <span class="sd">    or &#39;,&#39; values according to system settings (when separator is None).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
     <span class="n">factor</span> <span class="o">=</span> <span class="mf">0.1</span>
-    <span class="n">min_auto</span> <span class="o">=</span> <span class="n">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">factor</span><span class="p">)</span>
-    <span class="n">max_auto</span> <span class="o">=</span> <span class="n">bands</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">factor</span><span class="p">)</span>
+    <span class="n">min_auto</span> <span class="o">=</span> <span class="n">bands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">factor</span><span class="p">)</span>
+    <span class="n">max_auto</span> <span class="o">=</span> <span class="n">bands</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">factor</span><span class="p">)</span>
     <span class="n">axes</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">min_auto</span><span class="p">,</span> <span class="n">max_auto</span><span class="p">])</span>
     <span class="n">axes</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="n">band_type</span><span class="p">)</span>
 
     <span class="c1"># Set tick labels.</span>
     <span class="n">ticklabels</span> <span class="o">=</span> <span class="n">_get_ticklabels</span><span class="p">(</span><span class="n">band_type</span><span class="p">,</span> <span class="n">k_ticks</span><span class="p">,</span> <span class="n">separator</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">band_type</span> <span class="o">==</span> <span class="s1">&#39;third&#39;</span><span class="p">:</span>
-        <span class="n">third_ticks</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">third_ticks</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">elif</span> <span class="n">band_type</span> <span class="o">==</span> <span class="s1">&#39;octave&#39;</span><span class="p">:</span>
-        <span class="n">third_ticks</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">third_ticks</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">axes</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">ticklabels</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="n">third_ticks</span><span class="p">)</span>
 
     <span class="c1"># Set x and y labels and title.</span>
-    <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bands</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+
 <span class="n">TICKS_OCTAVE</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;16&#39;</span><span class="p">,</span> <span class="s1">&#39;31.5&#39;</span><span class="p">,</span> <span class="s1">&#39;63&#39;</span><span class="p">,</span> <span class="s1">&#39;125&#39;</span><span class="p">,</span> <span class="s1">&#39;250&#39;</span><span class="p">,</span> <span class="s1">&#39;500&#39;</span><span class="p">,</span> <span class="s1">&#39;1000&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;4000&#39;</span><span class="p">,</span> <span class="s1">&#39;8000&#39;</span><span class="p">,</span> <span class="s1">&#39;16000&#39;</span><span class="p">]</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Octave center frequencies as strings. </span>
+<span class="sd">Octave center frequencies as strings.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">TICKS_OCTAVE_KHZ</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;16&#39;</span><span class="p">,</span> <span class="s1">&#39;31.5&#39;</span><span class="p">,</span> <span class="s1">&#39;63&#39;</span><span class="p">,</span> <span class="s1">&#39;125&#39;</span><span class="p">,</span> <span class="s1">&#39;250&#39;</span><span class="p">,</span> <span class="s1">&#39;500&#39;</span><span class="p">,</span> <span class="s1">&#39;1k&#39;</span><span class="p">,</span> <span class="s1">&#39;2k&#39;</span><span class="p">,</span> <span class="s1">&#39;4k&#39;</span><span class="p">,</span> <span class="s1">&#39;8k&#39;</span><span class="p">,</span> <span class="s1">&#39;16k&#39;</span><span class="p">]</span>
@@ -268,45 +310,44 @@
 <span class="sd">Octave center frequencies as strings. Uses kHz notation.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="n">TICKS_THIRD_OCTAVE</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;12.5&#39;</span><span class="p">,</span>     <span class="s1">&#39;16&#39;</span><span class="p">,</span>    <span class="s1">&#39;20&#39;</span><span class="p">,</span>   <span class="s1">&#39;25&#39;</span><span class="p">,</span> <span class="s1">&#39;31.5&#39;</span><span class="p">,</span>    <span class="s1">&#39;40&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;50&#39;</span><span class="p">,</span>       <span class="s1">&#39;63&#39;</span><span class="p">,</span>    <span class="s1">&#39;80&#39;</span><span class="p">,</span>  <span class="s1">&#39;100&#39;</span><span class="p">,</span>  <span class="s1">&#39;125&#39;</span><span class="p">,</span>   <span class="s1">&#39;160&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;200&#39;</span><span class="p">,</span>     <span class="s1">&#39;250&#39;</span><span class="p">,</span>   <span class="s1">&#39;315&#39;</span><span class="p">,</span>  <span class="s1">&#39;400&#39;</span><span class="p">,</span>  <span class="s1">&#39;500&#39;</span><span class="p">,</span>   <span class="s1">&#39;630&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;800&#39;</span><span class="p">,</span>    <span class="s1">&#39;1000&#39;</span><span class="p">,</span>  <span class="s1">&#39;1250&#39;</span><span class="p">,</span> <span class="s1">&#39;1600&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span>  <span class="s1">&#39;2500&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;3150&#39;</span><span class="p">,</span>   <span class="s1">&#39;4000&#39;</span><span class="p">,</span>  <span class="s1">&#39;5000&#39;</span><span class="p">,</span> <span class="s1">&#39;6300&#39;</span><span class="p">,</span> <span class="s1">&#39;8000&#39;</span><span class="p">,</span> <span class="s1">&#39;10000&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;12500&#39;</span><span class="p">,</span> <span class="s1">&#39;16000&#39;</span><span class="p">,</span> <span class="s1">&#39;20000&#39;</span><span class="p">]</span>
+<span class="n">TICKS_THIRD_OCTAVE</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;12.5&#39;</span><span class="p">,</span> <span class="s1">&#39;16&#39;</span><span class="p">,</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="s1">&#39;25&#39;</span><span class="p">,</span> <span class="s1">&#39;31.5&#39;</span><span class="p">,</span> <span class="s1">&#39;40&#39;</span><span class="p">,</span> <span class="s1">&#39;50&#39;</span><span class="p">,</span> <span class="s1">&#39;63&#39;</span><span class="p">,</span> <span class="s1">&#39;80&#39;</span><span class="p">,</span> <span class="s1">&#39;100&#39;</span><span class="p">,</span> <span class="s1">&#39;125&#39;</span><span class="p">,</span> <span class="s1">&#39;160&#39;</span><span class="p">,</span> <span class="s1">&#39;200&#39;</span><span class="p">,</span> <span class="s1">&#39;250&#39;</span><span class="p">,</span> <span class="s1">&#39;315&#39;</span><span class="p">,</span> <span class="s1">&#39;400&#39;</span><span class="p">,</span> <span class="s1">&#39;500&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;630&#39;</span><span class="p">,</span> <span class="s1">&#39;800&#39;</span><span class="p">,</span> <span class="s1">&#39;1000&#39;</span><span class="p">,</span> <span class="s1">&#39;1250&#39;</span><span class="p">,</span> <span class="s1">&#39;1600&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;2500&#39;</span><span class="p">,</span> <span class="s1">&#39;3150&#39;</span><span class="p">,</span> <span class="s1">&#39;4000&#39;</span><span class="p">,</span> <span class="s1">&#39;5000&#39;</span><span class="p">,</span> <span class="s1">&#39;6300&#39;</span><span class="p">,</span> <span class="s1">&#39;8000&#39;</span><span class="p">,</span> <span class="s1">&#39;10000&#39;</span><span class="p">,</span> <span class="s1">&#39;12500&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;16000&#39;</span><span class="p">,</span> <span class="s1">&#39;20000&#39;</span>
+<span class="p">]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Third-octave center frequencies as strings.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="n">TICKS_THIRD_OCTAVE_KHZ</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;12.5&#39;</span><span class="p">,</span>     <span class="s1">&#39;16&#39;</span><span class="p">,</span>    <span class="s1">&#39;20&#39;</span><span class="p">,</span>   <span class="s1">&#39;25&#39;</span><span class="p">,</span> <span class="s1">&#39;31.5&#39;</span><span class="p">,</span>    <span class="s1">&#39;40&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;50&#39;</span><span class="p">,</span>       <span class="s1">&#39;63&#39;</span><span class="p">,</span>    <span class="s1">&#39;80&#39;</span><span class="p">,</span>  <span class="s1">&#39;100&#39;</span><span class="p">,</span>  <span class="s1">&#39;125&#39;</span><span class="p">,</span>   <span class="s1">&#39;160&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;200&#39;</span><span class="p">,</span>     <span class="s1">&#39;250&#39;</span><span class="p">,</span>   <span class="s1">&#39;315&#39;</span><span class="p">,</span>  <span class="s1">&#39;400&#39;</span><span class="p">,</span>  <span class="s1">&#39;500&#39;</span><span class="p">,</span>   <span class="s1">&#39;630&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;800&#39;</span><span class="p">,</span>    <span class="s1">&#39;1000&#39;</span><span class="p">,</span>  <span class="s1">&#39;1250&#39;</span><span class="p">,</span> <span class="s1">&#39;1600&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span>  <span class="s1">&#39;2500&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;3150&#39;</span><span class="p">,</span>   <span class="s1">&#39;4000&#39;</span><span class="p">,</span>  <span class="s1">&#39;5000&#39;</span><span class="p">,</span> <span class="s1">&#39;6300&#39;</span><span class="p">,</span> <span class="s1">&#39;8000&#39;</span><span class="p">,</span> <span class="s1">&#39;10000&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;12500&#39;</span><span class="p">,</span> <span class="s1">&#39;16000&#39;</span><span class="p">,</span> <span class="s1">&#39;20000&#39;</span><span class="p">]</span>
+<span class="n">TICKS_THIRD_OCTAVE_KHZ</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;12.5&#39;</span><span class="p">,</span> <span class="s1">&#39;16&#39;</span><span class="p">,</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="s1">&#39;25&#39;</span><span class="p">,</span> <span class="s1">&#39;31.5&#39;</span><span class="p">,</span> <span class="s1">&#39;40&#39;</span><span class="p">,</span> <span class="s1">&#39;50&#39;</span><span class="p">,</span> <span class="s1">&#39;63&#39;</span><span class="p">,</span> <span class="s1">&#39;80&#39;</span><span class="p">,</span> <span class="s1">&#39;100&#39;</span><span class="p">,</span> <span class="s1">&#39;125&#39;</span><span class="p">,</span> <span class="s1">&#39;160&#39;</span><span class="p">,</span> <span class="s1">&#39;200&#39;</span><span class="p">,</span> <span class="s1">&#39;250&#39;</span><span class="p">,</span> <span class="s1">&#39;315&#39;</span><span class="p">,</span> <span class="s1">&#39;400&#39;</span><span class="p">,</span> <span class="s1">&#39;500&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;630&#39;</span><span class="p">,</span> <span class="s1">&#39;800&#39;</span><span class="p">,</span> <span class="s1">&#39;1000&#39;</span><span class="p">,</span> <span class="s1">&#39;1250&#39;</span><span class="p">,</span> <span class="s1">&#39;1600&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;2500&#39;</span><span class="p">,</span> <span class="s1">&#39;3150&#39;</span><span class="p">,</span> <span class="s1">&#39;4000&#39;</span><span class="p">,</span> <span class="s1">&#39;5000&#39;</span><span class="p">,</span> <span class="s1">&#39;6300&#39;</span><span class="p">,</span> <span class="s1">&#39;8000&#39;</span><span class="p">,</span> <span class="s1">&#39;10000&#39;</span><span class="p">,</span> <span class="s1">&#39;12500&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;16000&#39;</span><span class="p">,</span> <span class="s1">&#39;20000&#39;</span>
+<span class="p">]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Third-octave center frequencies as strings. Uses kHz notation.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
 
 <span class="k">def</span> <span class="nf">_get_ticklabels</span><span class="p">(</span><span class="n">band_type</span><span class="p">,</span> <span class="n">kHz</span><span class="p">,</span> <span class="n">separator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a list with all tick labels for octave or third octave bands cases.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">separator</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">separator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">locale</span>
         <span class="n">separator</span> <span class="o">=</span> <span class="n">locale</span><span class="o">.</span><span class="n">localeconv</span><span class="p">()[</span><span class="s1">&#39;decimal_point&#39;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">band_type</span> <span class="o">==</span> <span class="s1">&#39;octave&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">kHz</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kHz</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">ticklabels</span> <span class="o">=</span> <span class="n">TICKS_OCTAVE_KHZ</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ticklabels</span> <span class="o">=</span> <span class="n">TICKS_OCTAVE</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">kHz</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kHz</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">ticklabels</span> <span class="o">=</span> <span class="n">TICKS_THIRD_OCTAVE_KHZ</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ticklabels</span> <span class="o">=</span> <span class="n">TICKS_THIRD_OCTAVE</span>
-            
+
     <span class="n">ticklabels</span> <span class="o">=</span> <span class="n">_set_separator</span><span class="p">(</span><span class="n">ticklabels</span><span class="p">,</span> <span class="n">separator</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ticklabels</span>
 
@@ -333,15 +374,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -357,13 +397,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+        &#169; Copyright 1970, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
     </div>
   </body>
 </html>

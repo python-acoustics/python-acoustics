@@ -1,33 +1,23 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>acoustics.generator &mdash; acoustics 0.0 documentation</title>
-    
+    <title>acoustics.generator &#8212; acoustics 0.2.0.post1 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body role="document">
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -37,8 +27,8 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -48,7 +38,7 @@
           <div class="body" role="main">
             
   <h1>Source code for acoustics.generator</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Generator</span>
 <span class="sd">=========</span>
 
@@ -56,12 +46,13 @@
 
 <span class="sd">The following functions calculate ``N`` samples and return an array containing the samples.</span>
 
-<span class="sd">For indefinitely long iteration over the samples, consider using the output of these functions in :func:`itertools.cycle`.</span>
+<span class="sd">For indefinitely long iteration over the samples, consider using the output of these functions</span>
+<span class="sd">in :func:`itertools.cycle`.</span>
 
 <span class="sd">Noise</span>
 <span class="sd">*****</span>
 
-<span class="sd">Different types of noise are available. The following table lists the color </span>
+<span class="sd">Different types of noise are available. The following table lists the color</span>
 <span class="sd">of noise and how the power and power density change per octave.</span>
 
 <span class="sd">====== ===== =============</span>
@@ -104,55 +95,59 @@
 
 
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
-<span class="c1">#import scipy.signal.sawtooth</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">pyfftw.interfaces.numpy_fft</span> <span class="kn">import</span> <span class="n">rfft</span><span class="p">,</span> <span class="n">irfft</span>       <span class="c1"># Performs much better than numpy&#39;s fftpack</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>                                    <span class="c1"># Use monkey-patching np.fft perhaps instead?</span>
-    <span class="kn">from</span> <span class="nn">numpy.fft</span> <span class="kn">import</span> <span class="n">rfft</span><span class="p">,</span> <span class="n">irfft</span>
+    <span class="kn">from</span> <span class="nn">pyfftw.interfaces.numpy_fft</span> <span class="k">import</span> <span class="n">irfft</span>  <span class="c1"># Performs much better than numpy&#39;s fftpack</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># Use monkey-patching np.fft perhaps instead?</span>
+    <span class="kn">from</span> <span class="nn">numpy.fft</span> <span class="k">import</span> <span class="n">irfft</span>  <span class="c1"># pylint: disable=ungrouped-imports</span>
 
-<span class="kn">from</span> <span class="nn">.signal</span> <span class="kn">import</span> <span class="n">normalize</span>
+<span class="kn">from</span> <span class="nn">.signal</span> <span class="k">import</span> <span class="n">normalize</span>
 
 
-<div class="viewcode-block" id="noise"><a class="viewcode-back" href="../../generator.html#acoustics.generator.noise">[docs]</a><span class="k">def</span> <span class="nf">noise</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="noise"><a class="viewcode-back" href="../../generator.html#acoustics.generator.noise">[docs]</a><span class="k">def</span> <span class="nf">noise</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Noise generator.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param N: Amount of samples.</span>
 <span class="sd">    :param color: Color of noise.</span>
-<span class="sd">    </span>
+<span class="sd">    :param state: State of PRNG.</span>
+<span class="sd">    :type state: :class:`np.random.RandomState`</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_noise_generators</span><span class="p">[</span><span class="n">color</span><span class="p">](</span><span class="n">N</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_noise_generators</span><span class="p">[</span><span class="n">color</span><span class="p">](</span><span class="n">N</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Incorrect color.&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="white"><a class="viewcode-back" href="../../generator.html#acoustics.generator.white">[docs]</a><span class="k">def</span> <span class="nf">white</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+<div class="viewcode-block" id="white"><a class="viewcode-back" href="../../generator.html#acoustics.generator.white">[docs]</a><span class="k">def</span> <span class="nf">white</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    White noise.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param N: Amount of samples.</span>
-<span class="sd">    </span>
+<span class="sd">    :param state: State of PRNG.</span>
+<span class="sd">    :type state: :class:`np.random.RandomState`</span>
+
 <span class="sd">    White noise has a constant power density. It&#39;s narrowband spectrum is therefore flat.</span>
-<span class="sd">    The power in white noise will increase by a factor of two for each octave band, </span>
+<span class="sd">    The power in white noise will increase by a factor of two for each octave band,</span>
 <span class="sd">    and therefore increases with 3 dB per octave.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span></div>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">()</span> <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">state</span>
+    <span class="k">return</span> <span class="n">state</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="pink"><a class="viewcode-back" href="../../generator.html#acoustics.generator.pink">[docs]</a><span class="k">def</span> <span class="nf">pink</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+<div class="viewcode-block" id="pink"><a class="viewcode-back" href="../../generator.html#acoustics.generator.pink">[docs]</a><span class="k">def</span> <span class="nf">pink</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Pink noise. </span>
-<span class="sd">    </span>
+<span class="sd">    Pink noise.</span>
+
 <span class="sd">    :param N: Amount of samples.</span>
-<span class="sd">    </span>
+<span class="sd">    :param state: State of PRNG.</span>
+<span class="sd">    :type state: :class:`np.random.RandomState`</span>
+
 <span class="sd">    Pink noise has equal power in bands that are proportionally wide.</span>
 <span class="sd">    Power density decreases with 3 dB per octave.</span>
-<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># This method uses the filter with the following coefficients.</span>
     <span class="c1">#b = np.array([0.049922035, -0.095993537, 0.050612699, -0.004408786])</span>
@@ -160,106 +155,115 @@
     <span class="c1">#return lfilter(B, A, np.random.randn(N))</span>
     <span class="c1"># Another way would be using the FFT</span>
     <span class="c1">#x = np.random.randn(N)</span>
-    <span class="c1">#X = rfft(x) / N  </span>
-    <span class="n">uneven</span> <span class="o">=</span> <span class="n">N</span><span class="o">%</span><span class="mi">2</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span>
-    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">+</span><span class="mf">1.</span><span class="p">)</span> <span class="c1"># +1 to avoid divide by zero</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="o">/</span><span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
+    <span class="c1">#X = rfft(x) / N</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">()</span> <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">state</span>
+    <span class="n">uneven</span> <span class="o">=</span> <span class="n">N</span> <span class="o">%</span> <span class="mi">2</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">uneven</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">uneven</span><span class="p">)</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span>  <span class="c1"># +1 to avoid divide by zero</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span> <span class="o">/</span> <span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
     <span class="k">if</span> <span class="n">uneven</span><span class="p">:</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">normalize</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="blue"><a class="viewcode-back" href="../../generator.html#acoustics.generator.blue">[docs]</a><span class="k">def</span> <span class="nf">blue</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+<div class="viewcode-block" id="blue"><a class="viewcode-back" href="../../generator.html#acoustics.generator.blue">[docs]</a><span class="k">def</span> <span class="nf">blue</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Blue noise. </span>
-<span class="sd">    </span>
+<span class="sd">    Blue noise.</span>
+
 <span class="sd">    :param N: Amount of samples.</span>
-<span class="sd">    </span>
+<span class="sd">    :param state: State of PRNG.</span>
+<span class="sd">    :type state: :class:`np.random.RandomState`</span>
+
 <span class="sd">    Power increases with 6 dB per octave.</span>
-<span class="sd">    Power density increases with 3 dB per octave. </span>
-<span class="sd">    </span>
+<span class="sd">    Power density increases with 3 dB per octave.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">uneven</span> <span class="o">=</span> <span class="n">N</span><span class="o">%</span><span class="mi">2</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span>
-    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span><span class="c1"># Filter</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="o">*</span><span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">()</span> <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">state</span>
+    <span class="n">uneven</span> <span class="o">=</span> <span class="n">N</span> <span class="o">%</span> <span class="mi">2</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">uneven</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">uneven</span><span class="p">)</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>  <span class="c1"># Filter</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span> <span class="o">*</span> <span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
     <span class="k">if</span> <span class="n">uneven</span><span class="p">:</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">normalize</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="brown"><a class="viewcode-back" href="../../generator.html#acoustics.generator.brown">[docs]</a><span class="k">def</span> <span class="nf">brown</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+<div class="viewcode-block" id="brown"><a class="viewcode-back" href="../../generator.html#acoustics.generator.brown">[docs]</a><span class="k">def</span> <span class="nf">brown</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Violet noise.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param N: Amount of samples.</span>
-<span class="sd">    </span>
+<span class="sd">    :param state: State of PRNG.</span>
+<span class="sd">    :type state: :class:`np.random.RandomState`</span>
+
 <span class="sd">    Power decreases with -3 dB per octave.</span>
-<span class="sd">    Power density decreases with 6 dB per octave. </span>
+<span class="sd">    Power density decreases with 6 dB per octave.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">uneven</span> <span class="o">=</span> <span class="n">N</span><span class="o">%</span><span class="mi">2</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span>
-    <span class="n">S</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="c1"># Filter</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="o">/</span><span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">()</span> <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">state</span>
+    <span class="n">uneven</span> <span class="o">=</span> <span class="n">N</span> <span class="o">%</span> <span class="mi">2</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">uneven</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">uneven</span><span class="p">)</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Filter</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span> <span class="o">/</span> <span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
     <span class="k">if</span> <span class="n">uneven</span><span class="p">:</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">normalize</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="violet"><a class="viewcode-back" href="../../generator.html#acoustics.generator.violet">[docs]</a><span class="k">def</span> <span class="nf">violet</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+<div class="viewcode-block" id="violet"><a class="viewcode-back" href="../../generator.html#acoustics.generator.violet">[docs]</a><span class="k">def</span> <span class="nf">violet</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Violet noise. Power increases with 6 dB per octave. </span>
-<span class="sd">    </span>
+<span class="sd">    Violet noise. Power increases with 6 dB per octave.</span>
+
 <span class="sd">    :param N: Amount of samples.</span>
-<span class="sd">    </span>
+<span class="sd">    :param state: State of PRNG.</span>
+<span class="sd">    :type state: :class:`np.random.RandomState`</span>
+
 <span class="sd">    Power increases with +9 dB per octave.</span>
-<span class="sd">    Power density increases with +6 dB per octave. </span>
-<span class="sd">    </span>
+<span class="sd">    Power density increases with +6 dB per octave.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">uneven</span> <span class="o">=</span> <span class="n">N</span><span class="o">%</span><span class="mi">2</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">uneven</span><span class="p">)</span>
-    <span class="n">S</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span><span class="c1"># Filter</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="o">*</span><span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">()</span> <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">state</span>
+    <span class="n">uneven</span> <span class="o">=</span> <span class="n">N</span> <span class="o">%</span> <span class="mi">2</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">uneven</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">uneven</span><span class="p">)</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>  <span class="c1"># Filter</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">irfft</span><span class="p">(</span><span class="n">X</span> <span class="o">*</span> <span class="n">S</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
     <span class="k">if</span> <span class="n">uneven</span><span class="p">:</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">normalize</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
 
 
 <span class="n">_noise_generators</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;white&#39;</span>  <span class="p">:</span> <span class="n">white</span><span class="p">,</span>
-    <span class="s1">&#39;pink&#39;</span>   <span class="p">:</span> <span class="n">pink</span><span class="p">,</span>
-    <span class="s1">&#39;blue&#39;</span>   <span class="p">:</span> <span class="n">blue</span><span class="p">,</span>
-    <span class="s1">&#39;brown&#39;</span>  <span class="p">:</span> <span class="n">brown</span><span class="p">,</span>
-    <span class="s1">&#39;violet&#39;</span> <span class="p">:</span> <span class="n">violet</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="s1">&#39;white&#39;</span><span class="p">:</span> <span class="n">white</span><span class="p">,</span>
+    <span class="s1">&#39;pink&#39;</span><span class="p">:</span> <span class="n">pink</span><span class="p">,</span>
+    <span class="s1">&#39;blue&#39;</span><span class="p">:</span> <span class="n">blue</span><span class="p">,</span>
+    <span class="s1">&#39;brown&#39;</span><span class="p">:</span> <span class="n">brown</span><span class="p">,</span>
+    <span class="s1">&#39;violet&#39;</span><span class="p">:</span> <span class="n">violet</span><span class="p">,</span>
+<span class="p">}</span>
 
 
-<div class="viewcode-block" id="noise_generator"><a class="viewcode-back" href="../../generator.html#acoustics.generator.noise_generator">[docs]</a><span class="k">def</span> <span class="nf">noise_generator</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">44100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Noise generator. </span>
+<div class="viewcode-block" id="noise_generator"><a class="viewcode-back" href="../../generator.html#acoustics.generator.noise_generator">[docs]</a><span class="k">def</span> <span class="nf">noise_generator</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">44100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Noise generator.</span>
 
 <span class="sd">    :param N: Amount of unique samples to generate.</span>
 <span class="sd">    :param color: Color of noise.</span>
-<span class="sd">     </span>
+
 <span class="sd">    Generate `N` amount of unique samples and cycle over these samples.</span>
-<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#yield from itertools.cycle(noise(N, color)) # Python 3.3</span>
-    <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">(</span><span class="n">noise</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">color</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">(</span><span class="n">noise</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">state</span><span class="p">)):</span>
         <span class="k">yield</span> <span class="n">sample</span></div>
-    
+
 
 <div class="viewcode-block" id="heaviside"><a class="viewcode-back" href="../../generator.html#acoustics.generator.heaviside">[docs]</a><span class="k">def</span> <span class="nf">heaviside</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Heaviside.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Returns the value 0 for `x &lt; 0`, 1 for `x &gt; 0`, and 1/2 for `x = 0`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div>
-    
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;noise&#39;</span><span class="p">,</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;pink&#39;</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="s1">&#39;brown&#39;</span><span class="p">,</span> <span class="s1">&#39;violet&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;noise_generator&#39;</span><span class="p">,</span> <span class="s1">&#39;heaviside&#39;</span><span class="p">]</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;noise&#39;</span><span class="p">,</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;pink&#39;</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="s1">&#39;brown&#39;</span><span class="p">,</span> <span class="s1">&#39;violet&#39;</span><span class="p">,</span> <span class="s1">&#39;noise_generator&#39;</span><span class="p">,</span> <span class="s1">&#39;heaviside&#39;</span><span class="p">]</span>
 </pre></div>
 
           </div>
@@ -269,15 +273,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -293,13 +296,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+        &#169; Copyright 1970, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
     </div>
   </body>
 </html>

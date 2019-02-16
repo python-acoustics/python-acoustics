@@ -1,0 +1,177 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>acoustics.decibel &#8212; acoustics 0.2.0.post1 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for acoustics.decibel</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Decibel</span>
+<span class="sd">=======</span>
+
+<span class="sd">The `decibel` module contains basic functions for decibel arithmetic.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="dbsum"><a class="viewcode-back" href="../../decibel.html#acoustics.decibel.dbsum">[docs]</a><span class="k">def</span> <span class="nf">dbsum</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Energetic summation of levels.</span>
+
+<span class="sd">    :param levels: Sequence of levels.</span>
+<span class="sd">    :param axis: Axis over which to perform the operation.</span>
+
+<span class="sd">    .. math:: L_{sum} = 10 \\log_{10}{\\sum_{i=0}^n{10^{L/10}}}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">((</span><span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="n">levels</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="dbmean"><a class="viewcode-back" href="../../decibel.html#acoustics.decibel.dbmean">[docs]</a><span class="k">def</span> <span class="nf">dbmean</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Energetic average of levels.</span>
+
+<span class="sd">    :param levels: Sequence of levels.</span>
+<span class="sd">    :param axis: Axis over which to perform the operation.</span>
+
+<span class="sd">    .. math:: L_{mean} = 10 \\log_{10}{\\frac{1}{n}\\sum_{i=0}^n{10^{L/10}}}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">((</span><span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="n">levels</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="dbadd"><a class="viewcode-back" href="../../decibel.html#acoustics.decibel.dbadd">[docs]</a><span class="k">def</span> <span class="nf">dbadd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Energetic addition.</span>
+
+<span class="sd">    :param a: Single level or sequence of levels.</span>
+<span class="sd">    :param b: Single level or sequence of levels.</span>
+
+<span class="sd">    .. math:: L_{a+b} = 10 \\log_{10}{10^{L_b/10}+10^{L_a/10}}</span>
+
+<span class="sd">    Energetically adds b to a.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="n">b</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="dbsub"><a class="viewcode-back" href="../../decibel.html#acoustics.decibel.dbsub">[docs]</a><span class="k">def</span> <span class="nf">dbsub</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Energetic subtraction.</span>
+
+<span class="sd">    :param a: Single level or sequence of levels.</span>
+<span class="sd">    :param b: Single level or sequence of levels.</span>
+
+<span class="sd">    .. math:: L_{a-b} = 10 \\log_{10}{10^{L_a/10}-10^{L_b/10}}</span>
+
+<span class="sd">    Energitally subtract b from a.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="n">b</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="dbmul"><a class="viewcode-back" href="../../decibel.html#acoustics.decibel.dbmul">[docs]</a><span class="k">def</span> <span class="nf">dbmul</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Energetically add `levels` `f` times.</span>
+
+<span class="sd">    :param levels: Sequence of levels.</span>
+<span class="sd">    :param f: Multiplication factor `f`.</span>
+<span class="sd">    :param axis: Axis over which to perform the operation.</span>
+
+<span class="sd">    .. math:: L_{sum} = 10 \log_{10}{\sum_{i=0}^n{10^{L/10} \cdot f}}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">((</span><span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="n">levels</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="dbdiv"><a class="viewcode-back" href="../../decibel.html#acoustics.decibel.dbdiv">[docs]</a><span class="k">def</span> <span class="nf">dbdiv</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Energetically divide `levels` `f` times.</span>
+
+<span class="sd">    :param levels: Sequence of levels.</span>
+<span class="sd">    :param f: Divider `f`.</span>
+<span class="sd">    :param axis: Axis over which to perform the operation.</span>
+
+<span class="sd">    .. math:: L_{sum} = 10 \\log_{10}{\\sum_{i=0}^n{10^{L/10} / f}}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">((</span><span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="n">levels</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">))</span></div>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;dbsum&#39;</span><span class="p">,</span> <span class="s1">&#39;dbmean&#39;</span><span class="p">,</span> <span class="s1">&#39;dbadd&#39;</span><span class="p">,</span> <span class="s1">&#39;dbsub&#39;</span><span class="p">,</span> <span class="s1">&#39;dbmul&#39;</span><span class="p">,</span> <span class="s1">&#39;dbdiv&#39;</span><span class="p">]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 1970, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
+    </div>
+  </body>
+</html>

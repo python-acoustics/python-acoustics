@@ -1,0 +1,236 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Decibel &#8212; acoustics 0.2.0.post1 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Generator" href="generator.html" />
+    <link rel="prev" title="Criterion" href="criterion.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generator.html" title="Generator"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="criterion.html" title="Criterion"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-acoustics.decibel"></span><div class="section" id="decibel">
+<h1>Decibel<a class="headerlink" href="#decibel" title="Permalink to this headline">¶</a></h1>
+<p>The <cite>decibel</cite> module contains basic functions for decibel arithmetic.</p>
+<dl class="function">
+<dt id="acoustics.decibel.dbsum">
+<code class="descclassname">acoustics.decibel.</code><code class="descname">dbsum</code><span class="sig-paren">(</span><em>levels</em>, <em>axis=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/decibel.html#dbsum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.decibel.dbsum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Energetic summation of levels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>levels</strong> – Sequence of levels.</li>
+<li><strong>axis</strong> – Axis over which to perform the operation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[L_{sum} = 10 \log_{10}{\sum_{i=0}^n{10^{L/10}}}\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.decibel.dbmean">
+<code class="descclassname">acoustics.decibel.</code><code class="descname">dbmean</code><span class="sig-paren">(</span><em>levels</em>, <em>axis=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/decibel.html#dbmean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.decibel.dbmean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Energetic average of levels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>levels</strong> – Sequence of levels.</li>
+<li><strong>axis</strong> – Axis over which to perform the operation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[L_{mean} = 10 \log_{10}{\frac{1}{n}\sum_{i=0}^n{10^{L/10}}}\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.decibel.dbadd">
+<code class="descclassname">acoustics.decibel.</code><code class="descname">dbadd</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/decibel.html#dbadd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.decibel.dbadd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Energetic addition.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> – Single level or sequence of levels.</li>
+<li><strong>b</strong> – Single level or sequence of levels.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[L_{a+b} = 10 \log_{10}{10^{L_b/10}+10^{L_a/10}}\]</div>
+<p>Energetically adds b to a.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.decibel.dbsub">
+<code class="descclassname">acoustics.decibel.</code><code class="descname">dbsub</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/decibel.html#dbsub"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.decibel.dbsub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Energetic subtraction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>a</strong> – Single level or sequence of levels.</li>
+<li><strong>b</strong> – Single level or sequence of levels.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[L_{a-b} = 10 \log_{10}{10^{L_a/10}-10^{L_b/10}}\]</div>
+<p>Energitally subtract b from a.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.decibel.dbmul">
+<code class="descclassname">acoustics.decibel.</code><code class="descname">dbmul</code><span class="sig-paren">(</span><em>levels</em>, <em>f</em>, <em>axis=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/decibel.html#dbmul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.decibel.dbmul" title="Permalink to this definition">¶</a></dt>
+<dd><p>Energetically add <cite>levels</cite> <cite>f</cite> times.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>levels</strong> – Sequence of levels.</li>
+<li><strong>f</strong> – Multiplication factor <cite>f</cite>.</li>
+<li><strong>axis</strong> – Axis over which to perform the operation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[L_{sum} = 10 \log_{10}{\sum_{i=0}^n{10^{L/10} \cdot f}}\]</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="acoustics.decibel.dbdiv">
+<code class="descclassname">acoustics.decibel.</code><code class="descname">dbdiv</code><span class="sig-paren">(</span><em>levels</em>, <em>f</em>, <em>axis=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/decibel.html#dbdiv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.decibel.dbdiv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Energetically divide <cite>levels</cite> <cite>f</cite> times.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>levels</strong> – Sequence of levels.</li>
+<li><strong>f</strong> – Divider <cite>f</cite>.</li>
+<li><strong>axis</strong> – Axis over which to perform the operation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="math notranslate nohighlight">
+\[L_{sum} = 10 \log_{10}{\sum_{i=0}^n{10^{L/10} / f}}\]</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="criterion.html"
+                        title="previous chapter">Criterion</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generator.html"
+                        title="next chapter">Generator</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/decibel.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generator.html" title="Generator"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="criterion.html" title="Criterion"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 1970, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
+    </div>
+  </body>
+</html>

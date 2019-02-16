@@ -1,33 +1,23 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>acoustics.power &mdash; acoustics 0.0 documentation</title>
-    
+    <title>acoustics.power &#8212; acoustics 0.2.0.post1 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body role="document">
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -37,8 +27,8 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -48,41 +38,39 @@
           <div class="body" role="main">
             
   <h1>Source code for acoustics.power</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Power</span>
 <span class="sd">=====</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
 <div class="viewcode-block" id="lw_iso3746"><a class="viewcode-back" href="../../power.html#acoustics.power.lw_iso3746">[docs]</a><span class="k">def</span> <span class="nf">lw_iso3746</span><span class="p">(</span><span class="n">LpAi</span><span class="p">,</span> <span class="n">LpAiB</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">surfaces</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate sound power level according to ISO 3746:2010.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param LpAi: Sound pressure levels of the source :math:`L_{pAi}`.</span>
 <span class="sd">    :type LpAi: :class:`np.ndarray`</span>
 <span class="sd">    :param LpAiB: Background noise sound pressure levels :math:`L_{pAiB}`.</span>
 <span class="sd">    :type LpAiB: :class:`np.ndarray`</span>
 <span class="sd">    :param S: Area in square meters of the measurement surface :math:`S`.</span>
 <span class="sd">    :type S: :class:`float`</span>
-<span class="sd">    :param alpha: Absorption coefficients of the room :math:`\\alpha`. </span>
+<span class="sd">    :param alpha: Absorption coefficients of the room :math:`\\alpha`.</span>
 <span class="sd">    :type alpha: :class:`np.ndarray`</span>
 <span class="sd">    :param surfaces: Room surfaces.</span>
 <span class="sd">    :type surfaces: :class:`np.ndarray`</span>
 
 <span class="sd">    :returns: Sound power level :math:`L_{w}`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">LpA</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="mf">0.1</span><span class="o">*</span><span class="n">LpAi</span><span class="p">))</span><span class="o">/</span><span class="n">LpAi</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-    <span class="n">LpAB</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="mf">0.1</span><span class="o">*</span><span class="n">LpAiB</span><span class="p">))</span><span class="o">/</span><span class="n">LpAiB</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">LpA</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">LpAi</span><span class="p">))</span> <span class="o">/</span> <span class="n">LpAi</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">LpAB</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">LpAiB</span><span class="p">))</span> <span class="o">/</span> <span class="n">LpAiB</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
     <span class="n">deltaLpA</span> <span class="o">=</span> <span class="n">LpA</span> <span class="o">-</span> <span class="n">LpAB</span>
 
     <span class="k">if</span> <span class="n">deltaLpA</span> <span class="o">&gt;</span> <span class="mf">10.0</span><span class="p">:</span>
         <span class="n">k_1a</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="k">elif</span> <span class="mf">3.0</span> <span class="o">&lt;=</span> <span class="n">deltaLpA</span> <span class="o">&lt;=</span> <span class="mf">10.0</span><span class="p">:</span>
-        <span class="n">k_1a</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="o">*</span><span class="n">deltaLpA</span><span class="p">))</span>
+        <span class="n">k_1a</span> <span class="o">=</span> <span class="o">-</span><span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">deltaLpA</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># This should alert to user because poor condition of the measurement.</span>
         <span class="n">k_1a</span> <span class="o">=</span> <span class="mf">3.0</span>
@@ -106,15 +94,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -130,13 +117,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+        &#169; Copyright 1970, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
     </div>
   </body>
 </html>

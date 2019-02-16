@@ -1,35 +1,25 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Quantities and units &mdash; acoustics 0.0 documentation</title>
-    
+    <title>Quantities and units &#8212; acoustics 0.2.0.post1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
-    <link rel="up" title="API Reference" href="reference.html" />
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Standards" href="standards.html" />
     <link rel="prev" title="Weighting" href="weighting.html" /> 
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,8 +35,8 @@
         <li class="right" >
           <a href="weighting.html" title="Weighting"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -61,12 +51,12 @@
 <dl class="class">
 <dt id="acoustics.quantity.Quantity">
 <em class="property">class </em><code class="descclassname">acoustics.quantity.</code><code class="descname">Quantity</code><span class="sig-paren">(</span><em>name</em>, <em>unit</em>, <em>dynamic</em>, <em>symbol=None</em>, <em>symbol_latex=None</em>, <em>reference=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/quantity.html#Quantity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.quantity.Quantity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Quantity.</p>
+<dd><p>Quantity.</p>
 <dl class="method">
 <dt id="acoustics.quantity.Quantity.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>name</em>, <em>unit</em>, <em>dynamic</em>, <em>symbol=None</em>, <em>symbol_latex=None</em>, <em>reference=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/quantity.html#Quantity.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.quantity.Quantity.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="acoustics.quantity.Quantity.dynamic">
@@ -107,7 +97,7 @@
 <dl class="attribute">
 <dt id="acoustics.quantity.Quantity.unit">
 <code class="descname">unit</code><em class="property"> = None</em><a class="headerlink" href="#acoustics.quantity.Quantity.unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unit. See <a class="reference internal" href="#acoustics.quantity.Unit" title="acoustics.quantity.Unit"><code class="xref py py-class docutils literal"><span class="pre">Unit</span></code></a>.</p>
+<dd><p>Unit. See <a class="reference internal" href="#acoustics.quantity.Unit" title="acoustics.quantity.Unit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Unit</span></code></a>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -115,16 +105,16 @@
 <dl class="class">
 <dt id="acoustics.quantity.Unit">
 <em class="property">class </em><code class="descclassname">acoustics.quantity.</code><code class="descname">Unit</code><span class="sig-paren">(</span><em>name</em>, <em>symbol</em>, <em>symbol_latex</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/quantity.html#Unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.quantity.Unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Unit of quantity.</p>
+<dd><p>Unit of quantity.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Perhaps inherit from tuple or <code class="xref py py-class docutils literal"><span class="pre">collections.namedTuple</span></code>?</p>
+<p class="last">Perhaps inherit from tuple or <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.namedTuple</span></code>?</p>
 </div>
 <dl class="method">
 <dt id="acoustics.quantity.Unit.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>name</em>, <em>symbol</em>, <em>symbol_latex</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/quantity.html#Unit.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.quantity.Unit.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="acoustics.quantity.Unit.name">
@@ -138,17 +128,23 @@
 <dd><p>Symbol of the unit.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="acoustics.quantity.Unit.symbol_latex">
+<code class="descname">symbol_latex</code><em class="property"> = None</em><a class="headerlink" href="#acoustics.quantity.Unit.symbol_latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symbol of the unit in LaTeX.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="function">
 <dt id="acoustics.quantity.get_quantity">
 <code class="descclassname">acoustics.quantity.</code><code class="descname">get_quantity</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/quantity.html#get_quantity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.quantity.get_quantity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get quantity by name. Returns instance of <a class="reference internal" href="#acoustics.quantity.Quantity" title="acoustics.quantity.Quantity"><code class="xref py py-class docutils literal"><span class="pre">Quantity</span></code></a>.</p>
+<dd><p>Get quantity by name. Returns instance of <a class="reference internal" href="#acoustics.quantity.Quantity" title="acoustics.quantity.Quantity"><code class="xref py py-class docutils literal notranslate"><span class="pre">Quantity</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; Name of the quantity.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> – Name of the quantity.</td>
 </tr>
 </tbody>
 </table>
@@ -162,7 +158,7 @@
 
 <dl class="data">
 <dt id="acoustics.quantity.units">
-<code class="descclassname">acoustics.quantity.</code><code class="descname">units</code><em class="property"> = {'pascal': ('pascal', 'Pa', '$Pa$'), 'meter': ('meter', 'm', '$m$')}</em><a class="headerlink" href="#acoustics.quantity.units" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">acoustics.quantity.</code><code class="descname">units</code><em class="property"> = {'meter': ('meter', 'm', '$m$'), 'pascal': ('pascal', 'Pa', '$Pa$')}</em><a class="headerlink" href="#acoustics.quantity.units" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dictionary with units. Each unit is stored as a tuple.</p>
 </dd></dl>
 
@@ -183,21 +179,20 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/quantity.txt"
+      <li><a href="_sources/quantity.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -219,13 +214,13 @@
         <li class="right" >
           <a href="weighting.html" title="Weighting"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+        &#169; Copyright 1970, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
     </div>
   </body>
 </html>

@@ -1,33 +1,23 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>acoustics.criterion &mdash; acoustics 0.0 documentation</title>
-    
+    <title>acoustics.criterion &#8212; acoustics 0.2.0.post1 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="acoustics 0.0 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body role="document">
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -37,8 +27,8 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -48,28 +38,32 @@
           <div class="body" role="main">
             
   <h1>Source code for acoustics.criterion</h1><div class="highlight"><pre>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Criterion</span>
+<span class="sd">=========</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="n">NC_CURVES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="mi">15</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">47.0</span><span class="p">,</span> <span class="mf">36.0</span><span class="p">,</span> <span class="mf">29.0</span><span class="p">,</span> <span class="mf">22.0</span><span class="p">,</span> <span class="mf">17.0</span><span class="p">,</span> <span class="mf">14.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">11.0</span><span class="p">]),</span>
-    <span class="mi">20</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">51.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">33.0</span><span class="p">,</span> <span class="mf">26.0</span><span class="p">,</span> <span class="mf">22.0</span><span class="p">,</span> <span class="mf">19.0</span><span class="p">,</span> <span class="mf">17.0</span><span class="p">,</span> <span class="mf">16.0</span><span class="p">]),</span>
-    <span class="mi">25</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">54.0</span><span class="p">,</span> <span class="mf">44.0</span><span class="p">,</span> <span class="mf">37.0</span><span class="p">,</span> <span class="mf">31.0</span><span class="p">,</span> <span class="mf">27.0</span><span class="p">,</span> <span class="mf">24.0</span><span class="p">,</span> <span class="mf">22.0</span><span class="p">,</span> <span class="mf">21.0</span><span class="p">]),</span>
-    <span class="mi">30</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">57.0</span><span class="p">,</span> <span class="mf">48.0</span><span class="p">,</span> <span class="mf">41.0</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">,</span> <span class="mf">31.0</span><span class="p">,</span> <span class="mf">29.0</span><span class="p">,</span> <span class="mf">28.0</span><span class="p">,</span> <span class="mf">27.0</span><span class="p">]),</span>
-    <span class="mi">35</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">60.0</span><span class="p">,</span> <span class="mf">52.0</span><span class="p">,</span> <span class="mf">45.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">36.0</span><span class="p">,</span> <span class="mf">34.0</span><span class="p">,</span> <span class="mf">33.0</span><span class="p">,</span> <span class="mf">32.0</span><span class="p">]),</span>
-    <span class="mi">40</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">64.0</span><span class="p">,</span> <span class="mf">56.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="mf">45.0</span><span class="p">,</span> <span class="mf">41.0</span><span class="p">,</span> <span class="mf">39.0</span><span class="p">,</span> <span class="mf">38.0</span><span class="p">,</span> <span class="mf">37.0</span><span class="p">]),</span>
-    <span class="mi">45</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">67.0</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">,</span> <span class="mf">54.0</span><span class="p">,</span> <span class="mf">49.0</span><span class="p">,</span> <span class="mf">46.0</span><span class="p">,</span> <span class="mf">44.0</span><span class="p">,</span> <span class="mf">43.0</span><span class="p">,</span> <span class="mf">42.0</span><span class="p">]),</span>
-    <span class="mi">50</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">71.0</span><span class="p">,</span> <span class="mf">64.0</span><span class="p">,</span> <span class="mf">58.0</span><span class="p">,</span> <span class="mf">54.0</span><span class="p">,</span> <span class="mf">51.0</span><span class="p">,</span> <span class="mf">49.0</span><span class="p">,</span> <span class="mf">48.0</span><span class="p">,</span> <span class="mf">47.0</span><span class="p">]),</span>
-    <span class="mi">55</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">74.0</span><span class="p">,</span> <span class="mf">67.0</span><span class="p">,</span> <span class="mf">62.0</span><span class="p">,</span> <span class="mf">58.0</span><span class="p">,</span> <span class="mf">56.0</span><span class="p">,</span> <span class="mf">54.0</span><span class="p">,</span> <span class="mf">53.0</span><span class="p">,</span> <span class="mf">52.0</span><span class="p">]),</span>
-    <span class="mi">60</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">77.0</span><span class="p">,</span> <span class="mf">71.0</span><span class="p">,</span> <span class="mf">67.0</span><span class="p">,</span> <span class="mf">63.0</span><span class="p">,</span> <span class="mf">61.0</span><span class="p">,</span> <span class="mf">59.0</span><span class="p">,</span> <span class="mf">58.0</span><span class="p">,</span> <span class="mf">57.0</span><span class="p">]),</span>
-    <span class="mi">65</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">80.0</span><span class="p">,</span> <span class="mf">75.0</span><span class="p">,</span> <span class="mf">71.0</span><span class="p">,</span> <span class="mf">68.0</span><span class="p">,</span> <span class="mf">66.0</span><span class="p">,</span> <span class="mf">64.0</span><span class="p">,</span> <span class="mf">63.0</span><span class="p">,</span> <span class="mf">62.0</span><span class="p">]),</span>
-    <span class="mi">70</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">83.0</span><span class="p">,</span> <span class="mf">79.0</span><span class="p">,</span> <span class="mf">75.0</span><span class="p">,</span> <span class="mf">72.0</span><span class="p">,</span> <span class="mf">71.0</span><span class="p">,</span> <span class="mf">70.0</span><span class="p">,</span> <span class="mf">69.0</span><span class="p">,</span> <span class="mf">68.0</span><span class="p">])</span>
-    <span class="p">}</span>
+    <span class="mi">15</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">47.0</span><span class="p">,</span> <span class="mf">36.0</span><span class="p">,</span> <span class="mf">29.0</span><span class="p">,</span> <span class="mf">22.0</span><span class="p">,</span> <span class="mf">17.0</span><span class="p">,</span> <span class="mf">14.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">11.0</span><span class="p">]),</span>
+    <span class="mi">20</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">51.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">33.0</span><span class="p">,</span> <span class="mf">26.0</span><span class="p">,</span> <span class="mf">22.0</span><span class="p">,</span> <span class="mf">19.0</span><span class="p">,</span> <span class="mf">17.0</span><span class="p">,</span> <span class="mf">16.0</span><span class="p">]),</span>
+    <span class="mi">25</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">54.0</span><span class="p">,</span> <span class="mf">44.0</span><span class="p">,</span> <span class="mf">37.0</span><span class="p">,</span> <span class="mf">31.0</span><span class="p">,</span> <span class="mf">27.0</span><span class="p">,</span> <span class="mf">24.0</span><span class="p">,</span> <span class="mf">22.0</span><span class="p">,</span> <span class="mf">21.0</span><span class="p">]),</span>
+    <span class="mi">30</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">57.0</span><span class="p">,</span> <span class="mf">48.0</span><span class="p">,</span> <span class="mf">41.0</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">,</span> <span class="mf">31.0</span><span class="p">,</span> <span class="mf">29.0</span><span class="p">,</span> <span class="mf">28.0</span><span class="p">,</span> <span class="mf">27.0</span><span class="p">]),</span>
+    <span class="mi">35</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">60.0</span><span class="p">,</span> <span class="mf">52.0</span><span class="p">,</span> <span class="mf">45.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">36.0</span><span class="p">,</span> <span class="mf">34.0</span><span class="p">,</span> <span class="mf">33.0</span><span class="p">,</span> <span class="mf">32.0</span><span class="p">]),</span>
+    <span class="mi">40</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">64.0</span><span class="p">,</span> <span class="mf">56.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="mf">45.0</span><span class="p">,</span> <span class="mf">41.0</span><span class="p">,</span> <span class="mf">39.0</span><span class="p">,</span> <span class="mf">38.0</span><span class="p">,</span> <span class="mf">37.0</span><span class="p">]),</span>
+    <span class="mi">45</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">67.0</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">,</span> <span class="mf">54.0</span><span class="p">,</span> <span class="mf">49.0</span><span class="p">,</span> <span class="mf">46.0</span><span class="p">,</span> <span class="mf">44.0</span><span class="p">,</span> <span class="mf">43.0</span><span class="p">,</span> <span class="mf">42.0</span><span class="p">]),</span>
+    <span class="mi">50</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">71.0</span><span class="p">,</span> <span class="mf">64.0</span><span class="p">,</span> <span class="mf">58.0</span><span class="p">,</span> <span class="mf">54.0</span><span class="p">,</span> <span class="mf">51.0</span><span class="p">,</span> <span class="mf">49.0</span><span class="p">,</span> <span class="mf">48.0</span><span class="p">,</span> <span class="mf">47.0</span><span class="p">]),</span>
+    <span class="mi">55</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">74.0</span><span class="p">,</span> <span class="mf">67.0</span><span class="p">,</span> <span class="mf">62.0</span><span class="p">,</span> <span class="mf">58.0</span><span class="p">,</span> <span class="mf">56.0</span><span class="p">,</span> <span class="mf">54.0</span><span class="p">,</span> <span class="mf">53.0</span><span class="p">,</span> <span class="mf">52.0</span><span class="p">]),</span>
+    <span class="mi">60</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">77.0</span><span class="p">,</span> <span class="mf">71.0</span><span class="p">,</span> <span class="mf">67.0</span><span class="p">,</span> <span class="mf">63.0</span><span class="p">,</span> <span class="mf">61.0</span><span class="p">,</span> <span class="mf">59.0</span><span class="p">,</span> <span class="mf">58.0</span><span class="p">,</span> <span class="mf">57.0</span><span class="p">]),</span>
+    <span class="mi">65</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">80.0</span><span class="p">,</span> <span class="mf">75.0</span><span class="p">,</span> <span class="mf">71.0</span><span class="p">,</span> <span class="mf">68.0</span><span class="p">,</span> <span class="mf">66.0</span><span class="p">,</span> <span class="mf">64.0</span><span class="p">,</span> <span class="mf">63.0</span><span class="p">,</span> <span class="mf">62.0</span><span class="p">]),</span>
+    <span class="mi">70</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">83.0</span><span class="p">,</span> <span class="mf">79.0</span><span class="p">,</span> <span class="mf">75.0</span><span class="p">,</span> <span class="mf">72.0</span><span class="p">,</span> <span class="mf">71.0</span><span class="p">,</span> <span class="mf">70.0</span><span class="p">,</span> <span class="mf">69.0</span><span class="p">,</span> <span class="mf">68.0</span><span class="p">])</span>
+<span class="p">}</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">NC curves.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-    
+
+
 <div class="viewcode-block" id="nc_curve"><a class="viewcode-back" href="../../criterion.html#acoustics.criterion.nc_curve">[docs]</a><span class="k">def</span> <span class="nf">nc_curve</span><span class="p">(</span><span class="n">nc</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return an array containing the `nc` curve.</span>
 
@@ -78,10 +72,7 @@
 <span class="sd">    nc: `int` between 15 and 70 with step of 5. Valid values are: 15, 20, 25,</span>
 <span class="sd">    ..., 60, 65 and 70. Invalid values (e.g. 23) returns `None`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">NC_CURVES</span><span class="p">[</span><span class="n">nc</span><span class="p">]</span>
-    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">None</span></div>
+    <span class="k">return</span> <span class="n">NC_CURVES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nc</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="nc"><a class="viewcode-back" href="../../criterion.html#acoustics.criterion.nc">[docs]</a><span class="k">def</span> <span class="nf">nc</span><span class="p">(</span><span class="n">levels</span><span class="p">):</span>
@@ -97,12 +88,13 @@
     <span class="n">nc_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">71</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">nc_test</span> <span class="ow">in</span> <span class="n">nc_range</span><span class="p">:</span>
         <span class="n">curve</span> <span class="o">=</span> <span class="n">nc_curve</span><span class="p">(</span><span class="n">nc_test</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">levels</span> <span class="o">&lt;=</span> <span class="n">curve</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">levels</span> <span class="o">&lt;=</span> <span class="n">curve</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
             <span class="k">break</span>
         <span class="k">if</span> <span class="n">nc_test</span> <span class="o">==</span> <span class="mi">70</span><span class="p">:</span>
             <span class="n">nc_test</span> <span class="o">=</span> <span class="s1">&#39;70+&#39;</span>
             <span class="k">break</span>
-    <span class="k">return</span> <span class="n">nc_test</span></div>
+    <span class="k">return</span> <span class="n">nc_test</span>  <span class="c1"># pylint: disable=undefined-loop-variable</span></div>
+
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NC_CURVES&#39;</span><span class="p">,</span> <span class="s1">&#39;nc_curve&#39;</span><span class="p">,</span> <span class="s1">&#39;nc&#39;</span><span class="p">]</span>
 </pre></div>
@@ -114,15 +106,14 @@
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -138,13 +129,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+        &#169; Copyright 1970, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
     </div>
   </body>
 </html>

@@ -1,35 +1,25 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Imaging &mdash; acoustics 0.0 documentation</title>
-    
+    <title>Imaging &#8212; acoustics 0.2.0.post1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="acoustics 0.0 documentation" href="index.html" />
-    <link rel="up" title="API Reference" href="reference.html" />
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Octave" href="octave.html" />
     <link rel="prev" title="Doppler" href="doppler.html" /> 
-  </head>
-  <body role="document">
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -45,8 +35,8 @@
         <li class="right" >
           <a href="doppler.html" title="Doppler"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="reference.html" accesskey="U">API Reference</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -65,12 +55,70 @@
 <dl class="class">
 <dt id="acoustics.imaging.OctaveBandScale">
 <em class="property">class </em><code class="descclassname">acoustics.imaging.</code><code class="descname">OctaveBandScale</code><span class="sig-paren">(</span><em>axis</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#OctaveBandScale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.OctaveBandScale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="http://matplotlib.sourceforge.net/devel/add_new_projection.html#matplotlib.scale.ScaleBase" title="(in Matplotlib v1.5.1)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.scale.ScaleBase</span></code></a></p>
-<p>Octave band scale.</p>
+<dd><p>Octave band scale.</p>
+<dl class="class">
+<dt id="acoustics.imaging.OctaveBandScale.BandTransform">
+<em class="property">class </em><code class="descname">BandTransform</code><a class="reference internal" href="_modules/acoustics/imaging.html#OctaveBandScale.BandTransform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.OctaveBandScale.BandTransform" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="acoustics.imaging.OctaveBandScale.BandTransform.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#OctaveBandScale.BandTransform.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.OctaveBandScale.BandTransform.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <code class="xref py py-class docutils literal notranslate"><span class="pre">TransformNode</span></code>.</p>
+<dl class="docutils">
+<dt>shorthand_name <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>A string representing the “name” of the transform. The name carries
+no significance other than to improve the readability of
+<code class="docutils literal notranslate"><span class="pre">str(transform)</span></code> when DEBUG=True.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.imaging.OctaveBandScale.BandTransform.transform_non_affine">
+<code class="descname">transform_non_affine</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#OctaveBandScale.BandTransform.transform_non_affine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.OctaveBandScale.BandTransform.transform_non_affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs only the non-affine part of the transformation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">transform(values)</span></code> is always equivalent to
+<code class="docutils literal notranslate"><span class="pre">transform_affine(transform_non_affine(values))</span></code>.</p>
+<p>In non-affine transformations, this is generally equivalent to
+<code class="docutils literal notranslate"><span class="pre">transform(values)</span></code>.  In affine transformations, this is
+always a no-op.</p>
+<p>Accepts a numpy array of shape (N x <code class="xref py py-attr docutils literal notranslate"><span class="pre">input_dims</span></code>) and
+returns a numpy array of shape (N x <code class="xref py py-attr docutils literal notranslate"><span class="pre">output_dims</span></code>).</p>
+<p>Alternatively, accepts a numpy array of length <code class="xref py py-attr docutils literal notranslate"><span class="pre">input_dims</span></code>
+and returns a numpy array of length <code class="xref py py-attr docutils literal notranslate"><span class="pre">output_dims</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="method">
 <dt id="acoustics.imaging.OctaveBandScale.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>axis</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#OctaveBandScale.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.OctaveBandScale.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.imaging.OctaveBandScale.get_transform">
+<code class="descname">get_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#OctaveBandScale.get_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.OctaveBandScale.get_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the <a class="reference external" href="https://matplotlib.org/api/transformations.html#matplotlib.transforms.Transform" title="(in Matplotlib v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transform</span></code></a> object
+associated with this scale.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.imaging.OctaveBandScale.limit_range_for_scale">
+<code class="descname">limit_range_for_scale</code><span class="sig-paren">(</span><em>vmin</em>, <em>vmax</em>, <em>minpos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#OctaveBandScale.limit_range_for_scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.OctaveBandScale.limit_range_for_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the range <em>vmin</em>, <em>vmax</em>, possibly limited to the
+domain supported by this scale.</p>
+<dl class="docutils">
+<dt><em>minpos</em> should be the minimum positive value in the data.</dt>
+<dd>This is used by log scales to determine a minimum value.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.imaging.OctaveBandScale.set_default_locators_and_formatters">
+<code class="descname">set_default_locators_and_formatters</code><span class="sig-paren">(</span><em>axis</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#OctaveBandScale.set_default_locators_and_formatters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.OctaveBandScale.set_default_locators_and_formatters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the <a class="reference external" href="https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.Locator" title="(in Matplotlib v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Locator</span></code></a> and
+<a class="reference external" href="https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.Formatter" title="(in Matplotlib v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Formatter</span></code></a> objects on the given
+axis to match this scale.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -101,12 +149,70 @@
 <dl class="class">
 <dt id="acoustics.imaging.ThirdBandScale">
 <em class="property">class </em><code class="descclassname">acoustics.imaging.</code><code class="descname">ThirdBandScale</code><span class="sig-paren">(</span><em>axis</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#ThirdBandScale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.ThirdBandScale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="http://matplotlib.sourceforge.net/devel/add_new_projection.html#matplotlib.scale.ScaleBase" title="(in Matplotlib v1.5.1)"><code class="xref py py-class docutils literal"><span class="pre">matplotlib.scale.ScaleBase</span></code></a></p>
-<p>Third-octave band scale.</p>
+<dd><p>Third-octave band scale.</p>
+<dl class="class">
+<dt id="acoustics.imaging.ThirdBandScale.BandTransform">
+<em class="property">class </em><code class="descname">BandTransform</code><a class="reference internal" href="_modules/acoustics/imaging.html#ThirdBandScale.BandTransform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.ThirdBandScale.BandTransform" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="acoustics.imaging.ThirdBandScale.BandTransform.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#ThirdBandScale.BandTransform.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.ThirdBandScale.BandTransform.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <code class="xref py py-class docutils literal notranslate"><span class="pre">TransformNode</span></code>.</p>
+<dl class="docutils">
+<dt>shorthand_name <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>A string representing the “name” of the transform. The name carries
+no significance other than to improve the readability of
+<code class="docutils literal notranslate"><span class="pre">str(transform)</span></code> when DEBUG=True.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.imaging.ThirdBandScale.BandTransform.transform_non_affine">
+<code class="descname">transform_non_affine</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#ThirdBandScale.BandTransform.transform_non_affine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.ThirdBandScale.BandTransform.transform_non_affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs only the non-affine part of the transformation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">transform(values)</span></code> is always equivalent to
+<code class="docutils literal notranslate"><span class="pre">transform_affine(transform_non_affine(values))</span></code>.</p>
+<p>In non-affine transformations, this is generally equivalent to
+<code class="docutils literal notranslate"><span class="pre">transform(values)</span></code>.  In affine transformations, this is
+always a no-op.</p>
+<p>Accepts a numpy array of shape (N x <code class="xref py py-attr docutils literal notranslate"><span class="pre">input_dims</span></code>) and
+returns a numpy array of shape (N x <code class="xref py py-attr docutils literal notranslate"><span class="pre">output_dims</span></code>).</p>
+<p>Alternatively, accepts a numpy array of length <code class="xref py py-attr docutils literal notranslate"><span class="pre">input_dims</span></code>
+and returns a numpy array of length <code class="xref py py-attr docutils literal notranslate"><span class="pre">output_dims</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="method">
 <dt id="acoustics.imaging.ThirdBandScale.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>axis</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#ThirdBandScale.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.ThirdBandScale.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.imaging.ThirdBandScale.get_transform">
+<code class="descname">get_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#ThirdBandScale.get_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.ThirdBandScale.get_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the <a class="reference external" href="https://matplotlib.org/api/transformations.html#matplotlib.transforms.Transform" title="(in Matplotlib v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transform</span></code></a> object
+associated with this scale.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.imaging.ThirdBandScale.limit_range_for_scale">
+<code class="descname">limit_range_for_scale</code><span class="sig-paren">(</span><em>vmin</em>, <em>vmax</em>, <em>minpos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#ThirdBandScale.limit_range_for_scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.ThirdBandScale.limit_range_for_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the range <em>vmin</em>, <em>vmax</em>, possibly limited to the
+domain supported by this scale.</p>
+<dl class="docutils">
+<dt><em>minpos</em> should be the minimum positive value in the data.</dt>
+<dd>This is used by log scales to determine a minimum value.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="acoustics.imaging.ThirdBandScale.set_default_locators_and_formatters">
+<code class="descname">set_default_locators_and_formatters</code><span class="sig-paren">(</span><em>axis</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acoustics/imaging.html#ThirdBandScale.set_default_locators_and_formatters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#acoustics.imaging.ThirdBandScale.set_default_locators_and_formatters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the <a class="reference external" href="https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.Locator" title="(in Matplotlib v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Locator</span></code></a> and
+<a class="reference external" href="https://matplotlib.org/api/ticker_api.html#matplotlib.ticker.Formatter" title="(in Matplotlib v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Formatter</span></code></a> objects on the given
+axis to match this scale.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -117,15 +223,15 @@
 Only use if you want to plot from arbitrary octave or third octave data.</p>
 <p>data: levels in an 1-D NumPy array.</p>
 <p>axes: <cite>matplotlib.axes</cite> object.</p>
-<p>band_type: <cite>&#8216;octave&#8217;</cite> or <cite>&#8216;third&#8217;</cite> are accepted values.</p>
+<p>band_type: <cite>‘octave’</cite> or <cite>‘third’</cite> are accepted values.</p>
 <p>axes: a <cite>matplotlib.axes</cite> object (<cite>None</cite> by default, optional).</p>
-<p>kHz: if <cite>True</cite> it shows &#8220;1k&#8221; or &#8220;2.5k&#8221; instead of &#8220;1000&#8221; or &#8220;2500&#8221; as
+<p>kHz: if <cite>True</cite> it shows “1k” or “2.5k” instead of “1000” or “2500” as
 tick labels (<cite>False</cite> by default, optional).</p>
 <p>xlabel: a <cite>str</cite> containing label for x axis (optional).</p>
 <p>ylabel: a <cite>str</cite> containing label for y axis (optional).</p>
 <p>title: a <cite>str</cite> containing title (optional).</p>
-<p>separator: a <cite>str</cite> defining the decimal separator. By default takes &#8216;.&#8217;
-or &#8216;,&#8217; values according to system settings (when separator is None).</p>
+<p>separator: a <cite>str</cite> defining the decimal separator. By default takes ‘.’
+or ‘,’ values according to system settings (when separator is None).</p>
 </dd></dl>
 
 <dl class="function">
@@ -134,15 +240,15 @@ or &#8216;,&#8217; values according to system settings (when separator is None).
 <dd><p>Plot octave bands from <cite>data</cite> levels and <cite>octaves</cite> bands.</p>
 <p>data: levels in an 1-D NumPy array.</p>
 <p>octaves: octaves in an 1-D NumPy array. Note that you can use
-<code class="xref py py-func docutils literal"><span class="pre">trompe.utils.bands.octave()</span></code> for this or manually enter all bands.</p>
+<code class="xref py py-func docutils literal notranslate"><span class="pre">trompe.utils.bands.octave()</span></code> for this or manually enter all bands.</p>
 <p>axes: a <cite>matplotlib.axes</cite> object (optional).</p>
-<p>kHz: if <cite>True</cite> it shows &#8220;1k&#8221; or &#8220;2k&#8221; instead of &#8220;1000&#8221; or &#8220;2000&#8221; as
+<p>kHz: if <cite>True</cite> it shows “1k” or “2k” instead of “1000” or “2000” as
 tick labels (<cite>False</cite> by default, optional).</p>
 <p>xlabel: a <cite>str</cite> containing label for x axis (optional).</p>
 <p>ylabel: a <cite>str</cite> containing label for y axis (optional).</p>
 <p>title: a <cite>str</cite> containing title (optional).</p>
-<p>separator: a <cite>str</cite> defining the decimal separator. By default takes &#8216;.&#8217;
-or &#8216;,&#8217; values according to system settings (when separator is None).</p>
+<p>separator: a <cite>str</cite> defining the decimal separator. By default takes ‘.’
+or ‘,’ values according to system settings (when separator is None).</p>
 </dd></dl>
 
 <dl class="function">
@@ -151,15 +257,15 @@ or &#8216;,&#8217; values according to system settings (when separator is None).
 <dd><p>Plot third octave bands from <cite>data</cite> levels and <cite>thirds</cite> bands.</p>
 <p>data: levels in an 1-D NumPy array.</p>
 <p>thirds: thirds in an 1-D NumPy array. Note that you can use
-<code class="xref py py-func docutils literal"><span class="pre">trompe.utils.bands.thirds()</span></code> for this or manually enter all bands.</p>
+<code class="xref py py-func docutils literal notranslate"><span class="pre">trompe.utils.bands.thirds()</span></code> for this or manually enter all bands.</p>
 <p>axes: a <cite>matplotlib.axes</cite> object (<cite>None</cite> by default, optional).</p>
-<p>kHz: if <cite>True</cite> it shows &#8220;1k&#8221; or &#8220;2.5k&#8221; instead of &#8220;1000&#8221; or &#8220;2500&#8221; as
+<p>kHz: if <cite>True</cite> it shows “1k” or “2.5k” instead of “1000” or “2500” as
 tick labels (<cite>False</cite> by default, optional).</p>
 <p>xlabel: a <cite>str</cite> containing label for x axis (optional).</p>
 <p>ylabel: a <cite>str</cite> containing label for y axis (optional).</p>
 <p>title: a <cite>str</cite> containing title (optional).</p>
-<p>separator: a <cite>str</cite> defining the decimal separator. By default takes &#8216;.&#8217;
-or &#8216;,&#8217; values according to system settings (when separator is None).</p>
+<p>separator: a <cite>str</cite> defining the decimal separator. By default takes ‘.’
+or ‘,’ values according to system settings (when separator is None).</p>
 </dd></dl>
 
 </div>
@@ -179,21 +285,20 @@ or &#8216;,&#8217; values according to system settings (when separator is None).
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/imaging.txt"
+      <li><a href="_sources/imaging.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -215,13 +320,13 @@ or &#8216;,&#8217; values according to system settings (when separator is None).
         <li class="right" >
           <a href="doppler.html" title="Doppler"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.0 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">acoustics 0.2.0.post1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="reference.html" >API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2013, Frederik Rietdijk.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+        &#169; Copyright 1970, Frederik Rietdijk.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
     </div>
   </body>
 </html>
