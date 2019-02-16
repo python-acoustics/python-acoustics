@@ -137,6 +137,5 @@ def attenuation_coefficient(pressure, temperature, reference_pressure, reference
          (0.5)) + (temperature / reference_temperature)**
         (-2.5) * (0.01275 * np.exp(-2239.1 / temperature) * (relaxation_frequency_oxygen +
                                                              (frequency**2.0 / relaxation_frequency_oxygen))**
-                  (-1.0) + 0.1068 * np.exp(-3352.0 / temperature) * (relaxation_frequency_nitrogen +
-                                                                     (frequency**2.0 / relaxation_frequency_nitrogen))**
-                  (-1.0)))
+                  (-1.0) + 0.1068 * np.exp(-3352.0 / temperature) *
+                  (relaxation_frequency_nitrogen + (frequency**2.0 / relaxation_frequency_nitrogen))**(-1.0)))

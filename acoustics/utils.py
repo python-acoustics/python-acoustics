@@ -4,13 +4,12 @@ Utils
 
 """
 import numpy as np
+from acoustics.decibel import dbsum
 
 SOUNDSPEED = 343.0
 """
 Speed of sound in air.
 """
-
-from acoustics.decibel import dbsum
 
 esum = dbsum
 
