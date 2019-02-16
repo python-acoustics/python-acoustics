@@ -15,8 +15,6 @@ tests:
 
 clean:
 	rm -rf dist
-	rm acoustics/*.c
-	rm acoustics/*.so
 	find . -name __pycache__ | xargs rm -rf {}
 	find . -name "*.pyc" | xargs rm -rf {}
 	rm -rf acoustics.egg-info
