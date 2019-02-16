@@ -6,10 +6,9 @@ by extrapolation of measurement results by means of calculation, or exclusively 
 intended as a basis for assessing environmental noise.
 
 """
-import itertools
 import numpy as np
 import pandas as pd
-from scipy.signal import welch, hanning
+from scipy.signal import welch
 from scipy.stats import linregress
 import matplotlib.pyplot as plt
 from acoustics.decibel import dbsum
@@ -53,6 +52,7 @@ def critical_band(frequency):
 
     """
     if isinstance(frequency, np.ndarray):
+        center = frequency.copy()
         center[frequency < 50.0] = 50.0
     else:
         center = 50.0 if frequency < 50 else frequency
@@ -146,7 +146,7 @@ class Tonality:
     Objective method for assessing the audibility of tones in noise.
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-instance-attributes
             self,
             signal,
             sample_frequency,
@@ -525,7 +525,7 @@ def create_critical_band(
 
 
 class CriticalBand:
-    def __init__(
+    def __init__(  # pylint: disable=too-many-instance-attributes
             self,
             center,
             start,
@@ -660,7 +660,7 @@ def determine_tone_lines(levels, df, start, end, force_tone_without_pause=False,
         bandwidth_for_tone_criterion = (indices_3db.max() - indices_3db.min()) * df
         # Frequency of tone.
         tone_center_frequency = levels.iloc[npr].idxmax()
-        tone_center_index = levels.reset_index(drop=True).iloc[npr].idxmax()
+        #tone_center_index = levels.reset_index(drop=True).iloc[npr].idxmax()
         # Critical band
         _, _, _, critical_band_bandwidth = critical_band(tone_center_frequency)
 

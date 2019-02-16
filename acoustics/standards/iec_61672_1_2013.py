@@ -29,16 +29,15 @@ Weighting systems
 
 
 """
-import numpy as np
-from scipy.signal import zpk2tf
-from scipy.signal import lfilter, bilinear
-from math import floor
-from .iso_tr_25417_2007 import REFERENCE_PRESSURE
-
 import io
 import os
 import pkgutil
+import numpy as np
 import pandas as pd
+from scipy.signal import zpk2tf
+from scipy.signal import lfilter, bilinear
+from .iso_tr_25417_2007 import REFERENCE_PRESSURE
+
 
 WEIGHTING_DATA = pd.read_csv(
     io.BytesIO(pkgutil.get_data('acoustics', os.path.join('data', 'iec_61672_1_2013.csv'))), sep=',', index_col=0)
@@ -110,7 +109,10 @@ def average(data, sample_frequency, averaging_time):
 
     Time weighting is applied by applying a low-pass filter with one real pole at :math:`-1/\\tau`.
 
-    .. note:: Because :math:`f_s \\cdot t_i` is generally not an integer, samples are discarded. This results in a drift of samples for longer signals (e.g. 60 minutes at 44.1 kHz).
+    .. note::
+
+        Because :math:`f_s \\cdot t_i` is generally not an integer, samples are discarded.
+        This results in a drift of samples for longer signals (e.g. 60 minutes at 44.1 kHz).
 
     """
     averaging_time = np.asarray(averaging_time)
@@ -148,7 +150,10 @@ def integrate(data, sample_frequency, integration_time):
 
     Time weighting is applied by applying a low-pass filter with one real pole at :math:`-1/\\tau`.
 
-    .. note:: Because :math:`f_s \\cdot t_i` is generally not an integer, samples are discarded. This results in a drift of samples for longer signals (e.g. 60 minutes at 44.1 kHz).
+    .. note::
+
+        Because :math:`f_s \\cdot t_i` is generally not an integer, samples are discarded.
+        This results in a drift of samples for longer signals (e.g. 60 minutes at 44.1 kHz).
 
     """
     integration_time = np.asarray(integration_time)
@@ -242,14 +247,14 @@ See section E.4.2 of the standard.
 
 
 def weighting_function_a(frequencies):
-    """A-weighting function in decibel.
+    r"""A-weighting function in decibel.
 
     :param frequencies: Vector of frequencies at which to evaluate the weighting.
     :returns: Vector with scaling factors.
 
     The weighting curve is
 
-    .. math:: 20 \\log_{10}{\\frac{(f_4^2 * f^4)}{(f^2 + f_1^2) \sqrt{(f^2 + f_2^2)(f^2 + f_3^2)}(f^2 + f_4^2)}} - A_{1000}
+    .. math:: 20 \log_{10}{\frac{(f_4^2 * f^4)}{(f^2 + f_1^2) \sqrt{(f^2 + f_2^2)(f^2 + f_3^2)}(f^2 + f_4^2)}} - A_{1000}
 
     with :math:`A_{1000} = -2` dB.
 
@@ -265,14 +270,14 @@ def weighting_function_a(frequencies):
 
 
 def weighting_function_c(frequencies):
-    """C-weighting function in decibel.
+    r"""C-weighting function in decibel.
 
     :param frequencies: Vector of frequencies at which to evaluate the weighting.
     :returns: Vector with scaling factors.
 
     The weighting curve is
 
-    .. math:: 20 \\log_{10}{\\frac{(f_4^2 f^2)}{(f^2+f_1^2)(f^2+f_4^2)}} - C_{1000}
+    .. math:: 20 \log_{10}{\frac{(f_4^2 f^2)}{(f^2+f_1^2)(f^2+f_4^2)}} - C_{1000}
 
     with :math:`C_{1000} = -0.062` dB
 
@@ -281,7 +286,7 @@ def weighting_function_c(frequencies):
     """
     f = np.asarray(frequencies)
     offset = _NORMALIZATION_CONSTANTS['C']
-    f1, f2, f3, f4 = _POLE_FREQUENCIES.values()
+    f1, _, _, f4 = _POLE_FREQUENCIES.values()
     weighting = 20.0 * np.log10((f4**2.0 * f**2.0) / ((f**2.0 + f1**2.0) * (f**2.0 + f4**2.0))) - offset
     return weighting
 

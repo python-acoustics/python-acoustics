@@ -136,6 +136,8 @@ class Octave:
             return self._fmin
         elif self._interval is not None:
             return self.interval.min()
+        else:
+            raise ValueError("Incorrect fmin/interval")
 
     @fmin.setter
     def fmin(self, x):
@@ -151,6 +153,8 @@ class Octave:
             return self._fmax
         elif self._interval is not None:
             return self.interval.max()
+        else:
+            raise ValueError("Incorrect fmax/interval")
 
     @fmax.setter
     def fmax(self, x):

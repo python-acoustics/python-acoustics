@@ -61,9 +61,9 @@ def t60_sabine(surfaces, alpha, volume, c=SOUNDSPEED):
     .. math:: T_{60} = \\frac{24 \\ln(10)}{c} \\frac{V}{S\\alpha}
 
     """
-    mean_alpha = np.average(alpha, axis=0, weights=surfaces)
+    mean_alpha_ = np.average(alpha, axis=0, weights=surfaces)
     S = np.sum(surfaces, axis=0)
-    A = S * mean_alpha
+    A = S * mean_alpha_
     t60 = 4.0 * np.log(10.0**6.0) * volume / (c * A)
     return t60
 
@@ -83,9 +83,9 @@ def t60_eyring(surfaces, alpha, volume, c=SOUNDSPEED):
     .. math:: T_{60} = \\frac{24 \\ln{10} V}{c \\left( 4 mV - S \\ln{\\left( 1 - \\alpha \\right)} \\right)}
 
     """
-    mean_alpha = np.average(alpha, axis=0, weights=surfaces)
+    mean_alpha_ = np.average(alpha, axis=0, weights=surfaces)
     S = np.sum(surfaces, axis=0)
-    A = -S * np.log(1 - mean_alpha)
+    A = -S * np.log(1 - mean_alpha_)
     t60 = 4.0 * np.log(10.0**6.0) * volume / (c * A)
     return t60
 
@@ -100,8 +100,8 @@ def t60_millington(surfaces, alpha, volume, c=SOUNDSPEED):
     :param c: Speed of sound :math:`c`.
     :returns: Reverberation time :math:`T_{60}`
     """
-    mean_alpha = np.average(alpha, axis=0, weights=surfaces)
-    A = -np.sum(surfaces[:, np.newaxis] * np.log(1.0 - mean_alpha), axis=0)
+    mean_alpha_ = np.average(alpha, axis=0, weights=surfaces)
+    A = -np.sum(surfaces[:, np.newaxis] * np.log(1.0 - mean_alpha_), axis=0)
     t60 = 4.0 * np.log(10.0**6.0) * volume / (c * A)
     return t60
 
@@ -153,7 +153,7 @@ def t60_arau(Sx, Sy, Sz, alpha, volume, c=SOUNDSPEED):
     return t60
 
 
-def t60_impulse(file_name, bands, rt='t30'):
+def t60_impulse(file_name, bands, rt='t30'):  # pylint: disable=too-many-locals
     """
     Reverberation time from a WAV impulse response.
 
@@ -166,10 +166,10 @@ def t60_impulse(file_name, bands, rt='t30'):
     fs, raw_signal = wavfile.read(file_name)
     band_type = _check_band_type(bands)
 
-    if band_type is 'octave':
+    if band_type == 'octave':
         low = octave_low(bands[0], bands[-1])
         high = octave_high(bands[0], bands[-1])
-    elif band_type is 'third':
+    elif band_type == 'third':
         low = third_low(bands[0], bands[-1])
         high = third_high(bands[0], bands[-1])
 
@@ -209,7 +209,7 @@ def t60_impulse(file_name, bands, rt='t30'):
         end_sample = np.where(sch_db == sch_end)[0][0]
         x = np.arange(init_sample, end_sample + 1) / fs
         y = sch_db[init_sample:end_sample + 1]
-        slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+        slope, intercept = stats.linregress(x, y)[0:2]
 
         # Reverberation time (T30, T20, T10 or EDT)
         db_regress_init = (init - intercept) / slope
@@ -232,10 +232,10 @@ def clarity(time, signal, fs, bands=None):
     """
     band_type = _check_band_type(bands)
 
-    if band_type is 'octave':
+    if band_type == 'octave':
         low = octave_low(bands[0], bands[-1])
         high = octave_high(bands[0], bands[-1])
-    elif band_type is 'third':
+    elif band_type == 'third':
         low = third_low(bands[0], bands[-1])
         high = third_high(bands[0], bands[-1])
 

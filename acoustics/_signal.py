@@ -1,9 +1,9 @@
-import numpy as np
+import itertools
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy.io import wavfile
 from scipy.signal import detrend, lfilter, bilinear, spectrogram, filtfilt, resample, fftconvolve
 import acoustics
-import itertools
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
 from acoustics.standards.iec_61672_1_2013 import WEIGHTING_SYSTEMS
@@ -160,7 +160,7 @@ class Signal(np.ndarray):
 
         .. seealso:: :meth:`resample`
         """
-        return self.resample(int(self.samples * factor), axis=-1)
+        return self.resample(int(self.samples * factor), axis=axis)
 
     def gain(self, decibel, inplace=False):
         """Apply gain of `decibel` decibels.
@@ -241,12 +241,15 @@ class Signal(np.ndarray):
     def weigh(self, weighting='A', zero_phase=False):
         """Apply frequency-weighting. By default 'A'-weighting is applied.
 
-        :param weighting: Frequency-weighting filter to apply. Valid options are 'A', 'C' and 'Z'. Default weighting is 'A'.
+        :param weighting: Frequency-weighting filter to apply.
+            Valid options are 'A', 'C' and 'Z'. Default weighting is 'A'.
         :returns: Weighted signal.
         :rtype: :class:`Signal`.
 
-        By default the weighting filter is applied using :func:`scipy.signal.lfilter` causing a frequency-dependent delay.
-        In case a delay is undesired, the filter can applied using :func:`scipy.signal.filtfilt` by settings `zero_phase=True`.
+        By default the weighting filter is applied using
+        :func:`scipy.signal.lfilter` causing a frequency-dependent delay. In case a
+        delay is undesired, the filter can applied using :func:`scipy.signal.filtfilt`
+        by settings `zero_phase=True`.
 
         """
         num, den = WEIGHTING_SYSTEMS[weighting]()
@@ -375,7 +378,10 @@ class Signal(np.ndarray):
 
         :param N: amount of bins.
 
-        .. seealso:: :func:`acoustics.signal.angle_spectrum`, :func:`acoustics.signal.phase_spectrum` and :meth:`phase_spectrum`.
+        .. seealso::
+
+            :func:`acoustics.signal.angle_spectrum`, :func:`acoustics.signal.phase_spectrum`
+            and :meth:`phase_spectrum`.
 
         """
         return acoustics.signal.angle_spectrum(self, self.fs, N=N)
@@ -385,7 +391,10 @@ class Signal(np.ndarray):
 
         :param N: Amount of bins.
 
-        .. seealso:: :func:`acoustics.signal.phase_spectrum`, :func:`acoustics.signal.angle_spectrum` and :meth:`angle_spectrum`.
+        .. seealso::
+
+            :func:`acoustics.signal.phase_spectrum`, :func:`acoustics.signal.angle_spectrum`
+            and :meth:`angle_spectrum`.
 
         """
         return acoustics.signal.phase_spectrum(self, self.fs, N=N)
@@ -395,7 +404,9 @@ class Signal(np.ndarray):
 
         :param axis: Axis.
 
-        .. seealso:: :func:`acoustic.standards.iso_tr_25417_2007.peak_sound_pressure`
+        .. seealso::
+
+            :func:`acoustic.standards.iso_tr_25417_2007.peak_sound_pressure`
 
         """
         return acoustics.standards.iso_tr_25417_2007.peak_sound_pressure(self, axis=axis)
@@ -405,7 +416,9 @@ class Signal(np.ndarray):
 
         :param axis: Axis.
 
-        .. seealso:: :func:`acoustics.standards.iso_tr_25417_2007.peak_sound_pressure_level`
+        .. seealso::
+
+            :func:`acoustics.standards.iso_tr_25417_2007.peak_sound_pressure_level`
 
         """
         return acoustics.standards.iso_tr_25417_2007.peak_sound_pressure_level(self, axis=axis)
@@ -561,7 +574,7 @@ class Signal(np.ndarray):
             'xscale': 'linear',
             'yscale': 'linear',
             'xlabel': "$f$ in Hz",
-            'ylabel': "$\\angle \phi$",
+            'ylabel': r"$\angle \phi$",
             'title': 'Phase response (wrapped)',
         }
         params.update(kwargs)
@@ -584,7 +597,7 @@ class Signal(np.ndarray):
             'xscale': 'linear',
             'yscale': 'linear',
             'xlabel': "$f$ in Hz",
-            'ylabel': "$\\angle \phi$",
+            'ylabel': r"$\angle \phi$",
             'title': 'Phase response (unwrapped)',
         }
         params.update(kwargs)
