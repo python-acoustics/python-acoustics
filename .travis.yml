@@ -9,7 +9,7 @@ env:
 
 script:
   - nix-build -A python$PYTHON.pkgs.acoustics release.nix
-  - nix-build -A python$PYTHON.pkgs.acoustics-sdist release.nix -o dist
+  - nix-build -A python$PYTHON.pkgs.acoustics.sdist release.nix -o dist
 
 deploy:
   provider: script

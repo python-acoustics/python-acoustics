@@ -20,18 +20,35 @@
 , pylint
 , yapf
 , sphinx
+, bootstrapped-pip
+, stdenv
+, python
 , development ? false
 }:
 
-buildPythonPackage rec {
+let
+  sdist = stdenv.mkDerivation {
+    name = "acoustics-sdist";
+    src = ./.;
+
+    nativeBuildInputs = [
+      python bootstrapped-pip
+    ];
+
+    buildPhase = ":";
+
+    installPhase = ''
+      ${python.interpreter} setup.py sdist
+      mkdir -p $out
+      cp dist/* $out/
+    '';
+  };
+
+in buildPythonPackage rec {
   pname = "acoustics";
   version = "0.2.0.post1";
 
-  src = ./.;
-
-  preBuild = ''
-    make clean
-  '';
+  src = "${sdist}/${pname}*";
 
   checkInputs = [ pytest glibcLocales ];
   nativeBuildInputs = lib.optionals development [ sphinx pylint yapf ];
@@ -42,6 +59,10 @@ buildPythonPackage rec {
   };
 
   checkPhase = ''
-    LC_ALL="en_US.UTF-8" py.test tests
+    pushd tests
+    LC_ALL="en_US.UTF-8" py.test .
+    popd
   '';
+
+  passthru.sdist = sdist;
 }

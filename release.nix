@@ -31,9 +31,6 @@ let
     acoustics = super.callPackage ./default.nix {
       development = true;
     };
-    acoustics-sdist = create-sdist (self.acoustics.override {
-      development = false;
-    });
   };
 
   overlay = self: super: {
