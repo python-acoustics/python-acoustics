@@ -1,6 +1,6 @@
 """
 Weighting_NOAA
-=========
+==============
 
 NOAA weightings as defined
 in 'Technical Guidance for Assessing the Effects of Anthropogenic Sound on Marine Mammal Hearing'
@@ -17,7 +17,6 @@ THIRD_OCTAVE_NOAA_LF_WEIGHTING = np.array([
     -0.1, -0.1, -0.0, 0.0, -0.0, -0.0, -0.1, -0.3, -0.5, -0.8, -1.3, -2.0, -3.0, -4.5, -6.3, -8.6, -11.3, -14.6,
     -17.9, -21.4, -25.3, -29.0, -32.8, -37.0, -40.8
 ])
-
 """
 NOAA LF-weighting filter for 1/3-octave band center frequencies, as specified by :attr:`acoustics.bands.third(12.5,200000)`.
 """
@@ -27,7 +26,6 @@ THIRD_OCTAVE_NOAA_MF_WEIGHTING = np.array([
     -38.7, -35.5, -32.2, -29.1, -26.1, -22.7, -19.7, -16.8, -13.9, -11.1, -8.6, -6.3, -4.4, -2.9, -1.7, -0.8, -0.3,
     -0.0, -0.0, -0.2, -0.6, -1.4, -2.6, -4.1, -6.0, -8.7, -11.5
 ])
-
 """
 NOAA MF-weighting filter for 1/3-octave band center frequencies, as specified by :attr:`acoustics.bands.third(12.5,200000)`.
 """
@@ -37,7 +35,6 @@ THIRD_OCTAVE_NOAA_HF_WEIGHTING = np.array([
     -48.3, -44.7, -41.0, -37.5, -34.1, -30.3, -26.9, -23.5, -20.1, -16.6, -13.6, -10.6, -7.9, -5.7, -3.8, -2.2, -1.2,
     -0.5, -0.1, 0.0, -0.1, -0.5, -1.3, -2.3, -3.8, -5.9, -8.3
 ])
-
 """
 NOAA HF-weighting filter for 1/3-octave band center frequencies, as specified by :attr:`acoustics.bands.third(12.5,200000)`.
 """
@@ -47,7 +44,6 @@ THIRD_OCTAVE_NOAA_PW_WEIGHTING = np.array([
     -11.1, -9.3, -7.5, -5.9, -4.5, -3.1, -2.1, -1.3, -0.7, -0.3, -0.1, -0.0, -0.1, -0.3, -0.7, -1.5, -2.5, -3.9, -5.7,
     -8.1, -10.8, -13.9, -17.4, -20.9, -24.5, -28.6, -32.4
 ])
-
 """
 NOAA PW-weighting filter for 1/3-octave band center frequencies, as specified by :attr:`acoustics.bands.third(12.5,200000)`.
 """
@@ -57,7 +53,6 @@ THIRD_OCTAVE_NOAA_OW_WEIGHTING = np.array([
     -12.5, -9.5, -6.9, -4.9, -3.3, -2.0, -1.1, -0.6, -0.2, -0.0, -0.0, -0.1, -0.3, -0.7, -1.3, -2.4, -3.7, -5.4, -7.6,
     -10.4, -13.3, -16.7, -20.4, -24.0, -27.7, -31.8, -35.6
 ])
-
 """
 NOAA OW-weighting filter for 1/3-octave band center frequencies, as specified by :attr:`acoustics.bands.third(12.5,200000)`.
 """
