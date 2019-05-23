@@ -3,8 +3,8 @@ Weighting_NOAA
 ==============
 
 NOAA weightings as defined
-in 'Technical Guidance for Assessing the Effects of Anthropogenic Sound on Marine Mammal Hearing'
-(https://www.fisheries.noaa.gov/resource/document/technical-guidance-assessing-effects-anthropogenic-sound-marine-mammal)
+in `Technical Guidance for Assessing the Effects of Anthropogenic Sound on Marine Mammal Hearing'
+<https://www.fisheries.noaa.gov/resource/document/technical-guidance-assessing-effects-anthropogenic-sound-marine-mammal>`_.
 
 
 """
