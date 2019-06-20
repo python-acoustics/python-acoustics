@@ -5,7 +5,7 @@ Ambisonics
 """
 
 import numpy as np
-from scipy.misc import factorial
+from scipy import math
 
 
 def acn(order=1):
@@ -48,7 +48,7 @@ def sn3d(m, n):
     n = np.atleast_1d(n)
 
     d = np.logical_not(m.astype(bool))
-    out = np.sqrt((2.0 - d) / (4.0 * np.pi) * factorial(n - np.abs(m)) / factorial(n + np.abs(m)))
+    out = np.sqrt((2.0 - d) / (4.0 * np.pi) * math.factorial(n - np.abs(m)) / math.factorial(n + np.abs(m)))
     return out
 
 
