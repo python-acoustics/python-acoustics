@@ -5,7 +5,7 @@ nix: 2.2.1
 
 env:
   global:
-    - PYTHON=36
+    - PYTHON=37
 
 script:
   - nix-build -A python$PYTHON.pkgs.acoustics release.nix
