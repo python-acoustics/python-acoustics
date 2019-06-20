@@ -5,7 +5,11 @@ Ambisonics
 """
 
 import numpy as np
-from scipy.misc import factorial
+try:
+    from scipy import math
+    factorial = math.factorial
+except AttributeError:
+    from scipy.misc import factorial
 
 
 def acn(order=1):
