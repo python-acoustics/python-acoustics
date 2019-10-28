@@ -1037,16 +1037,18 @@ class Signal(np.ndarray):
         #wavfile.write(filename, int(self.fs), np.int16(self._data/(np.abs(self._data).max()) * 32767) )
 
     @classmethod
-    def from_wav(cls, filename):
+    def from_wav(cls, filename, normalize=True):
         """
         Create an instance of `Signal` from a WAV file.
 
         :param filename: Filename
+        :param normalize: Whether to normalize the signal.
 
         """
         fs, data = wavfile.read(filename)
         data = data.astype(np.float32, copy=False).T
-        data /= np.max(np.abs(data))
+        if normalize:
+            data /= np.max(np.abs(data))
         return cls(data, fs=fs)
 
 
