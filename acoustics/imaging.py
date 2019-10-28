@@ -28,7 +28,7 @@ class OctaveBandScale(mscale.ScaleBase):
     name = 'octave'
 
     def __init__(self, axis, **kwargs):
-        mscale.ScaleBase.__init__(self)
+        mscale.ScaleBase.__init__(self, axis)
 
     def get_transform(self):
         return self.BandTransform()
@@ -65,7 +65,7 @@ class ThirdBandScale(mscale.ScaleBase):
     name = 'third'
 
     def __init__(self, axis, **kwargs):
-        mscale.ScaleBase.__init__(self)
+        mscale.ScaleBase.__init__(self, axis)
 
     def get_transform(self):
         return self.BandTransform()
