@@ -1,4 +1,4 @@
-{ nixpkgs ? (fetchTarball "channel:nixos-19.03")
+{ nixpkgs ? (fetchTarball "channel:nixos-19.09")
 }:
 
 with nixpkgs;
