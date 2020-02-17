@@ -119,7 +119,7 @@ class Signal(np.ndarray):
         gain = decibel - other.leq()
         return self.gain(gain, inplace=inplace)
 
-    def calibrate_peak(self, decibel, inplace=False):
+    def calibrate_with_peak(self, decibel, inplace=False):
         """Calibrate signal knowing its SPL for peak FS.
 
         :param decibel: Peak FS value to calibrate to.
