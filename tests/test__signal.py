@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
     #fs = 5000
 
 
-class test_wav():
+def test_wav():
     """Test writing to and reading from wav file."""
 
     duration = 5.0
