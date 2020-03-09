@@ -655,7 +655,7 @@ def determine_tone_lines(levels, df, start, end, force_tone_without_pause=False,
               (levels.iloc[npr] >= TONE_WITHIN_PAUSE_CRITERION_DB + levels.iloc[end + 1])) or force_tone_without_pause:
 
         # Indices of values that are within -3 dB point.
-        indices_3db = np.nonzero(levels.iloc[npr] >= levels.iloc[npr].max() - TONE_BANDWIDTH_CRITERION_DB)[0]
+        indices_3db = (levels.iloc[npr] >= levels.iloc[npr].max() - TONE_BANDWIDTH_CRITERION_DB).to_numpy().nonzero()[0]
         # -3 dB bandwidth
         bandwidth_for_tone_criterion = (indices_3db.max() - indices_3db.min()) * df
         # Frequency of tone.
@@ -668,6 +668,6 @@ def determine_tone_lines(levels, df, start, end, force_tone_without_pause=False,
         if (bandwidth_for_tone_criterion < 0.10 * critical_band_bandwidth) or force_bandwidth_criterion:
             # All values within 6 decibel are designated as tones.
             tone_indices = (levels_int.iloc[npr][
-                levels_int.iloc[npr] >= levels_int.iloc[npr].max() - TONE_LINES_CRITERION_DB]).index.get_values()
+                levels_int.iloc[npr] >= levels_int.iloc[npr].max() - TONE_LINES_CRITERION_DB]).index.values
 
     return tone_indices, bandwidth_for_tone_criterion
