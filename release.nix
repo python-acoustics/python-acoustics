@@ -36,6 +36,7 @@ let
   overlay = self: super: {
     python36 = super.python36.override{packageOverrides=overrides;};
     python37 = super.python37.override{packageOverrides=overrides;};
+    python38 = super.python38.override{packageOverrides=overrides;};
   };
 
 in import nixpkgs {
