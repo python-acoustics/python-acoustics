@@ -23,6 +23,7 @@
 , bootstrapped-pip
 , stdenv
 , python
+, pysoundfile
 , development ? false
 }:
 
@@ -52,7 +53,7 @@ in buildPythonPackage rec {
 
   checkInputs = [ pytest glibcLocales ];
   nativeBuildInputs = lib.optionals development [ sphinx pylint yapf ];
-  propagatedBuildInputs = [ cytoolz numpy scipy matplotlib pandas six tabulate ];
+  propagatedBuildInputs = [ cytoolz numpy scipy matplotlib pandas six tabulate pysoundfile ];
 
   meta = {
     description = "Acoustics module for Python";
