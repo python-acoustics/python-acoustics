@@ -23,6 +23,7 @@
 , bootstrapped-pip
 , stdenv
 , python
+, ensureNewerSourcesForZipFilesHook
 , development ? false
 }:
 
@@ -32,7 +33,11 @@ let
     src = ./.;
 
     nativeBuildInputs = [
-      python bootstrapped-pip
+      python
+      bootstrapped-pip
+      # Ensure files are after 1980 so users not using
+      # Nix and buildPythonPackage can built a wheel as well.
+      ensureNewerSourcesForZipFilesHook
     ];
 
     buildPhase = ":";
