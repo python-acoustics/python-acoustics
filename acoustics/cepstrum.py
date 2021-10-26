@@ -49,7 +49,7 @@ def complex_cepstrum(x, n=None):
 
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
-    >>> from scipy.signal import complex_cepstrum
+    >>> from acoustics.cepstrum import complex_cepstrum
 
     >>> duration = 5.0
     >>> fs = 8000.0
@@ -133,7 +133,7 @@ def real_cepstrum(x, n=None):
 
     Examples
     --------
-    >>> from scipy.signal import real_cepstrum
+    >>> from acoustics.cepstrum import real_cepstrum
 
 
     References
@@ -179,7 +179,7 @@ def inverse_complex_cepstrum(ceps, ndelay):
     in the original sequence.
 
     >>> import numpy as np
-    >>> from scipy.signal import inverse_complex_cepstrum
+    >>> from acoustics.cepstrum import inverse_complex_cepstrum
     >>> x = np.arange(10)
     >>> ceps, ndelay = complex_cepstrum(x)
     >>> y = inverse_complex_cepstrum(ceps, ndelay)
@@ -228,7 +228,7 @@ def minimum_phase(x, n=None):
 
     Examples
     --------
-    >>> from scipy.signal import minimum_phase
+    >>> from acoustics.cepstrum import minimum_phase
 
 
     References
