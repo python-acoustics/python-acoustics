@@ -856,7 +856,7 @@ def octaves(p, fs, density=False, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES,
     return fob, level
 
 
-def fractional_octaves(p, fs, start=5.0, stop=16000.0, fraction=3, density=False):
+def fractional_octaves(p, fs, start=5.0, stop=16000.0, fraction=3, density=False, ref=REFERENCE_PRESSURE):
     """Calculate level per 1/N-octave in frequency domain using the FFT. N is `fraction`.
 
     :param x: Instantaneous signal :math:`x(t)`.
@@ -876,7 +876,7 @@ def fractional_octaves(p, fs, start=5.0, stop=16000.0, fraction=3, density=False
     power = integrate_bands(p, fnb, fob)
     if density:
         power /= (fob.bandwidth / fnb.bandwidth)
-    level = 10.0 * np.log10(power)
+    level = 10.0 * np.log10(power / ref**2.0)
     return fob, level
 
 
