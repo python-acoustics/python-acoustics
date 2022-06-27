@@ -1,15 +1,10 @@
 # Nix function for building this package
-# To always get the latest version you could use
-#
-# acoustics = (import fetchTarball {
-#   url = https://github.com/python-acoustics/python-acoustics/archive/master.tar.gz;
-# });
-#
-# Note that the above should still be called, with the following arguments.
 { lib
 , buildPythonPackage
+, flit
+, flit-core
+, wheel
 , pytest
-, cytoolz
 , numpy
 , scipy
 , matplotlib
@@ -34,7 +29,8 @@ let
 
     nativeBuildInputs = [
       python
-      bootstrapped-pip
+      flit # Use flit front-end here because we don't have a sdist hook
+      wheel
       # Ensure files are after 1980 so users not using
       # Nix and buildPythonPackage can built a wheel as well.
       ensureNewerSourcesForZipFilesHook
@@ -43,21 +39,26 @@ let
     buildPhase = ":";
 
     installPhase = ''
-      ${python.interpreter} setup.py sdist
+      flit build --format sdist
       mkdir -p $out
       cp dist/* $out/
     '';
+
+    strictDeps = true;
   };
 
 in buildPythonPackage rec {
   pname = "acoustics";
   version = "0.2.4.post0";
+  format = "pyproject";
 
   src = "${sdist}/${pname}*";
 
   checkInputs = [ pytest glibcLocales ];
-  nativeBuildInputs = lib.optionals development [ sphinx pylint yapf ];
-  propagatedBuildInputs = [ cytoolz numpy scipy matplotlib pandas six tabulate ];
+  nativeBuildInputs = [
+    flit-core
+  ] ++ lib.optionals development [ sphinx pylint yapf ];
+  propagatedBuildInputs = [ numpy scipy matplotlib pandas six tabulate ];
 
   meta = {
     description = "Acoustics module for Python";
