@@ -11,9 +11,9 @@
     inherit (nixpkgs) lib;
 
     interpreters-to-test = [
-      "python37"
       "python38"
       "python39"
+      "python310"
       "python3"
     ];
 

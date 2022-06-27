@@ -2,7 +2,7 @@ DOCS=docs
 
 .PHONY: docs tests
 
-FORMAT_FILES=acoustics $(DOCS)/conf.py setup.py
+FORMAT_FILES=acoustics $(DOCS)/conf.py
 
 docs:
 	cd $(DOCS) && $(MAKE) clean && $(MAKE) html
@@ -25,8 +25,7 @@ format:
 	yapf -ipr $(FORMAT_FILES)
 
 sdist:
-	python3 setup.py sdist
+	flit build --format sdist
 
 release: docs-online
-	python3 setup.py sdist upload
-
+	flit publish --format sdist

@@ -4,8 +4,6 @@
 
 The `python-acoustics` module is a Python module with useful tools for acousticians.
 
-**Disclaimer**: This module is still heavily in development, and might break what you're working on.
-
 ## Installation
 
 The latest release can be found on PyPI and installed with `pip install acoustics`.
@@ -20,11 +18,7 @@ Several examples can be found in the `examples` folder.
 
 The test suite can be run with
 
-`python setup.py test`
-
-or
-
-`py.test`
+`pytest`
 
 ## Documentation
 
@@ -32,7 +26,7 @@ Documentation can be found [online](http://python-acoustics.github.io/python-aco
 
 ## License
 
-`python-acoustics` is distributed under the BSD 3-clause license. See LICENSE for more information.
+`python-acoustics` is distributed under the BSD 3-clause license. See `LICENSE` for more information.
 
 ## Contributing
 
