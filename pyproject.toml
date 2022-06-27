@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "acoustics"
-version = "0.2.4.post0"
+version = "0.2.5"
 authors = [
   { name="Python Acoustics" },
 ]
