@@ -11,9 +11,8 @@
     inherit (nixpkgs) lib;
 
     interpreters-to-test = [
-      "python37"
-      "python38"
       "python39"
+      "python310"
       "python3"
     ];
 
@@ -40,7 +39,9 @@
     ] ++ (map create-overlay-for-interpreter interpreters-to-test));
 
   in {
-    inherit overlay;
+    overlays = {
+      default = overlay;
+    };
   } // (utils.lib.eachSystem [ "x86_64-linux" ] (system: let
     # Our own overlay does not get applied to nixpkgs because that would lead to
     # an infinite recursion. Therefore, we need to import nixpkgs and apply it ourselves.
@@ -57,16 +58,18 @@
       # and additional dev inputs.
       devEnv = python.withPackages(_: (pkg.nativeBuildInputs ++ pkg.propagatedBuildInputs));
       pkg = python.pkgs."${attribute}";
+      default = pkg;
     } // (lib.genAttrs interpreters-to-test (interpreter: pkgs."${interpreter}".pkgs.acoustics));
 
-    defaultPackage = packages.pkg;
-    devShell = pkgs.mkShell {
-      nativeBuildInputs = [
-        packages.devEnv
-      ];
-      shellHook = ''
-        export PYTHONPATH=$(readlink -f .):$PYTHONPATH
-      '';
+    devShells = {
+      default = pkgs.mkShell {
+        nativeBuildInputs = [
+          packages.devEnv
+        ];
+        shellHook = ''
+          export PYTHONPATH=$(readlink -f .):$PYTHONPATH
+        '';
+      };
     };
     checks = lib.genAttrs interpreters-to-test (interpreter: pkgs."${interpreter}".pkgs.acoustics);
   }));

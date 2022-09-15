@@ -1,8 +1,0 @@
-include README.md
-include LICENSE
-include setup.py
-recursive-include acoustics
-graft acoustics/data
-graft data
-graft tests
-exclude nix_run_setup

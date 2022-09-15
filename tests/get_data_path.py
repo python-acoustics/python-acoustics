@@ -1,6 +1,7 @@
 import os
+import pathlib
 
 
-def data_path():
-    parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    return os.path.join(parent, 'data/')
+def data_path() -> pathlib.Path:
+    parent = pathlib.Path(__file__).parent
+    return parent / "data"
