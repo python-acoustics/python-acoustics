@@ -80,6 +80,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.sparse import spdiags
 from scipy.signal import butter, lfilter, freqz, filtfilt, sosfilt
+from scipy.integrate import simpson
 
 import acoustics.octave
 #from acoustics.octave import REFERENCE
@@ -1281,6 +1282,21 @@ def linear_phase(ntaps, steepness=1):
     f = np.fft.rfftfreq(ntaps, 1.0)  # Frequencies normalized to Nyquist.
     alpha = ntaps // 2 * steepness
     return np.exp(-1j * 2. * np.pi * f * alpha)
+
+
+
+def transmitted_energy(signal, fs):
+    """Compute the integration over time of the amplitude envelope in a time-domain input signal
+
+    :param signal: signal
+    :param fs: sample frequency
+
+    The transmitted energy is the signal feature used to compare the signal response to different impact energies. 
+    """
+    analytic_signal= hilbert(signal)
+    amplitude_envelope = np.abs(analytic_signal)
+    area = simpson(amplitude_envelope, dx=1/fs)
+    return area
 
 
 __all__ = [
