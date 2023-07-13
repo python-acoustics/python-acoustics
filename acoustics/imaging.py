@@ -325,3 +325,38 @@ def _set_separator(ticklabels, separator):
             decimal_number_format = item.replace('.', separator)
             bands_sep.append(decimal_number_format)
     return bands_sep
+
+def plotDWTcoeff(signal,wavelet,fs): 
+    """
+    Plot Discrete Wavelet Transform Coefficients (Level 1)
+
+    :param signal: signal
+    :param fs: sample frequency
+    :param fwavelet : Wavelet to use in the transform
+
+    """
+    [cA, cD] = pywt.wavedec(signal, wavelet, level= 1)
+
+    L = len(signal);
+    t= np.arange(0,(len(signal))/fs, 1/fs)
+    plt.figure(figsize=(30, 20));
+    
+    plt.subplot(3, 1, 1)
+    plt.plot(t, signal, color='k');
+    plt.xlabel('Time');
+    plt.ylabel('S');
+    plt.title('Original Signal');
+    
+    plt.subplot(3, 1, 2)
+    plt.plot(cA, color='r');
+    plt.xlabel('Samples');
+    plt.ylabel('cA');
+    plt.title('Approximation Coeff. (cA)');
+    
+    plt.subplot(3, 1, 3)
+    plt.plot(cD, color='g');
+    plt.xlabel('Samples');
+    plt.ylabel('cD');
+    plt.title('Detailed Coeff. (cD)');
+    
+    plt.show()
