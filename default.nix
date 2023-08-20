@@ -54,11 +54,14 @@ in buildPythonPackage rec {
 
   src = "${sdist}/${pname}*";
 
-  checkInputs = [ pytest glibcLocales ];
   nativeBuildInputs = [
     flit-core
   ] ++ lib.optionals development [ sphinx pylint yapf ];
   propagatedBuildInputs = [ numpy scipy matplotlib pandas six tabulate ];
+
+  nativeCheckInputs = [
+    pytest
+  ];
 
   meta = {
     description = "Acoustics module for Python";
@@ -66,7 +69,7 @@ in buildPythonPackage rec {
 
   checkPhase = ''
     pushd tests
-    LC_ALL="en_US.UTF-8" py.test .
+    LC_ALL="en_US.UTF-8" pytest .
     popd
   '';
 
