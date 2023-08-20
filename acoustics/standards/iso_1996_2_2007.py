@@ -32,7 +32,7 @@ REGRESSION_RANGE_FACTOR = 0.75
 """Range of regression is usually +/- 0.75 critical bandwidth."""
 
 _WINDOW_CORRECTION = {
-    'hanning': -1.8,
+    'hann': -1.8,
 }
 
 
@@ -150,7 +150,7 @@ class Tonality:
             self,
             signal,
             sample_frequency,
-            window='hanning',
+            window='hann',
             reference_pressure=REFERENCE_PRESSURE,
             tsc=TONE_SEEK_CRITERION,
             regression_range_factor=REGRESSION_RANGE_FACTOR,
@@ -235,7 +235,7 @@ class Tonality:
 
         C.2.2: Note 1.
         """
-        if self.window == 'hanning':
+        if self.window == 'hann':
             return 1.5 * self.frequency_resolution
         else:
             raise ValueError()
