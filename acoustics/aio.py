@@ -89,6 +89,10 @@ def read_csv_cirrus(filename):  # pylint: disable=too-many-locals
         data = pd.read_csv(
             filename,
             parse_dates=[[0, 1]],
+            date_format={
+                0: "d/m/y",
+                1: "H:M:S.%f",
+            },
             sep=separator,
             decimal=decimal_sep,
         )
