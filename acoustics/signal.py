@@ -711,30 +711,34 @@ def density_spectrum(x, fs, N=None):
     return np.fft.fftshift(f), np.fft.fftshift(fr)
 
 
-def integrate_bands(data, a, b):
+def integrate_bands(data, dataf, bandf):
     """
     Reduce frequency resolution of power spectrum. Merges frequency bands by integration.
 
     :param data: Vector with narrowband powers.
-    :param a: Instance of :class:`Frequencies`.
-    :param b: Instance of :class:`Frequencies`.
+    :param dataf: Instance of :class:`Frequencies`.
+    :param bandf: Instance of :class:`Frequencies`.
 
     .. note:: Needs rewriting so that the summation goes over axis=1.
 
     """
 
     try:
-        if b.fraction % a.fraction:
+        if bandf.fraction % dataf.fraction:
             raise NotImplementedError("Non-integer ratio of fractional-octaves are not supported.")
     except AttributeError:
         pass
 
-    lower, _ = np.meshgrid(b.lower, a.center)
-    upper, _ = np.meshgrid(b.upper, a.center)
-    _, center = np.meshgrid(b.center, a.center)
+    dataCount = len(data)
+    bandCount = len(bandf.center)
+    bandPower = np.zeros(bandCount)
+    for bandIndex in range(0, bandCount - 1):
+        upper = np.repeat(bandf.upper[bandIndex], dataCount)
+        lower = np.repeat(bandf.lower[bandIndex], dataCount)
+        bandPower[bandIndex] = ((lower < dataf.center) * (dataf.center <= upper) * data).sum()
 
-    return ((lower < center) * (center <= upper) * data[..., None]).sum(axis=-2)
-
+    return bandPower
+    
 
 def bandpass_frequencies(x, fs, frequencies, order=8, purge=False, zero_phase=False):
     """"Apply bandpass filters for frequencies
