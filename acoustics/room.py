@@ -153,17 +153,18 @@ def t60_arau(Sx, Sy, Sz, alpha, volume, c=SOUNDSPEED):
     return t60
 
 
-def t60_impulse(file_name, bands, rt='t30'):  # pylint: disable=too-many-locals
+def t60_from_signal(raw_signal, fs, bands, rt='t30'):  # pylint: disable=too-many-locals
     """
     Reverberation time from a WAV impulse response.
 
-    :param file_name: name of the WAV file containing the impulse response.
+    :param raw_signal: Impulse response.
+    :type raw_signal: :class:`np.ndarray`
+    :param fs: Sample frequency.
     :param bands: Octave or third bands as NumPy array.
     :param rt: Reverberation time estimator. It accepts `'t30'`, `'t20'`, `'t10'` and `'edt'`.
     :returns: Reverberation time :math:`T_{60}`
 
     """
-    fs, raw_signal = wavfile.read(file_name)
     band_type = _check_band_type(bands)
 
     if band_type == 'octave':
@@ -218,6 +219,20 @@ def t60_impulse(file_name, bands, rt='t30'):  # pylint: disable=too-many-locals
     return t60
 
 
+def t60_impulse(file_name, bands, rt='t30'):  # pylint: disable=too-many-locals
+    """
+    Reverberation time from a WAV impulse response.
+
+    :param file_name: name of the WAV file containing the impulse response.
+    :param bands: Octave or third bands as NumPy array.
+    :param rt: Reverberation time estimator. It accepts `'t30'`, `'t20'`, `'t10'` and `'edt'`.
+    :returns: Reverberation time :math:`T_{60}`
+
+    """
+    fs, raw_signal = wavfile.read(file_name)
+    return t60_from_signal(raw_signal, fs, bands, rt)
+
+
 def clarity(time, signal, fs, bands=None):
     """
     Clarity :math:`C_i` determined from an impulse response.
@@ -248,6 +263,20 @@ def clarity(time, signal, fs, bands=None):
     return c
 
 
+def c50_from_signal(signal, fs, bands=None):
+    """
+    Clarity for 50 miliseconds :math:`C_{50}` from a file.
+
+    :param signal: Impulse response.
+    :type signal: :class:`np.ndarray`
+    :param fs: Sample frequency.
+    :param bands: Bands of calculation (optional). Only support standard octave and third-octave bands.
+    :type bands: :class:`np.ndarray`
+
+    """
+    return clarity(50.0, signal, fs, bands)
+
+
 def c50_from_file(file_name, bands=None):
     """
     Clarity for 50 miliseconds :math:`C_{50}` from a file.
@@ -259,7 +288,21 @@ def c50_from_file(file_name, bands=None):
 
     """
     fs, signal = wavfile.read(file_name)
-    return clarity(50.0, signal, fs, bands)
+    return c50_from_signal(signal, fs, bands)
+
+
+def c80_from_signal(signal, fs, bands=None):
+    """
+    Clarity for 80 miliseconds :math:`C_{80}` from a file.
+
+    :param signal: Impulse response.
+    :type signal: :class:`np.ndarray`
+    :param fs: Sample frequency.
+    :param bands: Bands of calculation (optional). Only support standard octave and third-octave bands.
+    :type bands: :class:`np.ndarray`
+
+    """
+    return clarity(80.0, signal, fs, bands)
 
 
 def c80_from_file(file_name, bands=None):
@@ -273,4 +316,4 @@ def c80_from_file(file_name, bands=None):
 
     """
     fs, signal = wavfile.read(file_name)
-    return clarity(80.0, signal, fs, bands)
+    return c80_from_signal(signal, fs, bands)
