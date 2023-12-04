@@ -389,6 +389,14 @@ class Frequencies:
         """
         return 2.0 * np.pi * self.center
 
+    def __getitem__(self, key):
+        return type(self)(
+            center=self.center[key],
+            lower=self.lower[key],
+            upper=self.upper[key],
+            bandwidth=self.bandwidth[key]
+        )
+
 
 class EqualBand(Frequencies):
     """
