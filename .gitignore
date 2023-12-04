@@ -56,3 +56,5 @@ _build
 .ipynb_checkpoints
 
 temp
+
+.venv
