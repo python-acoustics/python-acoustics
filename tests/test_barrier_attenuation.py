@@ -141,7 +141,7 @@ class TestBarrierAttenuation:
         assert (bar_scene_geo._failure is None)
 
     def test_15(self):
-        """Test parallel s_r and bar give no IL"""
+        """Test parallel s_r and bar give no attenuation"""
         s = Point(5, 0, 0)
         r = Point(5, 10, 10)
         b = Segment(Point(6, 10, 10), Point(6, 0, 0))
@@ -157,7 +157,7 @@ class TestBarrierAttenuation:
         assert (bar_scene_geo._failure == ba.HORIZONTAL_ERR)
 
     def test_16(self):
-        """Mukilteo sheet For Pres-grnd"""
+        """ Real-world example (Project: Mukilteo, sheet For Pres-grnd) """
         s = Point(0, 0, 9)
         r = Point(0, 68, 20)
         b = Segment(Point(-10, 13, 19), Point(10, 13, 19))
@@ -171,7 +171,7 @@ class TestBarrierAttenuation:
         assert abs(bar_att - 17.26378) <= 1e-4
 
     def test_17(self):
-        """Mukilteo sheet For Pres-6ft"""
+        """ Real-world example (Project: Mukilteo, sheet For Pres-6ft) """
         s = Point(0, 0, 22)
         r = Point(0, 184.61, 22)
         b = Segment(Point(-10, 6, 25.25), Point(10, 6, 25.25))
