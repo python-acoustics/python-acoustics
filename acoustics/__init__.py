@@ -9,6 +9,7 @@ import acoustics.aio
 import acoustics.ambisonics
 import acoustics.atmosphere
 import acoustics.bands
+import acoustics.barrier_attenuation
 import acoustics.building
 import acoustics.cepstrum
 import acoustics.criterion
